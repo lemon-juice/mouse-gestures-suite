@@ -1273,9 +1273,10 @@ function aioOpenAddonManager() {
 }
 
 function aioOpenDownloadManager() {
-  if (aioFxV3) BrowserDownloadsUI();
-  else toOpenWindowByType("Download:Manager",
-                          "chrome://mozapps/content/downloads/downloads.xul",
+  //if (aioFxV3) BrowserDownloadsUI();
+  //else
+  toOpenWindowByType("Download:Manager",
+                          "chrome://communicator/content/downloads/downloadmanager.xul",
                           "chrome,dialog=no,resizable");
 }
 
