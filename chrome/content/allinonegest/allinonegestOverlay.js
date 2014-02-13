@@ -642,7 +642,8 @@ function aioMouseDown(e) {
         if (aioGestEnabled && aioIsKeyOK(e)) {
            aioSrcEvent = e;
            // Don't start gesture on scrollbars, input elements, etc.
-           if (aioIsAreaOK(e, false) && (aioIsWin || e.target.ownerDocument.contentType != "application/vnd.mozilla.xul+xml")
+           // @MOD: added " || e.button != aioLMB)" - to enable on inputs on right and middle buttons
+           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && (aioIsWin || e.target.ownerDocument.contentType != "application/vnd.mozilla.xul+xml")
                && !aioGestInProgress) {
               targetName  = e.target.nodeName.toLowerCase();
               var canGesture = true;
@@ -671,7 +672,9 @@ function aioMouseDown(e) {
            if (aioWheelRocker || aioTabCount >= 1 || aioTTNode)
               aioContent.addEventListener("DOMMouseScroll", aioWheelNav, true);
         }
-        if (preventDefaultAction) aioNukeEvent(e);
+        // @MOD: this killed right-click events on pages
+        // if (preventDefaultAction) aioNukeEvent(e);
+        if (preventDefaultAction && e.button == aioLMB) aioNukeEvent(e);
         aioOldX = e.screenX; aioOldY = e.screenY;
      }
      else {
@@ -760,7 +763,9 @@ function aioMouseUp(e) {
   }
   if (aioGestInProgress) {
      var lastgesture = aioStrokes.join("");
-     if (button != aioLMB || lastgesture) aioNukeEvent(e); // XXX to be investigated
+     // @MOD: this killed right-click events on pages
+     // if (button != aioLMB || lastgesture) aioNukeEvent(e); // XXX to be investigated
+     if (lastgesture) aioNukeEvent(e); // XXX to be investigated
      aioEraseTrail();
      if (lastgesture) {
         window.addEventListener("click", aioGestClickHandler, true);
