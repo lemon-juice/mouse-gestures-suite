@@ -1262,9 +1262,10 @@ function aioOpenAioOptions() {
 }
 
 function aioOpenBookmarksManager() {
-  if (aioFxV3) PlacesCommandHook.showPlacesOrganizer('AllBookmarks');
-  else toOpenWindowByType("bookmarks:manager",
-                          "chrome://communicator/content/bookmarks/bookmarksManager.xul");
+  //if (aioFxV3) PlacesCommandHook.showPlacesOrganizer('AllBookmarks');
+  //else
+  toOpenWindowByType("bookmarks:manager",
+    "chrome://communicator/content/bookmarks/bookmarksManager.xul");
 }
 
 function aioOpenAddonManager() {
