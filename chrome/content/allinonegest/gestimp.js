@@ -802,32 +802,12 @@ function aioCloseCurrTab(lastTabClosesWindow) {
 }
 
 function aioUndoCloseTab() {
-  if (aioFxV3) {
-     undoCloseTab();
-     return;
+  try { // Fx
+    undoCloseTab();
   }
-  if (typeof(aioContent.undoRemoveTab) == "function") {
-     aioContent.undoRemoveTab();
-     return;
+  catch (e) { // SM
+    gBrowser.restoreTab(0);
   }
-  if (!aioLastTabInfo.length) return;
-  var nbTabs = aioContent.mTabContainer.childNodes.length;
-  var lastTabInfo = aioLastTabInfo.pop();
-  var lTab = aioContent.addTab();
-  aioContent.selectedTab = lTab;
-  if (lastTabInfo.hist.count) {
-     var history = aioContent.webNavigation.sessionHistory;
-     history.QueryInterface(Components.interfaces.nsISHistoryInternal);
-     for (var i = 0; i < lastTabInfo.hist.count; ++i)
-        history.addEntry(lastTabInfo.hist.getEntryAtIndex(i, false), true);
-     aioContent.webNavigation.gotoIndex(lastTabInfo.hist.index);
-  }
-  if (typeof(aioContent.moveTabTo) != "function" || !lastTabInfo.next) return;
-  for (i = 0; i < nbTabs; ++i)
-     if (aioContent.mTabContainer.childNodes[i].getAttribute("aioTabId") == lastTabInfo.next) {
-        aioContent.moveTabTo(lTab, i);
-        break;
-     }
 }
 
 function aioGotoLastTab() {
