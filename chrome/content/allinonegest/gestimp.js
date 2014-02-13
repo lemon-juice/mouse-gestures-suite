@@ -796,7 +796,7 @@ function aioSaveImageAs() {
 }
 
 function aioCloseCurrTab(lastTabClosesWindow) {
-  if (aioRendering.childNodes.length > 1 || !lastTabClosesWindow) aioContent.removeCurrentTab();
+  if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) aioContent.removeCurrentTab();
   else if (typeof(BrowserCloseWindow) == "function") BrowserCloseWindow();
        else closeWindow(true);
 }
@@ -923,7 +923,7 @@ function aioLinkInTab(url, usePref, bg) {
 }
 
 function aioDupTab() {
-  if (aioFxV3) {
+  if (0 && aioFxV3) {
      var tab = aioContent.duplicateTab(aioContent.mCurrentTab);
      if (!aioPrefRoot.getBoolPref("browser.tabs.loadInBackground")) aioContent.selectedTab = tab;
   }
@@ -977,13 +977,14 @@ function aioNewWindowFor1_0(url, flag) {
 }
 
 function aioNewWindowFor1_5(url, flag) {
-  var handler = Components.classes["@mozilla.org/browser/clh;1"].getService(Components.interfaces.nsIBrowserHandler);
-  var startpage = url || handler.defaultArgs;
+  //var handler = Components.classes["@mozilla.org/browser/clh;1"].getService(Components.interfaces.nsIBrowserHandler);
+  //var startpage = url || handler.defaultArgs;
+  var startpage = url;
   if (window._content && window._content.document) {
      var charsetArg = "charset=" + window._content.document.characterSet;
-     return window.openDialog("chrome://browser/content/", "_blank", "chrome,all,dialog=no" + flag, startpage, charsetArg);
+     return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, startpage, charsetArg);
   }
-  return window.openDialog("chrome://browser/content/", "_blank", "chrome,all,dialog=no" + flag, startpage);
+  return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, startpage);
 }
 
 function aioNewWindow(url, flag) {
@@ -1283,7 +1284,7 @@ function aioOpenAioOptions() {
 function aioOpenBookmarksManager() {
   if (aioFxV3) PlacesCommandHook.showPlacesOrganizer('AllBookmarks');
   else toOpenWindowByType("bookmarks:manager",
-                          "chrome://browser/content/bookmarks/bookmarksManager.xul");
+                          "chrome://communicator/content/bookmarks/bookmarksManager.xul");
 }
 
 function aioOpenAddonManager() {
