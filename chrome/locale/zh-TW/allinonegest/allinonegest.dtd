@@ -84,6 +84,7 @@
 
 <!ENTITY aioAction.label       "滑鼠手勢動作">
 <!ENTITY aioAction.singlewindow    "『在新視窗中開啟連結』：開啟在單一新視窗內">
+<!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "『關閉所有其他的分頁』：永不警告">
 <!ENTITY aioAction.goUpAction      "『回到上一層…』或『載入首頁』：開啟於新視窗內">
 <!ENTITY aioAction.bookmarkAction  "『開啟書籤』：開啟於目前分頁內">

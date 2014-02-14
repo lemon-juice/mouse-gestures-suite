@@ -80,6 +80,7 @@
 
 <!ENTITY aioAction.label          "마우스 동작 지정">
 <!ENTITY aioAction.singlewindow   "'링크를 새 창으로 열기': 한 창에 여러 개의 탭으로 엽니다.">
+<!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn      "'다른 탭 모두 닫기': 경고하지 않습니다.">
 <!ENTITY aioAction.goUpAction     "'상위로 이동...' / '홈 페이지 불러오기': 새 탭으로 엽니다.">
 <!ENTITY aioAction.nextprev       "'링크 ... 따라가기': 찾을 문자열 ('|' 로 구분하십시오.)">

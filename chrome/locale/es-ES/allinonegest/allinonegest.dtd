@@ -10,6 +10,7 @@
 <!ENTITY aioAction.prevlink "Ir al enlace anterior:">
 <!ENTITY aioAction.rockermode "Gestos 'rocker' y con la rueda: Permitir repetición en acciones que cargan la página">
 <!ENTITY aioAction.singlewindow "'Abrir enlaces en ventanas': Una única ventana nueva con pestañas">
+<!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioMMB.cursor "Autodesplazamiento: Mostrar cursor especial">
 <!ENTITY aioMMB.evenOnLink "Comenzar el desplazamiento al pulsar con el botón central en un enlace">
 <!ENTITY aioMMB.fast "Rápido">

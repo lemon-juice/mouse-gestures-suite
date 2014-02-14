@@ -80,6 +80,7 @@
 
 <!ENTITY aioAction.label "Действия мышиных жестов">
 <!ENTITY aioAction.singlewindow "'Открыть ссылки в окнах': Новое окно с вкладками">
+<!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn "'Закрыть все другие вкладки': Никогда не предупреждать">
 <!ENTITY aioAction.goUpAction "'Перейти в ... верхнего уровня'/'Загрузить начальную страницу': Открывать в новой вкладке">
 <!ENTITY aioAction.nextprev "'Следовать по ссылке...': Искомые слова (| разделитель)">

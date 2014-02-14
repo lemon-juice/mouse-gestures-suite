@@ -917,8 +917,14 @@ function aioMarkLinkVisited(href, linkNode) {
 }
 
 function aioOpenInNewTab(bg) {
-  if (!bg) BrowserOpenTab();
-  else aioLinkInTab("about:blank", false, true);
+  if (aioOpenLinkInNew && aioOnLink.length) {
+     aioLinkInTab(aioOnLink[0].href, false, bg);
+     aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
+  }
+  else {
+     if (!bg) BrowserOpenTab();
+     else aioLinkInTab("about:blank", false, true);
+  }
 }
 
 function aioLinksInTabs() {
@@ -996,9 +1002,14 @@ function aioSetToNormalZ(aWindow) {
 
 function aioOpenNewWindow(background) {
   var s = background ? ",alwaysLowered" : "";
-  if (aioOnImage) win = aioNewWindow(aioOnImage.src, s);
-  else win = aioNewWindow("", s);
-  
+  if (aioOpenLinkInNew && aioOnLink.length) {
+     var win = aioNewWindow(aioOnLink[0].href, s);
+     aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
+  }
+  else {
+     if (aioOnImage) win = aioNewWindow(aioOnImage.src, s);
+     else win = aioNewWindow("", s);
+  }
   if (background) setTimeout(function(a){aioSetToNormalZ(a);}, 200, win);
 }
 

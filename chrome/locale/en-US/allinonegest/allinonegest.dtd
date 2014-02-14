@@ -80,6 +80,7 @@
 
 <!ENTITY aioAction.label       "Mouse Gesture Actions">
 <!ENTITY aioAction.singlewindow    "'Open Links in Windows': Single new window with tabs">
+<!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "'Close all other Tabs': Never warn">
 <!ENTITY aioAction.goUpAction      "'Go Up to parent ...' / 'Load Home Page': Open in new tab">
 <!ENTITY aioAction.nextprev        "'Follow ... Link': Strings to be searched for (| separated)">
