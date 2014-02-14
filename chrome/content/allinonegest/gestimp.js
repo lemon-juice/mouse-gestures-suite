@@ -815,7 +815,9 @@ function aioGotoLastTab() {
 }
 
 function aioWarnOnCloseMultipleTabs(numToClose) {
-     var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+     return true;
+     // the below doesn't work in SM, it's non-standard anyway, so probably we don't need it
+     /* var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                                    .getService(Components.interfaces.nsIPromptService);
      var bundle = aioContent.mStringBundle;
      window.focus();
@@ -828,7 +830,7 @@ function aioWarnOnCloseMultipleTabs(numToClose) {
               bundle.getString("tabs.closeButtonMultiple"),
               null, null, null,
               {value : 0});
-     return button == 0;
+     return button == 0; */
 }
 
 function aioRemoveAllTabsBut() {
@@ -1005,13 +1007,10 @@ function aioDupWindow() {
 }
 
 function aioCloseWindow() {
-  var numTabs = aioRendering.childNodes.length;
-  if (numTabs <= 1 || !aioPrefRoot.getBoolPref("browser.tabs.warnOnClose"))
-     if (typeof(BrowserCloseWindow) == "function") BrowserCloseWindow();
-     else closeWindow(true);
-  else if (aioContent.warnAboutClosingTabs(true))
-          if (typeof(BrowserCloseWindow) == "function") BrowserCloseWindow();
-          else closeWindow(true);
+  if ("BrowserTryToCloseWindow" in window)
+      window.setTimeout("BrowserTryToCloseWindow()", 10);
+    else
+      window.setTimeout("window.close()", 10);
 }
 
 function aioDoubleWin() {
