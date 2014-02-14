@@ -40,7 +40,7 @@ var aioRockMode, aioWheelMode, aioHistIfDown, aioNoPopup;
 var aioSpecialCursor, aioLeftDefault, aioPreferPaste, aioNoAltWithGest;
 var aioSingleNewWindow, aioPanToAS, aioReverseScroll, aioFocusMode;
 var aioShowTitletip, aioTTHover, aioShiftForTitle, aioTitleDelay, aioTitleDuration;
-var aioScrollAlaAcrobat, aioNeverWarnOnCloseOtherTabs, aioNextsString, aioPrevsString;
+var aioScrollAlaAcrobat, aioNeverWarnOnCloseOtherTabs = true, aioNextsString, aioPrevsString;
 var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
 var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
 var aioRockerAction = [], aioRockMultiple = [];
@@ -326,7 +326,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioNoAltWithGest=aioPref.getBoolPref("noAltGest");}, function(){aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
      [function(){aioLeftDefault=aioPref.getBoolPref("leftDefault");}, function(){aioPref.setBoolPref("leftDefault",false);}, function(){return false;}],
      [function(){aioSingleNewWindow=aioPref.getBoolPref("singleWindow");}, function(){aioPref.setBoolPref("singleWindow",false);}, function(){return false;}],
-     [function(){aioNeverWarnOnCloseOtherTabs=aioPref.getBoolPref("neverWarnOnCloseOtherTabs");}, function(){aioPref.setBoolPref("neverWarnOnCloseOtherTabs",false);}, function(){return false;}],
      [function(){aioGoUpInNewTab=aioPref.getBoolPref("goUpInNewTab");}, function(){aioPref.setBoolPref("goUpInNewTab",false);}, function(){return false;}],
      [function(){aioNoGestureOnFlash=aioPref.getBoolPref("noGestOnFlash");}, function(){aioPref.setBoolPref("noGestOnFlash",true);}, function(){return false;}],
      [function(){aioReverseScroll=aioPref.getBoolPref("reverseScrolling");}, function(){aioPref.setBoolPref("reverseScrolling",false);}, function(){return false;}],
