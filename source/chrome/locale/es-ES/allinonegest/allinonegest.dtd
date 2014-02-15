@@ -1,6 +1,6 @@
 <!ENTITY about.label "Acerca de">
-<!ENTITY about.provider1 "Creada por Optimoz, Joe4711, Skidooer &amp; otros;">
-<!ENTITY about.provider2 "Futuro desarrollo por M. Boullet">
+<!ENTITY about.provider1 "Creada por M. Boullet, Optimoz, Joe4711, Skidooer &amp; otros;">
+<!ENTITY about.provider2 "Futuro desarrollo por MK">
 <!ENTITY about.version "Versión">
 <!ENTITY aioAction.goUpAction "'Ir a la carpeta superior'/'Cargar página de inicio': Abrir en una nueva pestaña">
 <!ENTITY aioAction.label "Acciones de los gestos del ratón">

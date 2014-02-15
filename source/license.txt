@@ -65,9 +65,9 @@ The following license applies to all files
  *    Portions created by Ben Goodger are Copyright (C) 2002 Ben Goodger. All Rights Reserved.
  *
  *  For all other modules
- *    The Original Code is the "All-in-One Gestures" extension for Phoenix.
- *    The Initial Developer of the Original Code is Marc Boullet <boullet.marc@orange.fr>
- *    Portions created by Marc Boullet are Copyright (C) 2003, Marc Boullet. All Rights Reserved.
+ *    The original code base for this extension is the "All-in-One Gestures" extension
+ *    by Marc Boullet <boullet.marc@orange.fr> for Firefox.
+ *    The Current Developer of the code is Michal Koscielny
  * 
  *
  * Alternatively, the contents of this file may be used under the terms of

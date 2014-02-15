@@ -54,7 +54,7 @@
 
 <!ENTITY about.label           "Über">
 <!ENTITY about.version             "Version">
-<!ENTITY about.provider1           "Original von Optimoz, Joe4711, Skidooer; Zusammenstellung von Marc Boullet">
+<!ENTITY about.provider1           "Original von M. Boullet, Optimoz, Joe4711, Skidooer; Zusammenstellung von Marc Boullet">
 <!ENTITY about.provider2           "Deutsche Übersetzung von Armin C. Schneider">
 
 <!ENTITY mousebutton.label     "Auslösetaste für Mausgesten und Mausrad-Navigation">

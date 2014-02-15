@@ -54,8 +54,8 @@
 
 <!ENTITY about.label              "All-in-One Gestures에 대하여">
 <!ENTITY about.version            "버전">
-<!ENTITY about.provider1          "도움: Optimoz, Joe4711, Skidooer 그 외 모든 분">
-<!ENTITY about.provider2          "제작: M. Boullet">
+<!ENTITY about.provider1          "도움: M. Boullet, Optimoz, Joe4711, Skidooer 그 외 모든 분">
+<!ENTITY about.provider2          "제작: MK">
 
 <!ENTITY mousebutton.label        "마우스 동작과 휠 스크롤 탐색에 사용할 버튼">
 <!ENTITY mousebutton.left         "왼쪽 버튼">

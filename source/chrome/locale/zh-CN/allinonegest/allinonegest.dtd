@@ -54,8 +54,8 @@
 
 <!ENTITY about.label           "关于">
 <!ENTITY about.version             "版本">
-<!ENTITY about.provider1           "提供: Optimoz, Joe4711, Skidooer &amp; all;">
-<!ENTITY about.provider2           "合并及再开发: M. Boullet">
+<!ENTITY about.provider1           "提供: M. Boullet, Optimoz, Joe4711, Skidooer &amp; all;">
+<!ENTITY about.provider2           "合并及再开发: MK">
 
 <!ENTITY mousebutton.label     "鼠标手势及滚轮导航触发键">
 <!ENTITY mousebutton.left          "左键">

@@ -54,8 +54,8 @@
 
 <!ENTITY about.label "All-in-Oneジェスチャについて">
 <!ENTITY about.version "バージョン">
-<!ENTITY about.provider1 "Provided by Optimoz, Joe4711, Skidooer &amp; all;">
-<!ENTITY about.provider2 "Merged and further developed by M. Boullet">
+<!ENTITY about.provider1 "Provided by M. Boullet, Optimoz, Joe4711, Skidooer &amp; all;">
+<!ENTITY about.provider2 "Modified and further developed by MK">
 
 <!ENTITY mousebutton.label "マウスジェスチャ・マウスホイールジェスチャで用いるボタン">
 <!ENTITY mousebutton.left "左ボタン">

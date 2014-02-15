@@ -58,8 +58,8 @@
 
 <!ENTITY about.label           "關於">
 <!ENTITY about.version             "版本">
-<!ENTITY about.provider1           "由 Optimoz, Joe4711, Skidooer 等全體提供">
-<!ENTITY about.provider2           "由 M. Boullet 合併及進一步開發">
+<!ENTITY about.provider1           "由 M. Boullet, Optimoz, Joe4711, Skidooer 等全體提供">
+<!ENTITY about.provider2           "由 MK 合併及進一步開發">
 
 <!ENTITY mousebutton.label     "觸發滑鼠手勢與滾輪導覽功能的按鈕">
 <!ENTITY mousebutton.left          "左鍵">

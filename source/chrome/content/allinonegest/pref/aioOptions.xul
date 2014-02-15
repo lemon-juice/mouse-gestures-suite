@@ -61,7 +61,7 @@ function init() {
   populateTree(pref.getCharPref("allinonegest.gestureString"), pref.getCharPref("allinonegest.functionString"),
                pref.getCharPref("allinonegest.rockerString"));
   setScrollGesturesVisibility(document.getElementById("wheelScrollOptions").value == 0);
-  const myGUID = "{8b86149f-01fb-4842-9dd8-4d7eb02fd055}";
+  const myGUID = "mousegesturessuite@lemon_juice.addons.mozilla.org";
   try {
     // Firefox 4 i.e. Mozilla 2 and later
     Components.utils.import("resource://gre/modules/AddonManager.jsm");

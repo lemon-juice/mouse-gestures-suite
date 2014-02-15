@@ -54,8 +54,8 @@
 
 <!ENTITY about.label           "A propos">
 <!ENTITY about.version             "Version">
-<!ENTITY about.provider1           "Initialement: Optimoz, Joe4711, Skidooer &amp; les autres;">
-<!ENTITY about.provider2           "Fusionné et developpé par Marc Boullet">
+<!ENTITY about.provider1           "Initialement: M. Boullet, Optimoz, Joe4711, Skidooer &amp; les autres;">
+<!ENTITY about.provider2           "Fusionné et developpé par MK">
 
 <!ENTITY mousebutton.label     "Bouton déclenchant les Gestes de Souris et la Navigation à la molette">
 <!ENTITY mousebutton.left          "Gauche">

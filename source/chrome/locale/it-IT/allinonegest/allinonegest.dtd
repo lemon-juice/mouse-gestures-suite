@@ -58,8 +58,8 @@
 
 <!ENTITY about.label           "Informazioni">
 <!ENTITY about.version             "Versione">
-<!ENTITY about.provider1           "Fornita da Optimoz, Joe4711, Skidooer &amp; tutti gli altri;">
-<!ENTITY about.provider2           "Fusione ed ulteriore sviluppo da parte di M. Boullet">
+<!ENTITY about.provider1           "Fornita da M. Boullet, Optimoz, Joe4711, Skidooer &amp; tutti gli altri;">
+<!ENTITY about.provider2           "Fusione ed ulteriore sviluppo da parte di MK">
 
 <!ENTITY mousebutton.label     "Pulsante utilizzato per Mouse Gesture e Navigazione con rotellina di scorrimento">
 <!ENTITY mousebutton.left          "Sinistro">
