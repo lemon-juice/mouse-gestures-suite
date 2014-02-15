@@ -112,6 +112,9 @@ const aioStdPrefListener = {
     aioStdPrefChanged();
   }
 };
+// used to prevent infinite loop when aioStdPrefListener called itself on changing pref
+var aioIgnoreStdPrefListener = false;
+
 const aioShutdownListener = {
   observe: function(subject, topic, data) {
     if (topic != "quit-application") return;
@@ -229,10 +232,16 @@ function aioUninstallCleanUp() {
   aioPrefRoot.setBoolPref("general.autoScroll", aioPref.getBoolPref("savedAutoscroll"));
 }
 
-function aioStdPrefChanged() {
+function aioStdPrefChanged(force) {
+  if (aioIgnoreStdPrefListener) {
+    return;
+  }
+  aioIgnoreStdPrefListener = true; // prevent infinite loop
+  
   try {
-    if (aioPrefRoot.getBoolPref("general.autoScroll") != (aioASEnabled && aioWhatAS == 1))
+    if (aioPrefRoot.getBoolPref("general.autoScroll") != (aioASEnabled && aioWhatAS == 1)) {
         aioPrefRoot.setBoolPref("general.autoScroll", aioASEnabled && aioWhatAS == 1);
+      }
   }
   catch(err) {}
   try {
@@ -249,6 +258,8 @@ function aioStdPrefChanged() {
     else aioSmoothInc = 60;
   }
   catch(err) {aioSmoothInc = 60;}
+  
+  aioIgnoreStdPrefListener = false;
 }
 
 function aioCreateStringBundle(propFile) {
@@ -505,7 +516,7 @@ function aioGestMove(e) {
   aioLastEvtTime = new Date(); // e.timeStamp is broken on Linux
   aioDrawTrail(e);
   var pente = absY <= 5 ? 100 : absX / absY; // 5 should be grid/tangent(60)
-  if (pente < 0.58 || pente > 1.73) { //between 30° & 60°, wait
+  if (pente < 0.58 || pente > 1.73) { //between 30Â° & 60Â°, wait
      if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
      else tempMove = x_dir > 0 ? "R" : "L";
      if (!aioStrokes.length || aioStrokes[aioStrokes.length-1] != tempMove) {
