@@ -92,17 +92,6 @@
 <!ENTITY aioTabscroll.tabrocker   "휠 스크롤 탐색: 팝업 없이 바로 탭으로 이동합니다.">
 <!ENTITY aioTabscroll.revScroll   "휠을 뒤로 스크롤하면 왼쪽 탭으로 이동합니다.">
 
-<!ENTITY aioTabClose.label        "탭 닫기">
-<!ENTITY aioTabClose.focus        "탭 활성화:">
-<!ENTITY aioTabClose.default       "Firefox 기본 설정">
-<!ENTITY aioTabClose.left          "왼쪽 탭">
-<!ENTITY aioTabClose.lastSelect    "마지막 활성 탭">
-<!ENTITY aioTabClose.opener        "새 창">
-<!ENTITY aioTabClose.right         "오른쪽 탭">
-<!ENTITY aioTabClose.first         "처음">
-<!ENTITY aioTabClose.last          "마지막">
-<!ENTITY aioTabClose.lastOpen      "마지막으로 열렸던">
-
 <!ENTITY flipper.title            "숫자 변경 기능">
 <!ENTITY flipper.label            "숫자가 변경되는 부분을 선택하십시오.">
 

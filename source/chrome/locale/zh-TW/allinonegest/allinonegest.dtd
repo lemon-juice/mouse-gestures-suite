@@ -97,17 +97,6 @@
 <!ENTITY aioTabscroll.tabrocker    "滾輪導航：直接切換分頁（不顯示快顯功能表）">
 <!ENTITY aioTabscroll.revScroll    "當滾輪向下捲動時將分頁向左捲動">
 
-<!ENTITY aioTabClose.label     "關閉分頁">
-<!ENTITY aioTabClose.focus         "切換分頁焦點至：">
-<!ENTITY aioTabClose.default       "Firefox 預設">
-<!ENTITY aioTabClose.left          "左邊的分頁">
-<!ENTITY aioTabClose.lastSelect    "最後選取的分頁">
-<!ENTITY aioTabClose.opener        "開啟該分頁的分頁">
-<!ENTITY aioTabClose.right         "右邊的分頁">
-<!ENTITY aioTabClose.first         "第一個">
-<!ENTITY aioTabClose.last          "最後一個">
-<!ENTITY aioTabClose.lastOpen      "最近開啟的">
-
 <!ENTITY flipper.title         "數字翻頁器規則建立器">
 <!ENTITY flipper.label         "請選擇文件網址的數字部份。">
 

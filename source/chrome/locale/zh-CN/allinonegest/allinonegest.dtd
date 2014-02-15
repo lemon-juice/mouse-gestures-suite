@@ -92,17 +92,6 @@
 <!ENTITY aioTabscroll.tabrocker    "滚轮导航:直接切换标签页(无弹出窗口)">
 <!ENTITY aioTabscroll.revScroll    "滚轮向后滚动时向左滚动标签页">
 
-<!ENTITY aioTabClose.label     "关闭标签页">
-<!ENTITY aioTabClose.focus         "聚焦到...标签页:">
-<!ENTITY aioTabClose.default       "Firefox默认">
-<!ENTITY aioTabClose.left          "左侧的">
-<!ENTITY aioTabClose.lastSelect    "上一次聚焦的">
-<!ENTITY aioTabClose.opener        "打开该标签页的">
-<!ENTITY aioTabClose.right         "右侧的">
-<!ENTITY aioTabClose.first         "第一个">
-<!ENTITY aioTabClose.last          "最后一个">
-<!ENTITY aioTabClose.lastOpen      "上次打开的">
-
 <!ENTITY flipper.title         "数字翻页规则生成器">
 <!ENTITY flipper.label         "选择文档URL变化的数字部分.">
 

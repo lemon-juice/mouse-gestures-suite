@@ -96,17 +96,6 @@
 <!ENTITY aioTabscroll.tabrocker    "Navigazione rotellina di scorrimento: Spostamento diretto tra le schede (senza popup)">
 <!ENTITY aioTabscroll.revScroll    "Scorri le schede a sinistra quando la rotellina viene ruotata all'indietro">
 
-<!ENTITY aioTabClose.label     "Chiusura schede">
-<!ENTITY aioTabClose.focus         "Mantieni visualizzazione della scheda:">
-<!ENTITY aioTabClose.default       "predefinito Firefox">
-<!ENTITY aioTabClose.left          "a sinistra">
-<!ENTITY aioTabClose.lastSelect    "ultima visualizzata">
-<!ENTITY aioTabClose.opener        "apertura">
-<!ENTITY aioTabClose.right         "a destra">
-<!ENTITY aioTabClose.first         "prima">
-<!ENTITY aioTabClose.last          "ultima">
-<!ENTITY aioTabClose.lastOpen      "ultima aperta">
-
 <!ENTITY flipper.title             "Riconoscitore schema numerico in URL">
 <!ENTITY flipper.label             "Seleziona la parte numerica variabile dell'URL del documento.">
 

@@ -38,7 +38,7 @@ function init() {
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
                      "goUpId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
-                     "scrollrateOptions", "closeTabOptions"];
+                     "scrollrateOptions"];
   var checkbox, radiogroup, i;
   var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
   for (i = 0; i < checkboxes.length; ++i) {
@@ -147,7 +147,7 @@ function savePrefs() {
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
                      "goUpId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
-                     "scrollrateOptions", "closeTabOptions"];
+                     "scrollrateOptions"];
   var checkbox, radiogroup, i;
   if (document.getElementById("tabpanId").selectedIndex == 1 &&
       !document.getElementById("customEdit").hasAttribute("hidden")) {
@@ -511,22 +511,6 @@ function changeTrace(inc) {
            oncommand="doEnabling();" />
        <checkbox id="reverseId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.reverseScrolling" label="&aioTabscroll.revScroll;" />
-     </vbox>
-   </groupbox>
-   <groupbox orient="horizontal">
-     <caption label="&aioTabClose.label;"/>
-     <vbox>
-      <label value="&aioTabClose.focus;" />
-      <radiogroup class ="indent" id="closeTabOptions" prefstring="allinonegest.focusMode">
-       <radio id="closeTab0" value="0" label="&aioTabClose.default;" />
-       <radio id="closeTab1" value="1" label="&aioTabClose.left;" />
-       <radio id="closeTab2" value="2" label="&aioTabClose.lastSelect;" />
-       <radio id="closeTab3" value="3" label="&aioTabClose.opener;" />
-       <radio id="closeTab4" value="4" label="&aioTabClose.right;" />
-       <radio id="closeTab5" value="5" label="&aioTabClose.first;" />
-       <radio id="closeTab6" value="6" label="&aioTabClose.last;" />
-       <radio id="closeTab7" value="7" label="&aioTabClose.lastOpen;" />
-      </radiogroup>
      </vbox>
    </groupbox>
    <spring flex="1"/>

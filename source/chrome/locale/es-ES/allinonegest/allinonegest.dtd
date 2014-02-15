@@ -23,16 +23,7 @@
 <!ENTITY aioMMB.refreshrate "Frecuencia del autodesplazamiento">
 <!ENTITY aioMMB.superfast "Más rápido">
 <!ENTITY aioMMBScrolling.label "Desplazamiento con el botón central">
-<!ENTITY aioTabClose.focus "Dar el foco a la pestaña:">
-<!ENTITY aioTabClose.label "Cerrar pestañas">
-<!ENTITY aioTabClose.default "por defecto en Firefox">
-<!ENTITY aioTabClose.left "de la izquierda">
-<!ENTITY aioTabClose.lastSelect "última seleccionada">
-<!ENTITY aioTabClose.opener "anterior">
-<!ENTITY aioTabClose.right "de la derecha">
-<!ENTITY aioTabClose.first "primera">
-<!ENTITY aioTabClose.last "última">
-<!ENTITY aioTabClose.lastOpen "última abierta">
+
 <!ENTITY aioTabscroll.label "Desplazamiento en pestañas">
 <!ENTITY aioTabscroll.revScroll "Desplazarse hacia la izquierda en las pestañas cuando la rueda se mueve en sentido contrario">
 <!ENTITY aioTabscroll.tabrocker "Navegación con la rueda: intercambiar pestañas directamente">

@@ -92,17 +92,6 @@
 <!ENTITY aioTabscroll.tabrocker    "Scroll wheel navigation: Switch tabs directly (no popup)">
 <!ENTITY aioTabscroll.revScroll    "Scroll tabs to the left when the wheel is rotated backward">
 
-<!ENTITY aioTabClose.label     "Closing Tabs">
-<!ENTITY aioTabClose.focus         "Bring focus to the tab:">
-<!ENTITY aioTabClose.default       "Firefox default">
-<!ENTITY aioTabClose.left          "to the left">
-<!ENTITY aioTabClose.lastSelect    "last selected">
-<!ENTITY aioTabClose.opener        "opener">
-<!ENTITY aioTabClose.right         "to the right">
-<!ENTITY aioTabClose.first         "first">
-<!ENTITY aioTabClose.last          "last">
-<!ENTITY aioTabClose.lastOpen      "last opened">
-
 <!ENTITY flipper.title         "Digit Flipper Schema Builder">
 <!ENTITY flipper.label         "Select the numerical part of the document URL that varies.">
 

@@ -92,17 +92,6 @@
 <!ENTITY aioTabscroll.tabrocker    "Tabs sofort durchblättern (ohne Kontextmenü)">
 <!ENTITY aioTabscroll.revScroll    "Tabs nach links durchblättern, wenn das Rad nach unten bewegt wird">
 
-<!ENTITY aioTabClose.label     "Tabs schließen">
-<!ENTITY aioTabClose.focus         "Neuer Fokus auf Tab...">
-<!ENTITY aioTabClose.default       "Standard">
-<!ENTITY aioTabClose.left          "ganz links">
-<!ENTITY aioTabClose.lastSelect    "zuvor fokussiert">
-<!ENTITY aioTabClose.opener        "zuerst geöffnet">
-<!ENTITY aioTabClose.right         "ganz rechts">
-<!ENTITY aioTabClose.first         "ersten">
-<!ENTITY aioTabClose.last          "letzten">
-<!ENTITY aioTabClose.lastOpen      "zuletzt geöffneten">
-
 <!ENTITY flipper.title             "Ziffer-URL-Flipper">
 <!ENTITY flipper.label             "Den zu ändernden Nummernteil der URL auswählen.">
 

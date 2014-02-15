@@ -92,17 +92,6 @@
 <!ENTITY aioTabscroll.tabrocker    "Navigation à la molette: défiler directement les onglets (pas de popup)">
 <!ENTITY aioTabscroll.revScroll    "Défiler les onglets vers la gauche quand la molette tourne vers l'arrière">
 
-<!ENTITY aioTabClose.label     "Fermeture d'onglet">
-<!ENTITY aioTabClose.focus         "Sélectionner l'onglet:">
-<!ENTITY aioTabClose.default       "comme le ferait Firefox">
-<!ENTITY aioTabClose.left          "à gauche">
-<!ENTITY aioTabClose.lastSelect    "sélectionné en dernier">
-<!ENTITY aioTabClose.opener        "ouvreur">
-<!ENTITY aioTabClose.right         "à droite">
-<!ENTITY aioTabClose.first         "premier">
-<!ENTITY aioTabClose.last          "dernier">
-<!ENTITY aioTabClose.lastOpen      "ouvert en dernier">
-
 <!ENTITY flipper.title         "Constructeur de schéma pour l'incrémenteur d'URL">
 <!ENTITY flipper.label         "Sélectionner la partie numérique qui varie dans l'URL.">
 

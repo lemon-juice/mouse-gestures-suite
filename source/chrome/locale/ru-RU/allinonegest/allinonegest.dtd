@@ -92,17 +92,6 @@
 <!ENTITY aioTabscroll.tabrocker "Навигация колесом прокрутки: Листать вкладки сразу (без всплывающего окна)">
 <!ENTITY aioTabscroll.revScroll "При вращении колеса прокрутки на себя листать вкладки влево.">
 
-<!ENTITY aioTabClose.label "При закрытии вкладки">
-<!ENTITY aioTabClose.focus "сделать активной:">
-<!ENTITY aioTabClose.default       "выбор по умолчанию">
-<!ENTITY aioTabClose.left          "вкладку слева">
-<!ENTITY aioTabClose.lastSelect    "последнюю активную вкладку">
-<!ENTITY aioTabClose.opener        "начальную вкладку">
-<!ENTITY aioTabClose.right         "вкладку справа">
-<!ENTITY aioTabClose.first         "первую вкладку">
-<!ENTITY aioTabClose.last          "последнюю вкладку">
-<!ENTITY aioTabClose.lastOpen      "последнюю открытую вкладку">
-
 <!ENTITY flipper.title "Конструктор схемы изменения URL">
 <!ENTITY flipper.label "Выделите изменяемую цифровую часть URL документа.">
 

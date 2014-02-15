@@ -92,17 +92,6 @@
 <!ENTITY aioTabscroll.tabrocker "マウスホイールジェスチャ: タブを直接切り替える (ポップアップ表示せずに)">
 <!ENTITY aioTabscroll.revScroll "タブバー上で、マウスホイール下で左のタブに切り替える (デフォルトは右に)">
 
-<!ENTITY aioTabClose.label "タブを閉じる">
-<!ENTITY aioTabClose.focus "フォーカスを移動するタブ:">
-<!ENTITY aioTabClose.default       "Firefoxのデフォルト">
-<!ENTITY aioTabClose.left          "左のタブ">
-<!ENTITY aioTabClose.lastSelect    "直前に選択していたタブ">
-<!ENTITY aioTabClose.opener        "そのタブを開いたタブ">
-<!ENTITY aioTabClose.right         "右のタブ">
-<!ENTITY aioTabClose.first         "先頭の">
-<!ENTITY aioTabClose.last          "最後の">
-<!ENTITY aioTabClose.lastOpen      "最後に開いていた">
-
 <!ENTITY flipper.title "数値切り替えの設定">
 <!ENTITY flipper.label "数値切り替えに使用する、URLの数字の部分を選択してください。">
 

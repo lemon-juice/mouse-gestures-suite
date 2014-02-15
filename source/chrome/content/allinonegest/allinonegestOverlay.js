@@ -38,7 +38,7 @@ var aioWheelEnabled, aioScrollEnabled, aioNoScrollMarker, aioStartOnLinks;
 var aioWhatAS, aioASEnabled, aioTabSwitching, aioSmoothScroll;
 var aioRockMode, aioWheelMode, aioHistIfDown, aioNoPopup;
 var aioSpecialCursor, aioLeftDefault, aioPreferPaste, aioNoAltWithGest;
-var aioSingleNewWindow, aioOpenLinkInNew, aioPanToAS, aioReverseScroll, aioFocusMode;
+var aioSingleNewWindow, aioOpenLinkInNew, aioPanToAS, aioReverseScroll;
 var aioShowTitletip, aioTTHover, aioShiftForTitle, aioTitleDelay, aioTitleDuration;
 var aioScrollAlaAcrobat, aioNeverWarnOnCloseOtherTabs = true, aioNextsString, aioPrevsString;
 var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
@@ -332,7 +332,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioHistIfDown=aioPref.getBoolPref("wheelHistoryIfCw");}, function(){aioPref.setBoolPref("wheelHistoryIfCw",true);}, function(){return false;}],
      [function(){aioNoPopup=aioPref.getBoolPref("tabRocker");}, function(){aioPref.setBoolPref("tabRocker",false);}, function(){return false;}],
      [function(){aioRockMode=aioPref.getIntPref("rockertypepref");}, function(){aioPref.setIntPref("rockertypepref",0);}, function(){return aioRockMode<0||aioRockMode>1;}],
-     [function(){aioFocusMode=aioPref.getIntPref("focusMode");}, function(){aioPref.setIntPref("focusMode",0);}, function(){return aioFocusMode<0||aioFocusMode>7;}],
      [function(){aioSpecialCursor=aioPref.getBoolPref("autoscrollCursor");}, function(){aioPref.setBoolPref("autoscrollCursor",false);}, function(){return false;}],
      [function(){aioNoAltWithGest=aioPref.getBoolPref("noAltGest");}, function(){aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
      [function(){aioLeftDefault=aioPref.getBoolPref("leftDefault");}, function(){aioPref.setBoolPref("leftDefault",false);}, function(){return false;}],
@@ -415,17 +414,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioMainWin = document.getElementById("main-window");
      aioStatusBar = document.getElementById("statusbar-display");
     
-     window.addEventListener("mousemove", aioSetRemoveTab, true);
      aioRendering.addEventListener("contextmenu", aioContextMenuEnabler, true);
      aioRendering.addEventListener("mousedown", aioMouseDown, true);
-     if (aioFxV35) {
-        aioContent.tabContainer.addEventListener("TabSelect", aioTabFocus, true);
-     }
-     else {
-        aioTabsNb = aioRendering.childNodes.length;
-        aioContent.mTabBox.addEventListener("select", aioTabFocus, true);
-        aioContent.mTabBox.addEventListener("load", aioTabLoad, true);
-     }
+
      var activeId = "" + aioUnique++;
      aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
      aioTabFocusHistory.push({focused: activeId, openedBy: ""});
