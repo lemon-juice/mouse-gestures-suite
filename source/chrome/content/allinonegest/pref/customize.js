@@ -72,10 +72,11 @@ gestCustomizeTreeView.prototype = {
   handleCopy: function(row) { },
   performActionOnRow: function(action, row) { },
 
-  getCellProperties: function(row, column, prop) {
-    if (column.id == "enabledColId")
-       if (isEnabledTable[row]) prop.AppendElement(this.gestDisabled);
-       else prop.AppendElement(this.gestEnabled);
+  getCellProperties: function(row, column) {
+    if (column.id == "enabledColId") {
+       if (isEnabledTable[row]) return this.gestDisabled;
+       else return this.gestEnabled;
+     }
   },
   getColumnProperties: function(column, prop) { },
   isContainer: function(index) {return false;},
