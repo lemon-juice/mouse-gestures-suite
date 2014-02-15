@@ -103,103 +103,6 @@ gestCustomizeTreeView.prototype = {
   performActionOnCell: function(action, row, column) { }
 };
 
-function gestCustomizeTreeViewOld(columnids) {
-  // columnids is an array of strings indicating the names of the columns, in order
-  this.columnids = columnids;
-  this.colcount = columnids.length
-
-  this.copycol = -1;
-  this.rows = 0;
-  this.tree = null;
-  this.data = new Array;
-  this.selection = null;
-  this.sortcol = null;
-  this.sortdir = 0;
-  this.stdRowCount = -1;
-  this.hoveredRow = -1;
-  this.topOrBottom = false;
-  this.feedbackBottom = kAtomService.getAtom("aioHovered");
-  this.feedbackTop = kAtomService.getAtom("aioHoverCol");
-  this.gestEnabled = kAtomService.getAtom("aioGestEnabled");
-  this.gestDisabled = kAtomService.getAtom("aioGestDisabled");
-  this.before = false;
-}
-
-gestCustomizeTreeViewOld.prototype = {
-  set rowCount(c) { throw "rowCount is a readonly property"; },
-  get rowCount() { return this.rows; },
-
-  setTree: function(tree) {
-    this.tree = tree;
-  },
-
-  getCellText: function(row, column) {
-    var colidx = 0;
-    while(colidx < this.colcount && column != this.columnids[colidx]) ++colidx;
-    return this.data[row][colidx] || "";
-  },
-
-  setCellText: function(row, column, value) {
-    var colidx = 0;
-    while(colidx < this.colcount && column != this.columnids[colidx]) ++colidx;
-    this.data[row][colidx] = value;
-  },
-
-  addRow: function(row) {
-    this.rows = this.data.push(row);
-    this.rowCountChanged(this.rows - 1, 1);
-  },
-
-  removeLastRow: function() {
-    this.data.pop();
-    this.rowCountChanged(--this.rows, -1);
-  },
-
-  rowCountChanged: function(index, count) {
-    this.tree.rowCountChanged(index, count);
-  },
-
-  invalidate: function() {
-    this.tree.invalidate();
-  },
-
-  getRowProperties: function(row, prop) {
-    if (row == this.hoveredRow)
-       if (this.topOrBottom) prop.AppendElement(this.feedbackTop);
-       else prop.AppendElement(this.feedbackBottom);
-  },
-
-  handleCopy: function(row) { },
-  performActionOnRow: function(action, row) { },
-
-  getCellProperties: function(row, column, prop) {
-    if (column == "enabledColId")
-       if (isEnabledTable[row]) prop.AppendElement(this.gestDisabled);
-       else prop.AppendElement(this.gestEnabled);
-  },
-  getColumnProperties: function(column, elem, prop) { },
-  isContainer: function(index) {return false;},
-  isContainerOpen: function(index) {return false;},
-  isSeparator: function(index) {return index == this.stdRowCount},
-  isSorted: function() { },
-  canDropOn: function(index) {return false;},
-  canDropBeforeAfter: function(index, before) {this.before = before; return false;},
-  drop: function(row, orientation) {return false;},
-  getParentIndex: function(index) {return -1;},
-  hasNextSibling: function(index, after) {return false;},
-  getLevel: function(index) {return 0;},
-  getImageSrc: function(row, column) { },
-  getProgressMode: function(row, column) { },
-  getCellValue: function(row, column) { },
-  toggleOpenState: function(index) { },
-  cycleHeader: function(col, elem) { },
-  selectionChanged: function() { },
-  cycleCell: function(row, column) { },
-  isEditable: function(row, column) {return false;},
-  performAction: function(action) { },
-  performActionOnCell: function(action, row, column) { }
-};
-
 const kAioMime = "text/allinone-row";
 const kSAIID = Components.interfaces.nsISupportsArray;
 const kSSIID = Components.interfaces.nsISupportsString;
@@ -412,20 +315,13 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   funcArea = document.getElementById("customEditFunc");
   gestureTree = document.getElementById("gesttree");
   treeBox = gestureTree.treeBoxObject;
-  if ("columns" in gestureTree) {
-     gestView = new gestCustomizeTreeView(["functionId", "enabledColId", "gestTextId"]);
-     functionCol = gestureTree.columns["functionId"];
-     gestureCol = gestureTree.columns["gestTextId"];
-     enabledCol = gestureTree.columns["enabledColId"];
-     treeBoxView = gestView;
-  }
-  else {
-     gestView = new gestCustomizeTreeViewOld(["functionId", "enabledColId", "gestTextId"]);
-     functionCol = "functionId";
-     gestureCol = "gestTextId";
-     enabledCol = "enabledColId";
-     treeBoxView = treeBox;
-  }
+  
+  gestView = new gestCustomizeTreeView(["functionId", "enabledColId", "gestTextId"]);
+  functionCol = gestureTree.columns["functionId"];
+  gestureCol = gestureTree.columns["gestTextId"];
+  enabledCol = gestureTree.columns["enabledColId"];
+  treeBoxView = gestView;
+
   treeBox.view = gestView;
   var abbrT = aGesturesString.split("|");
   var funcNb = aFuncsString.split("|");
