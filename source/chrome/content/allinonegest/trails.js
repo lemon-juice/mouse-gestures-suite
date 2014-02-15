@@ -65,6 +65,7 @@ function aioStartTrail(e) {
      position = "absolute";
      zIndex = 2147483647;
      opacity = aioTrailOpacity / 100;
+     pointerEvents = "none";
   }
 
   aioTrailX = e.screenX;
