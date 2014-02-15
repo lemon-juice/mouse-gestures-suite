@@ -337,7 +337,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioNoAltWithGest=aioPref.getBoolPref("noAltGest");}, function(){aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
      [function(){aioLeftDefault=aioPref.getBoolPref("leftDefault");}, function(){aioPref.setBoolPref("leftDefault",false);}, function(){return false;}],
      [function(){aioSingleNewWindow=aioPref.getBoolPref("singleWindow");}, function(){aioPref.setBoolPref("singleWindow",false);}, function(){return false;}],
-     [function(){aioOpenLinkInNew=aioPref.getBoolPref("openLinkInNew");}, function(){aioPref.setBoolPref("openLinkInNew",false);}, function(){return false;}],
+     [function(){aioOpenLinkInNew=aioPref.getBoolPref("openLinkInNew");}, function(){aioPref.setBoolPref("openLinkInNew",true);}, function(){return false;}],
      [function(){aioGoUpInNewTab=aioPref.getBoolPref("goUpInNewTab");}, function(){aioPref.setBoolPref("goUpInNewTab",false);}, function(){return false;}],
      [function(){aioNoGestureOnFlash=aioPref.getBoolPref("noGestOnFlash");}, function(){aioPref.setBoolPref("noGestOnFlash",true);}, function(){return false;}],
      [function(){aioReverseScroll=aioPref.getBoolPref("reverseScrolling");}, function(){aioPref.setBoolPref("reverseScrolling",false);}, function(){return false;}],
