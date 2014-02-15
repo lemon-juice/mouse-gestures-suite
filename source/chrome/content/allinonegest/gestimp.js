@@ -610,7 +610,7 @@ function aioVScrollDocument(relativeScroll, aValue) {
      else scrollObj.nodeToScroll.scrollTop = aValue;
 }
 
-function aioHScrollDocument(relativeScroll, aValue) { // contributed by Ingo Fröhlich aka get-a-byte
+function aioHScrollDocument(relativeScroll, aValue) { // contributed by Ingo FrÃ¶hlich aka get-a-byte
   var scrollObj = aioFindNodeToScroll(aioSrcEvent.target);
   if (scrollObj.scrollType & 1) return; // 1 = vertical scroll only  3 = no scrolling
   var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
@@ -625,7 +625,7 @@ function aioHScrollDocument(relativeScroll, aValue) { // contributed by Ingo Frö
      else scrollObj.nodeToScroll.scrollLeft = aValue;
 }
 
-function aioCScrollDocument(aValueH, aValueV) { // contributed by Ingo Fröhlich aka get-a-byte
+function aioCScrollDocument(aValueH, aValueV) { // contributed by Ingo FrÃ¶hlich aka get-a-byte
   var scrollObj = aioFindNodeToScroll(aioSrcEvent.target);
   if (scrollObj.scrollType == 3) return;
   var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
