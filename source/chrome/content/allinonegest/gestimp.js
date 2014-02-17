@@ -33,7 +33,7 @@ var aioActionTable = [
       [function(){aioViewCookies();}, "g.viewSiteCookies", 0, ""], // 21
       [function(){BrowserPageInfo();}, "g.pageInfo", 0, ""], // 22
       [function(){toJavaScriptConsole();}, "g.jsConsole", 0, ""], // 23
-      [function(){openAboutDialog();}, "g.about", 0, ""], // 24
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 24
       [function(){aioBookmarkCurrentPage();}, "g.addBookmark", 0, ""], // 25
       [function(){aioDoubleWin();}, "g.doubleStackWin", 0, ""], // 26
       [function(){aioSetImgSize(true,false);}, "g.doubleImageSize", 1, "28"], // 27

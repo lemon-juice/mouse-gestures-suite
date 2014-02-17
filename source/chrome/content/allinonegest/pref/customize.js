@@ -162,7 +162,7 @@ var gestActionTable = [
       "g.viewSiteCookies", //21
       "g.pageInfo", //22
       "g.jsConsole", //23
-      "g.about", //24
+      "g.nullAction", //24
       "g.addBookmark", //25
       "g.doubleStackWin", //26
       "g.doubleImageSize", //27
