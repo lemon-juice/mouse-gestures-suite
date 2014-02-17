@@ -78,7 +78,6 @@ var aioActionTable = [
       [function(){aioActionOnPage(1);}, "g.translate", 0, ""], // 66
       [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, ""], // 67
       [function(){saveDocument(window._content.document);}, "g.savePageAs", 0, ""], // 68
-      [function(){aioGoToPreviousSelectedTab();}, "g.prevSelectedTab", 1, ""], // 69
       [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, ""], // 70
       [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, ""], // 71
       [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73"], // 72
@@ -185,25 +184,6 @@ function aioCorrectFocus(e) {
 function aioBackForward(back) {
   back ? BrowserBack() : BrowserForward();
   content.focus();
-}
-
-function aioPreviousSelectedTab() {
-  var lTab;
-  if (aioTabFocusHistory.length < 2) return null;
-  var tabId = aioTabFocusHistory[aioTabFocusHistory.length - 2].focused;
-  for (var i = 0; i < aioContent.mTabs.length; ++i) {
-    lTab = aioContent.mTabContainer.childNodes[i];
-    if (lTab.getAttribute("aioTabId") == tabId) return lTab;
-  }
-  return null;
-}
-
-function aioGoToPreviousSelectedTab() {
-  var lTab = aioPreviousSelectedTab();
-  if (lTab) {
-     aioTabFocusHistory.pop();
-     aioContent.selectedTab = lTab;
-  }
 }
 
 function aioFavoriteURL(suffix) {

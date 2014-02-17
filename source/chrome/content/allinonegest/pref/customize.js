@@ -200,7 +200,6 @@ var gestActionTable = [
       "g.translate", //66
       "g.downloadMgr", //67
       "g.savePageAs", //68
-      "g.prevSelectedTab", //69
       "g.showHideStatusBar", //70
       "g.reloadFrame", //71
       "g.enlargeObject", //72

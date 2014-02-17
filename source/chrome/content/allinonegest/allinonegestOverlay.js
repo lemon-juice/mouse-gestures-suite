@@ -92,7 +92,7 @@ var aioInitStarted = false;
 var aioSmoothInc;
 var aioSmooth = null, aioSmoothInterval;
 var aioGrabTarget, aioScrollMode;
-var aioTabsNb, aioTabFocusHistory = [];
+var aioTabsNb;
 var aioBeingUninstalled = false;
 const aioGUID = "{8b86149f-01fb-4842-9dd8-4d7eb02fd055}";
 
@@ -421,7 +421,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
 
      var activeId = "" + aioUnique++;
      aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
-     aioTabFocusHistory.push({focused: activeId, openedBy: ""});
      
      window.addEventListener("mouseup", aioMouseUp, true);
      window.addEventListener("draggesture", aioDragGesture, true);
