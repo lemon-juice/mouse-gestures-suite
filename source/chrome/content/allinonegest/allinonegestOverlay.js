@@ -32,6 +32,7 @@ var aioOnImage = null; // contains an image DOM node
 var aioSrcEvent; // event which started the active gesture
 var aioBundle; // String bundle for localized strings
 var aioShowContextMenu = false;
+var aioAllowPopupShowing = true;
 var aioGestEnabled, aioRockEnabled;  // prefs ....
 var aioTrailEnabled, aioTrailColor, aioTrailSize, aioTrailOpacity;
 var aioWheelEnabled, aioScrollEnabled, aioNoScrollMarker, aioStartOnLinks;
@@ -414,8 +415,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioMainWin = document.getElementById("main-window");
      aioStatusBar = document.getElementById("statusbar-display");
     
-     aioRendering.addEventListener("contextmenu", aioContextMenuEnabler, true);
-     aioRendering.addEventListener("mousedown", aioMouseDown, true);
+     window.addEventListener("mousedown", aioMouseDown, true);
+     document.documentElement.addEventListener("popupshowing", aioPopupShowing, true);
+     document.documentElement.addEventListener("contextmenu", aioContextMenuEnabler, true);
 
      var activeId = "" + aioUnique++;
      aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
@@ -485,6 +487,12 @@ function aioIsUnformattedXML(aDoc) {
 function aioContextMenuEnabler(e) {
   if (aioShowContextMenu) return;
   e.preventDefault(); e.stopPropagation();
+}
+
+function aioPopupShowing(e) {
+  if (!aioAllowPopupShowing && !aioShowContextMenu && e.originalTarget.nodeName == "menupopup") {
+    e.preventDefault(); e.stopPropagation();
+  }
 }
 
 function aioKeyPressed(e) {
@@ -569,7 +577,7 @@ function aioIsAreaOK(e, isAutoScroll) {
 
   return xtag != "slider" && xtag != "thumb" && xtag != "scrollbarbutton" &&
    (((tag != "input" || aioGestButton == aioRMB) && (tag != "textarea" || aioGestButton == aioRMB)
-   && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox") || isAutoScroll);
+   && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox" && tag != "menu") || isAutoScroll);
 }
 
 function aioIsPastable(e) {
@@ -645,9 +653,9 @@ function aioMouseDown(e) {
            aioSrcEvent = e;
            // Don't start gesture on scrollbars, input elements, etc.
            // @MOD: added " || e.button != aioLMB)" - to enable on inputs on right and middle buttons
-           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && (aioIsWin || e.target.ownerDocument.contentType != "application/vnd.mozilla.xul+xml")
+           targetName  = e.target.nodeName.toLowerCase();
+           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && ((aioIsWin && targetName != 'toolbarbutton') || e.target.ownerDocument.contentType != "application/vnd.mozilla.xul+xml")
                && !aioGestInProgress) {
-              targetName  = e.target.nodeName.toLowerCase();
               var canGesture = true;
               if (e.button == aioLMB) canGesture = aioGesturableURI();
               preventDefaultAction = e.button != aioLMB || (!aioLeftDefault && canGesture) ||
@@ -657,7 +665,10 @@ function aioMouseDown(e) {
               aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
               if (aioTrailEnabled) aioStartTrail(e);
               window.addEventListener("mousemove", aioGestMove, true);
-           }
+              if (e.button == aioRMB) {
+                aioAllowPopupShowing = false;
+              }
+         }
            else preventDefaultAction = e.button != aioLMB;
         }
         // it can be the start of a wheelscroll gesture as well
@@ -762,6 +773,9 @@ function aioMouseUp(e) {
         if (aioRockTimer) clearTimeout(aioRockTimer);
         aioRockTimer = null;
      }
+  }
+  if (button == aioRMB) {
+    aioAllowPopupShowing = true;
   }
   if (aioGestInProgress) {
      var lastgesture = aioStrokes.join("");
