@@ -62,7 +62,7 @@ var aioActionTable = [
       [function(){aioSchemas={};}, "g.clearDigitFlipper", 0, ""], // 50
       [function(){aioLinksInFiles();}, "g.linksInFiles", 0, ""], // 51
       [function(){aioUndoCloseTab();}, "g.undoCloseTab", 0, ""], // 52
-      [function(){PrintUtils.printPreview(onEnterPrintPreview, onExitPrintPreview);}, "g.printPreview", 0, ""], //53
+      [function(){BrowserPrintPreview();}, "g.printPreview", 0, ""], //53
       [function(){aioOpenInNewTab(true);}, "g.browserOpenTabInBg", 0, ""], // 54
       [function(){aioDeleteCookies();}, "g.deleteSiteCookies", 0, ""], // 55
       [function(){aioUndoNukeAnything();}, "g.undoHideObject", 0, ""], // 56
