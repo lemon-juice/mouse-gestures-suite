@@ -956,16 +956,20 @@ function aioFastForward() {
 }
 
 function aioHomePage() {
-  var homePage = gHomeButton.getHomePage();
-  if (!aioGoUpInNewTab) {
-     loadOneOrMoreURIs(homePage);
-     return;
+  var url = aioGetHomePageUrl();
+  
+  if (url) {
+    loadURI(url);
   }
-  var urls = homePage.split("|");
-  var firstTabAdded = aioContent.addTab(urls[0]);
-  for (var i = 1; i < urls.length; ++i) aioContent.addTab(urls[i]);
-  aioContent.selectedTab = firstTabAdded;
-  content.focus();
+}
+
+function aioGetHomePageUrl() {
+  var prefb = Components.classes["@mozilla.org/preferences-service;1"]
+                       .getService(Components.interfaces.nsIPrefService);
+
+  var uri = prefb.getComplexValue("browser.startup.homepage",
+                                  Components.interfaces.nsISupportsString).data;
+  return uri;
 }
 
 function aioUpDir() { // from Stephen Clavering's GoUp
