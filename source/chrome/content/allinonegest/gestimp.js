@@ -51,7 +51,7 @@ var aioActionTable = [
       [function(){aioVScrollDocument(false,0);}, "g.scrollToTop", 0, ""], // 39
       [function(){aioVScrollDocument(false,1000000);}, "g.scrollToBottom", 0, ""], // 40
       [function(){aioResetImgSize(false);}, "g.resetImage", 1, ""], // 41
-      [function(){toggleSidebar('viewBookmarksSidebar');}, "g.bookmarkSidebar", 1, ""], // 42
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 42
       [function(){aioNukeFlash();}, "g.hideFlash", 0, ""], // 43
       [function(){aioCopyURLToClipBoard();}, "g.URLToClipboard", 0, ""], // 44
       [function(){getWebNavigation().gotoIndex(0);}, "g.firstPage", 0, ""], // 45
@@ -73,7 +73,7 @@ var aioActionTable = [
       [function(){aioOpenNewWindow(true);}, "g.openWindowInBg", 0, ""], // 61
       [function(){aioFrameInfo();}, "g.frameInfo", 0, ""], // 62
       [function(){aioOpenAioOptions();}, "g.aioOptions", 0, ""], // 63
-      [function(){toggleSidebar('viewHistorySidebar');}, "g.historySidebar", 1, ""], // 64
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 64
       [function(){aioOpenBookmarksManager();}, "g.bookmarkMgr", 0, ""], // 65
       [function(){aioActionOnPage(1);}, "g.translate", 0, ""], // 66
       [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, ""], // 67
@@ -84,7 +84,7 @@ var aioActionTable = [
       [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73"], // 72
       [function(){aioSetImgSize(false,true);}, "g.reduceObject", 1, "72"], // 73
       [function(){aioResetImgSize(true);}, "g.resetSize", 1, ""], //74
-      [function(){aioShowHideFindBar();}, "g.showHideFindBar", 1, ""], // 75
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 75
       [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, ""], // 76
       [function(){aioNextPrevLink(true);}, "g.nextLink", 0, ""], // 77
       [function(){aioFastForward();}, "g.fastForward", 0, ""], // 78
@@ -1013,33 +1013,6 @@ function aioFrameInfo() {
 function aioShowHideStatusBar() {
   var bar = document.getElementById("status-bar");
   if (bar) bar.hidden = !bar.hidden;
-}
-
-function aioShowHideFindBar() {
-   var focusedWindow = document.commandDispatcher.focusedWindow;
-   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
-   var selectStr = winWrapper.getSelection().toString();
-   var toolbar = document.getElementById("FindToolbar");
-   var beforeV2 = typeof(gFindBar) == "undefined";
-   if (toolbar.hidden || selectStr) {
-      if (toolbar.hidden) {
-         if (beforeV2) onFindCmd();
-         else if (!aioFxV3) gFindBar.onFindCmd();
-              else gFindBar.onFindCommand();
-         if (!selectStr) return;
-      }
-      if (!aioFxV3) var findField = document.getElementById("find-field");
-      else findField = gFindBar._findField;
-      findField.value = selectStr;
-      findField.select(); findField.focus();
-      if (beforeV2) find("");
-      else if (!aioFxV3) gFindBar.find("");
-           else gFindBar._find("")
-   }
-   else
-      if (beforeV2) closeFindBar();
-      else if (!aioFxV3) gFindBar.closeFindBar();
-           else gFindBar.close();
 }
 
 function aioViewSource(frame) {

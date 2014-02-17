@@ -180,7 +180,7 @@ var gestActionTable = [
       "g.scrollToTop", //39
       "g.scrollToBottom", //40
       "g.resetImage", //41
-      "g.bookmarkSidebar", //42
+      "g.nullAction", //42
       "g.hideFlash", //43
       "g.URLToClipboard", //44
       "g.firstPage", //45
@@ -202,7 +202,7 @@ var gestActionTable = [
       "g.openWindowInBg", //61
       "g.frameInfo", //62
       "g.aioOptions", //63
-      "g.historySidebar", //64
+      "g.nullAction", //64
       "g.bookmarkMgr", //65
       "g.translate", //66
       "g.downloadMgr", //67
@@ -213,7 +213,7 @@ var gestActionTable = [
       "g.enlargeObject", //72
       "g.reduceObject", //73
       "g.resetSize", //74
-      "g.showHideFindBar", //75
+      "g.nullAction", //75
       "g.reloadAllTabs", //76
       "g.nextLink", //77
       "g.fastForward", //78
