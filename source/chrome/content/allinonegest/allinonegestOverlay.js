@@ -577,7 +577,7 @@ function aioIsAreaOK(e, isAutoScroll) {
 
   return xtag != "slider" && xtag != "thumb" && xtag != "scrollbarbutton" &&
    (((tag != "input" || aioGestButton == aioRMB) && (tag != "textarea" || aioGestButton == aioRMB)
-   && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox") || isAutoScroll);
+   && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox" && tag != "menu") || isAutoScroll);
 }
 
 function aioIsPastable(e) {
@@ -653,9 +653,9 @@ function aioMouseDown(e) {
            aioSrcEvent = e;
            // Don't start gesture on scrollbars, input elements, etc.
            // @MOD: added " || e.button != aioLMB)" - to enable on inputs on right and middle buttons
-           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && (aioIsWin || e.target.ownerDocument.contentType != "application/vnd.mozilla.xul+xml")
+           targetName  = e.target.nodeName.toLowerCase();
+           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && ((aioIsWin && targetName != 'toolbarbutton') || e.target.ownerDocument.contentType != "application/vnd.mozilla.xul+xml")
                && !aioGestInProgress) {
-              targetName  = e.target.nodeName.toLowerCase();
               var canGesture = true;
               if (e.button == aioLMB) canGesture = aioGesturableURI();
               preventDefaultAction = e.button != aioLMB || (!aioLeftDefault && canGesture) ||
