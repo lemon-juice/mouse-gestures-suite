@@ -37,7 +37,7 @@ var aioGestEnabled, aioRockEnabled;  // prefs ....
 var aioTrailEnabled, aioTrailColor, aioTrailSize, aioTrailOpacity;
 var aioWheelEnabled, aioScrollEnabled, aioNoScrollMarker, aioStartOnLinks;
 var aioWhatAS, aioASEnabled, aioTabSwitching, aioSmoothScroll;
-var aioRockMode, aioWheelMode, aioHistIfDown, aioNoPopup;
+var aioRockMode, aioWheelMode, aioHistIfDown;
 var aioSpecialCursor, aioLeftDefault, aioPreferPaste, aioNoAltWithGest;
 var aioSingleNewWindow, aioOpenLinkInNew, aioPanToAS, aioReverseScroll;
 var aioShowTitletip, aioTTHover, aioShiftForTitle, aioTitleDelay, aioTitleDuration;
@@ -337,7 +337,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioNoScrollMarker=aioPref.getBoolPref("autoscrollNoMarker");}, function(){aioPref.setBoolPref("autoscrollNoMarker",false);}, function(){return false;}],
      [function(){aioWheelMode=aioPref.getIntPref("wheelpref2");}, function(){aioPref.setIntPref("wheelpref2",3);}, function(){return aioWheelMode<0||aioWheelMode>3;}],
      [function(){aioHistIfDown=aioPref.getBoolPref("wheelHistoryIfCw");}, function(){aioPref.setBoolPref("wheelHistoryIfCw",true);}, function(){return false;}],
-     [function(){aioNoPopup=aioPref.getBoolPref("tabRocker");}, function(){aioPref.setBoolPref("tabRocker",false);}, function(){return false;}],
      [function(){aioRockMode=aioPref.getIntPref("rockertypepref");}, function(){aioPref.setIntPref("rockertypepref",0);}, function(){return aioRockMode<0||aioRockMode>1;}],
      [function(){aioSpecialCursor=aioPref.getBoolPref("autoscrollCursor");}, function(){aioPref.setBoolPref("autoscrollCursor",false);}, function(){return false;}],
      [function(){aioNoAltWithGest=aioPref.getBoolPref("noAltGest");}, function(){aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
@@ -1014,7 +1013,7 @@ function aioTabWheelNav() {
   }
 // Create and Display the popup menu
   aioTabPU = new aioPopUp(activeTab, 0, aioTabCount, false, "popup", aioOldX + 2, aioOldY + 2,
-                          aioReverseScroll && aioNoPopup, aioTabWheelEnd, aioTabPopping, aioTabWheeling);
+                          aioReverseScroll, aioTabWheelEnd, aioTabPopping, aioTabWheeling);
   aioTabPU.createPopup(0, "", "");
 }
 
@@ -1024,10 +1023,9 @@ function aioTabPopping(e) {
      aioTabPU.updatePopup(aioTabPU.initialRow, "_moz-menuactive", aioTabPU.initialRow, "aioBold", row, "aioItalic");
   else
      aioTabPU.updatePopup(aioTabPU.initialRow, "_moz-menuactive", aioTabPU.initialRow, "aioBold");
-  if (aioNoPopup) {
-     e.preventDefault(); //no popup
-     if (aioWheelMode == 2) aioContent.mTabContainer.advanceSelectedTab(aioCCW != aioReverseScroll ? -1 : 1, true);
-  }
+  
+  e.preventDefault(); //no popup
+  if (aioWheelMode == 2) aioContent.mTabContainer.advanceSelectedTab(aioCCW != aioReverseScroll ? -1 : 1, true);
 }
 
 function aioTabWheeling(e) {
@@ -1036,29 +1034,13 @@ function aioTabWheeling(e) {
      if (aioTabPU.activeRow == aioTabPU.initialRow)
         aioTabPU.scrollerNode.childNodes[aioTabDest].setAttribute("aioItalic", "true")
      else aioTabPU.scrollerNode.childNodes[aioTabDest].removeAttribute("aioItalic");
-  if (aioNoPopup) aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == aioReverseScroll ? -1 : 1, true);
+  aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == aioReverseScroll ? -1 : 1, true);
 }
 
 function aioTabWheelEnd(e) {
-  if (aioNoPopup) {
-     aioTabPU.closePopup(0);
-     aioRestoreListeners();
-     return;
-  }
-  if (aioTabPU.activeRow != aioTabPU.initialRow)
-     if (aioTabSrc != aioTabPU.activeRow) {
-        aioTabDest = aioTabSrc;
-        aioTabSrc = aioTabPU.activeRow;
-     }
-     else aioTabDest = -1;
-  else
-     if (aioTabDest != -1 && aioTabDest < aioTabPU.popupLength) {
-        aioTabPU.activeRow = aioTabDest;
-        aioTabDest = aioTabSrc;
-        aioTabSrc = aioTabPU.activeRow;
-     }
-  aioTabPU.closePopup(1);
+  aioTabPU.closePopup(0);
   aioRestoreListeners();
+  return;
 }
 
 function aioHistoryWheelNav() {

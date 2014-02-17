@@ -89,7 +89,6 @@
 <!ENTITY aioAction.rockermode     "록커 탐색 및 휠 스크롤 탐색: 문서를 읽는 중에도 반복을 허용합니다.">
 
 <!ENTITY aioTabscroll.label       "탭 이동">
-<!ENTITY aioTabscroll.tabrocker   "휠 스크롤 탐색: 팝업 없이 바로 탭으로 이동합니다.">
 <!ENTITY aioTabscroll.revScroll   "휠을 뒤로 스크롤하면 왼쪽 탭으로 이동합니다.">
 
 <!ENTITY flipper.title            "숫자 변경 기능">
