@@ -777,9 +777,8 @@ function aioMouseUp(e) {
         aioRockTimer = null;
      }
   }
-  if (button == aioRMB) {
-    aioAllowPopupShowing = true;
-  }
+  aioAllowPopupShowing = true;
+  
   if (aioGestInProgress) {
      var lastgesture = aioStrokes.join("");
      // @MOD: this killed right-click events on pages
@@ -862,6 +861,10 @@ function aioWheelRockUp(e) {
   window.removeEventListener("mouseup", aioWheelRockUp, true);
   aioContent.removeEventListener("DOMMouseScroll", aioWheelRocking, true);
   aioWheelRockEnd();
+  
+  setTimeout(function() {
+    aioAllowPopupShowing = true;
+  }, 1000);
 }
 
 function aioWheelRocking(e) {
@@ -983,6 +986,10 @@ function _aioScrollPU(event) {
 }
 
 function _aioClosePU(action) {
+  setTimeout(function() {
+    aioAllowPopupShowing = true;
+  }, 1000);
+  
   if (this.closeFunc) window.removeEventListener("mouseup", this.closeFunc, true);
   if (this.scrollingFunc) aioMainWin.removeEventListener("DOMMouseScroll", this.scrollingFunc, true);
   this.scrollerNode.hidePopup();
