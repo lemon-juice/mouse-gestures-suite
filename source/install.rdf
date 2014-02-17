@@ -3,7 +3,7 @@
          xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <rdf:Description rdf:about="urn:mozilla:install-manifest">
     <em:id>{8b86149f-01fb-4842-9dd8-4d7eb02fd055}</em:id>
-    <em:version>0.26.5-SM</em:version>
+    <em:version>0.26.6-SM</em:version>
     <em:type>2</em:type>
     <em:unpack>true</em:unpack>
 
