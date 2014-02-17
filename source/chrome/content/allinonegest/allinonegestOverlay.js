@@ -45,7 +45,7 @@ var aioScrollAlaAcrobat, aioNeverWarnOnCloseOtherTabs = true, aioNextsString, ai
 var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
 var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
 var aioRockerAction = [], aioRockMultiple = [];
-var aioTrustAutoSelect, aioOpenInCurrTab;
+var aioTrustAutoSelect;
 var aio2Buttons, aioScrollEnhancer;  // .... prefs
 var aioFxV1_0, aioFxV2Later, aioFxV3, aioFxV35, aioFxV36, aioFxV4, aioFxV18;
 var aioDefNextSearch, aioDefPrevSearch;
@@ -358,7 +358,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
      [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
      [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
-     [function(){aioOpenInCurrTab=aioPref.getBoolPref("openInCurrTab");}, function(){aioPref.setBoolPref("openInCurrTab",false);}, function(){return false;}],
      [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}]];
 
   const unixRe = new RegExp("unix|linux|sun|freebsd", "i");

@@ -189,16 +189,16 @@ function aioBackForward(back) {
 
 function aioFavoriteURL(suffix) {
   var shortcutURL = null;
-  if (aioFxV3) {
-     var bmsvc = Cc["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Ci.nsINavBookmarksService);
-     var shortcutURI = bmsvc.getURIForKeyword(aioGetStr("g.keywordForGesture") + suffix);
-     if (shortcutURI) shortcutURL = shortcutURI.spec;
+  var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
+  var keyword = aioGetStr("g.keywordForGesture") + suffix;
+  var shortcutURI = bmsvc.getURIForKeyword(keyword);
+  if (shortcutURI) shortcutURL = shortcutURI.spec;
+  if (!shortcutURL) {
+    alert(aioGetStr("g.keywordMissing") + " " + keyword);
+    return;
   }
-  else shortcutURL = BMSVC.resolveKeyword(aioGetStr("g.keywordForGesture") + suffix, { });
-  if (!shortcutURL) return;
-  if (shortcutURL.toLowerCase().substr(0, 11) != "javascript:" && !aioOpenInCurrTab)
-     aioLinkInTab(shortcutURL, true, false);
-  else loadURI(shortcutURL);
+  
+  loadURI(shortcutURL);
 }
 
 function aioIncURL(inc) { // derived from MagPie by Ben Goodger
