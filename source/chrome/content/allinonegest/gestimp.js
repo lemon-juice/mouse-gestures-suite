@@ -78,6 +78,7 @@ var aioActionTable = [
       [function(){aioActionOnPage(1);}, "g.translate", 0, ""], // 66
       [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, ""], // 67
       [function(){saveDocument(window._content.document);}, "g.savePageAs", 0, ""], // 68
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 69
       [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, ""], // 70
       [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, ""], // 71
       [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73"], // 72
@@ -1126,3 +1127,6 @@ function aioOpenDownloadManager() {
                           "chrome,dialog=no,resizable");
 }
 
+function aioNullAction() {
+  alert("This action does not exist");
+}

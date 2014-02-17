@@ -130,6 +130,13 @@ var abbrTable = [], isEnabledTable = [], funcNbTable = [], rowIdTable = [];
 var rockFuncTable = [];
 var uniqueRowId;
 
+
+// When you want to remove an action change its name to "g.nullAction" in the table
+// below. Such an action will not appear in customization preferences and its
+// gesture sequence will not be saved to prefs on next save.
+// Do not re-use the index - when you want to add new action then create it with the
+// next index in sequence, otherwise it may not appear in customization pane.
+
 var gestActionTable = [
       "g.browserBack", //0
       "g.browserForward", //1
@@ -200,6 +207,7 @@ var gestActionTable = [
       "g.translate", //66
       "g.downloadMgr", //67
       "g.savePageAs", //68
+      "g.nullAction", //69
       "g.showHideStatusBar", //70
       "g.reloadFrame", //71
       "g.enlargeObject", //72
@@ -292,8 +300,13 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   addgestLabel = document.getElementById("addId").label;
   bundle = document.getElementById("allinonegestbundle");
   var maxActions = gestActionTable.length;
-  for (var i = 0; i < maxActions; ++i)
-     gestActionTable[i] = bundle.getString(gestActionTable[i]);
+  for (var i = 0; i < maxActions; ++i) {
+    try {
+      gestActionTable[i] = bundle.getString(gestActionTable[i]);
+    } catch (err) {
+      // g.nullAction
+    }
+  }
   rockerCount = rockerGestName.length;
   for (i = 0; i < rockerCount; ++i)
      rockerGestName[i] = bundle.getString(rockerGestName[i]);
@@ -328,7 +341,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   var maxFunc = 0, j = 0, func;
   for (i = 0; i < abbrT.length; ++i) {
      func = funcNb[i] - 0;
-     if (func < 0 || func >= maxActions) continue;
+     if (func < 0 || func >= maxActions || gestActionTable[func] == 'g.nullAction') continue;
      funcNbTable[j] = funcNb[i];
      if (abbrT[i].charAt(0) == "/") {
         abbrTable[j] = abbrT[i].substr(1);

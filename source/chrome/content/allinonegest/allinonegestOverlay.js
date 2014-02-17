@@ -273,7 +273,13 @@ function aioCreateStringBundle(propFile) {
 }
 
 function aioGetStr(str) {
-  if (aioBundle) return aioBundle.GetStringFromName(str);
+  if (aioBundle) {
+    try {
+      return aioBundle.GetStringFromName(str);
+    } catch (err) {
+      return "?";
+    }
+  }
   return "";
 }
 
