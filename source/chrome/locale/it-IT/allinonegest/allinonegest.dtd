@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label    "Opzioni di All-in-One Gestures">
+<!ENTITY allinonegest.label    "Opzioni di Mouse Gestures Suite">
 <!ENTITY drawgesture.title     "Area disegno gesture">
 
 <!ENTITY enable.label          "Attiva">
@@ -47,9 +47,9 @@
 <!ENTITY wheel.historyIfCw         "All'indietro (verso l'utente): Cronologia">
 
 <!ENTITY autoscroll.label      "Scorrimento con pulsante centrale: Seleziona">
-<!ENTITY autoscroll.AiO            "Autoscorrimento All-in-One">
+<!ENTITY autoscroll.AiO            "Autoscorrimento Mouse Gestures">
 <!ENTITY autoscroll.native         "Autoscorrimento nativo">
-<!ENTITY autoscroll.aiograb        "Autoscorrimento All-in-One + Afferra e Trascina">
+<!ENTITY autoscroll.aiograb        "Autoscorrimento Mouse Gestures + Afferra e Trascina">
 <!ENTITY autoscroll.grab           "Scorrimento Afferra e Trascina">
 
 <!ENTITY settings.label        "Impostazioni">

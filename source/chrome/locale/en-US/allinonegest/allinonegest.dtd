@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label    "Options for All-in-One Gestures">
+<!ENTITY allinonegest.label    "Options for Mouse Gestures Suite">
 <!ENTITY drawgesture.title     "Gesture Drawing Area">
 
 <!ENTITY enable.label          "Enable">
@@ -47,9 +47,9 @@
 <!ENTITY wheel.historyIfCw         "Backward (toward the user): History">
 
 <!ENTITY autoscroll.label      "Middle Button Scrolling: Select">
-<!ENTITY autoscroll.AiO            "All-in-One autoscroll">
+<!ENTITY autoscroll.AiO            "Mouse Gestures autoscroll">
 <!ENTITY autoscroll.native         "Native autoscroll">
-<!ENTITY autoscroll.aiograb        "AiO autoscroll + Grab and Drag">
+<!ENTITY autoscroll.aiograb        "MG autoscroll + Grab and Drag">
 <!ENTITY autoscroll.grab           "Grab and Drag scrolling">
 
 <!ENTITY about.label           "About">

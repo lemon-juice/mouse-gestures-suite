@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label    "All-in-One Gestures 選項">
+<!ENTITY allinonegest.label    "Mouse Gestures Suite 選項">
 <!ENTITY drawgesture.title     "手勢描繪區">
 
 <!ENTITY enable.label          "啟用">
@@ -47,9 +47,9 @@
 <!ENTITY wheel.historyIfCw         "向後滾動（向使用者方向滾動）：歷史紀錄">
 
 <!ENTITY autoscroll.label      "中鍵捲動：選擇">
-<!ENTITY autoscroll.AiO            "All-in-One 的自動捲動">
+<!ENTITY autoscroll.AiO            "Mouse Gestures 的自動捲動">
 <!ENTITY autoscroll.native         "內建的自動捲動">
-<!ENTITY autoscroll.aiograb        "AiO 的自動捲動＋抓拉捲動">
+<!ENTITY autoscroll.aiograb        "MG 的自動捲動＋抓拉捲動">
 <!ENTITY autoscroll.grab           "抓拉捲動">
 
 <!ENTITY settings.label        "設定">

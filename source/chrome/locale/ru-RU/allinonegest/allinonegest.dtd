@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label "Настройки All-in-One Gestures">
+<!ENTITY allinonegest.label "Настройки Mouse Gestures Suite">
 <!ENTITY drawgesture.title "Область для рисования жеста">
 
 <!ENTITY enable.label "Включить">
@@ -47,12 +47,12 @@
 <!ENTITY wheel.historyIfCw "Наоборот (на себя): История">
 
 <!ENTITY autoscroll.label "Прокручивание средней кнопкой:">
-<!ENTITY autoscroll.AiO "AiO автопрокрутка">
+<!ENTITY autoscroll.AiO "Mouse Gestures автопрокрутка">
 <!ENTITY autoscroll.native "Собственная автопрокрутка">
-<!ENTITY autoscroll.aiograb "AiO автопрокрутка + Grab'n'Drag">
+<!ENTITY autoscroll.aiograb "MG автопрокрутка + Grab'n'Drag">
 <!ENTITY autoscroll.grab "Grab'n'Drag  прокручивание">
 
-<!ENTITY about.label "О All-in-One Gestures">
+<!ENTITY about.label "О Mouse Gestures Suite">
 <!ENTITY about.version "Версия">
 <!ENTITY about.provider1 "Оригинальные расширения M. Boullet, Optimoz, Joe4711, Skidooer &amp; all;">
 <!ENTITY about.provider2 "Объединение и дальнейшая разработка MK">

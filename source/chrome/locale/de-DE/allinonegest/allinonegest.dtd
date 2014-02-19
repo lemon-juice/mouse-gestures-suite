@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label    "Einstellungen der All-in-One Gestures">
+<!ENTITY allinonegest.label    "Einstellungen der Mouse Gestures Suite">
 <!ENTITY drawgesture.title     "Bitte die gewünschte Geste ausführen">
 
 <!ENTITY enable.label          "Aktivieren">
@@ -47,9 +47,9 @@
 <!ENTITY wheel.historyIfCw         "Nach unten drehen: Chronik">
 
 <!ENTITY autoscroll.label      "Bildlauf mit mittlerer Maustaste">
-<!ENTITY autoscroll.AiO            "All-in-One Bildlauf">
+<!ENTITY autoscroll.AiO            "Mouse Gestures Bildlauf">
 <!ENTITY autoscroll.native         "Standard-Bildlauf">
-<!ENTITY autoscroll.aiograb        "A-i-O und festhalten+verschieben">
+<!ENTITY autoscroll.aiograb        "MG und festhalten+verschieben">
 <!ENTITY autoscroll.grab           "Festhalten+verschieben">
 
 <!ENTITY about.label           "Über">

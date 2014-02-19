@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label    "All-in-One Gestures选项">
+<!ENTITY allinonegest.label    "Mouse Gestures Suite选项">
 <!ENTITY drawgesture.title     "手势绘制区域">
 
 <!ENTITY enable.label          "启用">
@@ -47,9 +47,9 @@
 <!ENTITY wheel.historyIfCw         "向后滚动(向用户方向滚动):历史纪录">
 
 <!ENTITY autoscroll.label      "中键滚动:选择">
-<!ENTITY autoscroll.AiO            "All-in-One式自动滚动">
+<!ENTITY autoscroll.AiO            "Mouse Gestures式自动滚动">
 <!ENTITY autoscroll.native         "系统默认式自动滚动">
-<!ENTITY autoscroll.aiograb        "AiO式自动滚动+拖拽">
+<!ENTITY autoscroll.aiograb        "MG式自动滚动+拖拽">
 <!ENTITY autoscroll.grab           "拖拽式滚动">
 
 <!ENTITY about.label           "关于">

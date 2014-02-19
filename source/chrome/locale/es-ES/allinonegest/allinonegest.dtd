@@ -26,9 +26,9 @@
 
 <!ENTITY aioTabscroll.label "Desplazamiento en pestañas">
 <!ENTITY aioTabscroll.revScroll "Desplazarse hacia la izquierda en las pestañas cuando la rueda se mueve en sentido contrario">
-<!ENTITY allinonegest.label "Opciones All-in-One Gestures">
-<!ENTITY autoscroll.AiO "Autodesplazamiento de All-in-One">
-<!ENTITY autoscroll.aiograb "Autodesplazamiento AiO + 'Coger y arrastrar'">
+<!ENTITY allinonegest.label "Opciones Mouse Gestures Suite">
+<!ENTITY autoscroll.AiO "Autodesplazamiento de Mouse Gestures">
+<!ENTITY autoscroll.aiograb "Autodesplazamiento MG + 'Coger y arrastrar'">
 <!ENTITY autoscroll.grab "Desplazamiento en modo 'Coger y arrastrar'">
 <!ENTITY autoscroll.label "Desplazamiento con botón central">
 <!ENTITY autoscroll.native "Desplazamiento automático nativo">

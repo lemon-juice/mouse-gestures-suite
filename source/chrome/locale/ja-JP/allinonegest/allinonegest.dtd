@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label "All-in-Oneジェスチャ設定">
+<!ENTITY allinonegest.label "Mouse Gestures Suiteジェスチャ設定">
 <!ENTITY drawgesture.title "ジェスチャ入力領域">
 
 <!ENTITY enable.label "利用する機能">
@@ -47,12 +47,12 @@
 <!ENTITY wheel.historyIfCw "上下を逆に">
 
 <!ENTITY autoscroll.label "オートスクロール">
-<!ENTITY autoscroll.AiO "All-in-Oneのものを使用">
+<!ENTITY autoscroll.AiO "Mouse Gesturesのものを使用">
 <!ENTITY autoscroll.native "ブラウザ内蔵のものを使用">
-<!ENTITY autoscroll.aiograb "AiOのオートスクロール + ページを掴んでスクロール">
+<!ENTITY autoscroll.aiograb "MGのオートスクロール + ページを掴んでスクロール">
 <!ENTITY autoscroll.grab "ページを掴んでスクロールする">
 
-<!ENTITY about.label "All-in-Oneジェスチャについて">
+<!ENTITY about.label "Mouse Gestures Suite">
 <!ENTITY about.version "バージョン">
 <!ENTITY about.provider1 "Provided by M. Boullet, Optimoz, Joe4711, Skidooer &amp; all;">
 <!ENTITY about.provider2 "Modified and further developed by MK">

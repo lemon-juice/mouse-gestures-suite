@@ -1,4 +1,4 @@
-<!ENTITY allinonegest.label       "All-in-One Gestures 설정">
+<!ENTITY allinonegest.label       "Mouse Gestures Suite 설정">
 <!ENTITY drawgesture.title        "마우스 동작 그리기">
 
 <!ENTITY enable.label             "사용 가능">
@@ -47,12 +47,12 @@
 <!ENTITY wheel.historyIfCw        "역으로(사용자 쪽으로): 탐색 기록">
 
 <!ENTITY autoscroll.label         "가운데 버튼 스크롤: 선택">
-<!ENTITY autoscroll.AiO           "All-in-One 자동 스크롤">
+<!ENTITY autoscroll.AiO           "Mouse Gestures 자동 스크롤">
 <!ENTITY autoscroll.native        "기본 자동 스크롤">
-<!ENTITY autoscroll.aiograb       "AiO 자동 스크롤 + 잡아끌기">
+<!ENTITY autoscroll.aiograb       "MG 자동 스크롤 + 잡아끌기">
 <!ENTITY autoscroll.grab          "잡아끌기 스크롤">
 
-<!ENTITY about.label              "All-in-One Gestures에 대하여">
+<!ENTITY about.label              "Mouse Gestures Suite에 대하여">
 <!ENTITY about.version            "버전">
 <!ENTITY about.provider1          "도움: M. Boullet, Optimoz, Joe4711, Skidooer 그 외 모든 분">
 <!ENTITY about.provider2          "제작: MK">
