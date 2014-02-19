@@ -89,7 +89,6 @@
 <!ENTITY aioAction.rockermode      "Rocker &amp; Scrollwheel gestures: Allow repetition for actions that load pages">
 
 <!ENTITY aioTabscroll.label    "Tab scrolling">
-<!ENTITY aioTabscroll.tabrocker    "Scroll wheel navigation: Switch tabs directly (no popup)">
 <!ENTITY aioTabscroll.revScroll    "Scroll tabs to the left when the wheel is rotated backward">
 
 <!ENTITY flipper.title         "Digit Flipper Schema Builder">

@@ -89,7 +89,6 @@
 <!ENTITY aioAction.rockermode      "摇杆&amp;滚轮手势:允许重复载入页面">
 
 <!ENTITY aioTabscroll.label    "标签滚动">
-<!ENTITY aioTabscroll.tabrocker    "滚轮导航:直接切换标签页(无弹出窗口)">
 <!ENTITY aioTabscroll.revScroll    "滚轮向后滚动时向左滚动标签页">
 
 <!ENTITY flipper.title         "数字翻页规则生成器">

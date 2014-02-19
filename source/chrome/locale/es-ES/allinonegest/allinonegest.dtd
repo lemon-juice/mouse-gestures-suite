@@ -26,7 +26,6 @@
 
 <!ENTITY aioTabscroll.label "Desplazamiento en pestañas">
 <!ENTITY aioTabscroll.revScroll "Desplazarse hacia la izquierda en las pestañas cuando la rueda se mueve en sentido contrario">
-<!ENTITY aioTabscroll.tabrocker "Navegación con la rueda: intercambiar pestañas directamente">
 <!ENTITY allinonegest.label "Opciones All-in-One Gestures">
 <!ENTITY autoscroll.AiO "Autodesplazamiento de All-in-One">
 <!ENTITY autoscroll.aiograb "Autodesplazamiento AiO + 'Coger y arrastrar'">

@@ -37,7 +37,7 @@ var aioGestEnabled, aioRockEnabled;  // prefs ....
 var aioTrailEnabled, aioTrailColor, aioTrailSize, aioTrailOpacity;
 var aioWheelEnabled, aioScrollEnabled, aioNoScrollMarker, aioStartOnLinks;
 var aioWhatAS, aioASEnabled, aioTabSwitching, aioSmoothScroll;
-var aioRockMode, aioWheelMode, aioHistIfDown, aioNoPopup;
+var aioRockMode, aioWheelMode, aioHistIfDown;
 var aioSpecialCursor, aioLeftDefault, aioPreferPaste, aioNoAltWithGest;
 var aioSingleNewWindow, aioOpenLinkInNew, aioPanToAS, aioReverseScroll;
 var aioShowTitletip, aioTTHover, aioShiftForTitle, aioTitleDelay, aioTitleDuration;
@@ -45,7 +45,7 @@ var aioScrollAlaAcrobat, aioNeverWarnOnCloseOtherTabs = true, aioNextsString, ai
 var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
 var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
 var aioRockerAction = [], aioRockMultiple = [];
-var aioTrustAutoSelect, aioOpenInCurrTab;
+var aioTrustAutoSelect;
 var aio2Buttons, aioScrollEnhancer;  // .... prefs
 var aioFxV1_0, aioFxV2Later, aioFxV3, aioFxV35, aioFxV36, aioFxV4, aioFxV18;
 var aioDefNextSearch, aioDefPrevSearch;
@@ -92,7 +92,7 @@ var aioInitStarted = false;
 var aioSmoothInc;
 var aioSmooth = null, aioSmoothInterval;
 var aioGrabTarget, aioScrollMode;
-var aioTabsNb, aioTabFocusHistory = [];
+var aioTabsNb;
 var aioBeingUninstalled = false;
 const aioGUID = "{8b86149f-01fb-4842-9dd8-4d7eb02fd055}";
 
@@ -273,7 +273,13 @@ function aioCreateStringBundle(propFile) {
 }
 
 function aioGetStr(str) {
-  if (aioBundle) return aioBundle.GetStringFromName(str);
+  if (aioBundle) {
+    try {
+      return aioBundle.GetStringFromName(str);
+    } catch (err) {
+      return "?";
+    }
+  }
   return "";
 }
 
@@ -320,18 +326,17 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioGestEnabled=aioPref.getBoolPref("mouse");}, function(){aioPref.setBoolPref("mouse",true);}, function(){return false;}],
      [function(){aioTrailEnabled=aioPref.getBoolPref("gestureTrails");}, function(){aioPref.setBoolPref("gestureTrails",true);}, function(){return false;}],
      [function(){aioTrailColor=aioPref.getCharPref("trailColor");}, function(){aioPref.setCharPref("trailColor","#FF0000");}, function(){return false;}],
-     [function(){aioTrailSize=aioPref.getIntPref("trailSize");}, function(){aioPref.setIntPref("trailSize",2);}, function(){return aioTrailSize<1||aioTrailSize>8;}],
+     [function(){aioTrailSize=aioPref.getIntPref("trailSize");}, function(){aioPref.setIntPref("trailSize",3);}, function(){return aioTrailSize<1||aioTrailSize>8;}],
      [function(){aioTrailOpacity=aioPref.getIntPref("trailOpacity");}, function(){aioPref.setIntPref("trailOpacity",100);}, function(){return aioTrailOpacity<0||aioTrailOpacity>100;}],
      [function(){aioRockEnabled=aioPref.getBoolPref("rocking");}, function(){aioPref.setBoolPref("rocking",true);}, function(){return false;}],
      [function(){aioWheelEnabled=aioPref.getBoolPref("wheelscrolling");}, function(){aioPref.setBoolPref("wheelscrolling",true);}, function(){return false;}],
      [function(){aioASEnabled=aioPref.getBoolPref("autoscrolling2");}, function(){aioPref.setBoolPref("autoscrolling2",true);}, function(){return false;}],
      [function(){aioTabSwitching=aioPref.getBoolPref("tabBar");}, function(){aioPref.setBoolPref("tabBar",true);}, function(){return false;}],
-     [function(){aioWhatAS=aioPref.getIntPref("autoscrollpref");}, function(){aioPref.setIntPref("autoscrollpref",0);}, function(){return aioWhatAS<0||aioWhatAS>3;}],
+     [function(){aioWhatAS=aioPref.getIntPref("autoscrollpref");}, function(){aioPref.setIntPref("autoscrollpref",1);}, function(){return aioWhatAS<0||aioWhatAS>3;}],
      [function(){aioScrollRate=aioPref.getIntPref("autoscrollRate");}, function(){aioPref.setIntPref("autoscrollRate",0);}, function(){return aioScrollRate<0||aioScrollRate>2;}],
      [function(){aioNoScrollMarker=aioPref.getBoolPref("autoscrollNoMarker");}, function(){aioPref.setBoolPref("autoscrollNoMarker",false);}, function(){return false;}],
-     [function(){aioWheelMode=aioPref.getIntPref("wheelpref2");}, function(){aioPref.setIntPref("wheelpref2",3);}, function(){return aioWheelMode<0||aioWheelMode>3;}],
+     [function(){aioWheelMode=aioPref.getIntPref("wheelpref2");}, function(){aioPref.setIntPref("wheelpref2",0);}, function(){return aioWheelMode<0||aioWheelMode>3;}],
      [function(){aioHistIfDown=aioPref.getBoolPref("wheelHistoryIfCw");}, function(){aioPref.setBoolPref("wheelHistoryIfCw",true);}, function(){return false;}],
-     [function(){aioNoPopup=aioPref.getBoolPref("tabRocker");}, function(){aioPref.setBoolPref("tabRocker",false);}, function(){return false;}],
      [function(){aioRockMode=aioPref.getIntPref("rockertypepref");}, function(){aioPref.setIntPref("rockertypepref",0);}, function(){return aioRockMode<0||aioRockMode>1;}],
      [function(){aioSpecialCursor=aioPref.getBoolPref("autoscrollCursor");}, function(){aioPref.setBoolPref("autoscrollCursor",false);}, function(){return false;}],
      [function(){aioNoAltWithGest=aioPref.getBoolPref("noAltGest");}, function(){aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
@@ -342,7 +347,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioNoGestureOnFlash=aioPref.getBoolPref("noGestOnFlash");}, function(){aioPref.setBoolPref("noGestOnFlash",true);}, function(){return false;}],
      [function(){aioReverseScroll=aioPref.getBoolPref("reverseScrolling");}, function(){aioPref.setBoolPref("reverseScrolling",false);}, function(){return false;}],
      [function(){aioStartOnLinks=aioPref.getBoolPref("evenOnLink");}, function(){aioPref.setBoolPref("evenOnLink",false);}, function(){return false;}],
-     [function(){aioShowTitletip=aioPref.getBoolPref("showLinkTooltip");}, function(){aioPref.setBoolPref("showLinkTooltip",true);}, function(){return false;}],
+     [function(){aioShowTitletip=aioPref.getBoolPref("showLinkTooltip");}, function(){aioPref.setBoolPref("showLinkTooltip",false);}, function(){return false;}],
      [function(){aioTTHover=aioPref.getBoolPref("TTHover");}, function(){aioPref.setBoolPref("TTHover",true);}, function(){return false;}],
      [function(){aioShiftForTitle=aioPref.getBoolPref("shiftForTitle");}, function(){aioPref.setBoolPref("shiftForTitle",true);}, function(){return false;}],
      [function(){titleDelay=aioPref.getIntPref("titleDelay");}, function(){aioPref.setIntPref("titleDelay",2);}, function(){return titleDelay<0||titleDelay>9;}],
@@ -352,7 +357,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
      [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
      [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
-     [function(){aioOpenInCurrTab=aioPref.getBoolPref("openInCurrTab");}, function(){aioPref.setBoolPref("openInCurrTab",false);}, function(){return false;}],
      [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}]];
 
   const unixRe = new RegExp("unix|linux|sun|freebsd", "i");
@@ -421,7 +425,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
 
      var activeId = "" + aioUnique++;
      aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
-     aioTabFocusHistory.push({focused: activeId, openedBy: ""});
      
      window.addEventListener("mouseup", aioMouseUp, true);
      window.addEventListener("draggesture", aioDragGesture, true);
@@ -774,9 +777,8 @@ function aioMouseUp(e) {
         aioRockTimer = null;
      }
   }
-  if (button == aioRMB) {
-    aioAllowPopupShowing = true;
-  }
+  aioAllowPopupShowing = true;
+  
   if (aioGestInProgress) {
      var lastgesture = aioStrokes.join("");
      // @MOD: this killed right-click events on pages
@@ -859,6 +861,10 @@ function aioWheelRockUp(e) {
   window.removeEventListener("mouseup", aioWheelRockUp, true);
   aioContent.removeEventListener("DOMMouseScroll", aioWheelRocking, true);
   aioWheelRockEnd();
+  
+  setTimeout(function() {
+    aioAllowPopupShowing = true;
+  }, 1000);
 }
 
 function aioWheelRocking(e) {
@@ -980,6 +986,10 @@ function _aioScrollPU(event) {
 }
 
 function _aioClosePU(action) {
+  setTimeout(function() {
+    aioAllowPopupShowing = true;
+  }, 1000);
+  
   if (this.closeFunc) window.removeEventListener("mouseup", this.closeFunc, true);
   if (this.scrollingFunc) aioMainWin.removeEventListener("DOMMouseScroll", this.scrollingFunc, true);
   this.scrollerNode.hidePopup();
@@ -1010,7 +1020,7 @@ function aioTabWheelNav() {
   }
 // Create and Display the popup menu
   aioTabPU = new aioPopUp(activeTab, 0, aioTabCount, false, "popup", aioOldX + 2, aioOldY + 2,
-                          aioReverseScroll && aioNoPopup, aioTabWheelEnd, aioTabPopping, aioTabWheeling);
+                          aioReverseScroll, aioTabWheelEnd, aioTabPopping, aioTabWheeling);
   aioTabPU.createPopup(0, "", "");
 }
 
@@ -1020,10 +1030,9 @@ function aioTabPopping(e) {
      aioTabPU.updatePopup(aioTabPU.initialRow, "_moz-menuactive", aioTabPU.initialRow, "aioBold", row, "aioItalic");
   else
      aioTabPU.updatePopup(aioTabPU.initialRow, "_moz-menuactive", aioTabPU.initialRow, "aioBold");
-  if (aioNoPopup) {
-     e.preventDefault(); //no popup
-     if (aioWheelMode == 2) aioContent.mTabContainer.advanceSelectedTab(aioCCW != aioReverseScroll ? -1 : 1, true);
-  }
+  
+  e.preventDefault(); //no popup
+  if (aioWheelMode == 2) aioContent.mTabContainer.advanceSelectedTab(aioCCW != aioReverseScroll ? -1 : 1, true);
 }
 
 function aioTabWheeling(e) {
@@ -1032,29 +1041,13 @@ function aioTabWheeling(e) {
      if (aioTabPU.activeRow == aioTabPU.initialRow)
         aioTabPU.scrollerNode.childNodes[aioTabDest].setAttribute("aioItalic", "true")
      else aioTabPU.scrollerNode.childNodes[aioTabDest].removeAttribute("aioItalic");
-  if (aioNoPopup) aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == aioReverseScroll ? -1 : 1, true);
+  aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == aioReverseScroll ? -1 : 1, true);
 }
 
 function aioTabWheelEnd(e) {
-  if (aioNoPopup) {
-     aioTabPU.closePopup(0);
-     aioRestoreListeners();
-     return;
-  }
-  if (aioTabPU.activeRow != aioTabPU.initialRow)
-     if (aioTabSrc != aioTabPU.activeRow) {
-        aioTabDest = aioTabSrc;
-        aioTabSrc = aioTabPU.activeRow;
-     }
-     else aioTabDest = -1;
-  else
-     if (aioTabDest != -1 && aioTabDest < aioTabPU.popupLength) {
-        aioTabPU.activeRow = aioTabDest;
-        aioTabDest = aioTabSrc;
-        aioTabSrc = aioTabPU.activeRow;
-     }
-  aioTabPU.closePopup(1);
+  aioTabPU.closePopup(0);
   aioRestoreListeners();
+  return;
 }
 
 function aioHistoryWheelNav() {

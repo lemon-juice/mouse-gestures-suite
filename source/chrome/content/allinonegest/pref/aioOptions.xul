@@ -33,7 +33,7 @@ function getBrowserWindow() {
 
 function init() {
   var checkboxes  = ["mouse", "trailId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
-                     "markerId", "cursorId", "panningId", "pasteId", "rockTabId", "reverseId",
+                     "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
                      "goUpId"];
@@ -101,7 +101,7 @@ function doEnabling() {
   var c12 = c1 && document.getElementById("mousebuttOptions").value == 0 && !document.getElementById("noAltGestId").checked;
   try {var c14 = !getBrowserWindow().document.getElementById("tabMenu");}
   catch(err) {c14 = true;}
-  var c15 = (c11 && document.getElementById("rockTabId").checked) || (c14 && document.getElementById("tabBar").checked);
+  var c15 = c11 || (c14 && document.getElementById("tabBar").checked);
   var c16 = document.getElementById("linkTooltip").checked;
   var c17 = c16 && !document.getElementById("tooltipShiftId").checked;
 
@@ -116,7 +116,7 @@ function doEnabling() {
                  ["tooltipShiftId", c16, a1], ["tooltipDelayId", c17, a1], ["delaydropdownId", c17, a1],
                  ["tooltipDisplayId", c16, a1], ["durationdropdownId", c16, a1], ["mousebuttOptions", c1or2, a1],
                  ["mousebutt0", c1or2, a1],  ["mousebutt1", c1or2, a1], ["mousebutt2", c1or2, a1],
-                 ["autoscroll", c8, a1], ["markerId", c9c, a1], ["cursorId", c10, a1], ["rockTabId", c11, a1], 
+                 ["autoscroll", c8, a1], ["markerId", c9c, a1], ["cursorId", c10, a1],
                  ["noAltGestId", c1, a1], ["leftdefaultId", c12, a1], ["autoscrollOptions", c9, a1],
                  ["autoscrollOptions0", c9, a1], ["autoscrollOptions1", c9, a1], ["autoscrollOptions2", c9, a1],
                  ["autoscrollOptions3", c9, a1], ["refreshrateId", c9c, a1], ["scrollrateOptions", c9c, a1],
@@ -142,7 +142,7 @@ function checkWheelRocker() {
 
 function savePrefs() {
   var checkboxes  = ["mouse", "trailId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
-                     "markerId", "cursorId", "panningId", "pasteId", "rockTabId", "reverseId",
+                     "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
                      "goUpId"];
@@ -506,9 +506,6 @@ function changeTrace(inc) {
    <groupbox orient="horizontal">
      <caption label="&aioTabscroll.label;"/>
      <vbox>
-       <checkbox id="rockTabId" type="checkbox" pref="true" preftype="bool"
-           prefstring="allinonegest.tabRocker" label="&aioTabscroll.tabrocker;"
-           oncommand="doEnabling();" />
        <checkbox id="reverseId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.reverseScrolling" label="&aioTabscroll.revScroll;" />
      </vbox>

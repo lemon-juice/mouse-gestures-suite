@@ -94,7 +94,6 @@
 <!ENTITY aioAction.rockermode      "搖擺與滾輪手勢：允許重複載入頁面">
 
 <!ENTITY aioTabscroll.label    "分頁捲動">
-<!ENTITY aioTabscroll.tabrocker    "滾輪導航：直接切換分頁（不顯示快顯功能表）">
 <!ENTITY aioTabscroll.revScroll    "當滾輪向下捲動時將分頁向左捲動">
 
 <!ENTITY flipper.title         "數字翻頁器規則建立器">

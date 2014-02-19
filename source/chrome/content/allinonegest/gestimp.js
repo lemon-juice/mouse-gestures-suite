@@ -33,7 +33,7 @@ var aioActionTable = [
       [function(){aioViewCookies();}, "g.viewSiteCookies", 0, ""], // 21
       [function(){BrowserPageInfo();}, "g.pageInfo", 0, ""], // 22
       [function(){toJavaScriptConsole();}, "g.jsConsole", 0, ""], // 23
-      [function(){openAboutDialog();}, "g.about", 0, ""], // 24
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 24
       [function(){aioBookmarkCurrentPage();}, "g.addBookmark", 0, ""], // 25
       [function(){aioDoubleWin();}, "g.doubleStackWin", 0, ""], // 26
       [function(){aioSetImgSize(true,false);}, "g.doubleImageSize", 1, "28"], // 27
@@ -51,7 +51,7 @@ var aioActionTable = [
       [function(){aioVScrollDocument(false,0);}, "g.scrollToTop", 0, ""], // 39
       [function(){aioVScrollDocument(false,1000000);}, "g.scrollToBottom", 0, ""], // 40
       [function(){aioResetImgSize(false);}, "g.resetImage", 1, ""], // 41
-      [function(){toggleSidebar('viewBookmarksSidebar');}, "g.bookmarkSidebar", 1, ""], // 42
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 42
       [function(){aioNukeFlash();}, "g.hideFlash", 0, ""], // 43
       [function(){aioCopyURLToClipBoard();}, "g.URLToClipboard", 0, ""], // 44
       [function(){getWebNavigation().gotoIndex(0);}, "g.firstPage", 0, ""], // 45
@@ -62,7 +62,7 @@ var aioActionTable = [
       [function(){aioSchemas={};}, "g.clearDigitFlipper", 0, ""], // 50
       [function(){aioLinksInFiles();}, "g.linksInFiles", 0, ""], // 51
       [function(){aioUndoCloseTab();}, "g.undoCloseTab", 0, ""], // 52
-      [function(){PrintUtils.printPreview(onEnterPrintPreview, onExitPrintPreview);}, "g.printPreview", 0, ""], //53
+      [function(){BrowserPrintPreview();}, "g.printPreview", 0, ""], //53
       [function(){aioOpenInNewTab(true);}, "g.browserOpenTabInBg", 0, ""], // 54
       [function(){aioDeleteCookies();}, "g.deleteSiteCookies", 0, ""], // 55
       [function(){aioUndoNukeAnything();}, "g.undoHideObject", 0, ""], // 56
@@ -73,18 +73,18 @@ var aioActionTable = [
       [function(){aioOpenNewWindow(true);}, "g.openWindowInBg", 0, ""], // 61
       [function(){aioFrameInfo();}, "g.frameInfo", 0, ""], // 62
       [function(){aioOpenAioOptions();}, "g.aioOptions", 0, ""], // 63
-      [function(){toggleSidebar('viewHistorySidebar');}, "g.historySidebar", 1, ""], // 64
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 64
       [function(){aioOpenBookmarksManager();}, "g.bookmarkMgr", 0, ""], // 65
       [function(){aioActionOnPage(1);}, "g.translate", 0, ""], // 66
       [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, ""], // 67
       [function(){saveDocument(window._content.document);}, "g.savePageAs", 0, ""], // 68
-      [function(){aioGoToPreviousSelectedTab();}, "g.prevSelectedTab", 1, ""], // 69
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 69
       [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, ""], // 70
       [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, ""], // 71
       [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73"], // 72
       [function(){aioSetImgSize(false,true);}, "g.reduceObject", 1, "72"], // 73
       [function(){aioResetImgSize(true);}, "g.resetSize", 1, ""], //74
-      [function(){aioShowHideFindBar();}, "g.showHideFindBar", 1, ""], // 75
+      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 75
       [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, ""], // 76
       [function(){aioNextPrevLink(true);}, "g.nextLink", 0, ""], // 77
       [function(){aioFastForward();}, "g.fastForward", 0, ""], // 78
@@ -187,37 +187,18 @@ function aioBackForward(back) {
   content.focus();
 }
 
-function aioPreviousSelectedTab() {
-  var lTab;
-  if (aioTabFocusHistory.length < 2) return null;
-  var tabId = aioTabFocusHistory[aioTabFocusHistory.length - 2].focused;
-  for (var i = 0; i < aioContent.mTabs.length; ++i) {
-    lTab = aioContent.mTabContainer.childNodes[i];
-    if (lTab.getAttribute("aioTabId") == tabId) return lTab;
-  }
-  return null;
-}
-
-function aioGoToPreviousSelectedTab() {
-  var lTab = aioPreviousSelectedTab();
-  if (lTab) {
-     aioTabFocusHistory.pop();
-     aioContent.selectedTab = lTab;
-  }
-}
-
 function aioFavoriteURL(suffix) {
   var shortcutURL = null;
-  if (aioFxV3) {
-     var bmsvc = Cc["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Ci.nsINavBookmarksService);
-     var shortcutURI = bmsvc.getURIForKeyword(aioGetStr("g.keywordForGesture") + suffix);
-     if (shortcutURI) shortcutURL = shortcutURI.spec;
+  var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
+  var keyword = aioGetStr("g.keywordForGesture") + suffix;
+  var shortcutURI = bmsvc.getURIForKeyword(keyword);
+  if (shortcutURI) shortcutURL = shortcutURI.spec;
+  if (!shortcutURL) {
+    alert(aioGetStr("g.keywordMissing") + " " + keyword);
+    return;
   }
-  else shortcutURL = BMSVC.resolveKeyword(aioGetStr("g.keywordForGesture") + suffix, { });
-  if (!shortcutURL) return;
-  if (shortcutURL.toLowerCase().substr(0, 11) != "javascript:" && !aioOpenInCurrTab)
-     aioLinkInTab(shortcutURL, true, false);
-  else loadURI(shortcutURL);
+  
+  loadURI(shortcutURL);
 }
 
 function aioIncURL(inc) { // derived from MagPie by Ben Goodger
@@ -975,16 +956,20 @@ function aioFastForward() {
 }
 
 function aioHomePage() {
-  var homePage = gHomeButton.getHomePage();
-  if (!aioGoUpInNewTab) {
-     loadOneOrMoreURIs(homePage);
-     return;
+  var url = aioGetHomePageUrl();
+  
+  if (url) {
+    loadURI(url);
   }
-  var urls = homePage.split("|");
-  var firstTabAdded = aioContent.addTab(urls[0]);
-  for (var i = 1; i < urls.length; ++i) aioContent.addTab(urls[i]);
-  aioContent.selectedTab = firstTabAdded;
-  content.focus();
+}
+
+function aioGetHomePageUrl() {
+  var prefb = Components.classes["@mozilla.org/preferences-service;1"]
+                       .getService(Components.interfaces.nsIPrefService);
+
+  var uri = prefb.getComplexValue("browser.startup.homepage",
+                                  Components.interfaces.nsISupportsString).data;
+  return uri;
 }
 
 function aioUpDir() { // from Stephen Clavering's GoUp
@@ -1028,33 +1013,6 @@ function aioFrameInfo() {
 function aioShowHideStatusBar() {
   var bar = document.getElementById("status-bar");
   if (bar) bar.hidden = !bar.hidden;
-}
-
-function aioShowHideFindBar() {
-   var focusedWindow = document.commandDispatcher.focusedWindow;
-   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
-   var selectStr = winWrapper.getSelection().toString();
-   var toolbar = document.getElementById("FindToolbar");
-   var beforeV2 = typeof(gFindBar) == "undefined";
-   if (toolbar.hidden || selectStr) {
-      if (toolbar.hidden) {
-         if (beforeV2) onFindCmd();
-         else if (!aioFxV3) gFindBar.onFindCmd();
-              else gFindBar.onFindCommand();
-         if (!selectStr) return;
-      }
-      if (!aioFxV3) var findField = document.getElementById("find-field");
-      else findField = gFindBar._findField;
-      findField.value = selectStr;
-      findField.select(); findField.focus();
-      if (beforeV2) find("");
-      else if (!aioFxV3) gFindBar.find("");
-           else gFindBar._find("")
-   }
-   else
-      if (beforeV2) closeFindBar();
-      else if (!aioFxV3) gFindBar.closeFindBar();
-           else gFindBar.close();
 }
 
 function aioViewSource(frame) {
@@ -1146,3 +1104,6 @@ function aioOpenDownloadManager() {
                           "chrome,dialog=no,resizable");
 }
 
+function aioNullAction() {
+  alert("This action does not exist");
+}

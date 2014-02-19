@@ -89,7 +89,6 @@
 <!ENTITY aioAction.rockermode "ロッカー・マウスホイールジェスチャ: ページ読み込みが起こる機能の複数回実行を許可する">
 
 <!ENTITY aioTabscroll.label "タブスクロール">
-<!ENTITY aioTabscroll.tabrocker "マウスホイールジェスチャ: タブを直接切り替える (ポップアップ表示せずに)">
 <!ENTITY aioTabscroll.revScroll "タブバー上で、マウスホイール下で左のタブに切り替える (デフォルトは右に)">
 
 <!ENTITY flipper.title "数値切り替えの設定">
