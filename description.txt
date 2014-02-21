@@ -1,0 +1,15 @@
+Mouse Gestures Suite is based on Firefox extension <em>All-in-One Gestures</em> and has been modified to work specifically with Seamonkey. The feature set is similar but many bug fixes has been made as well as some modifications to make it run on Seamonkey without problems.
+
+Main features:
+
+<b>Mouse gestures</b> - performed by moving the mouse with a button depressed allow you to quickly navigate through pages, open/close tabs and windows and perform many other commands without having to use toolbar buttons, menus or keyboard shortcuts.
+
+<b>Rocker gestures</b> - invoked by pressing one mouse button and then the other while keeping the first one pressed. By default used to go back and forward in browsing history but can be customized to do something else.
+
+<b>Scroll wheel in tab bar</b> - you can switch between tabs by scrolling mouse wheel over the tab bar.
+
+<b>Scroll wheel navigation</b> - perform your favourite actions by pressing a mouse button and scrolling mouse wheel at the same time.
+
+<b>Middle button scrolling</b> - scroll pages or textareas by pressing the middle mouse button once and then moving the mouse up or down. <i>Grab and Drag</i> options allow you to scroll by moving the mouse while the middle button is depressed.
+
+<b>Link tooltip</b> - see details about links as you hover over them with your mouse. Useful especially for browsing without the status bar like in full screen mode.

@@ -1,0 +1,29 @@
+The initial version of Mouse Gestures Suite is based on All-in-One Gestures 0.26 by Marc Boullet and the following fixes/modifications have been relative to the AiO release to make it work in Seamonkey:
+
+ * fix opening/duplicating current window
+ * fix duplicating tabs
+ * fix closing document
+ * fix: "undo close tab" didn't work in SM
+ * fix: "open bookmarks manager" didn't work in SM
+ * fix: "open download manager" didn't work in SM
+ * fix: "close window" didn't work in SM when warning about closing multiple tabs was about to be displayed (but the warning didn't show)
+ * fix: "close other tabs" didn't work in SM when warning about closing multiple tabs was about to be displayed - removed the warning altogether since it's non-standard behaviour anyway
+ * allow right- and middle-click gestures to work on form elements (they were disallowed but there seems to be no reason for doing so)
+ * fix: right-click gestures prevented right-click events from working on some pages
+ * remove unused setting "'Close all other Tabs': Never warn"
+ * new option "'Open new Tab/Window' opens link under performed gesture" 
+ * fix: browser hang due to infinite loop after changing "Middle Button Scrolling" options when more than 2 browser windows were open. This bug was present even in Firefox.
+ * fix: enabling/disabling gestures didn't work due to obsolete code (this also didn't work in Firefox)
+ * removed "Closing Tabs" preferences (for controlling which tab to focus after closing a tab) because the code didn't work in Seamonkey anyway
+ * fix: mouse trails caused flickering of popup elements when drawing gesture over complex popups like those at https://addons.mozilla.org/en-US/seamonkey/
+ * fix: right-click context menu pop ups and interferes with gestures on Linux when "Allow scripts to... Disable or replace context menu" is unchecked in browser preferences
+ * fix: browser menu was not accessible when gestures were set on left mouse button on Windows
+ * fix: the "Tools for add-ons" button in about:addons page was not accessible when gestures were set on left mouse button on Windows
+ * remove "Return to Previous Selected Tab" because it didn't work in Seamonkey
+ * fix: "Open Favorite Bookmark #..." didn't work in Seamonkey. Added information alert when no favorite bookmark is defined. Changed bookmark keywords to 'fav1' and 'fav2' (was 'aio1' and 'aio2').
+ * fix: "Load Home Page" didn't work in Seamonkey
+ * deleted "About this Build" action, which didn't work in SM (who needs gestures for it anyway??)
+ * deleted actions that did not work in Seamonkey: "Open/Close Bookmarks Sidebar", "Open/Close History Sidebar", "Show/Hide Find Bar"
+ * fix: "Print Preview" didn't work in Seamonkey
+ * removed option "Scroll wheel navigation: Switch tabs directly (no popup)" because in Seamonkey popups didn't work anyway
+ * changed some default prefs that make more sense in Seamonkey (hopefully)
