@@ -7,18 +7,5 @@
   <script type="application/x-javascript" src="linkTooltip.js"/>
   <script type="application/x-javascript" src="gestimp.js"/>
   <script type="application/x-javascript" src="trails.js"/>
-  <script type="application/x-javascript"><![CDATA[
-    window.addEventListener("load",
-                            function() {
-                               if (aioInitStarted) return;
-                               aioStartUp();},
-                            false);
-    window.addEventListener("load",
-                            function() {
-                               if (aioInitStarted) return;
-                               aioStartUp();},
-                            false);
-  ]]></script>
-
 </overlay>
 

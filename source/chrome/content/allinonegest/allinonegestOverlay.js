@@ -1261,13 +1261,6 @@ function aioAutoScrollUp(e) {
 }
 
 function aioFindNodeToScroll(initialNode) {
-
-  function scrollCursorType(neededW, availW, neededH, availH, scrollBarSize) {
-    if (neededW <= availW && neededH <= availH) return 3;
-    if (neededW > availW && neededH > availH) return 0;
-    if (neededW > availW) return ((neededH <= (availH - scrollBarSize)) - 0) << 1;  // 0 or 2
-    return (neededW <= (availW - scrollBarSize)) - 0;
-  }
   
   function getStyle(elem, aProp) {
     var p = elem.ownerDocument.defaultView.getComputedStyle(elem, "").getPropertyValue(aProp);
@@ -1583,3 +1576,16 @@ function aioGrabNDragMouseUp(e) {
      aioScroll.nodeToScroll.style.cursor = "auto";
   setTimeout(function(){aioScrollEnd();}, 200);
 }
+
+
+
+window.addEventListener("load",
+  function() {
+     if (aioInitStarted) return;
+     aioStartUp();},
+  false);
+window.addEventListener("load",
+  function() {
+     if (aioInitStarted) return;
+     aioStartUp();},
+  false);
