@@ -523,59 +523,36 @@ function aioSelectionAsSearchTerm() {
      if (typeof(SearchButton) == "undefined") BrowserOpenTab();
      searchBar.onTextEntered();
   }
-  else
-     if (!aioFxV3) {  
-        searchBar = BrowserSearch.getSearchBar();
-        if (!searchBar) return;
-        searchBar.removeAttribute("empty");
-        var textBox = searchBar._textbox;
-        textBox.value = searchStr;
-        textBox._formHistSvc.addEntry(textBox.getAttribute("autocompletesearchparam"), searchStr);
-        searchBar.doSearch(searchStr, true);
-     }
-     else {
-        searchBar = BrowserSearch.searchBar;
-        if (!searchBar) return;
-        searchBar.value = searchStr;
-        BrowserSearch.loadSearch(searchStr, true);
-     }
+  else {
+    searchBar = BrowserSearch.searchBar;
+    if (!searchBar) return;
+    searchBar.value = searchStr;
+    BrowserSearch.loadSearch(searchStr, true);
+  }
 }
 
 function aioZoomEnlarge() {
-  if (aioFxV3) {
-     var toggleZoom = ZoomManager.useFullZoom;
-     if (toggleZoom) ZoomManager.useFullZoom = false;
-     FullZoom.enlarge();
-     ZoomManager.useFullZoom = toggleZoom;
-     return;
-  }
-//  if (TextZoom.enlarge) TextZoom.enlarge();
-  else ZoomManager.prototype.getInstance().enlarge();
+  var toggleZoom = ZoomManager.useFullZoom;
+  if (toggleZoom) ZoomManager.useFullZoom = false;
+  FullZoom.enlarge();
+  ZoomManager.useFullZoom = toggleZoom;
+  return;
 }
 
 function aioZoomReduce() {
-  if (aioFxV3) {
-     var toggleZoom = ZoomManager.useFullZoom;
-     if (toggleZoom) ZoomManager.useFullZoom = false;
-     FullZoom.reduce();
-     ZoomManager.useFullZoom = toggleZoom;
-     return;
-  }   
-//  if (TextZoom.reduce) TextZoom.reduce();
-  else ZoomManager.prototype.getInstance().reduce();
+  var toggleZoom = ZoomManager.useFullZoom;
+  if (toggleZoom) ZoomManager.useFullZoom = false;
+  FullZoom.reduce();
+  ZoomManager.useFullZoom = toggleZoom;
+  return;
 }
 
 function aioZoomReset() {
-  if (aioFxV3) {
-     FullZoom.reset();
-     return;
-  }   
-//  if (TextZoom.reset) TextZoom.reset();
-  else ZoomManager.prototype.getInstance().reset();
+  FullZoom.reset();
+  return;
 }
 
 function aioFullZoomOperation(aOper) {
-  if (!aioFxV3) return;
   if (aOper) {
      var toggleZoom = ZoomManager.useFullZoom;
      if (!toggleZoom) ZoomManager.useFullZoom = true;
@@ -635,9 +612,8 @@ function aioSaveImageAs() {
   if (aioFxV18) saveImageURL(aioOnImage.src, null, "SaveImageTitle", false, false,
                          aioOnImage.ownerDocument.documentURIObject, aioOnImage.ownerDocument);
   else 
-     if (aioFxV3) saveImageURL(aioOnImage.src, null, "SaveImageTitle", false,
-                            false, aioOnImage.ownerDocument.documentURIObject);
-     else saveURL(aioOnImage.src, null, "SaveImageTitle", false);
+     saveImageURL(aioOnImage.src, null, "SaveImageTitle", false,
+       false, aioOnImage.ownerDocument.documentURIObject);
 
 }
 
@@ -751,11 +727,7 @@ function aioLinkInTab(url, usePref, bg) {
 }
 
 function aioDupTab() {
-  if (0 && aioFxV3) {
-     var tab = aioContent.duplicateTab(aioContent.mCurrentTab);
-     if (!aioPrefRoot.getBoolPref("browser.tabs.loadInBackground")) aioContent.selectedTab = tab;
-  }
-  else aioLinkInTab(window.content.document.location.href, true, false);
+  aioLinkInTab(window.content.document.location.href, true, false);
 }
 
 function aioMarkLinkVisited(href, linkNode) {
@@ -1025,9 +997,7 @@ function aioDeleteCookies() { //Contributed by Squarefree.com
 }
 
 function aioBookmarkCurrentPage() {
-  if (aioFxV3) 
-     PlacesCommandHook.bookmarkCurrentPage(true, PlacesUtils.bookmarksMenuFolderId);
-  else addBookmarkAs(aioContent);
+  PlacesCommandHook.bookmarkCurrentPage(true, PlacesUtils.bookmarksMenuFolderId);
 }
 
 function aioMetaInfo() {
@@ -1068,19 +1038,15 @@ function aioOpenAioOptions() {
 }
 
 function aioOpenBookmarksManager() {
-  //if (aioFxV3) PlacesCommandHook.showPlacesOrganizer('AllBookmarks');
-  //else
   toOpenWindowByType("bookmarks:manager",
     "chrome://communicator/content/bookmarks/bookmarksManager.xul");
 }
 
 function aioOpenAddonManager() {
-  if (aioFxV3) BrowserOpenAddonsMgr();
+  BrowserOpenAddonsMgr();
 }
 
 function aioOpenDownloadManager() {
-  //if (aioFxV3) BrowserDownloadsUI();
-  //else
   toOpenWindowByType("Download:Manager",
                           "chrome://communicator/content/downloads/downloadmanager.xul",
                           "chrome,dialog=no,resizable");

@@ -37,8 +37,8 @@ function aioStartTrail(e) {
         aioDocY -= targetDoc.defaultView.pageYOffset;
      }
      var NoSquintAbsent = typeof NoSquint == "undefined";
-     if (aioFxV3 && ((NoSquintAbsent && ZoomManager.useFullZoom && ZoomManager.zoom != 1) ||
-                     (!NoSquintAbsent && aioContent.mCurrentBrowser.markupDocumentViewer.fullZoom != 1))) {
+     if ((NoSquintAbsent && ZoomManager.useFullZoom && ZoomManager.zoom != 1) ||
+                     (!NoSquintAbsent && aioContent.mCurrentBrowser.markupDocumentViewer.fullZoom != 1)) {
         var o = targetDoc.createElementNS(xhtmlNS, "div");
         with (o.style) {
            top = "400000px";

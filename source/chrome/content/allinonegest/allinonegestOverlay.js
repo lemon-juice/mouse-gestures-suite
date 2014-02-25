@@ -904,7 +904,7 @@ function aioPopUp(pActive, pStart, pLength, pLastFirst, ptype, mouseX, mouseY, r
 function _aioCreatePU(arg1, arg2, arg3) {
   var popupElem, label, img;
   if (this.closeFunc) window.addEventListener("mouseup", this.closeFunc, true);
-  if (aioFxV3 && this.popupType == "popup") {
+  if (this.popupType == "popup") {
      this.scrollerNode = document.createElementNS(xulNS, "panel");
      this.scrollerNode.id = "aioWheelPopup";
      this.scrollerNode.setAttribute("noautohide", "true");
@@ -917,15 +917,9 @@ function _aioCreatePU(arg1, arg2, arg3) {
       if (arg1)
          label = getWebNavigation().sessionHistory.getEntryAtIndex(i, false).title;
       else label = aioContent.mTabContainer.childNodes[i].label;
-      if (aioFxV3) {
-         popupElem.setAttribute("class", "menuitem-iconic");
-         popupElem.setAttribute("style", "max-width:40em;");
-      }
-      else {
-         popupElem.setAttribute("type", "radio");
-         popupElem.setAttribute("class", "menuitem-iconic bookmark-item");
-         if (label.length > 60) label = label.substr(0, 57) + "...";
-      }
+
+      popupElem.setAttribute("class", "menuitem-iconic");
+      popupElem.setAttribute("style", "max-width:40em;");
       popupElem.setAttribute("label", label);
       if (arg1)
          img = (i < this.initialItem) ? aioBackURL : (i == this.initialItem) ?
@@ -960,12 +954,7 @@ function _aioCreatePU(arg1, arg2, arg3) {
   document.popupNode = null; document.tooltipNode = null;
   aioMainWin.appendChild(this.scrollerNode);
   this.scrollerNode.addEventListener("popupshowing", this.observeFunc, true);
-  if (aioFxV3)
-     this.scrollerNode.openPopupAtScreen(this.popupX, this.popupY, false);
-  else {
-     this.scrollerNode.showPopup(aioMainWin, this.popupX, this.popupY, "tooltip", null, null);
-     if (this.popupType == "tooltip") this.scrollerNode.setAttribute("height", this.scrollerNode.boxObject.height);
-  }
+  this.scrollerNode.openPopupAtScreen(this.popupX, this.popupY, false);
 }
 
 function _aioUpdatePU() {
@@ -1056,7 +1045,7 @@ function aioHistoryWheelNav() {
      aioRestoreListeners();
      return;
   }
-  if (aioFxV3 && sessionH.count > 15) {
+  if (sessionH.count > 15) {
      var start = Math.max(0, sessionH.index - 7);
      if (start + 15 > sessionH.count) start = sessionH.count - 15;
      var count = 15;
@@ -1066,7 +1055,7 @@ function aioHistoryWheelNav() {
      count = sessionH.count;
   }
         
-  aioHistPU = new aioPopUp(sessionH.index, start, count, aioFxV3, "popup", aioOldX + 2, aioOldY + 2,
+  aioHistPU = new aioPopUp(sessionH.index, start, count, true, "popup", aioOldX + 2, aioOldY + 2,
                            false, aioHistWheelEnd, aioHistPopping, aioHistWheeling);
   aioHistPU.createPopup(1, "", "");
 }
@@ -1202,13 +1191,12 @@ function aioAutoScrollKey(e) {
     case VK_DOWN :
     case VK_UP   : if (aioScroll.scrollType < 2 && (aioScroll.isXML || aioScroll.isBody)) {
                       var inc = e.keyCode == VK_UP ? -20 : 20 ;
-                      if (aioMarker)
-                         if (aioFxV3) {
-                            aioMarkerY -= inc;
-                            aioMarker.moveTo(aioMarkerX + aioMainWin.boxObject.screenX,
-                                             aioMarkerY + aioMainWin.boxObject.screenY);
-                         }   
-                         else aioMarker.style.top = (parseInt(aioMarker.style.top) - inc) + "px";
+                      if (aioMarker) {
+                        aioMarkerY -= inc;
+                        aioMarker.moveTo(aioMarkerX + aioMainWin.boxObject.screenX,
+                          aioMarkerY + aioMainWin.boxObject.screenY);
+                      }
+
                       aioLastY -= inc;
                       aioScroll.dY += inc;
                       aioDistY = aioLogDist(aioScroll.dY);
@@ -1217,13 +1205,12 @@ function aioAutoScrollKey(e) {
     case VK_LEFT :
     case VK_RIGHT: if (!(aioScroll.scrollType & 1) && (aioScroll.isXML || aioScroll.isBody)) {
                       inc = e.keyCode == VK_LEFT ? -20 : 20 ;
-                      if (aioMarker)
-                         if (aioFxV3) {
-                            aioMarkerX -= inc;
-                            aioMarker.moveTo(aioMarkerX + aioMainWin.boxObject.screenX,
-                                             aioMarkerY + aioMainWin.boxObject.screenY);
-                         }   
-                         else aioMarker.style.left = (parseInt(aioMarker.style.left) - inc) + "px";
+                      if (aioMarker) {
+                        aioMarkerX -= inc;
+                        aioMarker.moveTo(aioMarkerX + aioMainWin.boxObject.screenX,
+                          aioMarkerY + aioMainWin.boxObject.screenY);
+                      }
+
                       aioLastX -= inc;
                       aioScroll.dX += inc;
                       aioDistX = aioLogDist(aioScroll.dX);
@@ -1325,8 +1312,8 @@ function aioFindNodeToScroll(initialNode) {
         }
      }
      var NoSquintAbsent = typeof NoSquint == "undefined";
-     if (aioFxV3 && ((NoSquintAbsent && ZoomManager.useFullZoom && ZoomManager.zoom != 1) ||
-                     (!NoSquintAbsent && aioContent.mCurrentBrowser.markupDocumentViewer.fullZoom != 1))) {
+     if ((NoSquintAbsent && ZoomManager.useFullZoom && ZoomManager.zoom != 1) ||
+                     (!NoSquintAbsent && aioContent.mCurrentBrowser.markupDocumentViewer.fullZoom != 1)) {
         if (!retObj.XMLPrettyPrint) {
            var o = targetDoc.createElementNS(xhtmlNS, "div");
            with (o.style) {
@@ -1430,32 +1417,20 @@ function aioFindNodeToScroll(initialNode) {
      if (retObj.isFrame) return aioFindNodeToScroll(clientFrame.frameElement.ownerDocument.documentElement);
   }
   else { // XML document; do our best
-     retObj.nodeToScroll = initialNode;
-     if (aioFxV3) {
-        retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
-        retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
-        realWidth = clientFrame.innerWidth;
-        realHeight = clientFrame.innerHeight;
-        retObj.realHeight = realHeight;
-        realWidth *= zoom; realHeight *= zoom;
-        if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
-        if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
-        retObj.ratioX = retObj.docWidth / realWidth;
-        retObj.ratioY = retObj.docHeight / realHeight;
-        retObj.scrollType = 3 - (((clientFrame.scrollMaxY > 0) - 0) << 1) - ((clientFrame.scrollMaxX > 0) - 0);
-     }
-     else {
-        if (docBox) {
-           retObj.docWidth = docBox.width; retObj.docHeight = docBox.height;
-           realWidth = aioRendering.boxObject.width;
-           realHeight = aioRendering.boxObject.height;
-           retObj.realHeight = realHeight;
-           retObj.ratioX = docBox.width / realWidth;
-           retObj.ratioY = docBox.height / realHeight;
-           retObj.scrollType = scrollCursorType(docBox.width, realWidth, docBox.height, realHeight, defaultScrollBarSize);
-        }
-     }
-     retObj.isXML = true;
+    retObj.nodeToScroll = initialNode;
+    retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
+    retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
+    realWidth = clientFrame.innerWidth;
+    realHeight = clientFrame.innerHeight;
+    retObj.realHeight = realHeight;
+    realWidth *= zoom; realHeight *= zoom;
+    if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
+    if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
+    retObj.ratioX = retObj.docWidth / realWidth;
+    retObj.ratioY = retObj.docHeight / realHeight;
+    retObj.scrollType = 3 - (((clientFrame.scrollMaxY > 0) - 0) << 1) - ((clientFrame.scrollMaxX > 0) - 0);
+
+    retObj.isXML = true;
   }
   return retObj;
 }
@@ -1487,42 +1462,24 @@ function aioAddMarker(e) {
   }
   else aioOverlay = null;
   // marker
-  if (aioFxV3) {
-     if (!aioNoScrollMarker) {
-        el = document.createElementNS(xulNS, "popup");
-        el.id = aioMarkerIds[aioScroll.scrollType];
-        document.documentElement.appendChild(el);
-        document.popupNode = null;
-        aioMarkerX = e.screenX - aioHalfMarker; aioMarkerY = e.screenY - aioHalfMarker;
-        el.openPopupAtScreen(aioMarkerX, aioMarkerY, false);
-        aioMarker = el;
-     }
-     else aioMarker = null;
+  if (!aioNoScrollMarker) {
+     el = document.createElementNS(xulNS, "popup");
+     el.id = aioMarkerIds[aioScroll.scrollType];
+     document.documentElement.appendChild(el);
+     document.popupNode = null;
+     aioMarkerX = e.screenX - aioHalfMarker; aioMarkerY = e.screenY - aioHalfMarker;
+     el.openPopupAtScreen(aioMarkerX, aioMarkerY, false);
+     aioMarker = el;
   }
-  else {
-     el = aioScroll.targetDoc.createElementNS(xhtmlNS, "img");
-     if (!aioNoScrollMarker && !aioScroll.XMLPrettyPrint) {
-        el.src = aioMarkers[aioScroll.scrollType];
-        el.style.position = "fixed";
-        el.style.left = e.screenX - aioScroll.docBoxX - aioHalfMarker + "px";
-        el.style.top = e.screenY - aioScroll.docBoxY - aioHalfMarker + "px";
-        el.style.width = aioMarkerSize + "px"; el.style.height = aioMarkerSize + "px";
-        el.style.cursor = aioCursors[aioScroll.scrollType];
-        el.style.border = "0px";
-        el.style.zIndex = 10000;
-        aioScroll.insertionNode.appendChild(el);
-        aioMarker = el;
-     }
-     else aioMarker = null;
-  }
+  else aioMarker = null;
+
   return (aioScroll.isXML || aioScroll.isBody) - 0;
 }
 
 function aioRemoveMarker() {
   if (aioMarker) {
     try {
-	  if (aioFxV3) aioMarker.hidePopup();
-      else aioMarker.style.display = "none";  // seems to avoid some blocking
+	    aioMarker.hidePopup();
       aioMarker.parentNode.removeChild(aioMarker);
 	}
 	catch(err) {}
