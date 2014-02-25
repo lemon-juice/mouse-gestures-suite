@@ -151,7 +151,7 @@ function savePrefs() {
   var checkbox, radiogroup, i;
   if (document.getElementById("tabpanId").selectedIndex == 1 &&
       !document.getElementById("customEdit").hasAttribute("hidden")) {
-     setTimeout(newGestValue, 0);
+     setTimeout(function() {newGestValue();}, 0);
      return false;
   }
   var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
