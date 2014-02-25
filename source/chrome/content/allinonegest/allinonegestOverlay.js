@@ -21,7 +21,7 @@ var aioContent, aioRendering, aioContextPopup, aioMainWin, aioStatusBar;
 var aioIsWin, aioIsMac, aioIsNix;
 var aioFirstInit = true;
 var aioGrid = 15; // minimal gesture has to be 'grid' pixels long
-var aioDelay = 500; // delay before aborting gesture
+var aioDelay = 1000; // delay before aborting gesture
 var aioGestInProgress = false;
 var aioOldX, aioOldY; // old coords from previous gesture stroke
 var aioGestStr, aioUnknownStr, aioCurrGest;
