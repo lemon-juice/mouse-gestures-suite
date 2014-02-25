@@ -77,7 +77,7 @@ var aioActionTable = [
       [function(){aioOpenBookmarksManager();}, "g.bookmarkMgr", 0, ""], // 65
       [function(){aioActionOnPage(1);}, "g.translate", 0, ""], // 66
       [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, ""], // 67
-      [function(){saveDocument(window._content.document);}, "g.savePageAs", 0, ""], // 68
+      [function(){saveDocument(window.content.document);}, "g.savePageAs", 0, ""], // 68
       [function(){aioNullAction();}, "g.nullAction", 0, ""], // 69
       [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, ""], // 70
       [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, ""], // 71
@@ -323,7 +323,7 @@ function aioCopyURLToClipBoard() {
        }
        str.data = lstr;
     }
-    else str.data = window._content.document.location.href;
+    else str.data = window.content.document.location.href;
     var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
     if (!trans) return;
 	// Since data from the web content are copied to the clipboard, the privacy context must be set.
@@ -523,59 +523,36 @@ function aioSelectionAsSearchTerm() {
      if (typeof(SearchButton) == "undefined") BrowserOpenTab();
      searchBar.onTextEntered();
   }
-  else
-     if (!aioFxV3) {  
-        searchBar = BrowserSearch.getSearchBar();
-        if (!searchBar) return;
-        searchBar.removeAttribute("empty");
-        var textBox = searchBar._textbox;
-        textBox.value = searchStr;
-        textBox._formHistSvc.addEntry(textBox.getAttribute("autocompletesearchparam"), searchStr);
-        searchBar.doSearch(searchStr, true);
-     }
-     else {
-        searchBar = BrowserSearch.searchBar;
-        if (!searchBar) return;
-        searchBar.value = searchStr;
-        BrowserSearch.loadSearch(searchStr, true);
-     }
+  else {
+    searchBar = BrowserSearch.searchBar;
+    if (!searchBar) return;
+    searchBar.value = searchStr;
+    BrowserSearch.loadSearch(searchStr, true);
+  }
 }
 
 function aioZoomEnlarge() {
-  if (aioFxV3) {
-     var toggleZoom = ZoomManager.useFullZoom;
-     if (toggleZoom) ZoomManager.useFullZoom = false;
-     FullZoom.enlarge();
-     ZoomManager.useFullZoom = toggleZoom;
-     return;
-  }
-//  if (TextZoom.enlarge) TextZoom.enlarge();
-  else ZoomManager.prototype.getInstance().enlarge();
+  var toggleZoom = ZoomManager.useFullZoom;
+  if (toggleZoom) ZoomManager.useFullZoom = false;
+  FullZoom.enlarge();
+  ZoomManager.useFullZoom = toggleZoom;
+  return;
 }
 
 function aioZoomReduce() {
-  if (aioFxV3) {
-     var toggleZoom = ZoomManager.useFullZoom;
-     if (toggleZoom) ZoomManager.useFullZoom = false;
-     FullZoom.reduce();
-     ZoomManager.useFullZoom = toggleZoom;
-     return;
-  }   
-//  if (TextZoom.reduce) TextZoom.reduce();
-  else ZoomManager.prototype.getInstance().reduce();
+  var toggleZoom = ZoomManager.useFullZoom;
+  if (toggleZoom) ZoomManager.useFullZoom = false;
+  FullZoom.reduce();
+  ZoomManager.useFullZoom = toggleZoom;
+  return;
 }
 
 function aioZoomReset() {
-  if (aioFxV3) {
-     FullZoom.reset();
-     return;
-  }   
-//  if (TextZoom.reset) TextZoom.reset();
-  else ZoomManager.prototype.getInstance().reset();
+  FullZoom.reset();
+  return;
 }
 
 function aioFullZoomOperation(aOper) {
-  if (!aioFxV3) return;
   if (aOper) {
      var toggleZoom = ZoomManager.useFullZoom;
      if (!toggleZoom) ZoomManager.useFullZoom = true;
@@ -635,9 +612,8 @@ function aioSaveImageAs() {
   if (aioFxV18) saveImageURL(aioOnImage.src, null, "SaveImageTitle", false, false,
                          aioOnImage.ownerDocument.documentURIObject, aioOnImage.ownerDocument);
   else 
-     if (aioFxV3) saveImageURL(aioOnImage.src, null, "SaveImageTitle", false,
-                            false, aioOnImage.ownerDocument.documentURIObject);
-     else saveURL(aioOnImage.src, null, "SaveImageTitle", false);
+     saveImageURL(aioOnImage.src, null, "SaveImageTitle", false,
+       false, aioOnImage.ownerDocument.documentURIObject);
 
 }
 
@@ -751,11 +727,7 @@ function aioLinkInTab(url, usePref, bg) {
 }
 
 function aioDupTab() {
-  if (0 && aioFxV3) {
-     var tab = aioContent.duplicateTab(aioContent.mCurrentTab);
-     if (!aioPrefRoot.getBoolPref("browser.tabs.loadInBackground")) aioContent.selectedTab = tab;
-  }
-  else aioLinkInTab(window._content.document.location.href, true, false);
+  aioLinkInTab(window.content.document.location.href, true, false);
 }
 
 function aioMarkLinkVisited(href, linkNode) {
@@ -795,30 +767,12 @@ function aioLinksInFiles() {
   }
 }
 
-function aioNewWindowFor1_0(url, flag) {
-  var handler = Components.classes["@mozilla.org/commandlinehandler/general-startup;1?type=browser"].getService()
-                .QueryInterface(Components.interfaces.nsICmdLineHandler);
-  var startpage = url || handler.defaultArgs;
-  var charsetArg = null;
-  if (window._content && window._content.document)
-     charsetArg = "charset=" + window._content.document.characterSet;
-  return window.openDialog(getBrowserURL(), "_blank", "chrome,all,dialog=no" + flag, startpage, charsetArg);
-}
-
-function aioNewWindowFor1_5(url, flag) {
-  //var handler = Components.classes["@mozilla.org/browser/clh;1"].getService(Components.interfaces.nsIBrowserHandler);
-  //var startpage = url || handler.defaultArgs;
-  var startpage = url;
-  if (window._content && window._content.document) {
-     var charsetArg = "charset=" + window._content.document.characterSet;
-     return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, startpage, charsetArg);
-  }
-  return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, startpage);
-}
-
 function aioNewWindow(url, flag) {
-  if (aioFxV1_0) return aioNewWindowFor1_0(url, flag);
-  else return aioNewWindowFor1_5(url, flag);
+  if (window.content && window.content.document) {
+     var charsetArg = "charset=" + window.content.document.characterSet;
+     return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
+  }
+  return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, url);
 }
 
 function aioLinksInWindows() {
@@ -860,14 +814,14 @@ function aioOpenNewWindow(background) {
 }
 
 function aioDupWindow() {
-  aioNewWindow(window._content.document.location.href, "");
+  aioNewWindow(window.content.document.location.href, "");
 }
 
 function aioCloseWindow() {
   if ("BrowserTryToCloseWindow" in window)
-      window.setTimeout("BrowserTryToCloseWindow()", 10);
+      window.setTimeout(function() { BrowserTryToCloseWindow(); }, 10);
     else
-      window.setTimeout("window.close()", 10);
+      window.setTimeout(function() { window.close(); }, 10);
 }
 
 function aioDoubleWin() {
@@ -993,7 +947,7 @@ function aioUpDir() { // from Stephen Clavering's GoUp
     // nothing found
     return "";
   }
-  var url = getUp(window._content.document.location.href);
+  var url = getUp(window.content.document.location.href);
   if (!url) return;
   if (aioGoUpInNewTab) aioLinkInTab(url, false, false);
   else loadURI(url);
@@ -1017,40 +971,38 @@ function aioShowHideStatusBar() {
 
 function aioViewSource(frame) {
    if (frame) BrowserViewSourceOfDocument(aioSrcEvent.target.ownerDocument);
-   else BrowserViewSourceOfDocument(window._content.document);
+   else BrowserViewSourceOfDocument(window.content.document);
 }
 
 function aioViewCookies() { //Contributed by Squarefree.com
-  if (window._content.document.cookie)
+  if (window.content.document.cookie)
     alert(aioGetStr("cookies") + "\n\n" +
-       window._content.document.cookie.replace(/; /g,"\n"));
+       window.content.document.cookie.replace(/; /g,"\n"));
   else alert(aioGetStr("noCookies"));
 }
 
 function aioDeleteCookies() { //Contributed by Squarefree.com
   var d, sl, p, i, cookie;
-  var cookieStr = window._content.document.cookie;
+  var cookieStr = window.content.document.cookie;
   if (!cookieStr) alert(aioGetStr("noCookies"));
   var cookies = cookieStr.split("; ");
-  for (d = "." + window._content.document.location.host; d; d = ("" + d).substr(1).match(/\..*$/))
+  for (d = "." + window.content.document.location.host; d; d = ("" + d).substr(1).match(/\..*$/))
     for (sl = 0; sl < 2; ++sl)
-      for (p = "/" + window._content.document.location.pathname; p; p = p.substring(0, p.lastIndexOf('/')))
+      for (p = "/" + window.content.document.location.pathname; p; p = p.substring(0, p.lastIndexOf('/')))
         for (i in cookies) {
           cookie = cookies[i];
-          if (cookie) window._content.document.cookie = cookie + ";domain = " + d.slice(sl) + "; path=" +
+          if (cookie) window.content.document.cookie = cookie + ";domain = " + d.slice(sl) + "; path=" +
                    p.slice(1) + "/" + "; expires=" + new Date((new Date).getTime()-1e11).toGMTString();
         }
 }
 
 function aioBookmarkCurrentPage() {
-  if (aioFxV3) 
-     PlacesCommandHook.bookmarkCurrentPage(true, PlacesUtils.bookmarksMenuFolderId);
-  else addBookmarkAs(aioContent);
+  PlacesCommandHook.bookmarkCurrentPage(true, PlacesUtils.bookmarksMenuFolderId);
 }
 
 function aioMetaInfo() {
   var metas, metastr, mymeta;
-  metas = window._content.document.getElementsByTagName("meta");
+  metas = window.content.document.getElementsByTagName("meta");
   if (metas.length) {
     metastr = aioGetStr("meta") + "\n\n";
     for (var i = 0; i < metas.length; ++i) {
@@ -1086,19 +1038,15 @@ function aioOpenAioOptions() {
 }
 
 function aioOpenBookmarksManager() {
-  //if (aioFxV3) PlacesCommandHook.showPlacesOrganizer('AllBookmarks');
-  //else
   toOpenWindowByType("bookmarks:manager",
     "chrome://communicator/content/bookmarks/bookmarksManager.xul");
 }
 
 function aioOpenAddonManager() {
-  if (aioFxV3) BrowserOpenAddonsMgr();
+  BrowserOpenAddonsMgr();
 }
 
 function aioOpenDownloadManager() {
-  //if (aioFxV3) BrowserDownloadsUI();
-  //else
   toOpenWindowByType("Download:Manager",
                           "chrome://communicator/content/downloads/downloadmanager.xul",
                           "chrome,dialog=no,resizable");

@@ -19,38 +19,13 @@ function aioStartTrail(e) {
   var insertionNode = (targetDoc.documentElement) ? targetDoc.documentElement : targetDoc;
 
   var trailZoom = 0;
-  if (aioFxV36) {
-     var insertBounds = insertionNode.getBoundingClientRect();
-     var domWindowUtils = targetDoc.defaultView.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-                              .getInterface(Components.interfaces.nsIDOMWindowUtils);
-     if (aioFxV18) trailZoom = domWindowUtils.fullZoom;
-	 else trailZoom = domWindowUtils.screenPixelsPerCSSPixel;
-     aioDocX = Math.floor((targetDoc.defaultView.mozInnerScreenX + insertBounds.left) * trailZoom);
-     aioDocY = Math.floor((targetDoc.defaultView.mozInnerScreenY + insertBounds.top) * trailZoom);
-  }
-  else {
-     var docBox = targetDoc.getBoxObjectFor(insertionNode);
-     aioDocX = docBox.screenX;
-     aioDocY = docBox.screenY;
-     if (aioFxV1_0) {
-        aioDocX -= targetDoc.defaultView.pageXOffset;
-        aioDocY -= targetDoc.defaultView.pageYOffset;
-     }
-     var NoSquintAbsent = typeof NoSquint == "undefined";
-     if (aioFxV3 && ((NoSquintAbsent && ZoomManager.useFullZoom && ZoomManager.zoom != 1) ||
-                     (!NoSquintAbsent && aioContent.mCurrentBrowser.markupDocumentViewer.fullZoom != 1))) {
-        var o = targetDoc.createElementNS(xhtmlNS, "div");
-        with (o.style) {
-           top = "400000px";
-           position = "absolute";
-           display = "block";
-        }
-        insertionNode.appendChild(o);
-        var oBox = targetDoc.getBoxObjectFor(o);
-        trailZoom = (oBox.screenY - aioDocY) / o.offsetTop;
-        insertionNode.removeChild(o);
-     }
-  }
+  var domWindowUtils = targetDoc.defaultView.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                           .getInterface(Components.interfaces.nsIDOMWindowUtils);
+  if (aioFxV18) trailZoom = domWindowUtils.fullZoom;
+else trailZoom = domWindowUtils.screenPixelsPerCSSPixel;
+  aioDocX = Math.floor(targetDoc.defaultView.mozInnerScreenX * trailZoom);
+  aioDocY = Math.floor(targetDoc.defaultView.mozInnerScreenY * trailZoom);
+
   aioTrailZoom = (trailZoom == 1) ? 0 : trailZoom;
 
   aioTrailCont = targetDoc.createElementNS(xhtmlNS, "aioTrailContainer");
@@ -62,7 +37,7 @@ function aioStartTrail(e) {
      height = aioTrailSize + "px";
      background = aioTrailColor;
      border = "0px";
-     position = "absolute";
+     position = "fixed";
      zIndex = 2147483647;
      opacity = aioTrailOpacity / 100;
      pointerEvents = "none";
