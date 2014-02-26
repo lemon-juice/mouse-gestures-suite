@@ -46,8 +46,8 @@ var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
 var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
-var aio2Buttons, aioScrollEnhancer;  // .... prefs
-var aioFxV1_0, aioFxV2Later, aioFxV3, aioFxV35, aioFxV36, aioFxV4, aioFxV18;
+var aio2Buttons;  // .... prefs
+var aioFxV2Later, aioFxV3, aioFxV35, aioFxV36, aioFxV4, aioFxV18;
 var aioDefNextSearch, aioDefPrevSearch;
 
 // global variables for rocker gesture
@@ -353,7 +353,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){titleDelay=aioPref.getIntPref("titleDelay");}, function(){aioPref.setIntPref("titleDelay",2);}, function(){return titleDelay<0||titleDelay>9;}],
      [function(){titleDuration=aioPref.getIntPref("titleDuration");}, function(){aioPref.setIntPref("titleDuration",3);}, function(){return titleDuration<0||titleDuration>6;}],
      [function(){aio2Buttons=aioPref.getBoolPref("mouse2buttons");}, function(){aioPref.setBoolPref("mouse2buttons",false);}, function(){return false;}],
-     [function(){aioScrollEnhancer=aioPref.getBoolPref("wheelScrollEnhancer");}, function(){aioPref.setBoolPref("wheelScrollEnhancer",true);}, function(){return false;}],
      [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
      [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
      [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
@@ -405,7 +404,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      else
         if (platform.indexOf('mac') != -1) aioIsMac = true;
         else aioIsNix = platform.search(unixRe) != -1;
-     aioFxV1_0 = versionComparator.compare(geckoVersion, "1.8") < 0;
+     //aioFxV1_0 = versionComparator.compare(geckoVersion, "1.8") < 0;
      aioFxV2Later = versionComparator.compare(geckoVersion, "1.8.1") >= 0;
      aioFxV3 = versionComparator.compare(geckoVersion, "1.9") >= 0;
      aioFxV35 = versionComparator.compare(geckoVersion, "1.9.1") >= 0;
@@ -455,9 +454,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
   aioDownButton = aioNoB; aioBackRocking = false;
   if (aioShowTitletip && aioTTHover) aioRendering.addEventListener("mousemove", aioShowTitle, true);
   else aioRendering.removeEventListener("mousemove", aioShowTitle, true);
-  aioScrollEnhancer = aioScrollEnhancer && aioFxV1_0;
-  if (aioScrollEnhancer) aioRendering.addEventListener("DOMMouseScroll", aioWheelScroll, false);
-  else aioRendering.removeEventListener("DOMMouseScroll", aioWheelScroll, false);
+  
+  aioRendering.removeEventListener("DOMMouseScroll", aioWheelScroll, false);
+  
   if (aioTabSwitching) {
      aioContent.mStrip.addEventListener("DOMMouseScroll", aioSwitchTabs, true);
      if (platform.indexOf('linux') != -1) // hack for linux-gtk2 + xft bug
@@ -1123,7 +1122,6 @@ function aioScrollElem() {
 }
 
 function aioAutoScrollStart(e) {
-  if (aioScrollEnhancer) aioRendering.removeEventListener("DOMMouseScroll", aioWheelScroll, false);
   window.addEventListener("DOMMouseScroll", aioAutoScrollStop, true);
   window.addEventListener("mouseup", aioAutoScrollUp, true);
   window.addEventListener("mousedown", aioAutoScrollUp, true);
@@ -1252,7 +1250,6 @@ function aioAutoScrollUp(e) {
         aioAcceptASKeys = false;
         window.addEventListener("mouseup", aioMouseUp, true);
         aioRendering.addEventListener("mousedown", aioMouseDown, true);
-        if (aioScrollEnhancer) aioRendering.addEventListener("DOMMouseScroll", aioWheelScroll, false);
         aioRemoveMarker();
         setTimeout(function(){aioScrollEnd();}, 200);
      }
@@ -1299,10 +1296,8 @@ function aioFindNodeToScroll(initialNode) {
      var docBox = targetDoc.getBoxObjectFor(retObj.insertionNode);
      if (docBox) {
         retObj.docBoxX = docBox.screenX; retObj.docBoxY = docBox.screenY;
-        if (!aioFxV1_0) {
-           retObj.docBoxX += clientFrame.pageXOffset;
-           retObj.docBoxY += clientFrame.pageYOffset;
-        }
+        retObj.docBoxX += clientFrame.pageXOffset;
+        retObj.docBoxY += clientFrame.pageYOffset;
      }
      var NoSquintAbsent = typeof NoSquint == "undefined";
      if ((NoSquintAbsent && ZoomManager.useFullZoom && ZoomManager.zoom != 1) ||
