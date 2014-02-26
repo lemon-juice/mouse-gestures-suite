@@ -7,21 +7,12 @@ var aioTrailCont = null;
 var aioTrailCnt;
 var aioTrailX, aioTrailY, aioDocX, aioDocY;
 var rv, gestureStarted, iframe;
-var aioFxV10, aioFxV36;
 
 function init() {
   const httpProtocolHandler = Components.classes["@mozilla.org/network/protocol;1?name=http"]
                                .getService(Components.interfaces.nsIHttpProtocolHandler);
   var geckoVersion = httpProtocolHandler.misc.match(/rv:([0-9.]+)/)[1];
-  var versionComparator = null;
-  if ("nsIVersionComparator" in Components.interfaces)
-     versionComparator = Components.classes["@mozilla.org/xpcom/version-comparator;1"]
-                          .getService(Components.interfaces.nsIVersionComparator);
-  else
-     versionComparator = Components.classes["@mozilla.org/updates/version-checker;1"]
-                          .getService(Components.interfaces.nsIVersionChecker);
-  aioFxV10 = versionComparator.compare(geckoVersion, "1.8") < 0;
-  aioFxV36 = versionComparator.compare(geckoVersion, "1.9.2") >= 0;
+
   iframe = document.getElementById("gestDrawArea");
   var aioBundle = document.getElementById("allinonegestbundle");
   aioShortGest["R"] = aioBundle.getString("abbreviation.right");
@@ -41,20 +32,10 @@ function startGesture(e) {
   aioOldX = e.screenX; aioOldY = e.screenY;
   var targetDoc = e.target.ownerDocument;
   var insertionNode = targetDoc.documentElement;
-  if (aioFxV36) {
-     var insertBounds = insertionNode.getBoundingClientRect();
-     aioDocX = targetDoc.defaultView.mozInnerScreenX + insertBounds.left;
-     aioDocY = targetDoc.defaultView.mozInnerScreenY + insertBounds.top;
-  }
-  else {
-     var docBox = targetDoc.getBoxObjectFor(insertionNode);
-     aioDocX = docBox.screenX;
-     aioDocY = docBox.screenY;
-     if (aioFxV10) {
-        aioDocX -= targetDoc.defaultView.pageXOffset;
-        aioDocY -= targetDoc.defaultView.pageYOffset;
-     }
-  }
+  var insertBounds = insertionNode.getBoundingClientRect();
+  aioDocX = targetDoc.defaultView.mozInnerScreenX + insertBounds.left;
+  aioDocY = targetDoc.defaultView.mozInnerScreenY + insertBounds.top;
+
   aioTrailCont = targetDoc.createElementNS(xhtmlNS, "aioTrailContainer");
   insertionNode.appendChild(aioTrailCont);
   aioTrailDot = targetDoc.createElementNS(xhtmlNS, "aioTrailDot");

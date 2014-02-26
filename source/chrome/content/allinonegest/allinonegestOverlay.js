@@ -47,7 +47,7 @@ var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
 var aio2Buttons;  // .... prefs
-var aioFxV2Later, aioFxV3, aioFxV35, aioFxV36, aioFxV4, aioFxV18;
+var aioFxV18;
 var aioDefNextSearch, aioDefPrevSearch;
 
 // global variables for rocker gesture
@@ -404,12 +404,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      else
         if (platform.indexOf('mac') != -1) aioIsMac = true;
         else aioIsNix = platform.search(unixRe) != -1;
-     //aioFxV1_0 = versionComparator.compare(geckoVersion, "1.8") < 0;
-     aioFxV2Later = versionComparator.compare(geckoVersion, "1.8.1") >= 0;
-     aioFxV3 = versionComparator.compare(geckoVersion, "1.9") >= 0;
-     aioFxV35 = versionComparator.compare(geckoVersion, "1.9.1") >= 0;
-     aioFxV36 = versionComparator.compare(geckoVersion, "1.9.2") >= 0;
-     aioFxV4 = versionComparator.compare(geckoVersion, "2.0") >= 0;
+     
      aioFxV18 = versionComparator.compare(geckoVersion, "18.0") >= 0;
 
      aioContent = document.getElementById("content");
@@ -1283,40 +1278,15 @@ function aioFindNodeToScroll(initialNode) {
   retObj.insertionNode = (docEl) ? docEl : targetDoc;
   retObj.XMLPrettyPrint = aioIsUnformattedXML(targetDoc);
   var zoom = 1;
-  if (aioFxV36) {
-     var domWindowUtils = clientFrame.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-                              .getInterface(Components.interfaces.nsIDOMWindowUtils);
-     if (aioFxV18) zoom = domWindowUtils.fullZoom;
-	 else zoom = domWindowUtils.screenPixelsPerCSSPixel;
-     var insertBounds = retObj.insertionNode.getBoundingClientRect();
-     retObj.docBoxX = Math.floor((clientFrame.mozInnerScreenX + insertBounds.left) * zoom);
-     retObj.docBoxY = Math.floor((clientFrame.mozInnerScreenY + insertBounds.top) * zoom);
-  }
-  else {
-     var docBox = targetDoc.getBoxObjectFor(retObj.insertionNode);
-     if (docBox) {
-        retObj.docBoxX = docBox.screenX; retObj.docBoxY = docBox.screenY;
-        retObj.docBoxX += clientFrame.pageXOffset;
-        retObj.docBoxY += clientFrame.pageYOffset;
-     }
-     var NoSquintAbsent = typeof NoSquint == "undefined";
-     if ((NoSquintAbsent && ZoomManager.useFullZoom && ZoomManager.zoom != 1) ||
-                     (!NoSquintAbsent && aioContent.mCurrentBrowser.markupDocumentViewer.fullZoom != 1)) {
-        if (!retObj.XMLPrettyPrint) {
-           var o = targetDoc.createElementNS(xhtmlNS, "div");
-           with (o.style) {
-              top = "400000px";
-              position = "absolute";
-              display = "block";
-           }
-           retObj.insertionNode.appendChild(o);
-           var oBox = targetDoc.getBoxObjectFor(o);
-           zoom = (oBox.screenY - docBox.screenY) / o.offsetTop;
-           retObj.insertionNode.removeChild(o);
-        }
-        else zoom = ZoomManager.zoom;
-     }
-  }
+  
+  var domWindowUtils = clientFrame.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                           .getInterface(Components.interfaces.nsIDOMWindowUtils);
+  if (aioFxV18) zoom = domWindowUtils.fullZoom;
+else zoom = domWindowUtils.screenPixelsPerCSSPixel;
+  var insertBounds = retObj.insertionNode.getBoundingClientRect();
+  retObj.docBoxX = Math.floor((clientFrame.mozInnerScreenX + insertBounds.left) * zoom);
+  retObj.docBoxY = Math.floor((clientFrame.mozInnerScreenY + insertBounds.top) * zoom);
+
   retObj.targetDoc = targetDoc; retObj.clientFrame = clientFrame;
   if (docEl && docEl.nodeName.toLowerCase() == "html") { // walk the tree up looking for something to scroll
      if (clientFrame.frameElement) retObj.isFrame = true; else retObj.isFrame = false;
