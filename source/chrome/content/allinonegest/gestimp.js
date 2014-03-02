@@ -802,15 +802,16 @@ function aioSetToNormalZ(aWindow) {
 
 function aioOpenNewWindow(background) {
   var s = background ? ",alwaysLowered" : "";
+  var win;
   if (aioOpenLinkInNew && aioOnLink.length) {
-     var win = aioNewWindow(aioOnLink[0].href, s);
+     win = aioNewWindow(aioOnLink[0].href, s);
      aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
   }
   else {
      if (aioOnImage) win = aioNewWindow(aioOnImage.src, s);
      else win = aioNewWindow("", s);
   }
-  if (background) setTimeout(function(a){aioSetToNormalZ(a);}, 200, win);
+  if (background) setTimeout(function(a){aioSetToNormalZ(a);}, 500, win);
 }
 
 function aioDupWindow() {
