@@ -829,8 +829,8 @@ function aioDoubleWin() {
   if (!aioOnLink.length) return;
   window.moveTo(0, 0);
   window.resizeTo(screen.availWidth / 2, screen.availHeight);
-  aioNewWindow(aioOnLink[0].href, "");
-  window.moveTo(screen.availWidth / 2, 0);
+  var win = aioNewWindow(aioOnLink[0].href, "");
+  win.moveTo(screen.availWidth / 2, 0);
   aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
 }
 
