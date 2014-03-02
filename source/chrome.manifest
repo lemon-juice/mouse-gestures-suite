@@ -3,6 +3,7 @@ overlay	chrome://navigator/content/navigator.xul	chrome://allinonegest/content/a
 overlay	chrome://browser/content/pref/pref-advanced.xul	chrome://allinonegest/content/pref/aioPrefAdvancedOverlay.xul
 
 content	allinonegest	jar:chrome/allinonegest.jar!/content/allinonegest/
+content	allinonegest-en jar:chrome/allinonegest.jar!/locale/en-US/allinonegest/
 
 locale	allinonegest	en-US	jar:chrome/allinonegest.jar!/locale/en-US/allinonegest/
 locale	allinonegest	de-DE	jar:chrome/allinonegest.jar!/locale/de-DE/allinonegest/
@@ -14,3 +15,4 @@ locale	allinonegest	zh-CN	jar:chrome/allinonegest.jar!/locale/zh-CN/allinonegest
 locale	allinonegest	zh-TW	jar:chrome/allinonegest.jar!/locale/zh-TW/allinonegest/
 locale	allinonegest	ko-KR	jar:chrome/allinonegest.jar!/locale/ko-KR/allinonegest/
 locale	allinonegest	it-IT	jar:chrome/allinonegest.jar!/locale/it-IT/allinonegest/
+

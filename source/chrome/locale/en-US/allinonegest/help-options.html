@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <title>Mouse Gesture Suite :: Options</title>
+    <style type="text/css">body {
+  background: #c7d0d9;
+  font-family: 'segoe ui', 'sans serif';
+  font-size: 90%;
+      }
+  h2 {
+    margin-top: 1.5em;
+  }
+  :target {
+        border-bottom: 1px dashed black;
+        background: white;
+      }
+      table {
+        border-spacing: 0;
+        background-color: white;
+      }
+      table td {
+        padding: 1px 4px;
+      }
+}</style>
+    <script type="text/javascript">
+    function aioCreateStringBundle(propFile) {
+      try {
+        var strBundleService =  Components.classes["@mozilla.org/intl/stringbundle;1"].getService(). 
+                                  QueryInterface(Components.interfaces.nsIStringBundleService);
+        return strBundleService.createBundle(propFile);
+      }
+      catch(err) {return null;}
+    }
+
+    function aioGetStr(str) {
+      if (aioBundle) {
+        try {
+          return aioBundle.GetStringFromName(str);
+        } catch (err) {
+          return str;
+        }
+      }
+      return str;
+    }
+
+    function aioInit() {
+      // replace {placeholders} with transated texts
+      aioBundle = aioCreateStringBundle("chrome://allinonegest/locale/allinonegest.properties");
+      
+      var elems = document.body.getElementsByTagName('*');
+      var elem, txt, matches;
+      
+      for (var i=0; i<elems.length; i++) {
+        elem=elems[i];
+        
+        if (elem.firstChild && elem.firstChild.nodeName == '#text' && elem.firstChild.data) {
+          txt = elem.firstChild.data.trim();
+          matches = /^\{([\w.]+)\}$/.exec(txt);
+          
+          if (matches) {
+            elem.firstChild.data = aioGetStr(matches[1]);
+          }
+        }
+      }
+    }
+    
+    window.addEventListener("DOMContentLoaded", function() {
+      aioInit();
+    });
+    </script>
+  </head>
+  <body>
+    <h1>Mouse Gesture Suite :: Options</h1>
+    <p>Table of contents:</p>
+    <ol>
+      <li><a href="#tab0">General Preferences</a></li>
+      <li><a href="#tab1">Gestures Customization</a></li>
+      <li><a href="#tab2">Advanced Prefs #1</a></li>
+      <li><a href="#tab3">Advanced Prefs #2</a></li>
+    </ol>
+    <h2 id="tab0">General Preferences</h2>
+    <strong>Enable</strong> - enable/disable main features:<br>
+    <br>
+    <strong>Mouse gestures</strong> - performed by moving the mouse with a
+    button depressed allow you to quickly navigate through pages, open/close
+    tabs and windows and perform many other commands without having to use
+    toolbar buttons, menus or keyboard shortcuts.<br>
+    <br>
+    <strong>Rocker gestures</strong> - invoked by pressing one mouse button and
+    then the other while keeping the first one pressed. By default used to go
+    back and forward in browsing history but can be assigned to any gesture
+    function. To customize these gestures, go to the gesture customization tab,
+    select the gesture (at the end of the table) and click the <em>Edit
+      function</em> button. Then clicking on any row will assign the function of
+    the clicked row to the gesture.<br>
+    <br>
+    Functions which have a repetitive nature can be repeated without releasing
+    the trigger button. The <em>Allow repetition for actions that load pages</em>
+    advanced preference controls the repetivity of functions that load pages.<br>
+    <br>
+    <strong>Scroll wheel in tab bar</strong> - you can switch between tabs by
+    scrolling mouse wheel over the tab bar.<br>
+    <br>
+    <strong>Scroll wheel navigation</strong> - perform your favourite actions by
+    pressing a mouse button and scrolling mouse wheel at the same time.<br>
+    <br>
+    <strong>Middle button scrolling</strong> - scroll pages or textareas by
+    pressing the middle mouse button once and then moving the mouse up or down.
+    <i>Grab and Drag</i> options allow you to scroll by moving the mouse while
+    the middle button is depressed.<br>
+    <br>
+    <strong>Link tooltip</strong> - see details about links as you hover over
+    them with your mouse. Useful especially for browsing without the status bar
+    like in full screen mode.<br>
+    <hr><strong>Mouse Gestures: Prefs</strong> - customize trail color for mouse
+    gestures.<br>
+    <hr><strong>Link Tooltip: Prefs</strong> - options for customizing link
+    tooltips, available only when link tooltips are enabled.<br>
+    <hr><strong>Scroll Wheel Navigation</strong> - options available when scroll
+    wheel navigation is enabled. To use scroll wheel navigation scroll mouse
+    wheel while keeping a mouse button pressed (the mouse button is defined in
+    Advanced Prefs #1). Available options:<br>
+    <ul>
+      <li><strong>Perform Gesture Actions</strong> - perform actions defined in
+        the Gestures Customization tab at the bottom of the list: Forward &amp;
+        Backward Scrollwheel Gesture. Any action from the list can be assigned
+        by using the <em>Edit function</em> button.</li>
+      <li><strong>Navigate through History</strong> - go forward/back.</li>
+      <li><strong>Navigate through Tabs</strong> - switch to next/previous tab.</li>
+      <li><strong>History / Tabs based on initial rotation</strong> - either <em>Navigate
+          through History</em> or <em>Navigate through Tabs</em> depending on
+        the initial scroll wheel rotation (clockwise or anti-clockwise).</li>
+    </ul>
+    <hr><strong>Middle Button Scrolling</strong> - options available when middle
+    button scrolling is enabled:<br>
+    <ul>
+      <li><strong>Mouse Gestures autoscroll</strong> - to scroll the page press
+        and release the middle button and then move the mouse up or down. Stop
+        autoscroll by clicking middle or left button.</li>
+      <li><strong>Native autoscroll</strong> - same as above except it uses the
+        built-in mechanism in Seamonkey instead of the one in the extension.
+        This usually results in faster and smoother scrolling. Choose the one
+        that works better for you.</li>
+      <li><strong>MG autoscroll + Grab and Drag</strong> - both Mouse Gestures
+        autoscroll and Grab and Drag are enabled. To use Grab and Drag keep the
+        middle button depressed and move the mouse up or down.</li>
+      <li><strong>Grab and Drag scrolling</strong> - only Grab and Drag is
+        enabled.</li>
+    </ul>
+    <h2 id="tab1">Gestures Customization</h2>
+    <table style="width: 100%" border="1">
+      <tbody>
+        <tr>
+          <td>{g.browserBack}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.browserForward}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.browserReload}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.browserReloadSkipCache}</td>
+          <td>Force repload from network (same as Control+Shift+R)</td>
+        </tr>
+        <tr>
+          <td>{g.browserStop}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.reloadFrame}</td>
+          <td>Reload frame under gesture or reload page if no frame exists.</td>
+        </tr>
+        <tr>
+          <td>{g.reloadAllTabs}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.browserOpenTabInFg}</td>
+          <td>Open link in new tab. If no link was found under gesture then open
+            new tab with default page (same as Control+T). Behavior of this
+            action is affected by advanded preference <em>'Open new Tab/Window'
+              opens link under performed gesture</em>.</td>
+        </tr>
+        <tr>
+          <td>{g.browserOpenTabInBg}</td>
+          <td>Open link in new background tab. If no link was found under
+            gesture then open blank tab. Behavior of this action is affected by
+            advanded preference <em>'Open new Tab/Window' opens link under
+              performed gesture</em>.</td>
+        </tr>
+        <tr>
+          <td>{g.openBlankTab}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.duplicateTab}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.previousTab}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.nextTab}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.lastTab}</td>
+          <td>Go to rightmost tab.</td>
+        </tr>
+        <tr>
+          <td>{g.closeTab}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.closeOther}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.undoCloseTab}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.closeDoc}</td>
+          <td>Close current tab or window if only one tab is open.</td>
+        </tr>
+        <tr>
+          <td>{g.openSelection}</td>
+          <td>If a web address is selected then open it in new tab.</td>
+        </tr>
+        <tr>
+          <td>{g.searchSelection}</td>
+          <td>Perform web search using default search engine in new tab or
+            window (depending on browser settings).</td>
+        </tr>
+        <tr>
+          <td>{g.linksInTabs}</td>
+          <td>Open all links under gesture in new tabs.</td>
+        </tr>
+        <tr>
+          <td>{g.openFav1}</td>
+          <td>Load favorite bookmark with keyword <em>fav1</em>.</td>
+        </tr>
+        <tr>
+          <td>{g.openFav2}</td>
+          <td>Load favorite bookmark with keyword <em>fav2</em>.</td>
+        </tr>
+        <tr>
+          <td>{g.openNewWindow}</td>
+          <td>Open link in new window. If no link was found under gesture then
+            open new window with default page (same as Control+N). Behavior of
+            this action is affected by advanded preference <em>'Open new
+              Tab/Window' opens link under performed gesture</em>. </td>
+        </tr>
+        <tr>
+          <td>{g.openWindowInBg}</td>
+          <td>Open link in new background window.&nbsp;If no link was found
+            under gesture then open new background window with default page.
+            Behavior of this action is affected by advanded preference <em>'Open
+              new Tab/Window' opens link under performed gesture</em>. </td>
+        </tr>
+        <tr>
+          <td>{g.duplicateWindow}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.doubleStackWin}</td>
+          <td>Open link in new window: the opener window and the new window are
+            positioned side by side, each covering half of the screen.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.restMaxWin}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.minWin}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.closeWindow}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.linksInWindows}</td>
+          <td>All links that you have drawn the gesture over will be opened in
+            new window. The default gesture for this action is +RU (=any gesture
+            sequence-Right-Up), which allows you to draw a long path in any
+            shape over the links you want to open and then finish the gesture
+            with Right-Up.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.fullScreen}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.browserHome}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.scrollToTop}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.scrollToBottom}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.scrollDown}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.scrollUp}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.upDir}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.firstPage}</td>
+          <td>Go to first page in history of current tab/window. </td>
+        </tr>
+        <tr>
+          <td>{g.zoomIn}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.zoomOut}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.resetZoom}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.doubleImageSize}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.halveImageSize}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.resetImage}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.saveImageAs}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.enlargeObject}</td>
+          <td>If performed over image zoom in the image. Otherwise zoom in text
+            on page.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.reduceObject}</td>
+          <td>If performed over image zoom out the image. Otherwise zoom out
+            text on page. </td>
+        </tr>
+        <tr>
+          <td>{g.resetSize}</td>
+          <td>If performed over image reset the image size. Otherwise reset text
+            size on page. </td>
+        </tr>
+        <tr>
+          <td>{g.hideObject}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.undoHideObject}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.hideFlash}</td>
+          <td>After hiding flash objects you can click each one to view.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.viewPageSource}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.viewFrameSource}</td>
+          <td>View frame source. If there is no frame then view page source.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.viewSiteCookies}</td>
+          <td>View cookies on current site. Currently, only cookies which can be
+            read by javascript are shown.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.deleteSiteCookies}</td>
+          <td>Delete cookies on current site. Currently, only cookies which can
+            be read by javascript are deleted. </td>
+        </tr>
+        <tr>
+          <td>{g.pageInfo}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.frameInfo}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.jsConsole}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.addBookmark}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.w3cValidate}</td>
+          <td>Validate page online at validator.w3.org.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.translate}</td>
+          <td>Translate page at translate.google.com.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.metaInfo}</td>
+          <td>View meta tags in page.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.bookmarkMgr}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.downloadMgr}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.showHideStatusBar}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.URLToClipboard}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.pasteAndGo}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.incURL}</td>
+          <td>Increment number in URL (for example, page number). If there are
+            multiple numbers you will be asked to choose the number to
+            increment.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.decURL}</td>
+          <td>Decrement number in URL. </td>
+        </tr>
+        <tr>
+          <td>{g.clearDigitFlipper}</td>
+          <td>Forget your choice about which number to
+            increment/decrement in URL.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.linksInFiles}</td>
+          <td>Save all links under gesture to files.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.printPreview}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.print}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.savePageAs}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.showGestures}</td>
+          <td>Show your gesture definitions in new tab.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.aioOptions}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.nextLink}</td>
+          <td>Link that contains one of the strings defined in <em>Advanced
+              Prefs #1</em> will be followed. The <em>next</em> strings are
+            delimited with |. Useful for navigating to the next page.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.prevLink}</td>
+          <td>Like above.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.smartBack1}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.smartBack2}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.fastForward}</td>
+          <td>This acts like the normal <em>Forward in History</em> function as
+            far as there are pages in the forward history. Once at the end, it
+            acts like the <em>Follow Next Link</em> function. </td>
+        </tr>
+        <tr>
+          <td>{g.smartForward1}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.smartForward2}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.leftRocker}</td>
+          <td colspan="1" rowspan="4">Press <em>Edit function</em> button to
+            assign any function to the rocker or scroll wheel gestures.<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.rightRocker}</td>
+        </tr>
+        <tr>
+          <td>{g.backwardWheel}</td>
+        </tr>
+        <tr>
+          <td>{g.forwardWheel}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><br>
+    </p>
+    <h2 id="tab2">Advanced Prefs #1</h2>
+    <h2 id="tab3">Advanced Prefs #2</h2>
+  </body>
+</html>

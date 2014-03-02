@@ -13,9 +13,10 @@
 <dialog id="allInOnePref"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       title="&allinonegest.label;"
-      buttons="accept, cancel"
+      buttons="accept, cancel, help"
       onload="init();"
       ondialogaccept="return savePrefs();"
+      ondialoghelp="openHelp();"
       persist="width height screenX screenY">
 
 <script type="application/x-javascript" src="customize.js"/>

@@ -162,3 +162,36 @@ function changeTrace(inc) {
         "border-top-width:" + trailSize + "px;border-top-color:" + color);
   if (inc) doEnabling();
 }
+
+function openHelp() {
+  var url = "chrome://allinonegest/locale/help.html";
+  
+  if (!chromeFileExists(url)) {
+    // default English help
+    url = "chrome://allinonegest-en/content/help-options.html";
+  }
+  
+  var tabIndex = document.getElementById("tabpanId").selectedIndex;
+  if (tabIndex) {
+    url += "#tab"+tabIndex;
+  }
+  
+  window.open(url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=720,height=660");
+}
+
+function chromeFileExists(file)
+{
+  var xmlhttp = new window.XMLHttpRequest();
+  try {
+    xmlhttp.open("GET", file, false);
+    xmlhttp.onreadystatechange = function() {
+      xmlhttp.abort();
+    }
+    xmlhttp.send(null);
+  }
+  catch (ex) {
+    return false;
+  }
+  return true;
+}
+
