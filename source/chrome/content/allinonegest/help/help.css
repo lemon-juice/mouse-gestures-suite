@@ -1,0 +1,18 @@
+body {
+  background: #c7d0d9;
+  font-family: 'segoe ui', 'sans serif';
+  font-size: 90%;
+}
+h2 {
+  margin-top: 1.5em;
+}
+:target {
+  border-bottom: 2px dashed black;
+}
+table {
+  border-spacing: 0;
+  background-color: white;
+}
+table td {
+  padding: 1px 4px;
+}

@@ -3,83 +3,19 @@
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
     <title>Mouse Gesture Suite :: Options</title>
-    <style type="text/css">body {
-  background: #c7d0d9;
-  font-family: 'segoe ui', 'sans serif';
-  font-size: 90%;
-      }
-  h2 {
-    margin-top: 1.5em;
-  }
-  :target {
-        border-bottom: 1px dashed black;
-        background: white;
-      }
-      table {
-        border-spacing: 0;
-        background-color: white;
-      }
-      table td {
-        padding: 1px 4px;
-      }
-}</style>
-    <script type="text/javascript">
-    function aioCreateStringBundle(propFile) {
-      try {
-        var strBundleService =  Components.classes["@mozilla.org/intl/stringbundle;1"].getService(). 
-                                  QueryInterface(Components.interfaces.nsIStringBundleService);
-        return strBundleService.createBundle(propFile);
-      }
-      catch(err) {return null;}
-    }
-
-    function aioGetStr(str) {
-      if (aioBundle) {
-        try {
-          return aioBundle.GetStringFromName(str);
-        } catch (err) {
-          return str;
-        }
-      }
-      return str;
-    }
-
-    function aioInit() {
-      // replace {placeholders} with transated texts
-      aioBundle = aioCreateStringBundle("chrome://allinonegest/locale/allinonegest.properties");
-      
-      var elems = document.body.getElementsByTagName('*');
-      var elem, txt, matches;
-      
-      for (var i=0; i<elems.length; i++) {
-        elem=elems[i];
-        
-        if (elem.firstChild && elem.firstChild.nodeName == '#text' && elem.firstChild.data) {
-          txt = elem.firstChild.data.trim();
-          matches = /^\{([\w.]+)\}$/.exec(txt);
-          
-          if (matches) {
-            elem.firstChild.data = aioGetStr(matches[1]);
-          }
-        }
-      }
-    }
-    
-    window.addEventListener("DOMContentLoaded", function() {
-      aioInit();
-    });
-    </script>
+    <link rel="stylesheet" type="text/css" href="chrome://allinonegest/content/help/help.css" />
+    <script type="text/javascript" src="chrome://allinonegest/content/help/help.js"></script>
   </head>
   <body>
     <h1>Mouse Gesture Suite :: Options</h1>
     <p>Table of contents:</p>
     <ol>
-      <li><a href="#tab0">General Preferences</a></li>
-      <li><a href="#tab1">Gestures Customization</a></li>
-      <li><a href="#tab2">Advanced Prefs #1</a></li>
-      <li><a href="#tab3">Advanced Prefs #2</a></li>
+      <li><a href="#tab1">General Preferences</a></li>
+      <li><a href="#tab2">Gestures Customization</a></li>
+      <li><a href="#tab3">Advanced Prefs #1</a></li>
+      <li><a href="#tab4">Advanced Prefs #2</a></li>
     </ol>
-    <h2 id="tab0">General Preferences</h2>
+    <h2 id="tab1">General Preferences</h2>
     <strong>Enable</strong> - enable/disable main features:<br>
     <br>
     <strong>Mouse gestures</strong> - performed by moving the mouse with a
@@ -148,7 +84,7 @@
       <li><strong>Grab and Drag scrolling</strong> - only Grab and Drag is
         enabled.</li>
     </ul>
-    <h2 id="tab1">Gestures Customization</h2>
+    <h2 id="tab2">Gestures Customization</h2>
     <table style="width: 100%" border="1">
       <tbody>
         <tr>
@@ -607,7 +543,7 @@
     </table>
     <p><br>
     </p>
-    <h2 id="tab2">Advanced Prefs #1</h2>
-    <h2 id="tab3">Advanced Prefs #2</h2>
+    <h2 id="tab3">Advanced Prefs #1</h2>
+    <h2 id="tab4">Advanced Prefs #2</h2>
   </body>
 </html>

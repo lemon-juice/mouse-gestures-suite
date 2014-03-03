@@ -173,7 +173,7 @@ function openHelp() {
   
   var tabIndex = document.getElementById("tabpanId").selectedIndex;
   if (tabIndex) {
-    url += "#tab"+tabIndex;
+    url += "#tab"+(tabIndex+1);
   }
   
   window.open(url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=720,height=660");
