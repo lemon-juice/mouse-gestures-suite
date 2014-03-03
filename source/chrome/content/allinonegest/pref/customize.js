@@ -226,7 +226,9 @@ var gestActionTable = [
       "g.smartBack2", //85
       "g.smartForward1", //86
       "g.smartForward2", //87
-      "g.print" //88
+      "g.print", //88
+      "g.openImageInTab", //89,
+      "g.openImageInWin" //90
     ];
 var rockerGestName = [
       "g.leftRocker",

@@ -97,7 +97,9 @@ var aioActionTable = [
       [function(){aioSmartBackForward(-1, true);}, "g.smartBack2", 1, "87"], // 85
       [function(){aioSmartBackForward(+1, false);}, "g.smartForward1", 1, "84"], // 86
       [function(){aioSmartBackForward(+1, true);}, "g.smartForward2", 1, "85"], // 87
-      [function(){PrintUtils.print();}, "g.print", 0, ""] //88
+      [function(){PrintUtils.print();}, "g.print", 0, ""], //88
+      [function(){aioImageInTab();}, "g.openImageInTab", 0, ""], //89
+      [function(){aioImageInWindow();}, "g.openImageInWin", 0, ""], //90
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, ""], // 89
 //      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, ""], // 90
 //      [function(){aioCloseRightTabs(false);}, "g.CloseRightTab", 0, ""], // 91
@@ -1060,6 +1062,14 @@ function aioOpenDownloadManager() {
   toOpenWindowByType("Download:Manager",
                           "chrome://communicator/content/downloads/downloadmanager.xul",
                           "chrome,dialog=no,resizable");
+}
+
+function aioImageInWindow() {
+   if (aioOnImage) aioNewWindow(aioOnImage.src);
+}
+
+function aioImageInTab() {
+   if (aioOnImage) aioLinkInTab(aioOnImage.src, false, false);
 }
 
 function aioNullAction() {

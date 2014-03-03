@@ -218,10 +218,12 @@
         </tr>
         <tr>
           <td>{g.openNewWindow}</td>
-          <td>Open link in new window. If no link was found under gesture then
-            open new window with default page (same as Control+N). Behavior of
-            this action is affected by advanced preference <em>'Open new
-              Tab/Window' opens link under performed gesture</em>. </td>
+          <td>Open link in new window. If no link was found under gesture but
+            there was an image then open image in new window. If neither link
+            nor image was found then open new window with default page (same as
+            Control+N). Behavior of this action is affected by advanced
+            preference <em>'Open new Tab/Window' opens link under performed
+              gesture</em>. </td>
         </tr>
         <tr>
           <td>{g.openWindowInBg}</td>
@@ -358,6 +360,16 @@
           <td>{g.resetSize}</td>
           <td>If performed over image reset the image size. Otherwise reset text
             size on page. </td>
+        </tr>
+        <tr>
+          <td>{g.openImageInTab}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.openImageInWin}</td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.hideObject}</td>
