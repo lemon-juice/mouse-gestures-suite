@@ -12,7 +12,22 @@ h2 {
 table {
   border-spacing: 0;
   background-color: white;
+  border-top: 1px solid #222;
+  border-left: 1px solid #222;
 }
+table th {
+  background-color: #ffcc66;
+}
+table th,
 table td {
   padding: 1px 4px;
+  border-bottom: 1px solid #222;
+  border-right: 1px solid #222;
+}
+table tr:hover {
+  background-color: #ffe6b6;
+}
+table.gestlist tr td:first-child {
+  width: 15em;
+  font-weight: bold;
 }
