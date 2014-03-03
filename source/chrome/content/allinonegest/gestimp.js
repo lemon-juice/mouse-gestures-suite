@@ -812,7 +812,7 @@ function aioSetToNormalZ(aWindow) {
 }
 
 function aioOpenNewWindow(background) {
-  var s = background ? ",alwaysLowered" : "";
+  var s = (background && aioIsWin) ? ",alwaysLowered" : "";
   var win;
   if (aioOpenLinkInNew && aioOnLink.length) {
      win = aioNewWindow(aioOnLink[0].href, s);
@@ -822,7 +822,20 @@ function aioOpenNewWindow(background) {
      if (aioOnImage) win = aioNewWindow(aioOnImage.src, s);
      else win = aioNewWindow("", s);
   }
-  if (background) setTimeout(function(a){aioSetToNormalZ(a);}, 500, win);
+  if (background) {
+    if (aioIsWin) {
+      setTimeout(function(a){aioSetToNormalZ(a);}, 500, win);
+    } else {
+      win.addEventListener('load', function() {
+        setTimeout(function() {
+          window.focus();
+        }, 400);
+        setTimeout(function() {
+          window.focus();
+        }, 800);
+      }, true);
+    }
+  }
 }
 
 function aioDupWindow() {

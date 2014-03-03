@@ -1549,8 +1549,3 @@ window.addEventListener("load",
      if (aioInitStarted) return;
      aioStartUp();},
   false);
-window.addEventListener("load",
-  function() {
-     if (aioInitStarted) return;
-     aioStartUp();},
-  false);
