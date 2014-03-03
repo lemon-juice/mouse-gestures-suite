@@ -778,12 +778,21 @@ function aioNewWindow(url, flag) {
 function aioLinksInWindows() {
   if (!aioOnLink.length) return;
   if (aioSingleNewWindow) {
-     var hRefTable = [];
-     for (var i = 0; i < aioOnLink.length; ++i) {
-        hRefTable[i] = aioOnLink[i].href;
-        aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
-     }
-     aioNewWindow(hRefTable.join("|"), "");
+    var win = aioNewWindow(aioOnLink[0].href, "");
+    
+    var gestureLinks = [];
+    for (var i = 1; i < aioOnLink.length; ++i) {
+      gestureLinks.push(aioOnLink[i].href);
+    }
+    
+    win.addEventListener("load", function () {
+      setTimeout(function() {
+        for (var i = 0; i < gestureLinks.length; ++i) {
+          win.gBrowser.addTab(gestureLinks[i]);
+        }
+      }, 100);
+    }, true);
+//  aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
   }
   else
      for (i = 0; i < aioOnLink.length; ++i) {
