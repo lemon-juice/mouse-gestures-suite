@@ -15,6 +15,8 @@
       <li><a href="#tab2">Gestures Customization</a></li>
       <li><a href="#tab3">Advanced Prefs #1</a></li>
       <li><a href="#tab4">Advanced Prefs #2</a></li>
+      <li><a href="#tab5">Saving and porting Mouse Gesture preferences</a></li>
+      <li><a href="#tab6">Restoring defaults</a></li>
     </ol>
     <h2 id="tab1">General Preferences</h2>
     <strong>Enable</strong> - enable/disable main features:<br>
@@ -24,10 +26,10 @@
         open/close tabs and windows and perform many other commands without
         having to use toolbar buttons, menus or keyboard shortcuts. By default
         they are used by keeping the right mouse button down and drawing gesture
-        shape in one of four directions: up, right, down or left. After releasing
-        the mouse button the gesture function is executed. If you started
-        drawing a gesture and want to cancel it just stop moving the mouse and
-        wait at least one second before releasing the mouse button.</li>
+        shape in one of four directions: up, right, down or left. After
+        releasing the mouse button the gesture function is executed. If you
+        started drawing a gesture and want to cancel it just stop moving the
+        mouse and wait at least one second before releasing the mouse button.</li>
       <li> <strong>Rocker gestures</strong> - invoked by pressing one mouse
         button and then the other while keeping the first one pressed. By
         default used to go back and forward in browsing history but can be
@@ -574,7 +576,35 @@
         Preferences</a>.</p>
     <p><strong>Tab scrolling</strong> - enabled to reverse scrolling direction
       of tabs if <em>Scroll wheel in tab bar</em> is enabled.</p>
-    <p><br>
-    </p>
+    <h2 id="tab5">Saving and porting Mouse Gesture preferences (for advanced
+      users)</h2>
+    <p>At the moment this extension doesn't offer exporting and importing
+      preferences but you can do it manually:</p>
+    <ol>
+      <li>Locate your <a target="_blank" href="http://kb.mozillazine.org/Profile_folder_-_SeaMonkey">profile
+          folder</a>.</li>
+      <li>Close Seamonkey.</li>
+      <li>Open prefs.js in a notepad (backup prefs.js before making any changes
+        in case something goes wrong).</li>
+      <li>Preferences for mouse gestures are those starting with
+        "allinonegest.". Find a block of lines like this:<br>
+        <code>user_pref("allinonegest.TTHover", true);<br>
+          user_pref("allinonegest.autoscrollCursor", true);<br>
+          ...</code></li>
+      <li>Select and copy all lines containing mouse gesture preferences. You
+        can save them in a new file for future use or import to another profile
+        or Seamonkey installation.</li>
+      <li>To import preferences to another profile, open prefs.js of that
+        profile and paste the preferences into the file. If "allinonegest."
+        preferences already exist delete them first so you don't end up with
+        duplicates. It doesn't matter if mouse gestures are already installed or
+        not in the new profile, just make sure Seamonkey is not running when you
+        modify the file.</li>
+    </ol>
+    <h2 id="tab6">Restoring defaults</h2>
+    <p>In order to restore default mouse gesture options close Seamonkey and
+      delete all "allinonegest." preferences in prefs.js (see previous section
+      for details). When you next run Seamonkey the default preferences will be
+      restored.</p>
   </body>
 </html>
