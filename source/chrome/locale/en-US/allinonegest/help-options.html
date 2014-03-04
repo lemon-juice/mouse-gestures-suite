@@ -4,7 +4,7 @@
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <title>Mouse Gesture Suite :: Options</title>
     <link rel="stylesheet" type="text/css" href="chrome://allinonegest/content/help/help.css">
-    <link rel="stylesheet" type="text/css" href="file:///D:/dev/aio-gestures/source/chrome/content/allinonegest/help/help.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../../../content/allinonegest/help/help.css"> -->
     <script type="text/javascript" src="chrome://allinonegest/content/help/help.js"></script>
   </head>
   <body>
@@ -579,8 +579,21 @@
     <p><strong>Trigger button</strong> - choose which mouse button will be used
       for mouse gestures and scroll wheel navigation.</p>
     <p><strong>Mouse Gesture Actions</strong> - define behavior of some gesture
-      actions. These options are explained in detail in the <a href="#tab2">Gestures
-        Customization</a> table.</p>
+      actions:</p>
+    <ul>
+      <li><strong>'Open Links in Windows': Single new window with tabs</strong>
+        - <em>{g.linksInWindows}</em> will open one new window with each link
+        in separate tab.</li>
+      <li><strong>'Open new Tab/Window' opens link under performed gesture</strong>
+        - determines whether these functions will open links in new
+        windows/tabs.</li>
+      <li><strong>'Go Up to parent ...' / 'Load Home Page': Open in new tab</strong>
+        - open new tab when performing these functions.</li>
+      <li><strong>Rocker &amp; Scrollwheel gestures: Allow repetition for
+          actions that load pages</strong> - functions which have a repetitive
+        nature (like switching tabs, going back/forward) can be repeated without
+        releasing the trigger button.</li>
+    </ul>
     <h2 id="tab4">Advanced Prefs #2</h2>
     <p><strong>Middle Button Scrolling</strong> - define options for middle
       button scrolling. Availability of most of these options depend on which
@@ -618,5 +631,6 @@
       delete all "allinonegest." preferences in prefs.js (see previous section
       for details). When you next run Seamonkey the default preferences will be
       restored.</p>
+    
   </body>
 </html>

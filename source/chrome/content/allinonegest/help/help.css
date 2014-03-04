@@ -1,7 +1,10 @@
 body {
   background: #c7d0d9;
-  font-family: 'segoe ui', 'sans serif';
-  font-size: 90%;
+  font-family: tahoma, Sans-Serif;
+  font-size: 80%;
+}
+code {
+  font-size: 115%;
 }
 h2 {
   margin-top: 1.5em;
@@ -16,7 +19,8 @@ table {
   border-left: 1px solid #222;
 }
 table th {
-  background-color: #ffcc66;
+  background-color: #424f63;
+  color: white;
 }
 table th,
 table td {
