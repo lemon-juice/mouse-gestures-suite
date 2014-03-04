@@ -167,7 +167,7 @@ function changeTrace(inc) {
   if (inc) doEnabling();
 }
 
-function openHelp() {
+function openHelp(tabIndex) {
   var url = "chrome://allinonegest/locale/help.html";
   
   if (!chromeFileExists(url)) {
@@ -175,9 +175,15 @@ function openHelp() {
     url = "chrome://allinonegest-en/content/help-options.html";
   }
   
-  var tabIndex = document.getElementById("tabpanId").selectedIndex;
-  if (tabIndex) {
-    url += "#tab"+(tabIndex+1);
+  if (typeof tabIndex != 'undefined') {
+    if (tabIndex != '') {
+      url += "#tab"+tabIndex;
+    }
+  } else {
+    tabIndex = document.getElementById("tabpanId").selectedIndex;
+    if (tabIndex) {
+      url += "#tab"+(tabIndex+1);
+    }
   }
   
   window.open(url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=720,height=660");
@@ -197,6 +203,10 @@ function chromeFileExists(file)
     return false;
   }
   return true;
+}
+
+function openOptions() {
+  window.openDialog("chrome://allinonegest/content/pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
 }
 
 function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {

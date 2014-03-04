@@ -272,7 +272,11 @@ function aioShowLocalizedGestures(doc) {
   var locMove = aioGetStr("w.move").replace(/\'/g, "&#39;");
   const K1 = '<th width="100" class="thTop" nowrap="nowrap">&nbsp;' + locGest + '&nbsp;</th>';
   const imgURL = '<img src="http://pagesperso-orange.fr/marc.boullet/ext/';
-  var divCode = '<table width="100%" cellpadding="2" cellspacing="1" class="forumline">';
+  var divCode = '<div class="buttons">';
+  divCode += '<button onclick="openOptions()">' + aioGetStr('g.aioOptions') + '</button>';
+  divCode += '<button onclick="openHelp(2)">Help</button>';
+  divCode += '</div>';
+  divCode += '<table width="100%" cellpadding="2" cellspacing="1" class="forumline">';
   divCode += '<tr><th class="thCornerL" height="30" nowrap="nowrap">&nbsp;' + locFunc + '&nbsp;</th>';
   divCode += K1 + '<th width="50" class="thTop" nowrap="nowrap">&nbsp;' + locMove + '&nbsp;</th>';
   divCode += '<th class="thTop" height="30" nowrap="nowrap">&nbsp;' + locFunc + '&nbsp;</th>';
