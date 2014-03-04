@@ -34,7 +34,11 @@ function init() {
   trailSize = pref.getIntPref("allinonegest.trailSize");
   changeTrace(0);
   doEnabling();
-  populateTree(pref.getCharPref("allinonegest.gestureString"), pref.getCharPref("allinonegest.functionString"),
+  
+  var gestureString = pref.getCharPref("allinonegest.gestureString");
+  var functionString = pref.getCharPref("allinonegest.functionString");
+  var gestureStrings = sortGestureStrings(gestureString, functionString, defaultFunctionString);
+  populateTree(gestureStrings.gestureString, gestureStrings.functionString,
                pref.getCharPref("allinonegest.rockerString"));
   setScrollGesturesVisibility(document.getElementById("wheelScrollOptions").value == 0);
   const myGUID = "mousegesturessuite@lemon_juice.addons.mozilla.org";
@@ -193,5 +197,34 @@ function chromeFileExists(file)
     return false;
   }
   return true;
+}
+
+function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
+  var gest = gestStr.split("|");
+  var func = funcStr.split("|");
+  var defaultFunc = defaultFuncStr.split("|");
+  
+  // create key=>value object with gesture string
+  var gestObj = {};
+  
+  for (var i=0; i<func.length; i++) {
+    gestObj[func[i]] = gest[i] ? gest[i] : "";
+  }
+  
+  // recreate strings in new order as defined in defaultFuncStr
+  var newGest = [];
+  var newFunc = [];
+  
+  for (var i=0; i<defaultFunc.length; i++) {
+    if (gestObj.hasOwnProperty(defaultFunc[i])) {
+      newFunc.push(defaultFunc[i]);
+      newGest.push(gestObj[defaultFunc[i]]);
+    }
+  }
+
+  return {
+    gestureString: newGest.join("|"),
+    functionString: newFunc.join("|")
+  };
 }
 

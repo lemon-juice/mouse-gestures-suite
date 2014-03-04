@@ -300,17 +300,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
   var titleDelay, titleDuration, rockerString;
   const delayTable = [250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000];
   const durationTable = [2000, 3000, 4000, 5000, 6000, 7000, 8000];
-  const defaultGestureString =
-    "L|R|UD|UDU|LU|||U|||DUD|UL|UR|||RLDUR|||DR|RLR||+RUL|||D||DU|RUDR|RU|DL||" +
-    "+RU|RDLU|DURD|||||ULU|||||RULD|LURD||||||||LDUL|LUDL|LDUR|URD|LDRDL|LDR||RDU|" +
-    "|RUD|URDR|DRDLU|||||||||||||||||||DRD|||||" + 
-    "|||";
-  const defaultFunctionString =
-    "0|1|2|3|4|71|76|9|54|59|10|12|11|82|47|13|52|69|18|17|79|35|57|58|6|61|7|26|14|15|60|" +
-    "34|16|5|39|40|37|38|8|45|30|31|32|27|28|89|90|41|80|72|73|74|29|56|43|19|20|21|55|22|" +
-    "62|23|24|25|33|66|36|42|64|65|67|70|75|44|83|48|49|50|51|53|88|68|46|63|77|81|84|85|" +
-    "78|86|87";
-  const defaultRockerString = "0|1|73|72";
 
   if (!aioInitStarted) {
      aioInitStarted = true;

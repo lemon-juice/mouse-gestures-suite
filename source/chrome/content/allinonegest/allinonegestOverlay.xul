@@ -3,6 +3,7 @@
 <overlay id="allinonegest"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+  <script type="application/x-javascript" src="defaultGestureString.js"/>
   <script type="application/x-javascript" src="allinonegestOverlay.js"/>
   <script type="application/x-javascript" src="linkTooltip.js"/>
   <script type="application/x-javascript" src="gestimp.js"/>

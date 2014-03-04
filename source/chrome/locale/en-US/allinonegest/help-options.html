@@ -157,6 +157,27 @@
           </td>
         </tr>
         <tr>
+          <td>{g.duplicateWindow}</td>
+          <td><br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.openNewWindow}</td>
+          <td>Open link in new window. If no link was found under gesture but
+            there was an image then open image in new window. If neither link
+            nor image was found then open new window with default page (same as
+            Control+N). Behavior of this action is affected by advanced
+            preference <em>'Open new Tab/Window' opens link under performed
+              gesture</em>. </td>
+        </tr>
+        <tr>
+          <td>{g.openWindowInBg}</td>
+          <td>Open link in new background window.&nbsp;If no link was found
+            under gesture then open new background window with default page.
+            Behavior of this action is affected by advanced preference <em>'Open
+              new Tab/Window' opens link under performed gesture</em>. </td>
+        </tr>
+        <tr>
           <td>{g.previousTab}</td>
           <td><br>
           </td>
@@ -209,33 +230,25 @@
             with Right-Up-Left.</td>
         </tr>
         <tr>
+          <td>{g.linksInWindows}</td>
+          <td>All links that you have drawn the gesture over will be opened in
+            new windows. If you enable <em>'Open Links in Windows': Single new
+              window with tabs</em> option in advanced preferences then this
+            action will open one new window and load all links in separate tabs.<br>
+            <br>
+            The default gesture for this action is +RU (=any gesture
+            sequence-Right-Up), which allows you to draw a long path in any
+            shape over the links you want to open and then finish the gesture
+            with Right-Up.<br>
+          </td>
+        </tr>
+        <tr>
           <td>{g.openFav1}</td>
           <td>Load favorite bookmark with keyword <em>fav1</em>.</td>
         </tr>
         <tr>
           <td>{g.openFav2}</td>
           <td>Load favorite bookmark with keyword <em>fav2</em>.</td>
-        </tr>
-        <tr>
-          <td>{g.openNewWindow}</td>
-          <td>Open link in new window. If no link was found under gesture but
-            there was an image then open image in new window. If neither link
-            nor image was found then open new window with default page (same as
-            Control+N). Behavior of this action is affected by advanced
-            preference <em>'Open new Tab/Window' opens link under performed
-              gesture</em>. </td>
-        </tr>
-        <tr>
-          <td>{g.openWindowInBg}</td>
-          <td>Open link in new background window.&nbsp;If no link was found
-            under gesture then open new background window with default page.
-            Behavior of this action is affected by advanced preference <em>'Open
-              new Tab/Window' opens link under performed gesture</em>. </td>
-        </tr>
-        <tr>
-          <td>{g.duplicateWindow}</td>
-          <td><br>
-          </td>
         </tr>
         <tr>
           <td>{g.doubleStackWin}</td>
@@ -256,19 +269,6 @@
         <tr>
           <td>{g.closeWindow}</td>
           <td><br>
-          </td>
-        </tr>
-        <tr>
-          <td>{g.linksInWindows}</td>
-          <td>All links that you have drawn the gesture over will be opened in
-            new windows. If you enable <em>'Open Links in Windows': Single new
-              window with tabs</em> option in advanced preferences then this
-            action will open one new window and load all links in separate tabs.<br>
-            <br>
-            The default gesture for this action is +RU (=any gesture
-            sequence-Right-Up), which allows you to draw a long path in any
-            shape over the links you want to open and then finish the gesture
-            with Right-Up.<br>
           </td>
         </tr>
         <tr>
