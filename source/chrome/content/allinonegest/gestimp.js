@@ -310,7 +310,7 @@ function aiogestDOMLoaded(e) {
 
 function aioGesturesPage() {
   aioContent.addEventListener("DOMContentLoaded", aiogestDOMLoaded, false);
-  aioLinkInTab(aioKGestures, true, false);
+  aioLinkInTab(aioKGestures, false, false);
 }
 
 function aioCopyURLToClipBoard() {
