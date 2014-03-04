@@ -942,7 +942,12 @@ function aioHomePage() {
   var url = aioGetHomePageUrl();
   
   if (url) {
-    loadURI(url);
+    if (aioGoUpInNewTab && window.content.document.location.href != "about:blank") {
+      aioLinkInTab(url, false, false);
+    }
+    else {
+      loadURI(url);
+    }
   }
 }
 
@@ -962,7 +967,7 @@ function aioUpDir() { // from Stephen Clavering's GoUp
     var matches = url.match(/(^.*\/)(.*)/);
     if (!matches) return ""; //only fails if "url" has no /'s
     url = matches[1];
-    if (url != origUrl && !/(index|main)\.(php3?|html?)/i.test(url)) return url;
+    if (url != origUrl && !/(index|main)\.(php\d?|html?)/i.test(url)) return url;
     // dig through subdirs
     matches = url.match(/^([^\/]*?:\/\/.*\/)[^\/]+?\//);
     if (matches) return matches[1];
