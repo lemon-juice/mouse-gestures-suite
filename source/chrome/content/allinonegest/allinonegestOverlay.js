@@ -640,7 +640,7 @@ function aioMouseDown(e) {
            // Don't start gesture on scrollbars, input elements, etc.
            // @MOD: added " || e.button != aioLMB)" - to enable on inputs on right and middle buttons
            targetName  = e.target.nodeName.toLowerCase();
-           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && ((aioIsWin && targetName != 'toolbarbutton') || e.target.ownerDocument.contentType != "application/vnd.mozilla.xul+xml")
+           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && targetName != 'toolbarbutton'
                && !aioGestInProgress) {
               var canGesture = true;
               if (e.button == aioLMB) canGesture = aioGesturableURI();
