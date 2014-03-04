@@ -2,6 +2,8 @@
 overlay	chrome://navigator/content/navigator.xul	chrome://allinonegest/content/allinonegestOverlay.xul
 overlay	chrome://browser/content/pref/pref-advanced.xul	chrome://allinonegest/content/pref/aioPrefAdvancedOverlay.xul
 
+overlay	chrome://communicator/content/tasksOverlay.xul	chrome://allinonegest/content/TasksOverlay.xul
+
 content	allinonegest	jar:chrome/allinonegest.jar!/content/allinonegest/
 content	allinonegest-en jar:chrome/allinonegest.jar!/locale/en-US/allinonegest/
 

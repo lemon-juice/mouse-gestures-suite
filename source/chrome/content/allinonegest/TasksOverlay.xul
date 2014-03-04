@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<overlay id="allinonegestTasksOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <menupopup id="taskPopup">
+    <menuitem id="mousegesturessuite_menu" label="Mouse Gestures Suite" 
+              oncommand="window.openDialog('chrome://allinonegest/content/pref/aioOptions.xul', '', 'chrome,dialog,modal,resizable');" />
+  </menupopup>
+</overlay>
