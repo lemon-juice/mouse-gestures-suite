@@ -314,7 +314,11 @@ function aiogestDOMLoaded(e) {
 
 function aioGesturesPage() {
   aioContent.addEventListener("DOMContentLoaded", aiogestDOMLoaded, false);
-  aioLinkInTab(aioKGestures, false, false);
+  if (window.content.document.location.href != "about:blank") {
+    aioLinkInTab(aioKGestures, false, false);
+  } else {
+    loadURI(aioKGestures);
+  }
 }
 
 function aioCopyURLToClipBoard() {
