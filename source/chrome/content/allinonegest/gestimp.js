@@ -118,7 +118,7 @@ var aioLastTabInfo = [];
 var aioUndoHide = [];
 var aioUnique = 0;
 var aioOrigBlurTab;
-const aioKGestures = aioDir + "aiogest.html";
+const aioKGestures = aioDir + "show-gestures.html";
 
 function aioStatusMessage(msg, timeToClear) {
   if (!aioStatusBar) return;
@@ -264,14 +264,14 @@ function aioShowLocalizedGestures(doc) {
         }
         else lStr += aioShortGest[aStr.charAt(i)];
     if (!imageName)
-       if (aStr.length < 5) imageName = aStr.toLowerCase(); else imageName = "nomov";
+       if (aStr.length < 5) imageName = aStr; else imageName = "other";
     return lStr;
   }
   var locGest = aioGetStr("w.gesture").replace(/\'/g, "&#39;");
   var locFunc = aioGetStr("w.function").replace(/\'/g, "&#39;");
   var locMove = aioGetStr("w.move").replace(/\'/g, "&#39;");
   const K1 = '<th width="100" class="thTop" nowrap="nowrap">&nbsp;' + locGest + '&nbsp;</th>';
-  const imgURL = '<img src="http://pagesperso-orange.fr/marc.boullet/ext/';
+  const imgURL = '<img src="chrome://allinonegest/content/gest-imgs/';
   var divCode = '<div class="buttons">';
   divCode += '<button onclick="openOptions()">' + aioGetStr('g.aioOptions') + '</button>';
   divCode += '<button onclick="openHelp(2)">Help</button>';
@@ -309,7 +309,6 @@ function aioShowLocalizedGestures(doc) {
 function aiogestDOMLoaded(e) {  
   var doc = e.originalTarget.defaultView.document;
   if (doc.location.href == aioKGestures) aioShowLocalizedGestures(doc);
-//  aioContent.removeEventListener("DOMContentLoaded", aiogestDOMLoaded, false);
 }
 
 function aioGesturesPage() {
