@@ -521,25 +521,31 @@ function aioSelectionAsURL() {
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var url = winWrapper.getSelection().toString();
   if (!url) return;
+  
   // the following by Ted Mielczarek
   url = url.replace(/\s/g, ""); // Strip any space characters
   url = url.replace(/^[^a-zA-Z0-9]+/, ""); // strip bad leading characters
   url = url.replace(/[\.,\'\"\)\?!>\]]+$/, ""); // strip bad ending characters
+  url = url.replace(/\\/g,"/"); // change \ to /
   if (!url) return;
-  url.replace(/\\/g,"/"); // change \ to /
-  if (url.indexOf(".") == -1) return; // can't be valid
+  if (!url || url.indexOf(".") == -1) {
+    // invalid address, do web search instead
+    aioSelectionAsSearchTerm(true);
+    return;
+  }
+  
   if (url.search(/^\w+:/) == -1) // make sure it has some sort of protocol
      if (url.indexOf("@") == -1) url = "http://" + url;
      else url = "mailto:" + url;
   aioLinkInTab(url, true, false);
 }
 
-function aioSelectionAsSearchTerm() {
+function aioSelectionAsSearchTerm(alwaysNewTab) {
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var searchStr = winWrapper.getSelection().toString();
   if (!searchStr) return;
-  if (typeof(BrowserSearch) == "undefined") {
+  if (0 && typeof(BrowserSearch) == "undefined") {
      var searchBar = document.getElementById("searchbar");
      if (!searchBar) return;
      searchBar = searchBar.mTextbox;
@@ -553,7 +559,16 @@ function aioSelectionAsSearchTerm() {
     searchBar = BrowserSearch.searchBar;
     if (!searchBar) return;
     searchBar.value = searchStr;
-    BrowserSearch.loadSearch(searchStr, true);
+    
+    if (alwaysNewTab) {
+      var oldPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+      aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
+      BrowserSearch.loadSearch(searchStr, true);
+      aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldPref);
+    } else {
+      // may open in tab or window depending on browser prefs
+      BrowserSearch.loadSearch(searchStr, true);
+    }
   }
 }
 
