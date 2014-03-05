@@ -283,20 +283,36 @@ function aioShowLocalizedGestures(doc) {
   divCode += K1 + '<th width="50" class="thCornerR" nowrap="nowrap">&nbsp;' + locMove + '&nbsp;</th></tr>';
   var gestTable = aioActionString.split("|");
   var funcTable = aioFuncString.split("|");
-  var func, actionName, j = 0;
+  var func, actionName;
+  var cols = [[], []], colNum = 0, c;
+  var splitColAt = Math.ceil(gestTable.length / 2);
+  
   for (var i = 0; i < gestTable.length; ++i) {
-     func = funcTable[i] - 0;
-     if (func < 0 || func >= aioActionTable.length) {j++; continue;}
-     actionName = aioActionTable[func][1].replace(/\'/g, "&#39;");
-     if (!((i - j) & 1)) divCode +='<tr>';
-     divCode += K2 + actionName + K3 + localized(gestTable[i]) + K4;
-     divCode += imgURL + imageName + '.png"></td>';
-     if ((i-j) & 1) divCode += '</tr>'
+    if (i == splitColAt) {
+      colNum++;
+    }
+    func = funcTable[i] - 0;
+    if (func < 0 || func >= aioActionTable.length) {continue;}
+    actionName = aioActionTable[func][1].replace(/\'/g, "&#39;");
+    c = K2 + actionName + K3 + localized(gestTable[i]) + K4;
+    c += imgURL + imageName + '.png"></td>';
+    cols[colNum].push(c);
   }
-  if ((gestTable.length - j) & 1) {
-     divCode += K2 + "&nbsp;" + K3 + "&nbsp;" + K4;
-     divCode += imgURL + 'nomov.png"></td></tr>';
+
+  // insert 2 columns into table
+  for (var i=0; i<cols[0].length; i++) {
+    divCode += '<tr>';
+    divCode += cols[0][i];
+    
+    if (cols[1][i]) {
+      divCode += cols[1][i];
+    } else {
+      divCode += K2 + "&nbsp;" + K3 + "&nbsp;" + K4;
+      divCode += imgURL + 'nomov.png"></td>';
+    }
+    divCode += '</tr>';
   }
+  
   divCode += '</table>';
   var title = aioGetStr("w.gestTable").replace(/\'/g, "&#39;");
   var str = "(function(){window.addEventListener('load',function(e){document.title='" + title +
