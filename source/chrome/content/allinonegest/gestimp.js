@@ -260,7 +260,8 @@ function aioShowLocalizedGestures(doc) {
     var lStr = ""; imageName = "";
     for (var i = 0; i < aStr.length; ++i)
         if (aioShortGest[aStr.charAt(i)] == null) {
-           imageName = "nomov"; lStr += aStr.charAt(i);
+           imageName = (aStr.charAt(i) == '+') ? "other" : "nomov";
+           lStr += aStr.charAt(i);
         }
         else lStr += aioShortGest[aStr.charAt(i)];
     if (!imageName)
