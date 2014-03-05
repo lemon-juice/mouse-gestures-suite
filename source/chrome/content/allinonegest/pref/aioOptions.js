@@ -186,7 +186,8 @@ function openHelp(tabIndex) {
     }
   }
   
-  window.open(url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=720,height=660");
+  var win = window.open(url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=800,height=660");
+  win.focus();
 }
 
 function chromeFileExists(file)

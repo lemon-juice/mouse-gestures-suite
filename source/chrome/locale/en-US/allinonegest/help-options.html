@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="chrome://allinonegest/content/help/help.css">
     <!-- <link rel="stylesheet" type="text/css" href="../../../content/allinonegest/help/help.css"> -->
     <script type="text/javascript" src="chrome://allinonegest/content/help/help.js"></script>
+    <script type="text/javascript" src="chrome://allinonegest/content/gestimp.js"></script>
   </head>
   <body>
     <h1>Mouse Gesture Suite :: Options</h1>
@@ -95,6 +96,7 @@
       <thead>
         <tr>
           <th>Function</th>
+          <th>Gesture</th>
           <th>Description</th>
         </tr>
       </thead>
@@ -103,9 +105,13 @@
           <td>{g.browserBack}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.browserForward}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -113,27 +119,39 @@
           <td>{g.browserReload}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.browserReloadSkipCache}</td>
+          <td><br>
+          </td>
           <td>Force repload from network (same as Control+Shift+R)</td>
         </tr>
         <tr>
           <td>{g.browserStop}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.reloadFrame}</td>
+          <td><br>
+          </td>
           <td>Reload frame under gesture or reload page if no frame exists.</td>
         </tr>
         <tr>
           <td>{g.reloadAllTabs}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.browserOpenTabInFg}</td>
+          <td><br>
+          </td>
           <td>Open link in new tab. If no link was found under gesture then open
             new tab with default page (same as Control+T). Behavior of this
             action is affected by advanced preference <em>'Open new Tab/Window'
@@ -141,6 +159,8 @@
         </tr>
         <tr>
           <td>{g.browserOpenTabInBg}</td>
+          <td><br>
+          </td>
           <td>Open link in new background tab. If no link was found under
             gesture then open blank tab. Behavior of this action is affected by
             advanced preference <em>'Open new Tab/Window' opens link under
@@ -150,9 +170,13 @@
           <td>{g.openBlankTab}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.duplicateTab}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -160,9 +184,13 @@
           <td>{g.duplicateWindow}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.openNewWindow}</td>
+          <td><br>
+          </td>
           <td>Open link in new window. If no link was found under gesture but
             there was an image then open image in new window. If neither link
             nor image was found then open new window with default page (same as
@@ -172,6 +200,8 @@
         </tr>
         <tr>
           <td>{g.openWindowInBg}</td>
+          <td><br>
+          </td>
           <td>Open link in new background window.&nbsp;If no link was found
             under gesture then open new background window with default page.
             Behavior of this action is affected by advanced preference <em>'Open
@@ -181,18 +211,26 @@
           <td>{g.previousTab}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.nextTab}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.lastTab}</td>
+          <td><br>
+          </td>
           <td>Go to rightmost tab.</td>
         </tr>
         <tr>
           <td>{g.closeTab}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -200,28 +238,40 @@
           <td>{g.closeOther}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.undoCloseTab}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.closeDoc}</td>
+          <td><br>
+          </td>
           <td>Close current tab or window if only one tab is open.</td>
         </tr>
         <tr>
           <td>{g.openSelection}</td>
+          <td><br>
+          </td>
           <td>If a web address is selected then open it in new tab. Otherwise
             search for selected text in new tab.</td>
         </tr>
         <tr>
           <td>{g.searchSelection}</td>
+          <td><br>
+          </td>
           <td>Perform web search using default search engine in new tab or
             window (depending on browser settings).</td>
         </tr>
         <tr>
           <td>{g.linksInTabs}</td>
+          <td><br>
+          </td>
           <td>All links that you have drawn the gesture over will be opened in
             new tabs.<br>
             <br>
@@ -232,6 +282,8 @@
         </tr>
         <tr>
           <td>{g.linksInWindows}</td>
+          <td><br>
+          </td>
           <td>All links that you have drawn the gesture over will be opened in
             new windows. If you enable <em>'Open Links in Windows': Single new
               window with tabs</em> option in advanced preferences then this
@@ -245,14 +297,20 @@
         </tr>
         <tr>
           <td>{g.openFav1}</td>
+          <td><br>
+          </td>
           <td>Load favorite bookmark with keyword <em>fav1</em>.</td>
         </tr>
         <tr>
           <td>{g.openFav2}</td>
+          <td><br>
+          </td>
           <td>Load favorite bookmark with keyword <em>fav2</em>.</td>
         </tr>
         <tr>
           <td>{g.doubleStackWin}</td>
+          <td><br>
+          </td>
           <td>Open link in new window: the opener window and the new window are
             positioned side by side, each covering half of the screen.<br>
           </td>
@@ -261,9 +319,13 @@
           <td>{g.restMaxWin}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.minWin}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -271,9 +333,13 @@
           <td>{g.closeWindow}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.fullScreen}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -281,9 +347,13 @@
           <td>{g.browserHome}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.scrollToTop}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -291,9 +361,13 @@
           <td>{g.scrollToBottom}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.scrollDown}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -301,18 +375,26 @@
           <td>{g.scrollUp}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.upDir}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.firstPage}</td>
+          <td><br>
+          </td>
           <td>Go to first page in history of current tab/window. </td>
         </tr>
         <tr>
           <td>{g.zoomIn}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -320,9 +402,13 @@
           <td>{g.zoomOut}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.resetZoom}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -330,9 +416,13 @@
           <td>{g.doubleImageSize}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.halveImageSize}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -340,25 +430,35 @@
           <td>{g.resetImage}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.saveImageAs}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.enlargeObject}</td>
+          <td><br>
+          </td>
           <td>If performed over image zoom in the image. Otherwise zoom in text
             on page.<br>
           </td>
         </tr>
         <tr>
           <td>{g.reduceObject}</td>
+          <td><br>
+          </td>
           <td>If performed over image zoom out the image. Otherwise zoom out
             text on page. </td>
         </tr>
         <tr>
           <td>{g.resetSize}</td>
+          <td><br>
+          </td>
           <td>If performed over image reset the image size. Otherwise reset text
             size on page. </td>
         </tr>
@@ -366,9 +466,13 @@
           <td>{g.openImageInTab}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.openImageInWin}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -376,14 +480,20 @@
           <td>{g.hideObject}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.undoHideObject}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.hideFlash}</td>
+          <td><br>
+          </td>
           <td>After hiding flash objects you can click each one to view.<br>
           </td>
         </tr>
@@ -391,20 +501,28 @@
           <td>{g.viewPageSource}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.viewFrameSource}</td>
+          <td><br>
+          </td>
           <td>View frame source. If there is no frame then view page source.<br>
           </td>
         </tr>
         <tr>
           <td>{g.viewSiteCookies}</td>
+          <td><br>
+          </td>
           <td>View cookies on current site. Currently, only cookies which can be
             read by javascript are shown.<br>
           </td>
         </tr>
         <tr>
           <td>{g.deleteSiteCookies}</td>
+          <td><br>
+          </td>
           <td>Delete cookies on current site. Currently, only cookies which can
             be read by javascript are deleted. </td>
         </tr>
@@ -412,9 +530,13 @@
           <td>{g.pageInfo}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.frameInfo}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -422,24 +544,34 @@
           <td>{g.jsConsole}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.addBookmark}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.w3cValidate}</td>
+          <td><br>
+          </td>
           <td>Validate page online at validator.w3.org.<br>
           </td>
         </tr>
         <tr>
           <td>{g.translate}</td>
+          <td><br>
+          </td>
           <td>Translate page at translate.google.com.<br>
           </td>
         </tr>
         <tr>
           <td>{g.metaInfo}</td>
+          <td><br>
+          </td>
           <td>View meta tags in page.<br>
           </td>
         </tr>
@@ -447,9 +579,13 @@
           <td>{g.bookmarkMgr}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.downloadMgr}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -457,9 +593,13 @@
           <td>{g.showHideStatusBar}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.URLToClipboard}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -467,9 +607,13 @@
           <td>{g.pasteAndGo}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.incURL}</td>
+          <td><br>
+          </td>
           <td>Increment number in URL (for example, page number). If there are
             multiple numbers you will be asked to choose the number to
             increment.<br>
@@ -477,16 +621,22 @@
         </tr>
         <tr>
           <td>{g.decURL}</td>
+          <td><br>
+          </td>
           <td>Decrement number in URL. </td>
         </tr>
         <tr>
           <td>{g.clearDigitFlipper}</td>
+          <td><br>
+          </td>
           <td>Forget your choice about which number to increment/decrement in
             URL.<br>
           </td>
         </tr>
         <tr>
           <td>{g.linksInFiles}</td>
+          <td><br>
+          </td>
           <td>Save all links under gesture to files.<br>
           </td>
         </tr>
@@ -494,9 +644,13 @@
           <td>{g.printPreview}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.print}</td>
+          <td><br>
+          </td>
           <td><br>
           </td>
         </tr>
@@ -504,9 +658,13 @@
           <td>{g.savePageAs}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.showGestures}</td>
+          <td><br>
+          </td>
           <td>Show your gesture definitions in new tab.<br>
           </td>
         </tr>
@@ -514,9 +672,13 @@
           <td>{g.aioOptions}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.nextLink}</td>
+          <td><br>
+          </td>
           <td>Link that contains one of the strings defined in <em>Advanced
               Prefs #1</em> will be followed. The <em>next</em> strings are
             delimited with |. Useful for navigating to the next page.<br>
@@ -524,6 +686,8 @@
         </tr>
         <tr>
           <td>{g.prevLink}</td>
+          <td><br>
+          </td>
           <td>Like above.<br>
           </td>
         </tr>
@@ -531,14 +695,20 @@
           <td>{g.smartBack1}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.smartBack2}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.fastForward}</td>
+          <td><br>
+          </td>
           <td>This acts like the normal <strong>{g.browserForward}</strong>
             function as far as there are pages in the forward history. Once at
             the end, it acts like the <strong>{g.nextLink}</strong> function. </td>
@@ -547,13 +717,19 @@
           <td>{g.smartForward1}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
           <td>{g.smartForward2}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
         </tr>
         <tr>
+          <td><br>
+          </td>
           <td><br>
           </td>
           <td><br>
@@ -561,8 +737,11 @@
         </tr>
         <tr>
           <td>{g.leftRocker}</td>
-          <td colspan="1" rowspan="4">Press <em>Edit function</em> button to
-            assign any function to the rocker or scroll wheel gestures.<br>
+          <td rowspan="4"><br>
+          </td>
+          <td rowspan="4">Press <em>Edit function</em> button to
+            assign any function to the rocker or scroll wheel
+            gestures.<br>
           </td>
         </tr>
         <tr>
