@@ -523,12 +523,13 @@ function aioSelectionAsURL() {
   if (!url) return;
   
   // the following by Ted Mielczarek
-  url = url.replace(/\s/g, ""); // Strip any space characters
+  //url = url.replace(/\s/g, ""); // Strip any space characters
   url = url.replace(/^[^a-zA-Z0-9]+/, ""); // strip bad leading characters
   url = url.replace(/[\.,\'\"\)\?!>\]]+$/, ""); // strip bad ending characters
   url = url.replace(/\\/g,"/"); // change \ to /
-  if (!url) return;
-  if (!url || url.indexOf(".") == -1) {
+  url = url.trim();
+
+  if (!url || !/\./.test(url) || /\s/.test(url)) {
     // invalid address, do web search instead
     aioSelectionAsSearchTerm(true);
     return;
