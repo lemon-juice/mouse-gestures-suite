@@ -1,5 +1,14 @@
 
 overlay	chrome://navigator/content/navigator.xul	chrome://allinonegest/content/allinonegestOverlay.xul
+
+overlay chrome://messenger/content/messenger.xul chrome://allinonegest/content/allinonegestOverlay.xul
+overlay chrome://messenger/content/messageWindow.xul chrome://allinonegest/content/allinonegestOverlay.xul
+overlay chrome://messenger/content/messengercompose/messengercompose.xul chrome://allinonegest/content/allinonegestOverlay.xul
+
+overlay chrome://navigator/content/viewSource.xul chrome://allinonegest/content/allinonegestOverlay.xul
+overlay chrome://navigator/content/viewPartialSource.xul chrome://allinonegest/content/allinonegestOverlay.xul
+
+
 overlay	chrome://browser/content/pref/pref-advanced.xul	chrome://allinonegest/content/pref/aioPrefAdvancedOverlay.xul
 
 overlay	chrome://communicator/content/tasksOverlay.xul	chrome://allinonegest/content/TasksOverlay.xul

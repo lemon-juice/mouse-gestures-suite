@@ -397,7 +397,13 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioFxV18 = versionComparator.compare(geckoVersion, "18.0") >= 0;
 
      aioContent = document.getElementById("content");
-     aioRendering = aioContent.mPanelContainer;
+     if (aioContent) {
+       aioRendering = aioContent.mPanelContainer;
+     } else {
+       aioContent = document.getElementById("messagepanebox");
+       aioRendering = document.getElementById("messagepane");
+     }
+     
      aioContextPopup = document.getElementById("contentAreaContextMenu");
      aioMainWin = document.getElementById("main-window");
      aioStatusBar = document.getElementById("statusbar-display");
@@ -407,7 +413,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
      document.documentElement.addEventListener("contextmenu", aioContextMenuEnabler, true);
 
      var activeId = "" + aioUnique++;
-     aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
+     if (aioContent.mTabContainer) {
+       aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
+     }
      
      window.addEventListener("mouseup", aioMouseUp, true);
      window.addEventListener("draggesture", aioDragGesture, true);
@@ -441,16 +449,16 @@ function aioInit() { // overlay has finished loading or a pref was changed
   
   aioRendering.removeEventListener("DOMMouseScroll", aioWheelScroll, false);
   
-  if (aioTabSwitching) {
-     aioContent.mStrip.addEventListener("DOMMouseScroll", aioSwitchTabs, true);
-     if (platform.indexOf('linux') != -1) // hack for linux-gtk2 + xft bug
-        document.getElementById("navigator-toolbox").addEventListener("DOMMouseScroll", aioSwitchTabs, true); 
-  }
-  else {
-     aioContent.mStrip.removeEventListener("DOMMouseScroll", aioSwitchTabs, true);
-     if (platform.indexOf('linux') != -1)
-        document.getElementById("navigator-toolbox").removeEventListener("DOMMouseScroll", aioSwitchTabs, true); 
-  }
+//  if (aioTabSwitching) {
+//     aioContent.mStrip.addEventListener("DOMMouseScroll", aioSwitchTabs, true);
+//     if (platform.indexOf('linux') != -1) // hack for linux-gtk2 + xft bug
+//        document.getElementById("navigator-toolbox").addEventListener("DOMMouseScroll", aioSwitchTabs, true); 
+//  }
+//  else {
+//     aioContent.mStrip.removeEventListener("DOMMouseScroll", aioSwitchTabs, true);
+//     if (platform.indexOf('linux') != -1)
+//        document.getElementById("navigator-toolbox").removeEventListener("DOMMouseScroll", aioSwitchTabs, true); 
+//  }
   aioFirstInit = false;
   dump("AiOGest: end init\n");
 }
