@@ -891,11 +891,27 @@ function aioCloseWindow() {
 
 function aioDoubleWin() {
   if (!aioOnLink.length) return;
-  window.moveTo(0, 0);
-  var width = aioIsWin ? (screen.availWidth / 2) : (screen.availWidth / 2 - 5);
-  window.resizeTo(width, screen.availHeight);
-  var win = aioNewWindow(aioOnLink[0].href, "");
-  win.moveTo(screen.availWidth / 2, 0);
+  window.moveTo(screen.availLeft, screen.availTop);
+  
+  if (aioIsWin) {
+    // only on Win screen.availWidth & screen.availHeight are correct
+    window.resizeTo(screen.availWidth / 2, screen.availHeight);
+    var win = aioNewWindow(aioOnLink[0].href, "");
+    win.moveTo(screen.availWidth / 2 + screen.availLeft, screen.availTop);
+   
+  } else {
+    var win = aioNewWindow(aioOnLink[0].href, "top=" + screen.availTop + ",left=" + screen.availLeft + ",outerWidth=" + screen.availWidth + ",outerHeight=" + screen.availHeight);
+    
+    var shift = aioIsWin ? 0 : 5; // prevent overlapping on linux
+
+    win.addEventListener("load", function () {
+      win.resizeTo(win.outerWidth / 2 - shift, win.outerHeight);
+      setTimeout(function() {
+        window.resizeTo(win.outerWidth, win.outerHeight);
+        win.moveTo(win.outerWidth + screen.availLeft + shift, screen.availTop);
+      }, 100);
+    }, true);
+  }
   aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
 }
 
