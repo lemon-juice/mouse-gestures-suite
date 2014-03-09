@@ -305,6 +305,30 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioInitStarted = true;
      aioGetLocalizedStrings();
   }
+  
+  // detect window type
+  switch (String(document.location)) {
+    case "chrome://navigator/content/navigator.xul":
+      aioWindowType = "browser";
+      break;
+     
+    case "chrome://global/content/viewSource.xul":
+    case "chrome://global/content/viewPartialSource.xul":
+      aioWindowType = "source";
+      break;
+     
+    case "chrome://messenger/content/messenger.xul":
+    case "chrome://messenger/content/messageWindow.xul":
+      aioWindowType = "messenger";
+      break;
+    
+    case "chrome://messenger/content/messengercompose/messengercompose.xul":
+      aioWindowType = "mailcompose";
+      break;
+    
+    default:
+      aioWindowType = null;
+  }
 
   // read prefs or set Defaults
   const prefFuncs = [ // get pref value, set default value, check value range
@@ -396,14 +420,29 @@ function aioInit() { // overlay has finished loading or a pref was changed
      
      aioFxV18 = versionComparator.compare(geckoVersion, "18.0") >= 0;
 
-     aioContent = document.getElementById("content");
-     if (aioContent) {
-       aioRendering = aioContent.mPanelContainer;
-     } else {
-       aioContent = document.getElementById("messagepanebox");
-       aioRendering = document.getElementById("messagepane");
+     switch (aioWindowType) {
+       case 'browser':
+         aioContent = document.getElementById("content");
+         aioRendering = aioContent.mPanelContainer;
+         break;
+         
+       case 'messenger':
+         aioContent = document.getElementById("messagepanebox");
+         aioRendering = document.getElementById("messagepane");
+         break;
+         
+       case 'mailcompose':
+         aioContent = aioContent = document.getElementById("appcontent");
+         aioRendering = document.getElementById("content-frame");
+         break;
+         
+       case 'source':
+         aioContent = aioContent = document.getElementById("appcontent");
+         aioRendering = document.getElementById("content");
+         break;
      }
      
+   
      aioContextPopup = document.getElementById("contentAreaContextMenu");
      aioMainWin = document.getElementById("main-window");
      aioStatusBar = document.getElementById("statusbar-display");

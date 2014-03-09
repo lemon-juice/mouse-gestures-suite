@@ -185,8 +185,12 @@ function aioCorrectFocus(e) {
 /*  Gesture actions */
 
 function aioBackForward(back) {
-  back ? BrowserBack() : BrowserForward();
-  content.focus();
+  if (aioWindowType == 'messenger') {
+    back ? goDoCommand('cmd_goBack') : goDoCommand('cmd_goForward');
+  } else {
+    back ? BrowserBack() : BrowserForward();
+    content.focus();
+  }
 }
 
 function aioFavoriteURL(suffix) {
@@ -574,24 +578,15 @@ function aioSelectionAsSearchTerm(alwaysNewTab) {
 }
 
 function aioZoomEnlarge() {
-  var toggleZoom = ZoomManager.useFullZoom;
-  if (toggleZoom) ZoomManager.useFullZoom = false;
-  FullZoom.enlarge();
-  ZoomManager.useFullZoom = toggleZoom;
-  return;
+  ZoomManager.enlarge()
 }
 
 function aioZoomReduce() {
-  var toggleZoom = ZoomManager.useFullZoom;
-  if (toggleZoom) ZoomManager.useFullZoom = false;
-  FullZoom.reduce();
-  ZoomManager.useFullZoom = toggleZoom;
-  return;
+  ZoomManager.reduce()
 }
 
 function aioZoomReset() {
-  FullZoom.reset();
-  return;
+  ZoomManager.reset();
 }
 
 function aioFullZoomOperation(aOper) {
@@ -660,9 +655,32 @@ function aioSaveImageAs() {
 }
 
 function aioCloseCurrTab(lastTabClosesWindow) {
-  if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) aioContent.removeCurrentTab();
-  else if (typeof(BrowserCloseWindow) == "function") BrowserCloseWindow();
-       else closeWindow(true);
+  if (aioWindowType == "browser") {
+    if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) {
+      aioContent.removeCurrentTab();
+    } else if (typeof(BrowserCloseWindow) == "function") {
+      BrowserCloseWindow();
+    } else {
+      closeWindow(true);
+    }
+  
+  } else if (aioWindowType == "messenger") {
+    var tabmail = window.top.document.getElementById("tabmail");
+    if (tabmail.tabContainer.childNodes.length > 1) {
+        tabmail.removeCurrentTab();
+    } else {
+      if (lastTabClosesWindow) {
+        closeWindow(true);
+      }
+    }
+  } else if (aioWindowType == 'mailcompose') {
+    if (lastTabClosesWindow) {
+      goDoCommand('cmd_close');
+    }
+  
+  } else {
+      closeWindow(true);
+  }
 }
 
 function aioUndoCloseTab() {
