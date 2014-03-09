@@ -41,9 +41,10 @@ function aioTraslate() {
   }
 }
 
+// insert currently assigned gesture definitions into the 2nd column of the table
 function aioInsertGesturesToTable() {
   var trs = document.querySelectorAll("table.gestlist tbody tr");
-  var tr, tds, matches;
+  var tds, matches;
   
   for (var i=0; i<trs.length; i++) {
     tds = trs[i].getElementsByTagName('td');
@@ -52,12 +53,17 @@ function aioInsertGesturesToTable() {
       matches = /^\{([\w.]+)\}$/.exec(tds[0].firstChild.data.trim());
       
       if (matches && tds[1]) {
-        tds[1].innerHTML = aioPropertyToGestureString(matches[1]);
+        while (tds[1].firstChild) {
+          tds[1].removeChild(tds[1].firstChild);
+        }
+        tds[1].appendChild(document.createTextNode(aioPropertyToGestureString(matches[1])));
       }
     }
   }
 }
 
+// for the given property describing gesture return currently assigned
+// gesture in the form of (localized) gesture string, e.g. "RUL"
 function aioPropertyToGestureString(prop) {
   var gStr = "";
   
@@ -71,6 +77,7 @@ function aioPropertyToGestureString(prop) {
   return gStr;
 }
 
+// translate gesture preference string like "RUL" into current locale
 function getLocalizedShortGesture(prefGesture) {
   if (!prefGesture) {
      return "";

@@ -168,11 +168,11 @@ function changeTrace(inc) {
 }
 
 function openHelp(tabIndex) {
-  var url = "chrome://allinonegest/locale/help.html";
+  var url = "allinonegest/locale/help.html";
   
   if (!chromeFileExists(url)) {
     // default English help
-    url = "chrome://allinonegest-en/content/help-options.html";
+    url = "allinonegest-en/content/help-options.html";
   }
   
   if (typeof tabIndex != 'undefined') {
@@ -186,7 +186,7 @@ function openHelp(tabIndex) {
     }
   }
   
-  var win = window.open(url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=800,height=660");
+  var win = window.open("chrome://" + url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=800,height=660");
   win.focus();
 }
 
@@ -194,7 +194,7 @@ function chromeFileExists(file)
 {
   var xmlhttp = new window.XMLHttpRequest();
   try {
-    xmlhttp.open("GET", file, false);
+    xmlhttp.open("GET", "chrome://" + file, false);
     xmlhttp.onreadystatechange = function() {
       xmlhttp.abort();
     }
