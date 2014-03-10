@@ -32,7 +32,6 @@ var aioOnImage = null; // contains an image DOM node
 var aioSrcEvent; // event which started the active gesture
 var aioBundle; // String bundle for localized strings
 var aioShowContextMenu = false;
-var aioAllowPopupShowing = true;
 var aioGestEnabled, aioRockEnabled;  // prefs ....
 var aioTrailEnabled, aioTrailColor, aioTrailSize, aioTrailOpacity;
 var aioWheelEnabled, aioScrollEnabled, aioNoScrollMarker, aioStartOnLinks;
@@ -403,8 +402,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioStatusBar = document.getElementById("statusbar-display");
     
      window.addEventListener("mousedown", aioMouseDown, true);
-     document.documentElement.addEventListener("popupshowing", aioPopupShowing, true);
-     document.documentElement.addEventListener("contextmenu", aioContextMenuEnabler, true);
+     document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
 
      var activeId = "" + aioUnique++;
      aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
@@ -471,15 +469,20 @@ function aioIsUnformattedXML(aDoc) {
 }
 
 function aioContextMenuEnabler(e) {
-  if (aioShowContextMenu) return;
-  e.preventDefault(); e.stopPropagation();
-}
-
-function aioPopupShowing(e) {
-  if (!aioAllowPopupShowing && !aioShowContextMenu && e.originalTarget.nodeName == "menupopup") {
+  if (!aioShowContextMenu && e.originalTarget.nodeName == "menupopup" && e.originalTarget.id == "contentAreaContextMenu") {
     e.preventDefault(); e.stopPropagation();
   }
 }
+
+//function debugAllAttr(elem) {
+//  var str = "", node;
+//  
+//  for (var i=0; i<elem.attributes.length; i++) {
+//    node = elem.attributes[i];
+//    str += node.nodeName + "=" + node.nodeValue + "; ";
+//  }
+//  return str;
+//}
 
 function aioKeyPressed(e) {
   if (aioAcceptASKeys) aioAutoScrollKey(e);
@@ -651,10 +654,7 @@ function aioMouseDown(e) {
               aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
               if (aioTrailEnabled) aioStartTrail(e);
               window.addEventListener("mousemove", aioGestMove, true);
-              if (e.button == aioRMB) {
-                aioAllowPopupShowing = false;
-              }
-         }
+           }
            else preventDefaultAction = e.button != aioLMB;
         }
         // it can be the start of a wheelscroll gesture as well
@@ -760,7 +760,6 @@ function aioMouseUp(e) {
         aioRockTimer = null;
      }
   }
-  aioAllowPopupShowing = true;
   
   if (aioGestInProgress) {
      var lastgesture = aioStrokes.join("");
@@ -844,10 +843,6 @@ function aioWheelRockUp(e) {
   window.removeEventListener("mouseup", aioWheelRockUp, true);
   aioContent.removeEventListener("DOMMouseScroll", aioWheelRocking, true);
   aioWheelRockEnd();
-  
-  setTimeout(function() {
-    aioAllowPopupShowing = true;
-  }, 1000);
 }
 
 function aioWheelRocking(e) {
@@ -958,10 +953,6 @@ function _aioScrollPU(event) {
 }
 
 function _aioClosePU(action) {
-  setTimeout(function() {
-    aioAllowPopupShowing = true;
-  }, 1000);
-  
   if (this.closeFunc) window.removeEventListener("mouseup", this.closeFunc, true);
   if (this.scrollingFunc) aioMainWin.removeEventListener("DOMMouseScroll", this.scrollingFunc, true);
   this.scrollerNode.hidePopup();
