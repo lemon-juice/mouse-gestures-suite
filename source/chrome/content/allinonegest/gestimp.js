@@ -832,7 +832,7 @@ function aioLinkInTab(url, usePref, bg) {
     if (!loadInBg) aioContent.selectedTab = tab;
   
   } else {
-    aioNewWindow(url, "");
+    openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg);
   }
 }
 
@@ -857,15 +857,38 @@ function aioOpenInNewTab(bg) {
      aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
   }
   else {
-     if (!bg) BrowserOpenTab();
-     else aioLinkInTab("about:blank", false, true);
+    if (aioWindowType == "browser") {
+      if (!bg) BrowserOpenTab();
+      else aioLinkInTab("about:blank", false, true);
+      
+    } else {
+        openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, !!bg);
+    }
   }
 }
 
 function aioLinksInTabs() {
-  for (var i = 0; i < aioOnLink.length; ++i) {
-    aioContent.addTab(url = aioSanitizeUrl(aioOnLink[i].href), aioGetReferrer());
-    aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
+  if (aioWindowType == "browser") {
+    for (var i = 0; i < aioOnLink.length; ++i) {
+      aioContent.addTab(aioSanitizeUrl(aioOnLink[i].href), aioGetReferrer());
+      aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
+    }
+  
+  } else {
+    if (aioOnLink.length > 0) {
+      openNewTabWindowOrExistingWith(kNewTab, aioSanitizeUrl(aioOnLink[0].href), null, false);
+      
+      var links = [];
+      for (var i = 1; i < aioOnLink.length; ++i) {
+        links.push(aioSanitizeUrl(aioOnLink[i].href));
+      }
+      
+      setTimeout(function() {
+        for (var i = 0; i < links.length; ++i) {
+          openNewTabWindowOrExistingWith(kNewTab, links[i], null, false);
+        }
+      }, 500);
+    }
   }
 }
 
