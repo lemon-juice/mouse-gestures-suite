@@ -1,3 +1,4 @@
+set xpi_name=mouse-gestures-suite-1.2.0.xpi
 rmdir "D:\dev\aio-gestures-build" /S /Q
 xcopy "D:\dev\aio-gestures\source" "D:\dev\aio-gestures-build" /I /E /Q
 
@@ -5,7 +6,11 @@ xcopy "D:\dev\aio-gestures\source" "D:\dev\aio-gestures-build" /I /E /Q
 
 for /D %%f in ("D:\dev\aio-gestures-build\chrome\*") do rmdir %%f /S /Q
 
-del "D:\dev\aio-gestures\mouse-gestures-suite-1.1.0-W.xpi" 2>nul
-"C:\Program Files\7-Zip\7z.exe" a -tzip "D:\dev\aio-gestures\mouse-gestures-suite-1.1.0-W.xpi" "D:\dev\aio-gestures-build\*"
+del "D:\dev\aio-gestures\%xpi_name%" 2>nul
+"C:\Program Files\7-Zip\7z.exe" a -tzip "D:\dev\aio-gestures\%xpi_name%" "D:\dev\aio-gestures-build\*"
 
 rmdir "D:\dev\aio-gestures-build" /S /Q
+
+if "%1"=="dbox" (
+  copy /B "D:\dev\aio-gestures\%xpi_name%" "D:\Dropbox\Public\%xpi_name%"
+)
