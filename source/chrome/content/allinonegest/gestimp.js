@@ -11,8 +11,8 @@ var aioGestTable;
 var aioActionTable = [
       [function(){aioBackForward(true);}, "g.browserBack", 2, "1"], // 0
       [function(){aioBackForward(false);}, "g.browserForward", 2, "0"], // 1
-      [function(){BrowserReload();}, "g.browserReload", 0, ""], // 2
-      [function(){BrowserReloadSkipCache();}, "g.browserReloadSkipCache", 0, ""], // 3
+      [function(){aioReload(false);}, "g.browserReload", 0, ""], // 2
+      [function(){aioReload(true);}, "g.browserReloadSkipCache", 0, ""], // 3
       [function(){BrowserStop();}, "g.browserStop", 0, ""], // 4
       [function(){aioHomePage();}, "g.browserHome", 0, ""], // 5
       [function(){aioOpenNewWindow(false);}, "g.openNewWindow", 0, ""], // 6
@@ -62,7 +62,7 @@ var aioActionTable = [
       [function(){aioSchemas={};}, "g.clearDigitFlipper", 0, ""], // 50
       [function(){aioLinksInFiles();}, "g.linksInFiles", 0, ""], // 51
       [function(){aioUndoCloseTab();}, "g.undoCloseTab", 0, ""], // 52
-      [function(){BrowserPrintPreview();}, "g.printPreview", 0, ""], //53
+      [function(){aioPrintPreview();}, "g.printPreview", 0, ""], //53
       [function(){aioOpenInNewTab(true);}, "g.browserOpenTabInBg", 0, ""], // 54
       [function(){aioDeleteCookies();}, "g.deleteSiteCookies", 0, ""], // 55
       [function(){aioUndoNukeAnything();}, "g.undoHideObject", 0, ""], // 56
@@ -97,7 +97,7 @@ var aioActionTable = [
       [function(){aioSmartBackForward(-1, true);}, "g.smartBack2", 1, "87"], // 85
       [function(){aioSmartBackForward(+1, false);}, "g.smartForward1", 1, "84"], // 86
       [function(){aioSmartBackForward(+1, true);}, "g.smartForward2", 1, "85"], // 87
-      [function(){PrintUtils.print();}, "g.print", 0, ""], //88
+      [function(){aioPrint();}, "g.print", 0, ""], //88
       [function(){aioImageInTab();}, "g.openImageInTab", 0, ""], //89
       [function(){aioImageInWindow();}, "g.openImageInWin", 0, ""], //90
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, ""], // 89
@@ -190,6 +190,53 @@ function aioBackForward(back) {
   } else {
     back ? BrowserBack() : BrowserForward();
     content.focus();
+  }
+}
+
+function aioPrint() {
+  switch (aioWindowType) {
+    case "browser":
+    case "source":
+      PrintUtils.print();
+      break;
+   
+    case "messenger":
+    case "mailcompose":
+      goDoCommand("cmd_print");
+      break;
+  }
+}
+
+function aioPrintPreview() {
+  switch (aioWindowType) {
+    case "browser":
+      BrowserPrintPreview();
+      break;
+   
+    case "source":
+      PrintUtils.printPreview(PrintPreviewListener);
+      break;
+   
+    case "messenger":
+    case "mailcompose":
+      goDoCommand("cmd_printpreview");
+      break;
+  }
+}
+
+function aioReload(skipCache) {
+  switch (aioWindowType) {
+    case "browser":
+      skipCache ? BrowserReloadSkipCache() : BrowserReload();
+      break;
+
+    case "messenger":
+      goDoCommand("cmd_reload");
+      break;
+
+    case "source":
+      ViewSourceReload();
+      break;
   }
 }
 
@@ -550,30 +597,26 @@ function aioSelectionAsSearchTerm(alwaysNewTab) {
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var searchStr = winWrapper.getSelection().toString();
   if (!searchStr) return;
-  if (0 && typeof(BrowserSearch) == "undefined") {
-     var searchBar = document.getElementById("searchbar");
-     if (!searchBar) return;
-     searchBar = searchBar.mTextbox;
-     if (!searchBar) return;
-     searchBar.value = searchStr;
-     searchBar.mEnterEvent = null;
-     if (typeof(SearchButton) == "undefined") BrowserOpenTab();
-     searchBar.onTextEntered();
-  }
-  else {
-    searchBar = BrowserSearch.searchBar;
-    if (!searchBar) return;
-    searchBar.value = searchStr;
-    
-    if (alwaysNewTab) {
-      var oldPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
-      aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
-      BrowserSearch.loadSearch(searchStr, true);
-      aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldPref);
-    } else {
-      // may open in tab or window depending on browser prefs
-      BrowserSearch.loadSearch(searchStr, true);
-    }
+  
+  switch (aioWindowType) {
+    case "browser":
+      searchBar = BrowserSearch.searchBar;
+      if (!searchBar) return;
+      searchBar.value = searchStr;
+
+      if (alwaysNewTab) {
+        var oldPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
+        BrowserSearch.loadSearch(searchStr, true);
+        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldPref);
+      } else {
+        // may open in tab or window depending on browser prefs
+        BrowserSearch.loadSearch(searchStr, true);
+      }
+      break;
+   
+    case "messenger":
+      MsgOpenSearch(searchStr);
   }
 }
 
@@ -666,7 +709,7 @@ function aioCloseCurrTab(lastTabClosesWindow) {
   
   } else if (aioWindowType == "messenger") {
     var tabmail = window.top.document.getElementById("tabmail");
-    if (tabmail.tabContainer.childNodes.length > 1) {
+    if (tabmail && tabmail.tabContainer.childNodes.length > 1) {
         tabmail.removeCurrentTab();
     } else {
       if (lastTabClosesWindow) {
@@ -781,9 +824,23 @@ function aioGetReferrer() {
 }
 
 function aioLinkInTab(url, usePref, bg) {
-  var tab = aioContent.addTab(url, aioGetReferrer());
-  var loadInBg = (usePref && (aioPrefRoot.getBoolPref("browser.tabs.loadInBackground") != bg)) || (!usePref && bg);
-  if (!loadInBg) aioContent.selectedTab = tab;
+  url = aioSanitizeUrl(url);
+  
+  if (aioWindowType == "browser") {
+    var tab = aioContent.addTab(url, aioGetReferrer());
+    var loadInBg = (usePref && (aioPrefRoot.getBoolPref("browser.tabs.loadInBackground") != bg)) || (!usePref && bg);
+    if (!loadInBg) aioContent.selectedTab = tab;
+  
+  } else {
+    aioNewWindow(url, "");
+  }
+}
+
+function aioSanitizeUrl(url) {
+    if (url.indexOf("view-source:") == 0) {
+      url = url.substr(12);
+    }
+    return url;
 }
 
 function aioDupTab() {
@@ -807,7 +864,7 @@ function aioOpenInNewTab(bg) {
 
 function aioLinksInTabs() {
   for (var i = 0; i < aioOnLink.length; ++i) {
-    aioContent.addTab(aioOnLink[i].href, aioGetReferrer());
+    aioContent.addTab(url = aioSanitizeUrl(aioOnLink[i].href), aioGetReferrer());
     aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
   }
 }
@@ -828,6 +885,8 @@ function aioLinksInFiles() {
 }
 
 function aioNewWindow(url, flag) {
+  url = aioSanitizeUrl(url);
+  
   if (window.content && window.content.document) {
      var charsetArg = "charset=" + window.content.document.characterSet;
      return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
@@ -848,7 +907,7 @@ function aioLinksInWindows() {
     win.addEventListener("load", function () {
       setTimeout(function() {
         for (var i = 0; i < gestureLinks.length; ++i) {
-          win.gBrowser.addTab(gestureLinks[i]);
+          win.gBrowser.addTab(url = aioSanitizeUrl(gestureLinks[i]));
         }
       }, 100);
     }, true);
@@ -856,7 +915,7 @@ function aioLinksInWindows() {
   }
   else
      for (i = 0; i < aioOnLink.length; ++i) {
-        aioNewWindow(aioOnLink[i].href, "");
+        aioNewWindow(url = aioSanitizeUrl(aioOnLink[i].href), "");
         aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
      }
 }
@@ -916,6 +975,7 @@ function aioDoubleWin() {
     window.resizeTo(screen.availWidth / 2, screen.availHeight);
     var win = aioNewWindow(aioOnLink[0].href, "");
     win.moveTo(screen.availWidth / 2 + screen.availLeft, screen.availTop);
+    win.resizeTo(screen.availWidth / 2, screen.availHeight);
    
   } else {
     var win = aioNewWindow(aioOnLink[0].href, "top=" + screen.availTop + ",left=" + screen.availLeft + ",outerWidth=" + screen.availWidth + ",outerHeight=" + screen.availHeight);
@@ -1075,8 +1135,13 @@ function aioShowHideStatusBar() {
 }
 
 function aioViewSource(frame) {
-   if (frame) BrowserViewSourceOfDocument(aioSrcEvent.target.ownerDocument);
-   else BrowserViewSourceOfDocument(window.content.document);
+  if (aioWindowType == "messenger") {
+    goDoCommand("cmd_viewPageSource");
+    
+  } else {
+    if (frame) BrowserViewSourceOfDocument(aioSrcEvent.target.ownerDocument);
+    else BrowserViewSourceOfDocument(window.content.document);
+  }
 }
 
 function aioViewCookies() { //Contributed by Squarefree.com
