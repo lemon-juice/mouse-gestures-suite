@@ -844,7 +844,16 @@ function aioSanitizeUrl(url) {
 }
 
 function aioDupTab() {
-  aioLinkInTab(window.content.document.location.href, true, false);
+  switch (aioWindowType) {
+    case "browser":
+      aioLinkInTab(window.content.document.location.href, true, false);
+      break;
+    
+    case "messenger":
+      MsgOpenNewTabForMessage();
+      break;
+    
+  }
 }
 
 function aioMarkLinkVisited(href, linkNode) {
@@ -907,8 +916,8 @@ function aioLinksInFiles() {
   }
 }
 
-function aioNewWindow(url, flag) {
-  url = aioSanitizeUrl(url);
+function aioNewWindow(url, flag, noSanitize) {
+  if (!noSanitize) url = aioSanitizeUrl(url);
   
   if (window.content && window.content.document) {
      var charsetArg = "charset=" + window.content.document.characterSet;
@@ -979,7 +988,17 @@ function aioOpenNewWindow(background) {
 }
 
 function aioDupWindow() {
-  aioNewWindow(window.content.document.location.href, "");
+  switch (aioWindowType) {
+    case "browser":
+    case "source":
+      aioNewWindow(window.content.document.location.href, "", true);
+      break;
+    
+    case "messenger":
+      MsgOpenNewWindowForMessage();
+      break;
+    
+  }
 }
 
 function aioCloseWindow() {
