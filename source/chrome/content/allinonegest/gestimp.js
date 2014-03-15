@@ -101,8 +101,8 @@ var aioActionTable = [
       [function(){aioSmartBackForward(+1, false);}, "g.smartForward1", 1, "84", ["browser"]], // 86
       [function(){aioSmartBackForward(+1, true);}, "g.smartForward2", 1, "85", ["browser"]], // 87
       [function(){aioPrint();}, "g.print", 0, "", null], //88
-      [function(){aioImageInTab();}, "g.openImageInTab", 0, "", null], //89
-      [function(){aioImageInWindow();}, "g.openImageInWin", 0, "", null], //90
+      [function(){aioImageInTab();}, "g.openImageInTab", 0, "", ["browser", "source", "messenger"]], //89
+      [function(){aioImageInWindow();}, "g.openImageInWin", 0, "", ["browser", "source", "messenger"]], //90
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
 //      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, "", null], // 90
 //      [function(){aioCloseRightTabs(false);}, "g.CloseRightTab", 0, "", null], // 91
