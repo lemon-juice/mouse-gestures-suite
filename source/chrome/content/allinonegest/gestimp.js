@@ -898,14 +898,9 @@ function aioDupTab() {
   }
 }
 
-function aioMarkLinkVisited(href, linkNode) {
-  if (typeof(markLinkVisited) == "function") markLinkVisited(href, linkNode);
-}
-
 function aioOpenInNewTab(bg) {
   if (aioOpenLinkInNew && aioOnLink.length) {
      aioLinkInTab(aioOnLink[0].href, false, bg);
-     aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
   }
   else {
     if (aioWindowType == "browser") {
@@ -922,7 +917,6 @@ function aioLinksInTabs() {
   if (aioWindowType == "browser") {
     for (var i = 0; i < aioOnLink.length; ++i) {
       aioContent.addTab(aioSanitizeUrl(aioOnLink[i].href), aioGetReferrer());
-      aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
     }
   
   } else {
@@ -985,12 +979,10 @@ function aioLinksInWindows() {
         }
       }, 100);
     }, true);
-//  aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
   }
   else
      for (i = 0; i < aioOnLink.length; ++i) {
         aioNewWindow(url = aioSanitizeUrl(aioOnLink[i].href), "");
-        aioMarkLinkVisited(aioOnLink[i].href, aioOnLink[i].node);
      }
 }
 
@@ -1007,7 +999,6 @@ function aioOpenNewWindow(background) {
   var win;
   if (aioOpenLinkInNew && aioOnLink.length) {
      win = aioNewWindow(aioOnLink[0].href, s);
-     aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
   }
   else {
      if (aioOnImage) win = aioNewWindow(aioOnImage.src, s);
@@ -1085,7 +1076,6 @@ function aioDoubleWin() {
       }, 100);
     }, true);
   }
-  aioMarkLinkVisited(aioOnLink[0].href, aioOnLink[0].node);
 }
 
 function aioNextPrevLink(next) { // submitted by Christian Kruse
