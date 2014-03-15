@@ -423,28 +423,31 @@ function aioInit() { // overlay has finished loading or a pref was changed
        case 'browser':
          aioContent = document.getElementById("content");
          aioRendering = aioContent.mPanelContainer;
+         aioStatusBar = document.getElementById("statusbar-display");
          break;
          
        case 'messenger':
          aioContent = document.getElementById("messagepanebox");
          aioRendering = document.getElementById("messagepane");
+         aioStatusBar = document.getElementById("statusText");
          break;
          
        case 'mailcompose':
          aioContent = aioContent = document.getElementById("appcontent");
          aioRendering = document.getElementById("content-frame");
+         aioStatusBar = document.getElementById("statusText");
          break;
          
        case 'source':
          aioContent = aioContent = document.getElementById("appcontent");
          aioRendering = document.getElementById("content");
+         aioStatusBar = document.getElementById("statusbar-line-col");
          break;
      }
      
    
      aioContextPopup = document.getElementById("contentAreaContextMenu");
      aioMainWin = document.getElementById("main-window");
-     aioStatusBar = document.getElementById("statusbar-display");
     
      window.addEventListener("mousedown", aioMouseDown, true);
      document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);

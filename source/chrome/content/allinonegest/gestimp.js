@@ -7,111 +7,114 @@
  */
 var aioGestTable;
 // aioActionTable's 3rd column denotes rocker multiple operations. 0: Not allowed, 1: Allowed 2: Conditional
-// 4th column denotes the buddy action if any 
+// 4th column denotes the buddy action if any
+// 5th column denotes in what window types action is allowed to be performed:
+//  - array of: browser, source, messenger, mailcompose
+//  - or null for all window types
 var aioActionTable = [
-      [function(){aioBackForward(true);}, "g.browserBack", 2, "1"], // 0
-      [function(){aioBackForward(false);}, "g.browserForward", 2, "0"], // 1
-      [function(){aioReload(false);}, "g.browserReload", 0, ""], // 2
-      [function(){aioReload(true);}, "g.browserReloadSkipCache", 0, ""], // 3
-      [function(){BrowserStop();}, "g.browserStop", 0, ""], // 4
-      [function(){aioHomePage();}, "g.browserHome", 0, ""], // 5
-      [function(){aioOpenNewWindow(false);}, "g.openNewWindow", 0, ""], // 6
-      [function(){aioDupWindow();}, "g.duplicateWindow", 0, ""], // 7
-      [function(){aioUpDir();}, "g.upDir", 2, ""], // 8
-      [function(){aioOpenInNewTab(false);}, "g.browserOpenTabInFg", 0, ""], // 9
-      [function(){aioDupTab();}, "g.duplicateTab", 0, ""], // 10
-      [function(){aioSwitchTab(1);}, "g.nextTab", 1, "12"], // 11
-      [function(){aioSwitchTab(-1, true);}, "g.previousTab", 1, "11"], // 12
-      [function(){aioRemoveAllTabsBut();}, "g.closeOther", 0, ""], // 13
-      [function(){aioRestMaxWin();}, "g.restMaxWin", 1, ""], // 14
-      [function(){window.minimize();}, "g.minWin", 0, ""], // 15
-      [function(){BrowserFullScreen();}, "g.fullScreen", 1, ""], // 16
-      [function(){aioSelectionAsURL();}, "g.openSelection", 0, ""], // 17
-      [function(){aioCloseCurrTab(true);}, "g.closeDoc", 0, ""], // 18
-      [function(){aioViewSource(0);}, "g.viewPageSource", 0, ""], // 19
-      [function(){aioViewSource(1);}, "g.viewFrameSource", 0, ""], // 20
-      [function(){aioViewCookies();}, "g.viewSiteCookies", 0, ""], // 21
-      [function(){BrowserPageInfo();}, "g.pageInfo", 0, ""], // 22
-      [function(){toJavaScriptConsole();}, "g.jsConsole", 0, ""], // 23
-      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 24
-      [function(){aioBookmarkCurrentPage();}, "g.addBookmark", 0, ""], // 25
-      [function(){aioDoubleWin();}, "g.doubleStackWin", 0, ""], // 26
-      [function(){aioSetImgSize(true,false);}, "g.doubleImageSize", 1, "28"], // 27
-      [function(){aioSetImgSize(false,false);}, "g.halveImageSize", 1, "27"], // 28
-      [function(){aioNukeAnything();}, "g.hideObject", 0, ""], // 29
-      [function(){aioZoomEnlarge();}, "g.zoomIn", 1, "31"], // 30
-      [function(){aioZoomReduce();}, "g.zoomOut", 1, "30"], // 31
-      [function(){aioZoomReset();}, "g.resetZoom", 1, ""], // 32
-      [function(){aioActionOnPage(0);}, "g.w3cValidate", 0, ""], // 33
-      [function(){aioLinksInWindows();}, "g.linksInWindows", 0, ""], // 34
-      [function(){aioLinksInTabs();}, "g.linksInTabs", 0, ""], // 35
-      [function(){aioMetaInfo();}, "g.metaInfo", 0, ""], // 36
-      [function(){aioVScrollDocument(true,1);}, "g.scrollDown", 1, "38"], // 37
-      [function(){aioVScrollDocument(true,-1);}, "g.scrollUp", 1, "37"], // 38
-      [function(){aioVScrollDocument(false,0);}, "g.scrollToTop", 0, ""], // 39
-      [function(){aioVScrollDocument(false,1000000);}, "g.scrollToBottom", 0, ""], // 40
-      [function(){aioResetImgSize(false);}, "g.resetImage", 1, ""], // 41
-      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 42
-      [function(){aioNukeFlash();}, "g.hideFlash", 0, ""], // 43
-      [function(){aioCopyURLToClipBoard();}, "g.URLToClipboard", 0, ""], // 44
-      [function(){getWebNavigation().gotoIndex(0);}, "g.firstPage", 0, ""], // 45
-      [function(){aioGesturesPage();}, "g.showGestures", 0, ""], // 46
-      [function(){aioCloseCurrTab(false);}, "g.closeTab", 0, ""], // 47
-      [function(){aioIncURL(1);}, "g.incURL", 2, "49"], // 48
-      [function(){aioIncURL(-1);}, "g.decURL", 2, "48"], // 49
-      [function(){aioSchemas={};}, "g.clearDigitFlipper", 0, ""], // 50
-      [function(){aioLinksInFiles();}, "g.linksInFiles", 0, ""], // 51
-      [function(){aioUndoCloseTab();}, "g.undoCloseTab", 0, ""], // 52
-      [function(){aioPrintPreview();}, "g.printPreview", 0, ""], //53
-      [function(){aioOpenInNewTab(true);}, "g.browserOpenTabInBg", 0, ""], // 54
-      [function(){aioDeleteCookies();}, "g.deleteSiteCookies", 0, ""], // 55
-      [function(){aioUndoNukeAnything();}, "g.undoHideObject", 0, ""], // 56
-      [function(){aioFavoriteURL('1');}, "g.openFav1", 0, ""], // 57
-      [function(){aioFavoriteURL('2');}, "g.openFav2", 0, ""], // 58
-      [function(){BrowserOpenTab();}, "g.openBlankTab", 0, ""], // 59
-      [function(){aioCloseWindow();}, "g.closeWindow", 0, ""], // 60
-      [function(){aioOpenNewWindow(true);}, "g.openWindowInBg", 0, ""], // 61
-      [function(){aioFrameInfo();}, "g.frameInfo", 0, ""], // 62
-      [function(){aioOpenAioOptions();}, "g.aioOptions", 0, ""], // 63
-      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 64
-      [function(){aioOpenBookmarksManager();}, "g.bookmarkMgr", 0, ""], // 65
-      [function(){aioActionOnPage(1);}, "g.translate", 0, ""], // 66
-      [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, ""], // 67
-      [function(){saveDocument(window.content.document);}, "g.savePageAs", 0, ""], // 68
-      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 69
-      [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, ""], // 70
-      [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, ""], // 71
-      [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73"], // 72
-      [function(){aioSetImgSize(false,true);}, "g.reduceObject", 1, "72"], // 73
-      [function(){aioResetImgSize(true);}, "g.resetSize", 1, ""], //74
-      [function(){aioNullAction();}, "g.nullAction", 0, ""], // 75
-      [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, ""], // 76
-      [function(){aioNextPrevLink(true);}, "g.nextLink", 0, ""], // 77
-      [function(){aioFastForward();}, "g.fastForward", 0, ""], // 78
-      [function(){aioSelectionAsSearchTerm();}, "g.searchSelection", 0, ""], // 79
-      [function(){aioSaveImageAs();}, "g.saveImageAs", 0, ""], // 80
-      [function(){aioNextPrevLink(false);}, "g.prevLink", 0, ""], // 81
-      [function(){aioGotoLastTab();}, "g.lastTab", 0, ""], // 82
-      [function(){aioCopyClipBoardToURLBar();}, "g.pasteAndGo", 0, ""], // 83
-      [function(){aioSmartBackForward(-1, false);}, "g.smartBack1", 1, "86"], // 84
-      [function(){aioSmartBackForward(-1, true);}, "g.smartBack2", 1, "87"], // 85
-      [function(){aioSmartBackForward(+1, false);}, "g.smartForward1", 1, "84"], // 86
-      [function(){aioSmartBackForward(+1, true);}, "g.smartForward2", 1, "85"], // 87
-      [function(){aioPrint();}, "g.print", 0, ""], //88
-      [function(){aioImageInTab();}, "g.openImageInTab", 0, ""], //89
-      [function(){aioImageInWindow();}, "g.openImageInWin", 0, ""], //90
-//      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, ""], // 89
-//      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, ""], // 90
-//      [function(){aioCloseRightTabs(false);}, "g.CloseRightTab", 0, ""], // 91
-//      [function(){aioCloseLeftTabs(false);}, "g.CloseLeftTabs", 0, ""], // 92
-//      [function(){aioCloseAllTabs(false);}, "g.CloseAllTabs", 0, ""], // 93
-//      [function(){aioHScrollDocument(false,0);}, "g.scrollToLeft", 0, ""], // 94
-//      [function(){aioHScrollDocument(false,1000000);}, "g.scrollToRight", 0, ""], // 95
-//      [function(){aioCScrollDocument(1000000,1000000);}, "g.scrollToCenter", 0, ""], // 96
-//      [function(){aioFullZoomOperation(1);}, "g.FullZoomEnlarge", 0, ""], // 97
-//      [function(){aioFullZoomOperation(2);}, "g.FullZoomReduce", 0, ""], // 98
-//      [function(){aioFullZoomOperation(0);}, "g.FullZoomReset", 0, ""], // 99
-//      [function(){aioOpenAddonManager();}, "g.addOnMgr", 0, ""] // 100
+      [function(){aioBackForward(true);}, "g.browserBack", 2, "1", ["browser", "source", "messenger"]], // 0
+      [function(){aioBackForward(false);}, "g.browserForward", 2, "0", ["browser", "source", "messenger"]], // 1
+      [function(){aioReload(false);}, "g.browserReload", 0, "", ["browser", "source", "messenger"]], // 2
+      [function(){aioReload(true);}, "g.browserReloadSkipCache", 0, "", ["browser", "source", "messenger"]], // 3
+      [function(){BrowserStop();}, "g.browserStop", 0, "", ["browser"]], // 4
+      [function(){aioHomePage();}, "g.browserHome", 0, "", null], // 5
+      [function(){aioOpenNewWindow(false);}, "g.openNewWindow", 0, "", null], // 6
+      [function(){aioDupWindow();}, "g.duplicateWindow", 0, "", ["browser", "source", "messenger"]], // 7
+      [function(){aioUpDir();}, "g.upDir", 2, "", ["browser"]], // 8
+      [function(){aioOpenInNewTab(false);}, "g.browserOpenTabInFg", 0, "", null], // 9
+      [function(){aioDupTab();}, "g.duplicateTab", 0, "", ["browser", "messenger"]], // 10
+      [function(){aioSwitchTab(1);}, "g.nextTab", 1, "12", ["browser", "messenger"]], // 11
+      [function(){aioSwitchTab(-1, true);}, "g.previousTab", 1, "11", ["browser", "messenger"]], // 12
+      [function(){aioRemoveAllTabsBut();}, "g.closeOther", 0, "", ["browser"]], // 13
+      [function(){aioRestMaxWin();}, "g.restMaxWin", 1, "", null], // 14
+      [function(){window.minimize();}, "g.minWin", 0, "", null], // 15
+      [function(){BrowserFullScreen();}, "g.fullScreen", 1, "", ["browser"]], // 16
+      [function(){aioSelectionAsURL();}, "g.openSelection", 0, "", ["browser", "messenger"]], // 17
+      [function(){aioCloseCurrTab(true);}, "g.closeDoc", 0, "", null], // 18
+      [function(){aioViewSource(0);}, "g.viewPageSource", 0, "", ["browser", "messenger"]], // 19
+      [function(){aioViewSource(1);}, "g.viewFrameSource", 0, "", ["browser", "messenger"]], // 20
+      [function(){aioViewCookies();}, "g.viewSiteCookies", 0, "", ["browser"]], // 21
+      [function(){BrowserPageInfo();}, "g.pageInfo", 0, "", ["browser", "messenger"]], // 22
+      [function(){toJavaScriptConsole();}, "g.jsConsole", 0, "", null], // 23
+      [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 24
+      [function(){aioBookmarkCurrentPage();}, "g.addBookmark", 0, "", ["browser"]], // 25
+      [function(){aioDoubleWin();}, "g.doubleStackWin", 0, "", ["browser", "source", "messenger"]], // 26
+      [function(){aioSetImgSize(true,false);}, "g.doubleImageSize", 1, "28", ["browser", "messenger"]], // 27
+      [function(){aioSetImgSize(false,false);}, "g.halveImageSize", 1, "27", ["browser", "messenger"]], // 28
+      [function(){aioNukeAnything();}, "g.hideObject", 0, "", ["browser", "messenger"]], // 29
+      [function(){aioZoomEnlarge();}, "g.zoomIn", 1, "31", ["browser", "source", "messenger"]], // 30
+      [function(){aioZoomReduce();}, "g.zoomOut", 1, "30", ["browser", "source", "messenger"]], // 31
+      [function(){aioZoomReset();}, "g.resetZoom", 1, "", ["browser", "source", "messenger"]], // 32
+      [function(){aioActionOnPage(0);}, "g.w3cValidate", 0, "", ["browser"]], // 33
+      [function(){aioLinksInWindows();}, "g.linksInWindows", 0, "", ["browser", "source", "messenger"]], // 34
+      [function(){aioLinksInTabs();}, "g.linksInTabs", 0, "", ["browser", "source", "messenger"]], // 35
+      [function(){aioMetaInfo();}, "g.metaInfo", 0, "", ["browser"]], // 36
+      [function(){aioVScrollDocument(true,1);}, "g.scrollDown", 1, "38", ["browser", "source", "messenger"]], // 37
+      [function(){aioVScrollDocument(true,-1);}, "g.scrollUp", 1, "37", ["browser", "source", "messenger"]], // 38
+      [function(){aioVScrollDocument(false,0);}, "g.scrollToTop", 0, "", ["browser", "source", "messenger"]], // 39
+      [function(){aioVScrollDocument(false,1000000);}, "g.scrollToBottom", 0, "", ["browser", "source", "messenger"]], // 40
+      [function(){aioResetImgSize(false);}, "g.resetImage", 1, "", ["browser", "messenger"]], // 41
+      [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 42
+      [function(){aioNukeFlash();}, "g.hideFlash", 0, "", ["browser"]], // 43
+      [function(){aioCopyURLToClipBoard();}, "g.URLToClipboard", 0, "", ["browser"]], // 44
+      [function(){getWebNavigation().gotoIndex(0);}, "g.firstPage", 0, "", ["browser"]], // 45
+      [function(){aioGesturesPage();}, "g.showGestures", 0, "", ["browser"]], // 46
+      [function(){aioCloseCurrTab(false);}, "g.closeTab", 0, "", ["browser", "messenger"]], // 47
+      [function(){aioIncURL(1);}, "g.incURL", 2, "49", ["browser"]], // 48
+      [function(){aioIncURL(-1);}, "g.decURL", 2, "48", ["browser"]], // 49
+      [function(){aioSchemas={};}, "g.clearDigitFlipper", 0, "", ["browser"]], // 50
+      [function(){aioLinksInFiles();}, "g.linksInFiles", 0, "", ["browser", "source", "messenger"]], // 51
+      [function(){aioUndoCloseTab();}, "g.undoCloseTab", 0, "", ["browser"]], // 52
+      [function(){aioPrintPreview();}, "g.printPreview", 0, "", ["browser", "source", "messenger"]], //53
+      [function(){aioOpenInNewTab(true);}, "g.browserOpenTabInBg", 0, "", null], // 54
+      [function(){aioDeleteCookies();}, "g.deleteSiteCookies", 0, "", ["browser"]], // 55
+      [function(){aioUndoNukeAnything();}, "g.undoHideObject", 0, "", ["browser", "messenger"]], // 56
+      [function(){aioFavoriteURL('1');}, "g.openFav1", 0, "", null], // 57
+      [function(){aioFavoriteURL('2');}, "g.openFav2", 0, "", null], // 58
+      [function(){aioOpenBlankTab();}, "g.openBlankTab", 0, "", null], // 59
+      [function(){aioCloseWindow();}, "g.closeWindow", 0, "", null], // 60
+      [function(){aioOpenNewWindow(true);}, "g.openWindowInBg", 0, "", null], // 61
+      [function(){aioFrameInfo();}, "g.frameInfo", 0, "", ["browser"]], // 62
+      [function(){aioOpenAioOptions();}, "g.aioOptions", 0, "", null], // 63
+      [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 64
+      [function(){aioOpenBookmarksManager();}, "g.bookmarkMgr", 0, "", null], // 65
+      [function(){aioActionOnPage(1);}, "g.translate", 0, "", ["browser"]], // 66
+      [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, "", null], // 67
+      [function(){aioSavePageAs();}, "g.savePageAs", 0, "", null], // 68
+      [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 69
+      [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, "", null], // 70
+      [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, "", ["browser"]], // 71
+      [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73", ["browser", "source", "messenger"]], // 72
+      [function(){aioSetImgSize(false,true);}, "g.reduceObject", 1, "72", ["browser", "source", "messenger"]], // 73
+      [function(){aioResetImgSize(true);}, "g.resetSize", 1, "", ["browser", "source", "messenger"]], //74
+      [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 75
+      [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, "", ["browser"]], // 76
+      [function(){aioNextPrevLink(true);}, "g.nextLink", 0, "", ["browser"]], // 77
+      [function(){aioFastForward();}, "g.fastForward", 0, "", ["browser"]], // 78
+      [function(){aioSelectionAsSearchTerm();}, "g.searchSelection", 0, "", ["browser", "source", "messenger"]], // 79
+      [function(){aioSaveImageAs();}, "g.saveImageAs", 0, "", ["browser", "messenger"]], // 80
+      [function(){aioNextPrevLink(false);}, "g.prevLink", 0, "", ["browser"]], // 81
+      [function(){aioGotoLastTab();}, "g.lastTab", 0, "", ["browser", "messenger"]], // 82
+      [function(){aioCopyClipBoardToURLBar();}, "g.pasteAndGo", 0, "", ["browser"]], // 83
+      [function(){aioSmartBackForward(-1, false);}, "g.smartBack1", 1, "86", ["browser"]], // 84
+      [function(){aioSmartBackForward(-1, true);}, "g.smartBack2", 1, "87", ["browser"]], // 85
+      [function(){aioSmartBackForward(+1, false);}, "g.smartForward1", 1, "84", ["browser"]], // 86
+      [function(){aioSmartBackForward(+1, true);}, "g.smartForward2", 1, "85", ["browser"]], // 87
+      [function(){aioPrint();}, "g.print", 0, "", null], //88
+      [function(){aioImageInTab();}, "g.openImageInTab", 0, "", null], //89
+      [function(){aioImageInWindow();}, "g.openImageInWin", 0, "", null], //90
+//      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
+//      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, "", null], // 90
+//      [function(){aioCloseRightTabs(false);}, "g.CloseRightTab", 0, "", null], // 91
+//      [function(){aioCloseLeftTabs(false);}, "g.CloseLeftTabs", 0, "", null], // 92
+//      [function(){aioCloseAllTabs(false);}, "g.CloseAllTabs", 0, "", null], // 93
+//      [function(){aioHScrollDocument(false,0);}, "g.scrollToLeft", 0, "", null], // 94
+//      [function(){aioHScrollDocument(false,1000000);}, "g.scrollToRight", 0, "", null], // 95
+//      [function(){aioCScrollDocument(1000000,1000000);}, "g.scrollToCenter", 0, "", null], // 96
+//      [function(){aioFullZoomOperation(1);}, "g.FullZoomEnlarge", 0, "", null], // 97
+//      [function(){aioFullZoomOperation(2);}, "g.FullZoomReduce", 0, "", null], // 98
+//      [function(){aioFullZoomOperation(0);}, "g.FullZoomReset", 0, "", null], // 99
+//      [function(){aioOpenAddonManager();}, "g.addOnMgr", 0, "", null] // 100
      ];
 var aioSchemas = {};
 var aioLastTabInfo = [];
@@ -154,8 +157,14 @@ function aioFireGesture(aGesture) {
   }
   else
      try {
-       aioStatusMessage(aioActionTable[index][1], 2000);
-       aioActionTable[index][0]();
+       var allowedWinTypes = aioActionTable[index][4];
+       
+       if (allowedWinTypes === null || allowedWinTypes.indexOf(aioWindowType) >=0) {
+         aioStatusMessage(aioActionTable[index][1], 2000);
+         aioActionTable[index][0]();
+       } else {
+         aioStatusMessage(aioActionTable[index][1] + " - " + aioGetStr("g.aborted"), 2000);
+       }
      }
      catch(err) {}
   aioKillGestInProgress();
@@ -251,7 +260,14 @@ function aioFavoriteURL(suffix) {
     return;
   }
   
-  loadURI(shortcutURL);
+  switch (aioWindowType) {
+    case "browser":
+      loadURI(shortcutURL);
+      break;
+    
+    default:
+      openNewTabWindowOrExistingWith(kNewTab, shortcutURL, null, false);
+  }
 }
 
 function aioIncURL(inc) { // derived from MagPie by Ben Goodger
@@ -616,7 +632,16 @@ function aioSelectionAsSearchTerm(alwaysNewTab) {
       break;
    
     case "messenger":
-      MsgOpenSearch(searchStr);
+       if (alwaysNewTab) {
+        var oldPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
+        MsgOpenSearch(searchStr);
+        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldPref);
+      } else {
+        // may open in tab or window depending on browser prefs
+        MsgOpenSearch(searchStr);
+      }
+      break;
   }
 }
 
@@ -698,30 +723,35 @@ function aioSaveImageAs() {
 }
 
 function aioCloseCurrTab(lastTabClosesWindow) {
-  if (aioWindowType == "browser") {
-    if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) {
-      aioContent.removeCurrentTab();
-    } else if (typeof(BrowserCloseWindow) == "function") {
-      BrowserCloseWindow();
-    } else {
-      closeWindow(true);
-    }
-  
-  } else if (aioWindowType == "messenger") {
-    var tabmail = window.top.document.getElementById("tabmail");
-    if (tabmail && tabmail.tabContainer.childNodes.length > 1) {
-        tabmail.removeCurrentTab();
-    } else {
-      if (lastTabClosesWindow) {
+  switch (aioWindowType) {
+    case "browser":
+      if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) {
+        aioContent.removeCurrentTab();
+      } else if (typeof(BrowserCloseWindow) == "function") {
+        BrowserCloseWindow();
+      } else {
         closeWindow(true);
       }
-    }
-  } else if (aioWindowType == 'mailcompose') {
-    if (lastTabClosesWindow) {
-      goDoCommand('cmd_close');
-    }
-  
-  } else {
+      break;
+    
+    case "messenger":
+      var tabmail = window.top.document.getElementById("tabmail");
+      if (tabmail && tabmail.tabContainer.childNodes.length > 1) {
+          tabmail.removeCurrentTab();
+      } else {
+        if (lastTabClosesWindow) {
+          closeWindow(true);
+        }
+      }
+      break;
+    
+    case "mailcompose":
+      if (lastTabClosesWindow) {
+        goDoCommand('cmd_close');
+      }
+      break;
+    
+    default:
       closeWindow(true);
   }
 }
@@ -736,7 +766,19 @@ function aioUndoCloseTab() {
 }
 
 function aioGotoLastTab() {
-  aioContent.selectedTab = aioContent.mTabContainer.childNodes[aioContent.mTabContainer.childNodes.length - 1];
+  switch (aioWindowType) {
+    case "browser":
+      aioContent.selectedTab = aioContent.mTabContainer.childNodes[aioContent.mTabContainer.childNodes.length - 1];
+      break;
+    
+    case "messenger":
+      var tabmail = GetTabMail();
+      
+      if (tabmail) {
+        tabmail.tabContainer.selectedIndex = tabmail.tabContainer.childNodes.length - 1;
+      }
+      break;
+  }
 }
 
 function aioWarnOnCloseMultipleTabs(numToClose) {
@@ -995,17 +1037,28 @@ function aioDupWindow() {
       break;
     
     case "messenger":
-      MsgOpenNewWindowForMessage();
+      if (document.documentElement.getAttribute("windowtype") == "mail:3pane") {
+        MsgOpenNewWindowForFolder(null,-1);
+      } else {
+        MsgOpenNewWindowForMessage();
+      }
       break;
     
   }
 }
 
 function aioCloseWindow() {
-  if ("BrowserTryToCloseWindow" in window)
-      window.setTimeout(function() { BrowserTryToCloseWindow(); }, 10);
-    else
-      window.setTimeout(function() { window.close(); }, 10);
+  switch (aioWindowType) {
+    case "mailcompose":
+      goDoCommand('cmd_close');
+      break;
+    
+    default:
+    if ("BrowserTryToCloseWindow" in window)
+        window.setTimeout(function() { BrowserTryToCloseWindow(); }, 10);
+      else
+        window.setTimeout(function() { window.close(); }, 10);      
+  }
 }
 
 function aioDoubleWin() {
@@ -1113,14 +1166,20 @@ function aioFastForward() {
 
 function aioHomePage() {
   var url = aioGetHomePageUrl();
-  
-  if (url) {
-    if (aioGoUpInNewTab && window.content.document.location.href != "about:blank") {
+  if (!url) return;
+ 
+  switch (aioWindowType) {
+    case "browser":
+      if (aioGoUpInNewTab && window.content.document.location.href != "about:blank") {
+        aioLinkInTab(url, false, false);
+      }
+      else {
+        loadURI(url);
+      }
+      break;
+    
+    default:
       aioLinkInTab(url, false, false);
-    }
-    else {
-      loadURI(url);
-    }
   }
 }
 
@@ -1292,6 +1351,30 @@ function aioSwitchTab(advanceBy) {
         
         tabmail.tabContainer.selectedIndex = selIndex;
       }
+      break;
+  }
+}
+
+function aioOpenBlankTab() {
+  switch (aioWindowType) {
+    case "browser":
+      BrowserOpenTab();
+      break;
+    
+    default:
+      openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+  }
+}
+
+function aioSavePageAs() {
+  switch (aioWindowType) {
+    case "browser":
+    case "source":
+      saveDocument(window.content.document);
+      break;
+    
+    case "messenger":
+      MsgSaveAsFile();
       break;
   }
 }
