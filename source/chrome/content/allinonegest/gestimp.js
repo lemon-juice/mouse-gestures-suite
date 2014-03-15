@@ -20,8 +20,8 @@ var aioActionTable = [
       [function(){aioUpDir();}, "g.upDir", 2, ""], // 8
       [function(){aioOpenInNewTab(false);}, "g.browserOpenTabInFg", 0, ""], // 9
       [function(){aioDupTab();}, "g.duplicateTab", 0, ""], // 10
-      [function(){aioContent.mTabContainer.advanceSelectedTab(+1, true);}, "g.nextTab", 1, "12"], // 11
-      [function(){aioContent.mTabContainer.advanceSelectedTab(-1, true);}, "g.previousTab", 1, "11"], // 12
+      [function(){aioSwitchTab(1);}, "g.nextTab", 1, "12"], // 11
+      [function(){aioSwitchTab(-1, true);}, "g.previousTab", 1, "11"], // 12
       [function(){aioRemoveAllTabsBut();}, "g.closeOther", 0, ""], // 13
       [function(){aioRestMaxWin();}, "g.restMaxWin", 1, ""], // 14
       [function(){window.minimize();}, "g.minWin", 0, ""], // 15
@@ -1270,6 +1270,30 @@ function aioImageInWindow() {
 
 function aioImageInTab() {
    if (aioOnImage) aioLinkInTab(aioOnImage.src, false, false);
+}
+
+function aioSwitchTab(advanceBy) {
+  switch (aioWindowType) {
+    case "browser":
+      aioContent.mTabContainer.advanceSelectedTab(advanceBy, true);
+      break;
+    
+    case "messenger":
+      var tabmail = GetTabMail();
+      
+      if (tabmail) {
+        var selIndex = tabmail.tabContainer.selectedIndex + advanceBy;
+        
+        if (selIndex >= tabmail.tabContainer.childNodes.length) {
+          selIndex = 0;
+        } else if (selIndex < 0) {
+          selIndex = tabmail.tabContainer.childNodes.length - 1;
+        }
+        
+        tabmail.tabContainer.selectedIndex = selIndex;
+      }
+      break;
+  }
 }
 
 function aioNullAction() {
