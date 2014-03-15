@@ -49,6 +49,8 @@ function aioInsertGesturesToTable() {
   for (var i=0; i<trs.length; i++) {
     tds = trs[i].getElementsByTagName('td');
     
+    if (tds[0].colSpan > 1) break;
+    
     if (tds[0].firstChild && tds[0].firstChild.data) {
       matches = /^\{([\w.]+)\}$/.exec(tds[0].firstChild.data.trim());
       
@@ -57,6 +59,12 @@ function aioInsertGesturesToTable() {
           tds[1].removeChild(tds[1].firstChild);
         }
         tds[1].appendChild(document.createTextNode(aioPropertyToGestureString(matches[1])));
+        
+        // insert available window types
+        if (tds[2]) {
+          tds[2].classList.add("wintypes");
+          tds[2].innerHTML = aioPropertyToWindowTypes(matches[1]);
+        }
       }
     }
   }
@@ -75,6 +83,34 @@ function aioPropertyToGestureString(prop) {
   }
   
   return gStr;
+}
+
+// for the given property describing gesture return available
+// window types in the form of (localized) space-delimited abbreviations,
+// e.g. "BR MSG"
+function aioPropertyToWindowTypes(prop) {
+  var winTypes, info = "";
+  
+  for (var i=0; i<aioActionTable.length; i++) {
+    if (aioActionTable[i][1] == prop) {
+      winTypes = aioActionTable[i][4];
+      
+      if (winTypes === null) {
+        winTypes = [
+          'browser',
+          'source',
+          'messenger',
+          'mailcompose'
+        ];
+      }
+      for (var i=0; i<winTypes.length; i++) {
+        info += '<span class="' + winTypes[i] + '">' + aioAllWinTypes[winTypes[i]] + '</span> ';
+      }
+      return info;
+    }
+  }
+  
+  return "";
 }
 
 // translate gesture preference string like "RUL" into current locale
@@ -115,7 +151,13 @@ window.addEventListener("DOMContentLoaded", function() {
     U: aioGetStr("abbreviation.up"),
     D: aioGetStr("abbreviation.down"),
   };
-   
+  
+  aioAllWinTypes = {
+    browser: aioGetStr("abbreviation.browser"),
+    source: aioGetStr("abbreviation.source"),
+    messenger: aioGetStr("abbreviation.messenger"),
+    mailcompose: aioGetStr("abbreviation.mailcompose")
+  };
   
   aioInsertGesturesToTable();
   aioTraslate();

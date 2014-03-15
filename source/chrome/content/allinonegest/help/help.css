@@ -35,3 +35,19 @@ table.gestlist tr td:first-child {
   width: 15em;
   font-weight: bold;
 }
+table.gestlist td.wintypes {
+  white-space: nowrap;
+  font-weight: bold;
+}
+table.gestlist td.wintypes span.browser {
+  color: blue;
+}
+table.gestlist td.wintypes span.source {
+  color: #9933ff;
+}
+table.gestlist td.wintypes span.messenger {
+  color: green;
+}
+table.gestlist td.wintypes span.mailcompose {
+  color: #999900;
+}
