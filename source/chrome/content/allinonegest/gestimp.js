@@ -16,7 +16,7 @@ var aioActionTable = [
       [function(){aioBackForward(false);}, "g.browserForward", 2, "0", ["browser", "source", "messenger"]], // 1
       [function(){aioReload(false);}, "g.browserReload", 0, "", ["browser", "source", "messenger"]], // 2
       [function(){aioReload(true);}, "g.browserReloadSkipCache", 0, "", ["browser", "source", "messenger"]], // 3
-      [function(){BrowserStop();}, "g.browserStop", 0, "", ["browser"]], // 4
+      [function(){aioStopLoading();}, "g.browserStop", 0, "", ["browser", "messenger"]], // 4
       [function(){aioHomePage();}, "g.browserHome", 0, "", null], // 5
       [function(){aioOpenNewWindow(false);}, "g.openNewWindow", 0, "", null], // 6
       [function(){aioDupWindow();}, "g.duplicateWindow", 0, "", ["browser", "source", "messenger"]], // 7
@@ -91,7 +91,7 @@ var aioActionTable = [
       [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, "", ["browser"]], // 76
       [function(){aioNextPrevLink(true);}, "g.nextLink", 0, "", ["browser"]], // 77
       [function(){aioFastForward();}, "g.fastForward", 0, "", ["browser"]], // 78
-      [function(){aioSelectionAsSearchTerm();}, "g.searchSelection", 0, "", ["browser", "source", "messenger"]], // 79
+      [function(){aioSelectionAsSearchTerm();}, "g.searchSelection", 0, "", ["browser", "messenger"]], // 79
       [function(){aioSaveImageAs();}, "g.saveImageAs", 0, "", ["browser", "messenger"]], // 80
       [function(){aioNextPrevLink(false);}, "g.prevLink", 0, "", ["browser"]], // 81
       [function(){aioGotoLastTab();}, "g.lastTab", 0, "", ["browser", "messenger"]], // 82
@@ -245,6 +245,18 @@ function aioReload(skipCache) {
 
     case "source":
       ViewSourceReload();
+      break;
+  }
+}
+
+function aioStopLoading() {
+  switch (aioWindowType) {
+    case "browser":
+      BrowserStop();
+      break;
+
+    case "messenger":
+      goDoCommand("cmd_stop");
       break;
   }
 }
