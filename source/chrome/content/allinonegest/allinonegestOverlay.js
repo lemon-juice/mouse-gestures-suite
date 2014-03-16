@@ -488,17 +488,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
   else aioRendering.removeEventListener("mousemove", aioShowTitle, true);
   
   aioRendering.removeEventListener("DOMMouseScroll", aioWheelScroll, false);
-  
-//  if (aioTabSwitching) {
-//     aioContent.mStrip.addEventListener("DOMMouseScroll", aioSwitchTabs, true);
-//     if (platform.indexOf('linux') != -1) // hack for linux-gtk2 + xft bug
-//        document.getElementById("navigator-toolbox").addEventListener("DOMMouseScroll", aioSwitchTabs, true); 
-//  }
-//  else {
-//     aioContent.mStrip.removeEventListener("DOMMouseScroll", aioSwitchTabs, true);
-//     if (platform.indexOf('linux') != -1)
-//        document.getElementById("navigator-toolbox").removeEventListener("DOMMouseScroll", aioSwitchTabs, true); 
-//  }
+
   aioFirstInit = false;
   dump("AiOGest: end init\n");
 }
@@ -713,7 +703,7 @@ function aioMouseDown(e) {
            else preventDefaultAction = e.button != aioLMB;
         }
         // it can be the start of a wheelscroll gesture as well
-        if (aioWheelEnabled) {           
+        if (aioWheelEnabled && aioWindowType == "browser") {          
            preventDefaultAction = preventDefaultAction || e.button != aioLMB;
            aioTabCount = aioRendering.childNodes.length;
            if (aioWheelRocker) {
@@ -1121,12 +1111,6 @@ function aioLinkTTEnd(e) {
   aioTTPU = null; aioTTNode = null;
   aioRestoreListeners();
   aioNukeEvent(e);
-}
-
-function aioSwitchTabs(e) {
-  if (typeof(TabbrowserService) == "object" || aioRendering.childNodes.length <= 1)  return;
-  aioNukeEvent(e);
-  aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == aioReverseScroll ? -1 : 1, true);
 }
 
 function aioScrollMove(e) {
