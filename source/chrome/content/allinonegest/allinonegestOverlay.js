@@ -427,7 +427,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
          break;
          
        case 'messenger':
-         aioContent = document.getElementById("messagepanebox");
+         aioContent = document.getElementById("messagepane");
          aioRendering = document.getElementById("messagepane");
          aioStatusBar = document.getElementById("statusText");
          break;
@@ -449,8 +449,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioContextPopup = document.getElementById("contentAreaContextMenu");
      aioMainWin = document.getElementById("main-window");
     
-     window.addEventListener("mousedown", aioMouseDown, true);
-     document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
+     aioRendering.addEventListener("mousedown", aioMouseDown, true);
+     document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, false);
 
      var activeId = "" + aioUnique++;
      if (aioContent.mTabContainer) {
@@ -519,7 +519,12 @@ function aioIsUnformattedXML(aDoc) {
 }
 
 function aioContextMenuEnabler(e) {
-  if (!aioShowContextMenu && e.originalTarget.nodeName == "menupopup" && e.originalTarget.id && (e.originalTarget.id == "contentAreaContextMenu" || e.originalTarget.id == "mailContext")) {
+  if (!aioShowContextMenu && e.originalTarget.nodeName == "menupopup" && e.originalTarget.id
+          && (e.originalTarget.id == "contentAreaContextMenu"
+          || (e.originalTarget.id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
+          || e.originalTarget.id == "viewSourceContextMenu")
+    ) {
+    
     e.preventDefault(); e.stopPropagation();
   }
 }
@@ -774,20 +779,19 @@ function aioGestClickHandler(e) {
 function aioDisplayContextMenu(e) {
   aioShowContextMenu = true;
   if (aioIsWin) return; // use the default action
-  with (aioRendering.ownerDocument.defaultView) {
-    if (!nsContextMenu.prototype._setTargetInternal) {
-       nsContextMenu.prototype._setTargetInternal = nsContextMenu.prototype.setTarget;
-       nsContextMenu.prototype.setTarget = function(aNode, aRangeParent, aRangeOffset) {
-                this._setTargetInternal(aNode, aRangeParent, this._rangeOffset);
-       };
-    }
-    nsContextMenu.prototype._rangeOffset = e.rangeOffset;
-  }
 
-  var evt = e.originalTarget.ownerDocument.createEvent("MouseEvents");
-  evt.initMouseEvent("contextmenu", true, true, e.originalTarget.ownerDocument.defaultView, 0,
-        e.screenX, e.screenY, e.clientX, e.clientY, false, false, false, false, 2, null);
-  e.originalTarget.dispatchEvent(evt);
+  var evt = Components.interfaces.nsIDOMNSEvent;
+  var mods = 0;
+
+  if (e.shiftKey) mods |= evt.SHIFT_MASK;
+  if (e.ctrlKey) mods |= evt.CONTROL_MASK;
+  if (e.altKey) mods |= evt.ALT_MASK;
+  if (e.metaKey) mods |= evt.META_MASK;
+
+  var dwu = e.view.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+            .getInterface(Components.interfaces.nsIDOMWindowUtils);
+
+  dwu.sendMouseEvent("contextmenu", e.clientX, e.clientY, 2, 1, mods);
 }
 
 function aioMouseUp(e) {
