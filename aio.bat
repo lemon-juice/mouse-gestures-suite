@@ -11,6 +11,8 @@ del "D:\dev\aio-gestures\%xpi_name%" 2>nul
 
 rmdir "D:\dev\aio-gestures-build" /S /Q
 
-if "%1"=="dbox" (
-  copy /B "D:\dev\aio-gestures\%xpi_name%" "D:\Dropbox\Public\%xpi_name%"
-)
+copy /B "D:\dev\aio-gestures\%xpi_name%" "D:\www\test\xpi\%xpi_name%"
+
+rem if "%1"=="dbox" (
+rem   copy /B "D:\dev\aio-gestures\%xpi_name%" "D:\Dropbox\Public\%xpi_name%"
+rem )
