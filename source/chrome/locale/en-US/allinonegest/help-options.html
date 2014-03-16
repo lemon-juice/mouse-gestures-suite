@@ -30,31 +30,41 @@
         shape in one of four directions: up, right, down or left. After
         releasing the mouse button the gesture function is executed. If you
         started drawing a gesture and want to cancel it just stop moving the
-        mouse and wait at least one second before releasing the mouse button.</li>
+        mouse and wait at least one second before releasing the mouse button.
+        Mouse gestures are available in browser, mail, view message and mail
+        compose windows. In some windows the range of available actions is
+        limited - see <a href="#tab2">Gestures Customization</a> table for
+        details.</li>
       <li> <strong>Rocker gestures</strong> - invoked by pressing one mouse
         button and then the other while keeping the first one pressed. By
         default used to go back and forward in browsing history but can be
         assigned to any gesture function. To customize these gestures, go to the
         gesture customization tab, select the gesture (at the end of the table)
         and click the <em>Edit function</em> button. Then clicking on any row
-        will assign the function of the clicked row to the gesture. <br>
+        will assign the function of the clicked row to the gesture. Rocker
+        gestures are available in browser, mail, view message and mail compose
+        windows. In some windows the range of available actions is limited - see
+        <a href="#tab2">Gestures Customization</a> table for details.<br>
         <br>
         Functions which have a repetitive nature can be repeated without
         releasing the trigger button. The <em>Allow repetition for actions that
           load pages</em> advanced preference controls the repeatability of
         functions that load pages.</li>
       <li> <strong>Scroll wheel in tab bar</strong> - you can switch between
-        tabs by scrolling mouse wheel over the tab bar.</li>
+        tabs by scrolling mouse wheel over the tab bar. This feature is available
+        in browser windows only.</li>
       <li> <strong>Scroll wheel navigation</strong> - perform your favorite
         actions by pressing a mouse button and scrolling mouse wheel at the same
-        time.</li>
+        time. This feature is available in browser windows only.</li>
       <li> <strong>Middle button scrolling</strong> - scroll pages or textareas
         by pressing the middle mouse button once and then moving the mouse up or
         down. <i>Grab and Drag</i> options allow you to scroll by moving the
-        mouse while the middle button is depressed.</li>
+        mouse while the middle button is depressed. This feature is available in
+        browser, mail and view message windows.</li>
       <li> <strong>Link tooltip</strong> - see details about links as you hover
         over them with your mouse. Useful especially for browsing without the
-        status bar like in full screen mode.</li>
+        status bar like in full screen mode. This feature is available in
+        browser windows only.</li>
     </ul>
     <hr><strong>Mouse Gestures: Prefs</strong> - customize trail color for mouse
     gestures.<br>
@@ -910,20 +920,23 @@
           </td>
         </tr>
         <tr>
-          <td colspan="4"><br></td>
+          <td colspan="4"><br>
+          </td>
         </tr>
         <tr>
           <td>{g.leftRocker}</td>
           <td rowspan="4"><br>
           </td>
-          <td class="wintypes"><span class="browser">{abbreviation.browser}</span> <span class="messenger">{abbreviation.messenger}</span></td>
+          <td class="wintypes"><span class="browser">{abbreviation.browser}</span>
+            <span class="messenger">{abbreviation.messenger}</span></td>
           <td rowspan="4">Press <em>Edit function</em> button to assign any
             function to the rocker or scroll wheel gestures.<br>
           </td>
         </tr>
         <tr>
           <td>{g.rightRocker}</td>
-          <td class="wintypes"><span class="browser">{abbreviation.browser}</span> <span class="messenger">{abbreviation.messenger}</span></td>
+          <td class="wintypes"><span class="browser">{abbreviation.browser}</span>
+            <span class="messenger">{abbreviation.messenger}</span></td>
         </tr>
         <tr>
           <td>{g.backwardWheel}</td>
