@@ -161,4 +161,10 @@ window.addEventListener("DOMContentLoaded", function() {
   
   aioInsertGesturesToTable();
   aioTraslate();
+  
+  if (location.hash) {
+    setTimeout(function() {
+      location.hash = location.hash;
+    }, 50);
+  }
 });

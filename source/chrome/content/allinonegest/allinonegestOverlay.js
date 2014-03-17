@@ -337,7 +337,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioGestButton=aioPref.getIntPref("mousebuttonpref");}, function(){aioPref.setIntPref("mousebuttonpref",aioRMB);}, function(){return aioGestButton<0||aioGestButton>2;}],
      [function(){aioGestEnabled=aioPref.getBoolPref("mouse");}, function(){aioPref.setBoolPref("mouse",true);}, function(){return false;}],
      [function(){aioTrailEnabled=aioPref.getBoolPref("gestureTrails");}, function(){aioPref.setBoolPref("gestureTrails",true);}, function(){return false;}],
-     [function(){aioTrailColor=aioPref.getCharPref("trailColor");}, function(){aioPref.setCharPref("trailColor","#FF0000");}, function(){return false;}],
+     [function(){aioTrailColor=aioPref.getCharPref("trailColor");}, function(){aioPref.setCharPref("trailColor","#FF6600");}, function(){return false;}],
      [function(){aioTrailSize=aioPref.getIntPref("trailSize");}, function(){aioPref.setIntPref("trailSize",3);}, function(){return aioTrailSize<1||aioTrailSize>8;}],
      [function(){aioTrailOpacity=aioPref.getIntPref("trailOpacity");}, function(){aioPref.setIntPref("trailOpacity",100);}, function(){return aioTrailOpacity<0||aioTrailOpacity>100;}],
      [function(){aioRockEnabled=aioPref.getBoolPref("rocking");}, function(){aioPref.setBoolPref("rocking",true);}, function(){return false;}],

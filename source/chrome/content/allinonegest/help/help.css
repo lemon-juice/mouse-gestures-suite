@@ -2,12 +2,19 @@ body {
   background: #c7d0d9;
   font-family: tahoma, Sans-Serif;
   font-size: 80%;
+  padding-bottom: 100px;
 }
 code {
   font-size: 115%;
 }
 h2 {
   margin-top: 1.5em;
+}
+ol li {
+  margin: 0.3em 0;
+}
+ul li {
+  margin: 0.5em 0;
 }
 :target {
   border-bottom: 2px dashed black;
