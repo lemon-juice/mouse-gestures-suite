@@ -108,7 +108,7 @@
     <ul>
       <li><em>{abbreviation.browser}</em> - browser window</li>
       <li><em>{abbreviation.source}</em> - view source window</li>
-      <li><em>{abbreviation.messenger}</em> - mail and message view window</li>
+      <li><em>{abbreviation.messenger}</em> - mail and message view window (in the main mail window gestures work only in the message page)</li>
       <li><em>{abbreviation.mailcompose}</em> - mail compose window</li>
     </ul>
     <table class="gestlist">
@@ -223,14 +223,6 @@
           </td>
         </tr>
         <tr>
-          <td>{g.detachTab}</td>
-          <td><br>
-          </td>
-          <td><br>
-          </td>
-          <td>Move tab from current window to a new window. Tab history, scroll position and zoom level are preserved. Works only if two or more tabs are open in current window.</td>
-        </tr>
-        <tr>
           <td>{g.duplicateWindow}</td>
           <td><br>
           </td>
@@ -238,6 +230,14 @@
           </td>
           <td><br>
           </td>
+        </tr>
+        <tr>
+          <td>{g.detachTab}</td>
+          <td><br>
+          </td>
+          <td><br>
+          </td>
+          <td>Move tab from current window to a new window. Tab history, scroll position and zoom level are preserved. Works only if two or more tabs are open in current window.</td>
         </tr>
         <tr>
           <td>{g.openNewWindow}</td>
