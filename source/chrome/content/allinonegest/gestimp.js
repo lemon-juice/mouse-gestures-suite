@@ -1041,13 +1041,8 @@ function aioDupWindow() {
       break;
     
     case "messenger":
-      if (document.documentElement.getAttribute("windowtype") == "mail:3pane") {
-        MsgOpenNewWindowForFolder(null,-1);
-      } else {
-        MsgOpenNewWindowForMessage();
-      }
+      MsgOpenNewWindowForMessage();
       break;
-    
   }
 }
 
