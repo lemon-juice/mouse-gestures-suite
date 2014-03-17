@@ -1388,7 +1388,7 @@ function aioDetachTab() {
   if (tabLength <= 1) return;
 
   var aTab = gBrowser.selectedTab;
-  aioClonedData = aioGetClonedData(aTab);
+  aioClonedData = _aioGetClonedData(aTab);
   gBrowser.removeTab(aTab);
   
   aioOpenedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
@@ -1406,12 +1406,12 @@ function aioDetachTab() {
     // Wait until session history is available in the new window
     aioOpenedWindow.addEventListener('load',
         function() {
-          aioWaitForSessionHistory(10);
+          _aioWaitForSessionHistory(10);
         }, false);
   }
 }
 
-function aioWaitForSessionHistory(attempts) {
+function _aioWaitForSessionHistory(attempts) {
   // Test if sessionHistory exists yet
   var webNav = aioOpenedWindow.getBrowser().webNavigation;
   try {
@@ -1421,15 +1421,15 @@ function aioWaitForSessionHistory(attempts) {
   // webNav.sessionHistory is not yet available, try again later
   catch (err) {
     if (attempts)
-      window.setTimeout(aioWaitForSessionHistory, 100, --attempts);
+      window.setTimeout(_aioWaitForSessionHistory, 100, --attempts);
     return;
   }
   if ((webNav.sessionHistory == null) && attempts) {
-    window.setTimeout(aioWaitForSessionHistory, 100, --attempts);
+    window.setTimeout(_aioWaitForSessionHistory, 100, --attempts);
     return;
   }
 
-  aioSetClonedData(aioOpenedWindow.getBrowser().selectedTab, aioClonedData);
+  _aioSetClonedData(aioOpenedWindow.getBrowser().selectedTab, aioClonedData);
 }
 
 /* getClonedData
@@ -1438,16 +1438,16 @@ function aioWaitForSessionHistory(attempts) {
  * @param aTab:       tabbrowser tab which should be cloned.
  * returns either a JSON string or an object containing the data which should be cloned.
  */
-function aioGetClonedData(aTab)
+function _aioGetClonedData(aTab)
 {
   // try sessionStore first
-  var tabState = aioGetSessionStoreTabState(aTab);
+  var tabState = _aioGetSessionStoreTabState(aTab);
   if (tabState)
     return tabState;
 
   var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
   var clonedData = new Array();
-  clonedData[0] = aioCopyTabHistory(browser.webNavigation.sessionHistory);
+  clonedData[0] = _aioCopyTabHistory(browser.webNavigation.sessionHistory);
   clonedData[1] = browser.contentWindow.scrollX;
   clonedData[2] = browser.contentWindow.scrollY;
   clonedData[3] = browser.markupDocumentViewer.textZoom;
@@ -1463,7 +1463,7 @@ function aioGetClonedData(aTab)
  *
  * returns  boolean to indicate successfullness
  */
-function aioSetClonedData(aTab, aClonedData)
+function _aioSetClonedData(aTab, aClonedData)
 {
   // if aClonedData is a JSON string we can use sessionStore.
   if (typeof(aClonedData) == "string") {
@@ -1495,7 +1495,7 @@ function aioSetClonedData(aTab, aClonedData)
   if (aClonedData[0].length == 0)
     return false;
 
-  aioCloneTabHistory(browser.webNavigation, aClonedData[0]);
+  _aioCloneTabHistory(browser.webNavigation, aClonedData[0]);
   setScrollPosition(15);
   setTextZoom(15);
   setFullZoom(15);
@@ -1506,7 +1506,7 @@ function aioSetClonedData(aTab, aClonedData)
 // Clone an array of history entries into a browsers webNavigation.sessionHistory
 // Argument1 webNav: The webNavigation object of a newly created browser.
 // Argument2 originalHistory: an array containing history entries from the original browser
-function aioCloneTabHistory(webNav, originalHistory)
+function _aioCloneTabHistory(webNav, originalHistory)
 {
   var newHistory = webNav.sessionHistory;
 
@@ -1518,7 +1518,7 @@ function aioCloneTabHistory(webNav, originalHistory)
 
   for (var i = 0; i < originalHistory.length; i++) {
     var entry = originalHistory[i].QueryInterface(Components.interfaces.nsISHEntry);
-    var newEntry = aioCloneHistoryEntry(entry);
+    var newEntry = _aioCloneHistoryEntry(entry);
     if (newEntry)
       newHistory.addEntry(newEntry, true);
   }
@@ -1540,7 +1540,7 @@ function aioCloneTabHistory(webNav, originalHistory)
   }
 }
 
-function aioCloneHistoryEntry(aEntry) {
+function _aioCloneHistoryEntry(aEntry) {
   if (!aEntry)
     return null;
   aEntry = aEntry.QueryInterface(Components.interfaces.nsISHContainer);
@@ -1549,7 +1549,7 @@ function aioCloneHistoryEntry(aEntry) {
   newEntry.loadType = Math.floor(aEntry.loadType);
   if (aEntry.childCount) {
     for (var j = 0; j < aEntry.childCount; j++) {
-        var childEntry = aioCloneHistoryEntry(aEntry.GetChildAt(j));
+        var childEntry = _aioCloneHistoryEntry(aEntry.GetChildAt(j));
         if (childEntry)
           newEntry.AddChild(childEntry, j);
     }
@@ -1564,7 +1564,7 @@ function aioCloneHistoryEntry(aEntry) {
  *
  * returns: JSON string of tabState if success, null otherwise
  * */
-function aioGetSessionStoreTabState(aTab)
+function _aioGetSessionStoreTabState(aTab)
 {
   var ss = null;
   if ("@mozilla.org/browser/sessionstore;1" in Components.classes) {
@@ -1581,7 +1581,7 @@ function aioGetSessionStoreTabState(aTab)
 // copy a sessionHistory and put it into an array
 // Argument1 originalHistory: webNavigation.sessionHistory browser history to be copied
 // returns: an array containing a copy of the history
-function aioCopyTabHistory(originalHistory)
+function _aioCopyTabHistory(originalHistory)
 {
   var range = {start: 0, index: originalHistory.index, length: originalHistory.count};
 
