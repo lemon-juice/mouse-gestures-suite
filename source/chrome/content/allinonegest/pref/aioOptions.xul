@@ -207,6 +207,7 @@
        <button label="&customize.add;" id="addId" hidden="true" />
        <button label="&customize.edfunc;" id="edfuncId" oncommand="editFunction();" />
        <button label="&customize.undo;" id="undoId" oncommand="performUndo();" />
+       <button label="&customize.restore;" id="restoreId" oncommand="restoreDefaultGestures();" />
      </hbox>
    </vbox>
    <vbox>

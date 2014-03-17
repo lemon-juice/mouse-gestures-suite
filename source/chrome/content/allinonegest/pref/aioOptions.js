@@ -57,6 +57,8 @@ function init() {
     var addon = em.getItemForID(myGUID);
     document.getElementById("versId").value += " " + addon.version;
   }
+//  var tabbox = document.getElementsByTagName('tabbox')[0];
+//  tabbox.selectedIndex = 1;
 }
 
 function doEnabling() {
@@ -165,6 +167,20 @@ function changeTrace(inc) {
   document.getElementById("traitId").setAttribute("style",
         "border-top-width:" + trailSize + "px;border-top-color:" + color);
   if (inc) doEnabling();
+}
+
+function restoreDefaultGestures() {
+  
+  if (!confirm(bundle.getString("opt.confirmDefaultGestures"))) return;
+  
+  var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+  
+  pref.setCharPref("allinonegest.gestureString", defaultGestureString);
+  pref.setCharPref("allinonegest.functionString", defaultFunctionString);
+  pref.setCharPref("allinonegest.rockerString", defaultRockerString);
+  
+  window.opener.aioOpenAioOptionsDelayed(400);
+  closeWindow(true);
 }
 
 function openHelp(tabIndex) {

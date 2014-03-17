@@ -1311,6 +1311,12 @@ function aioOpenAioOptions() {
   window.openDialog(aioDir + "pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
 }
 
+function aioOpenAioOptionsDelayed(delay) {
+  setTimeout(function() {
+    aioOpenAioOptions();
+  }, delay);
+}
+
 function aioOpenBookmarksManager() {
   toOpenWindowByType("bookmarks:manager",
     "chrome://communicator/content/bookmarks/bookmarksManager.xul");

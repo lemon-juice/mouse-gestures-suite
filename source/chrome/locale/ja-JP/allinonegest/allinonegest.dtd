@@ -23,6 +23,7 @@
 <!ENTITY customize.add "ジェスチャを追加">
 <!ENTITY customize.edfunc "機能割り当て編集">
 <!ENTITY customize.undo "元に戻す">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter "ジェスチャを文字列 (上下左右をLRUDで記述) で入力してください。">
 <!ENTITY customize.draw "ジェスチャ入力">
 <!ENTITY customize.swaptxt "入れ替える相手の行をクリックしてください (現在行とその行を入れ替えます)。">

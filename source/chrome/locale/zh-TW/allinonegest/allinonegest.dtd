@@ -23,6 +23,7 @@
 <!ENTITY customize.add            "加入手勢">
 <!ENTITY customize.edfunc         "編輯功能">
 <!ENTITY customize.undo           "復原">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter          "或輸入（簡短格式，例如：LRUD）新的手勢：">
 <!ENTITY customize.draw           "描繪">
 <!ENTITY customize.swaptxt        "按一下另一列互換手勢（另一列的手勢 &lt;-&gt; 目前這一列的手勢）">

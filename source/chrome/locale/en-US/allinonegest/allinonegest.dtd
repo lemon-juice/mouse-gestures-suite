@@ -23,6 +23,7 @@
 <!ENTITY customize.add            "Add gesture">
 <!ENTITY customize.edfunc         "Edit function">
 <!ENTITY customize.undo           "Undo">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter          "or Enter (short format e.g. LRUD) the new gesture:">
 <!ENTITY customize.draw           "Draw">
 <!ENTITY customize.swaptxt        "Click on a new row to swap (new row gesture &lt;-&gt; current row gesture)">

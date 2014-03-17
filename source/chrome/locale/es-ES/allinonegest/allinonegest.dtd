@@ -46,6 +46,7 @@
 <!ENTITY customize.swap "Intercambiar gestos">
 <!ENTITY customize.swaptxt "Pulse en una nueva fila para intercambiar (nuego gesto &lt;-&gt; gesto actual)">
 <!ENTITY customize.undo "Deshacer">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY drawgesture.title "Área de dibujado del gesto">
 <!ENTITY enable.autoscroll "Desplazamiento con botón central">
 <!ENTITY enable.label "Habilitar">

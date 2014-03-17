@@ -23,6 +23,7 @@
 <!ENTITY customize.add            "Geste hinzufügen">
 <!ENTITY customize.edfunc         "Funktion bearbeiten">
 <!ENTITY customize.undo           "Rückgängig">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter          "Neue Geste eingeben (z.B. LROU für Links-Rechts-Oben-Unten):">
 <!ENTITY customize.draw           "Mausgeste ziehen">
 <!ENTITY customize.swaptxt        "Auf eine neue Zeile klicken zum Austauschen (Geste neue Zeile &lt;-&gt; gewählte Geste)">

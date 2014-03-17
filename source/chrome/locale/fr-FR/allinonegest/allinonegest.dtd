@@ -23,6 +23,7 @@
 <!ENTITY customize.add            "Ajouter un geste">
 <!ENTITY customize.edfunc         "Editer la fonction">
 <!ENTITY customize.undo           "Défaire">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter          "ou Entrer le nouveau geste (format court p.ex. GDHB):">
 <!ENTITY customize.draw           "Dessiner">
 <!ENTITY customize.swaptxt        "Cliquer sur une nouvelle ligne pour échanger (geste de la nouvelle ligne &lt;-&gt; geste de la ligne courante)">

@@ -23,6 +23,7 @@
 <!ENTITY customize.add "Добавить жест">
 <!ENTITY customize.edfunc "Изменить действие">
 <!ENTITY customize.undo "Отменить">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter "или Введите (например в коротком формате, ЛПВН) новый жест:">
 <!ENTITY customize.draw "Нарисуйте">
 <!ENTITY customize.swaptxt "Щёлкните на другую строку для обмена (новый жест строки &lt;-&gt; текущий жест строки)">

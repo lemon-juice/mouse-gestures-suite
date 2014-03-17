@@ -23,6 +23,7 @@
 <!ENTITY customize.add            "添加手势">
 <!ENTITY customize.edfunc         "功能编辑">
 <!ENTITY customize.undo           "撤销">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter          "或输入(缩写格式，如LRUD)新手势:">
 <!ENTITY customize.draw           "绘制">
 <!ENTITY customize.swaptxt        "点击目标手势进行交换(新手势 &lt;-&gt; 当前手势)">

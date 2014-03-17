@@ -23,6 +23,7 @@
 <!ENTITY customize.add            "동작 추가">
 <!ENTITY customize.edfunc         "기능 수정">
 <!ENTITY customize.undo           "되돌리기">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter          "또는 새로운 동작을 입력하십시오.(형식: L,U,R,D):">
 <!ENTITY customize.draw           "동작 그리기">
 <!ENTITY customize.swaptxt        "교환하려는 줄을 선택하십시오. (현재 줄과 선택된 줄을 서로 바꿉니다.)">

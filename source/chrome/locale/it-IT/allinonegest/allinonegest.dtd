@@ -23,6 +23,7 @@
 <!ENTITY customize.add            "Aggiungi gesture">
 <!ENTITY customize.edfunc         "Modifica funzione">
 <!ENTITY customize.undo           "Annulla">
+<!ENTITY customize.restore        "Restore defaults">
 <!ENTITY customize.enter          "o Inserisci (formato compatto es. LRUD) la nuova gesture:">
 <!ENTITY customize.draw           "Disegna">
 <!ENTITY customize.swaptxt        "Clicca su una nuova riga per scambiare gesture (riga nuova gesture &lt;-&gt; riga gesture corrente)">
