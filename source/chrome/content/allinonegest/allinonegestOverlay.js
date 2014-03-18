@@ -489,6 +489,19 @@ function aioInit() { // overlay has finished loading or a pref was changed
   
   aioRendering.removeEventListener("DOMMouseScroll", aioWheelScroll, false);
 
+  if (aioWindowType == "browser") {
+    if (aioTabSwitching) {
+      aioContent.mStrip.addEventListener("DOMMouseScroll", aioSwitchTabs, true);
+      if (platform.indexOf('linux') != -1) // hack for linux-gtk2 + xft bug
+         document.getElementById("navigator-toolbox").addEventListener("DOMMouseScroll", aioSwitchTabs, true); 
+   }
+   else {
+      aioContent.mStrip.removeEventListener("DOMMouseScroll", aioSwitchTabs, true);
+      if (platform.indexOf('linux') != -1)
+         document.getElementById("navigator-toolbox").removeEventListener("DOMMouseScroll", aioSwitchTabs, true);
+    }
+  }
+
   aioFirstInit = false;
   dump("AiOGest: end init\n");
 }
@@ -1111,6 +1124,12 @@ function aioLinkTTEnd(e) {
   aioTTPU = null; aioTTNode = null;
   aioRestoreListeners();
   aioNukeEvent(e);
+}
+
+function aioSwitchTabs(e) {
+  if (typeof(TabbrowserService) == "object" || aioRendering.childNodes.length <= 1)  return;
+  aioNukeEvent(e);
+  aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == aioReverseScroll ? -1 : 1, true);
 }
 
 function aioScrollMove(e) {
