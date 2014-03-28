@@ -351,10 +351,10 @@
           <td>All links that you have drawn the gesture over will be opened in
             new tabs.<br>
             <br>
-            The default gesture for this action is +RUL (=any gesture
-            sequence-Right-Up-Left), which allows you to draw a long path in any
+            The default gesture for this action is +RU (=any gesture
+            sequence-Right-Up), which allows you to draw a long path in any
             shape over the links you want to open and then finish the gesture
-            with Right-Up-Left.</td>
+            with Right-Up.</td>
         </tr>
         <tr>
           <td>{g.linksInWindows}</td>
@@ -367,10 +367,10 @@
               window with tabs</em> option in advanced preferences then this
             action will open one new window and load all links in separate tabs.<br>
             <br>
-            The default gesture for this action is +RU (=any gesture
-            sequence-Right-Up), which allows you to draw a long path in any
+            The default gesture for this action is +RUL (=any gesture
+            sequence-Right-Up-Left), which allows you to draw a long path in any
             shape over the links you want to open and then finish the gesture
-            with Right-Up.<br>
+            with Right-Up-Left.<br>
           </td>
         </tr>
         <tr>
@@ -935,16 +935,24 @@
           <td>{g.leftRocker}</td>
           <td rowspan="4"><br>
           </td>
-          <td class="wintypes"><span class="browser">{abbreviation.browser}</span>
-            <span class="messenger">{abbreviation.messenger}</span></td>
+          <td class="wintypes">
+            <span class="browser">{abbreviation.browser}</span>
+            <span class="source">{abbreviation.source}</span>
+            <span class="messenger">{abbreviation.messenger}</span>
+            <span class="mailcompose">{abbreviation.mailcompose}</span>
+          </td>
           <td rowspan="4">Press <em>Edit function</em> button to assign any
             function to the rocker or scroll wheel gestures.<br>
           </td>
         </tr>
         <tr>
           <td>{g.rightRocker}</td>
-          <td class="wintypes"><span class="browser">{abbreviation.browser}</span>
-            <span class="messenger">{abbreviation.messenger}</span></td>
+          <td class="wintypes">
+            <span class="browser">{abbreviation.browser}</span>
+            <span class="source">{abbreviation.source}</span>
+            <span class="messenger">{abbreviation.messenger}</span>
+            <span class="mailcompose">{abbreviation.mailcompose}</span>
+          </td>
         </tr>
         <tr>
           <td>{g.backwardWheel}</td>
