@@ -517,7 +517,7 @@ function aioIsKeyOK(e) {
 }
 
 function aioIsUnformattedXML(aDoc) {
-  return /\/[\w+]*xml/.test(aDoc.contentType) && aDoc.styleSheets && aDoc.styleSheets.length && 
+  return /\/[\w+]*xml/.test(aDoc.contentType) && aDoc.styleSheets && aDoc.styleSheets.length && aDoc.styleSheets[0].href &&
          aDoc.styleSheets[0].href.substr(-31) == "/content/xml/XMLPrettyPrint.css";
 }
 
