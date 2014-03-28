@@ -9,6 +9,8 @@
 		Send ^o
 		WinWait ahk_class #32770 ; Open File dialog
 		Sleep 500
+		Send !{Up}
+		Sleep 500
 		SendInput D:\dev\aio-gestures\*.xpi{Enter} ; Open last xpi file in folder
 		Sleep 500
 		Send +{Tab}{End}{Enter}
@@ -16,7 +18,7 @@
 		Send {Enter}
 		Sleep 200
 		Send {Tab}{Tab}
-		Sleep 400
+		Sleep 500
 		Send {Enter}
 	}
 return
