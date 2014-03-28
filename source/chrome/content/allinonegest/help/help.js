@@ -104,13 +104,22 @@ function aioPropertyToWindowTypes(prop) {
         ];
       }
       for (var i=0; i<winTypes.length; i++) {
-        info += '<span class="' + winTypes[i] + '">' + aioAllWinTypes[winTypes[i]] + '</span> ';
+        info += '<span class="' + aioEscapeHTML(winTypes[i]) + '">' + aioEscapeHTML(aioAllWinTypes[winTypes[i]]) + '</span> ';
       }
       return info;
     }
   }
   
   return "";
+}
+
+function aioEscapeHTML(s) {
+    s = s.replace(/&/g, '&amp;');
+    s = s.replace(/</g, '&lt;');
+    s = s.replace(/>/g, '&gt;');
+    s = s.replace(/"/g, '&quot;');
+    s = s.replace(/'/g, '&#039;');
+    return s;
 }
 
 // translate gesture preference string like "RUL" into current locale
