@@ -450,7 +450,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioMainWin = document.getElementById("main-window");
     
      aioRendering.addEventListener("mousedown", aioMouseDown, true);
-     document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, false);
+     document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
 
      var activeId = "" + aioUnique++;
      if (aioContent.mTabContainer) {
