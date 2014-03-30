@@ -46,6 +46,7 @@ var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
 var aio2Buttons;  // .... prefs
+var aioDisableClickHeat;
 var aioFxV18;
 var aioDefNextSearch, aioDefPrevSearch;
 
@@ -368,7 +369,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
      [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
      [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
-     [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}]];
+     [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
+	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]];
 
   const unixRe = new RegExp("unix|linux|sun|freebsd", "i");
   for (var i = 0; i < prefFuncs.length; ++i) {
@@ -664,6 +666,10 @@ function aioGesturableURI() {
 }
 
 function aioMouseDown(e) {
+  if (aioDisableClickHeat && aioWindowType == "browser") {
+	aioDisableClickHeatEvents(e);
+  }
+  
   aioShowContextMenu = false;
   aioBackRocking = false;
   if (e.button == aioOpp[aioDownButton] && aioRockEnabled) {
@@ -1578,6 +1584,31 @@ function aioGrabNDragMouseUp(e) {
      aioScroll.nodeToScroll.style.cursor = "auto";
   setTimeout(function(){aioScrollEnd();}, 200);
 }
+
+// Disable clickheat.js events, because they cause delays in gestures
+// See http://www.labsmedia.com/clickheat/index.html
+function aioDisableClickHeatEvents(e) {
+  var targetWin = e.target.ownerDocument.defaultView.wrappedJSObject;
+  
+  if (typeof targetWin.catchClickHeat == "function") {
+	targetWin.document.removeEventListener("mousedown", targetWin.catchClickHeat);
+	
+	var f=targetWin.document.getElementsByTagName("iframe");
+	for (var d=0; d<f.length; d+=1) {
+	  f[d].removeEventListener("focus", targetWin.catchClickHeat);
+	}
+	
+	aioStatusMessage(aioGetStr("g.ClickHeatDisabled"));
+  }
+}
+
+//function aioDebugObj(o) {
+//  var s="";
+//  for (var key in o) {
+//	s += key + "=" + o[key] + "\n";
+//  }
+//  alert(s);
+//}
 
 
 

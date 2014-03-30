@@ -89,6 +89,9 @@
 <!ENTITY aioAction.prevlink       "이전 링크 따라가기:">
 <!ENTITY aioAction.rockermode     "록커 탐색 및 휠 스크롤 탐색: 문서를 읽는 중에도 반복을 허용합니다.">
 
+<!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
+
 <!ENTITY aioTabscroll.label       "탭 이동">
 <!ENTITY aioTabscroll.revScroll   "휠을 뒤로 스크롤하면 왼쪽 탭으로 이동합니다.">
 

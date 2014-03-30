@@ -89,6 +89,9 @@
 <!ENTITY aioAction.prevlink        "跟踪上一链接:">
 <!ENTITY aioAction.rockermode      "摇杆&amp;滚轮手势:允许重复载入页面">
 
+<!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
+
 <!ENTITY aioTabscroll.label    "标签滚动">
 <!ENTITY aioTabscroll.revScroll    "滚轮向后滚动时向左滚动标签页">
 

@@ -93,6 +93,9 @@
 <!ENTITY aioAction.prevlink        "Raggiungi pagina precedente:">
 <!ENTITY aioAction.rockermode      "Gesture Rocker &amp; Rotellina di scorrimento: Permetti ripetizione per azioni che caricano pagine">
 
+<!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
+
 <!ENTITY aioTabscroll.label    "Scorrimento delle schede">
 <!ENTITY aioTabscroll.revScroll    "Scorri le schede a sinistra quando la rotellina viene ruotata all'indietro">
 

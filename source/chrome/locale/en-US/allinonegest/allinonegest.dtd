@@ -89,6 +89,9 @@
 <!ENTITY aioAction.prevlink        "Follow Previous Link:">
 <!ENTITY aioAction.rockermode      "Rocker &amp; Scrollwheel gestures: Allow repetition for actions that load pages">
 
+<!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
+
 <!ENTITY aioTabscroll.label    "Tab scrolling">
 <!ENTITY aioTabscroll.revScroll    "Scroll tabs to the left when the wheel is rotated backward">
 
