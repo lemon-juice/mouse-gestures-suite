@@ -1591,14 +1591,32 @@ function aioDisableClickHeatEvents(e) {
   var targetWin = e.target.ownerDocument.defaultView.wrappedJSObject;
   
   if (typeof targetWin.catchClickHeat == "function") {
-	targetWin.document.removeEventListener("mousedown", targetWin.catchClickHeat);
+	_aioRemoveEventsForFunction(targetWin.document, targetWin.catchClickHeat);
 	
 	var f=targetWin.document.getElementsByTagName("iframe");
-	for (var d=0; d<f.length; d+=1) {
-	  f[d].removeEventListener("focus", targetWin.catchClickHeat);
+	for (var i=0; i<f.length; i++) {
+	  _aioRemoveEventsForFunction(f[i], targetWin.catchClickHeat);
 	}
 	
 	aioStatusMessage(aioGetStr("g.ClickHeatDisabled"));
+  }
+}
+
+// remove all event listeners for function on given target
+function _aioRemoveEventsForFunction(target, func) {
+  var els = Components.classes["@mozilla.org/eventlistenerservice;1"]
+            .getService(Components.interfaces.nsIEventListenerService);
+  
+  var handlers = els.getListenerInfoFor(target);
+  var handler;
+  
+  for (var i in handlers) {
+	handler = handlers[i];
+	
+	if (handler.type && (typeof handler.listenerObject) == "function"
+		&& handler.listenerObject.name == func.name) {
+	  target.removeEventListener(handler.type, handler.listenerObject, handler.capturing);
+	}
   }
 }
 
@@ -1607,7 +1625,7 @@ function aioDisableClickHeatEvents(e) {
 //  for (var key in o) {
 //	s += key + "=" + o[key] + "\n";
 //  }
-//  alert(s);
+//  return s;
 //}
 
 
