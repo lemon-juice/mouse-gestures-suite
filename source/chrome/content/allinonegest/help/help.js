@@ -63,6 +63,7 @@ function aioInsertGesturesToTable() {
         // insert available window types
         if (tds[2]) {
           tds[2].classList.add("wintypes");
+          tds[2].style.whiteSpace = "nowrap";
           tds[2].innerHTML = aioPropertyToWindowTypes(matches[1]);
         }
       }

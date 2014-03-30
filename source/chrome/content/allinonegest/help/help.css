@@ -43,7 +43,6 @@ table.gestlist tr td:first-child {
   font-weight: bold;
 }
 table.gestlist td.wintypes {
-  white-space: nowrap;
   font-weight: bold;
 }
 table.gestlist td.wintypes span.browser {
