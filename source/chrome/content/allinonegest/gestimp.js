@@ -122,12 +122,20 @@ var aioLastTabInfo = [];
 var aioUndoHide = [];
 var aioUnique = 0;
 var aioOrigBlurTab;
+var aioStatusMessageTO;
 const aioKGestures = aioDir + "show-gestures.html";
 
 function aioStatusMessage(msg, timeToClear) {
   if (!aioStatusBar) return;
+  
+  if (aioStatusMessageTO) {
+    clearTimeout(aioStatusMessageTO);
+  }
+  
   aioStatusBar.label = msg;
-  if (timeToClear) setTimeout(function(){aioStatusMessage("", 0);}, timeToClear );
+  if (timeToClear) {
+    aioStatusMessageTO = setTimeout(function(){aioStatusMessage("", 0);}, timeToClear );
+  }
 }
 
 function aioInitGestTable() {
@@ -1243,26 +1251,92 @@ function aioViewSource(frame) {
   }
 }
 
-function aioViewCookies() { //Contributed by Squarefree.com
-  if (window.content.document.cookie)
-    alert(aioGetStr("cookies") + "\n\n" +
-       window.content.document.cookie.replace(/; /g,"\n"));
-  else alert(aioGetStr("noCookies"));
+function aioViewCookies() {
+  var cookieStr = "";
+  var cookies = _aioGetDomainCookies(window.content.document);
+  
+  if (cookies.length) {
+    for (var i=0; i<cookies.length; i++) {
+      var cookie = cookies[i];
+      cookieStr += cookie.host + ": " + cookie.name + "=" + cookie.value + "\n";
+    }
+    
+    alert(aioGetStr("cookies") + "\n\n" + cookieStr);
+  
+  } else {
+    alert(aioGetStr("noCookies"));
+  }
 }
 
-function aioDeleteCookies() { //Contributed by Squarefree.com
-  var d, sl, p, i, cookie;
-  var cookieStr = window.content.document.cookie;
-  if (!cookieStr) alert(aioGetStr("noCookies"));
-  var cookies = cookieStr.split("; ");
-  for (d = "." + window.content.document.location.host; d; d = ("" + d).substr(1).match(/\..*$/))
-    for (sl = 0; sl < 2; ++sl)
-      for (p = "/" + window.content.document.location.pathname; p; p = p.substring(0, p.lastIndexOf('/')))
-        for (i in cookies) {
-          cookie = cookies[i];
-          if (cookie) window.content.document.cookie = cookie + ";domain = " + d.slice(sl) + "; path=" +
-                   p.slice(1) + "/" + "; expires=" + new Date((new Date).getTime()-1e11).toGMTString();
-        }
+function aioDeleteCookies() {
+  var cookies = _aioGetDomainCookies(window.content.document);
+  if (!cookies.length) {
+    alert(aioGetStr("noCookies"));
+    return;
+  }
+  
+  var confMsg = aioGetStr("deleteCookies").replace("%", cookies.length);
+  
+  if (!confirm(confMsg)) {
+    return;
+  }
+  
+  var cookie;
+  for (var i=0; i<cookies.length; i++) {
+    cookie = cookies[i];
+    Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager2).remove(cookie.host, cookie.name, cookie.path, false);
+  }
+  
+  aioStatusMessage(aioGetStr("cookiesDeleted"), 4000);
+}
+
+// Get all cookies in domain of given document
+function _aioGetDomainCookies(doc) {
+  var allCookies = [];
+  var host = doc.location.hostname;
+  var path = "/";
+  var cookie, cookieHost, cookiePath;
+
+  var cookieEnumeration = Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager2).enumerator;
+  
+  // Loop through the cookies and filter
+  while(cookieEnumeration.hasMoreElements()) {
+    cookie = cookieEnumeration.getNext().QueryInterface(Components.interfaces.nsICookie2);
+    
+    cookieHost = cookie.host;
+    cookiePath = cookie.path;
+
+    // If there is a host and path for this cookie
+    if(cookieHost && cookiePath)
+    {
+      if(cookieHost.charAt(0) == ".")
+      {
+        cookieHost = cookieHost.substring(1);
+      }
+
+      // If the host and cookie host and path and cookie path match
+      if((host == cookieHost || new RegExp("." + cookieHost + "$").test(host)) && (path == cookiePath || cookiePath.indexOf(path) === 0))
+      {
+        allCookies.push(cookie);
+      }
+    }
+  }
+  
+  // sort
+  allCookies.sort(function(a, b) {
+    var s1 = a.host + a.name;
+    var s2 = b.host + b.name;
+    
+    if (s1 > s2) {
+      return 1;
+    } else if (s1 < s2) {
+      return -1
+    } else {
+      return 0;
+    }
+  })
+  
+  return allCookies;
 }
 
 function aioBookmarkCurrentPage() {
