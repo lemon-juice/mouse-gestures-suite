@@ -1635,3 +1635,20 @@ window.addEventListener("load",
      if (aioInitStarted) return;
      aioStartUp();},
   false);
+
+// With each window focusing we save current and previous window in global variable
+// because we will need previous window for double-stack windows option
+// (we can't use z-order of windows because it's broken on Linux)
+window.addEventListener("activate", function() {
+  var curwin = Application.storage.get("aioCurWindow", null);
+  
+  if (curwin == window) {
+	return;
+  }
+  
+  if (curwin) {
+	Application.storage.set("aioLastWindow", curwin);
+  }
+  
+  Application.storage.set("aioCurWindow", window);
+});

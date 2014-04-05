@@ -229,7 +229,9 @@ var gestActionTable = [
       "g.print", //88
       "g.openImageInTab", //89,
       "g.openImageInWin", //90
-      "g.detachTab" //91
+      "g.detachTab", //91
+      "g.detachTabAndDoubleStack", //92
+      "g.doubleStack2Windows", //93
     ];
 var rockerGestName = [
       "g.leftRocker",

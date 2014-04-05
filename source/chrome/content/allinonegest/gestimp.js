@@ -104,6 +104,8 @@ var aioActionTable = [
       [function(){aioImageInTab();}, "g.openImageInTab", 0, "", ["browser", "source", "messenger"]], //89
       [function(){aioImageInWindow();}, "g.openImageInWin", 0, "", ["browser", "source", "messenger"]], //90
       [function(){aioDetachTab();}, "g.detachTab", 0, "", ["browser"]], //91
+      [function(){aioDetachTabAndDoubleStack();}, "g.detachTabAndDoubleStack", 0, "", ["browser"]], //92
+      [function(){aioDoubleStackWindows();}, "g.doubleStack2Windows", 0, "", null], //93
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
 //      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, "", null], // 90
 //      [function(){aioCloseRightTabs(false);}, "g.CloseRightTab", 0, "", null], // 91
@@ -1068,21 +1070,22 @@ function aioCloseWindow() {
   }
 }
 
+// open link in new window and double stack
 function aioDoubleWin() {
   if (!aioOnLink.length) return;
   window.moveTo(screen.availLeft, screen.availTop);
   
   if (aioIsWin) {
     // only on Win screen.availWidth & screen.availHeight are correct
-    window.resizeTo(screen.availWidth / 2, screen.availHeight);
     var win = aioNewWindow(aioOnLink[0].href, "");
+    window.resizeTo(screen.availWidth / 2, screen.availHeight);
     win.moveTo(screen.availWidth / 2 + screen.availLeft, screen.availTop);
     win.resizeTo(screen.availWidth / 2, screen.availHeight);
    
   } else {
     var win = aioNewWindow(aioOnLink[0].href, "top=" + screen.availTop + ",left=" + screen.availLeft + ",outerWidth=" + screen.availWidth + ",outerHeight=" + screen.availHeight);
     
-    var shift = aioIsWin ? 0 : 5; // prevent overlapping on linux
+    var shift = 5; // prevent overlapping on linux
 
     win.addEventListener("load", function () {
       win.resizeTo(win.outerWidth / 2 - shift, win.outerHeight);
@@ -1228,6 +1231,17 @@ function aioUpDir() { // from Stephen Clavering's GoUp
 function aioRestMaxWin() {
   if (window.windowState == STATE_MAXIMIZED) window.restore();
   else window.maximize();
+ }
+
+function aioDebugProps(obj) {
+  var s="";
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key) && typeof obj[key] != "function") {
+      s += key + "=" + obj[key] + "\n";
+    }
+  }
+  
+  alert(s);
 }
 
 function aioFrameInfo() {
@@ -1667,6 +1681,92 @@ function _aioCopyTabHistory(originalHistory)
 
   return copiedHistory;
 }
+
+// detach next tab and double stack windows
+function aioDetachTabAndDoubleStack() {
+  
+}
+
+// double stack 2 windows: current and previously focused
+function aioDoubleStackWindows() {
+  var lastWin = Application.storage.get("aioLastWindow", null);
+  
+  if (!lastWin || lastWin.closed) {
+    return;
+  }
+  
+  if (window.windowState == STATE_FULLSCREEN) {
+    BrowserFullScreen();
+  }
+  
+  switch (lastWin.windowState) {
+    case STATE_MINIMIZED:
+    case STATE_MAXIMIZED:
+      lastWin.restore();
+      break;
+  }
+  
+  if (lastWin.screenX < window.screenX) {
+    // change order because current window is to the right of the other window
+    var win1 = lastWin;
+    var win2 = window;
+    
+  } else {
+    // normal order - current window is to the left of the other window
+    var win1 = window;
+    var win2 = lastWin;
+  }
+  
+  _aioDoubleStack2Windows(win1, win2);
+  
+  setTimeout(function() {
+    window.focus();
+  }, 200);
+}
+
+function _aioDoubleStack2Windows(win1, win2) {
+  function positionWindows(availHeight) {
+    var shift = aioIsWin ? 0 : 5; // prevent overlapping on linux
+    win1.resizeTo(screen.availWidth / 2 - shift, availHeight);
+    win2.resizeTo(screen.availWidth / 2 - shift, availHeight);
+    
+    setTimeout(function() {
+      win1.moveTo(screen.availLeft, screen.availTop);
+      win2.moveTo(screen.availWidth / 2 + screen.availLeft, screen.availTop);
+    }, 100);
+  }
+  
+  if (aioIsWin) {
+    positionWindows(screen.availHeight);
+    
+  } else {
+    var diff = Application.storage.get("aioAvailHeightDiff", null);
+    
+    if (diff !== null) {
+      positionWindows(screen.availHeight - diff);
+      
+    } else {
+      // on Linux screen.availHeight is too large so we workaround this by using
+      // outerHeight of a maximized window
+      win1.maximize();
+      setTimeout(function() {
+        var availHeight = win1.outerHeight - 2;
+        
+        // save amount of error of screen.availHeight so we don't need to execute
+        // the maximize hack on subsequent calls
+        Application.storage.set("aioAvailHeightDiff", screen.availHeight - availHeight);
+        
+        win1.restore();
+        
+        setTimeout(function() {
+          positionWindows(availHeight);
+        }, 100);
+      }, 100);
+    }
+  }
+}
+
+
 
 function aioNullAction() {
   alert("This action does not exist");
