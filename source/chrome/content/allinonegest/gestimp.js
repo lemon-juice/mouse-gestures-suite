@@ -1514,12 +1514,12 @@ function _aioDetachTab(tabToDetach) {
   aioClonedData = _aioGetClonedData(tabToDetach);
   gBrowser.removeTab(tabToDetach);
   
-  aioOpenedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
+  var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
 
   if (typeof aioClonedData == "string") {
     // sessionStore waits for the session history to be available,
     // so we don't have to wait.
-    aioOpenedWindow.addEventListener('load',
+    openedWindow.addEventListener('load',
         function() {
           var os = Components.classes["@mozilla.org/observer-service;1"]
                              .getService(Components.interfaces.nsIObserverService);
@@ -1527,18 +1527,18 @@ function _aioDetachTab(tabToDetach) {
         }, false);
   } else {
     // Wait until session history is available in the new window
-    aioOpenedWindow.addEventListener('load',
+    openedWindow.addEventListener('load',
         function() {
-          _aioWaitForSessionHistory(10);
+          _aioWaitForSessionHistory(10, openedWindow);
         }, false);
   }
   
-  return aioOpenedWindow;
+  return openedWindow;
 }
 
-function _aioWaitForSessionHistory(attempts) {
+function _aioWaitForSessionHistory(attempts, openedWindow) {
   // Test if sessionHistory exists yet
-  var webNav = aioOpenedWindow.getBrowser().webNavigation;
+  var webNav = openedWindow.getBrowser().webNavigation;
   try {
     webNav.sessionHistory;
   }
@@ -1546,15 +1546,15 @@ function _aioWaitForSessionHistory(attempts) {
   // webNav.sessionHistory is not yet available, try again later
   catch (err) {
     if (attempts)
-      window.setTimeout(_aioWaitForSessionHistory, 100, --attempts);
+      window.setTimeout(_aioWaitForSessionHistory, 100, --attempts, openedWindow);
     return;
   }
   if ((webNav.sessionHistory == null) && attempts) {
-    window.setTimeout(_aioWaitForSessionHistory, 100, --attempts);
+    window.setTimeout(_aioWaitForSessionHistory, 100, --attempts, openedWindow);
     return;
   }
 
-  _aioSetClonedData(aioOpenedWindow.getBrowser().selectedTab, aioClonedData);
+  _aioSetClonedData(openedWindow.getBrowser().selectedTab, aioClonedData);
 }
 
 /* getClonedData
