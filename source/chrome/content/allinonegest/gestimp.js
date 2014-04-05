@@ -1471,13 +1471,48 @@ function aioSavePageAs() {
   }
 }
 
+// Detach tab to new window
 function aioDetachTab() {
   var tabLength = gBrowser.tabContainer.childNodes.length;
   if (tabLength <= 1) return;
 
-  var aTab = gBrowser.selectedTab;
-  aioClonedData = _aioGetClonedData(aTab);
-  gBrowser.removeTab(aTab);
+  _aioDetachTab(gBrowser.selectedTab);
+}
+
+// detach next tab and double stack windows
+function aioDetachTabAndDoubleStack() {
+  var tabLength = gBrowser.tabContainer.childNodes.length;
+  if (tabLength <= 1) return;
+
+  var curTabIndex = gBrowser.tabContainer.selectedIndex;
+  var tabToDetach;
+  
+  if (curTabIndex < tabLength - 1) {
+    // detach next tab
+    tabToDetach = gBrowser.tabContainer.childNodes[curTabIndex + 1];
+    
+  } else {
+    // last tab is open - detach current tab
+    tabToDetach = gBrowser.selectedTab;
+  }
+  
+  window.fullScreen = false;
+  
+  var newWin =_aioDetachTab(tabToDetach);
+  
+  setTimeout(function() {
+    _aioDoubleStack2Windows(window, newWin);
+  }, 500);
+}
+
+// detach given tab to new window
+// returns opened window object
+function _aioDetachTab(tabToDetach) {
+  var tabLength = gBrowser.tabContainer.childNodes.length;
+  if (tabLength <= 1) return null;
+
+  aioClonedData = _aioGetClonedData(tabToDetach);
+  gBrowser.removeTab(tabToDetach);
   
   aioOpenedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
 
@@ -1497,6 +1532,8 @@ function aioDetachTab() {
           _aioWaitForSessionHistory(10);
         }, false);
   }
+  
+  return aioOpenedWindow;
 }
 
 function _aioWaitForSessionHistory(attempts) {
@@ -1682,10 +1719,6 @@ function _aioCopyTabHistory(originalHistory)
   return copiedHistory;
 }
 
-// detach next tab and double stack windows
-function aioDetachTabAndDoubleStack() {
-  
-}
 
 // double stack 2 windows: current and previously focused
 function aioDoubleStackWindows() {
@@ -1695,9 +1728,7 @@ function aioDoubleStackWindows() {
     return;
   }
   
-  if (window.windowState == STATE_FULLSCREEN) {
-    BrowserFullScreen();
-  }
+  window.fullScreen = false;
   
   switch (lastWin.windowState) {
     case STATE_MINIMIZED:
