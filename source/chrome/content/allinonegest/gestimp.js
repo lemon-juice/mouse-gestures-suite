@@ -1072,18 +1072,18 @@ function aioCloseWindow() {
 
 // open link in new window and double stack
 function aioDoubleWin() {
-  if (!aioOnLink.length) return;
+  var link = aioOnLink.length ? aioOnLink[0].href : "about:blank";
   window.moveTo(screen.availLeft, screen.availTop);
   
   if (aioIsWin) {
     // only on Win screen.availWidth & screen.availHeight are correct
-    var win = aioNewWindow(aioOnLink[0].href, "");
+    var win = aioNewWindow(link, "");
     window.resizeTo(screen.availWidth / 2, screen.availHeight);
     win.moveTo(screen.availWidth / 2 + screen.availLeft, screen.availTop);
     win.resizeTo(screen.availWidth / 2, screen.availHeight);
    
   } else {
-    var win = aioNewWindow(aioOnLink[0].href, "top=" + screen.availTop + ",left=" + screen.availLeft + ",outerWidth=" + screen.availWidth + ",outerHeight=" + screen.availHeight);
+    var win = aioNewWindow(link, "top=" + screen.availTop + ",left=" + screen.availLeft + ",outerWidth=" + screen.availWidth + ",outerHeight=" + screen.availHeight);
     
     var shift = 5; // prevent overlapping on linux
 
