@@ -1,11 +1,11 @@
 const defaultGestureString =
-  "L|R|UD|UDU||||U|||" + 
-  "DUD|DU|DLD|DLDL|D||RUDR|UL|UR|||RLDUR|LUL|" +
+  "L|R|UD|UDU||||U|UDR||" + 
+  "DUD|DU|DLD|DLU|D|DUR|RUDR|UL|UR|||DRDR|LUL|" +
   "|DR|RLR||+RU|+RUL|||RDUR|RU|" +
-  "DL|DRD|RDLU|DURD|||||ULU||" +
+  "DL|DRD|LUD|DURD|||||ULU||" +
   "|||||||LU|LD||" +
-  "||LDUL|LUDL|LDUR|URD|LDRDL|||RDU|" +
-  "|RUD||DRDLU|||||||" + 
+  "||||LDUR|URD|LDRDL|LDR|LDRL|RDU|" +
+  "|RUD||DRDLU||||||DRL|" + 
   "||||||||||" +
   "||RDR||||||||" +
   "";
@@ -21,4 +21,4 @@ const defaultFunctionString =
   "67|70|75|44|83|48|49|50|51|53|" +
   "88|68|46|63|77|81|84|85|78|86|" +
   "87";
-const defaultRockerString = "0|1|73|72";
+const defaultRockerString = "0|1|39|40";
