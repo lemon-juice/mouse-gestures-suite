@@ -306,10 +306,8 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   bundle = document.getElementById("allinonegestbundle");
   var maxActions = gestActionTable.length;
   for (var i = 0; i < maxActions; ++i) {
-    try {
+    if (gestActionTable[i] != "g.nullAction") {
       gestActionTable[i] = bundle.getString(gestActionTable[i]);
-    } catch (err) {
-      // g.nullAction
     }
   }
   rockerCount = rockerGestName.length;
