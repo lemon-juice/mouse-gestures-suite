@@ -226,6 +226,10 @@ function openOptions() {
   window.openDialog("chrome://allinonegest/content/pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
 }
 
+// Sort gesture and function strings according to order in
+// defaultFunctionString & defaultGestureString.
+// If an item does not exists (eg. new action not yet in prefs)
+// then add it with empty definition.
 function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
   var gest = gestStr.split("|");
   var func = funcStr.split("|");
@@ -243,9 +247,14 @@ function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
   var newFunc = [];
   
   for (var i=0; i<defaultFunc.length; i++) {
+    newFunc.push(defaultFunc[i]);
+    
     if (gestObj.hasOwnProperty(defaultFunc[i])) {
-      newFunc.push(defaultFunc[i]);
       newGest.push(gestObj[defaultFunc[i]]);
+      
+    } else {
+      // new action not yet in prefs
+      newGest.push("");
     }
   }
 
