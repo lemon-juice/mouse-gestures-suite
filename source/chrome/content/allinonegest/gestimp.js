@@ -703,6 +703,10 @@ function aioSaveImageAs() {
 }
 
 function aioCloseCurrTab(lastTabClosesWindow) {
+  if (aioClosePrintPreview()) {
+    return;
+  }
+  
   switch (aioWindowType) {
     case "browser":
       if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) {
@@ -973,6 +977,10 @@ function aioDupWindow() {
 }
 
 function aioCloseWindow() {
+  if (aioClosePrintPreview()) {
+    return;
+  }
+  
   switch (aioWindowType) {
     case "mailcompose":
       goDoCommand('cmd_close');
@@ -1707,6 +1715,15 @@ function _aioDoubleStack2Windows(win1, win2) {
       }, 100);
     }
   }
+}
+
+function aioClosePrintPreview() {
+  if (document.getElementById("print-preview-toolbar")) {
+    PrintUtils.exitPrintPreview();
+    return true;
+  }
+
+  return false;
 }
 
 
