@@ -832,8 +832,10 @@ function aioMouseUp(e) {
      aioEraseTrail();
      if (lastgesture) {
         window.addEventListener("click", aioGestClickHandler, true);
+		var shiftKey = e.shiftKey;
+		
         if ((new Date() - aioLastEvtTime) < aioDelay) {
-           setTimeout(function(a){aioFireGesture(a);}, 0, lastgesture);
+           setTimeout(function(a){aioFireGesture(a, shiftKey);}, 0, lastgesture);
            setTimeout(function(){aioGestClickEnd();}, 200);
            return;
         }

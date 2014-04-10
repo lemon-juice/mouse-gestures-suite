@@ -18,18 +18,18 @@ var aioActionTable = [
       [function(){aioReload(true);}, "g.browserReloadSkipCache", 0, "", ["browser", "source", "messenger"]], // 3
       [function(){aioStopLoading();}, "g.browserStop", 0, "", ["browser", "messenger"]], // 4
       [function(){aioHomePage();}, "g.browserHome", 0, "", null], // 5
-      [function(){aioOpenNewWindow(false);}, "g.openNewWindow", 0, "", null], // 6
-      [function(){aioDupWindow();}, "g.duplicateWindow", 0, "", ["browser", "source", "messenger"]], // 7
+      [function(shiftKey){aioOpenNewWindow(null, shiftKey);}, "g.openNewWindow", 0, "", null], // 6
+      [function(shiftKey){aioDupWindow(shiftKey);}, "g.duplicateWindow", 0, "", ["browser", "source", "messenger"]], // 7
       [function(){aioUpDir();}, "g.upDir", 2, "", ["browser"]], // 8
-      [function(){aioOpenInNewTab(false);}, "g.browserOpenTabInFg", 0, "", null], // 9
-      [function(){aioDupTab();}, "g.duplicateTab", 0, "", ["browser", "messenger"]], // 10
+      [function(shiftKey){aioOpenInNewTab(shiftKey);}, "g.browserOpenTabInFg", 0, "", null], // 9
+      [function(shiftKey){aioDupTab(shiftKey);}, "g.duplicateTab", 0, "", ["browser", "messenger"]], // 10
       [function(){aioSwitchTab(1);}, "g.nextTab", 1, "12", ["browser", "messenger"]], // 11
       [function(){aioSwitchTab(-1, true);}, "g.previousTab", 1, "11", ["browser", "messenger"]], // 12
       [function(){aioRemoveAllTabsBut();}, "g.closeOther", 0, "", ["browser"]], // 13
       [function(){aioRestMaxWin();}, "g.restMaxWin", 1, "", null], // 14
       [function(){window.minimize();}, "g.minWin", 0, "", null], // 15
       [function(){BrowserFullScreen();}, "g.fullScreen", 1, "", ["browser"]], // 16
-      [function(){aioSelectionAsURL();}, "g.openSelection", 0, "", ["browser", "messenger"]], // 17
+      [function(shiftKey){aioSelectionAsURL(shiftKey);}, "g.openSelection", 0, "", ["browser", "messenger"]], // 17
       [function(){aioCloseCurrTab(true);}, "g.closeDoc", 2, "", null], // 18
       [function(){aioViewSource(0);}, "g.viewPageSource", 0, "", ["browser", "messenger"]], // 19
       [function(){aioViewSource(1);}, "g.viewFrameSource", 0, "", ["browser", "messenger"]], // 20
@@ -66,14 +66,14 @@ var aioActionTable = [
       [function(){aioLinksInFiles();}, "g.linksInFiles", 0, "", ["browser", "source", "messenger"]], // 51
       [function(){aioUndoCloseTab();}, "g.undoCloseTab", 2, "", ["browser"]], // 52
       [function(){aioPrintPreview();}, "g.printPreview", 0, "", ["browser", "source", "messenger"]], //53
-      [function(){aioOpenInNewTab(true);}, "g.browserOpenTabInBg", 0, "", null], // 54
+      [function(shiftKey){aioOpenInNewTab(!shiftKey);}, "g.browserOpenTabInBg", 0, "", null], // 54
       [function(){aioDeleteCookies();}, "g.deleteSiteCookies", 0, "", ["browser"]], // 55
       [function(){aioUndoNukeAnything();}, "g.undoHideObject", 0, "", ["browser", "messenger"]], // 56
       [function(){aioFavoriteURL('1');}, "g.openFav1", 0, "", null], // 57
       [function(){aioFavoriteURL('2');}, "g.openFav2", 0, "", null], // 58
       [function(){aioOpenBlankTab();}, "g.openBlankTab", 0, "", null], // 59
       [function(){aioCloseWindow();}, "g.closeWindow", 0, "", null], // 60
-      [function(){aioOpenNewWindow(true);}, "g.openWindowInBg", 0, "", null], // 61
+      [function(shiftKey){aioOpenNewWindow(null, !shiftKey);}, "g.openWindowInBg", 0, "", null], // 61
       [function(){aioFrameInfo();}, "g.frameInfo", 0, "", ["browser"]], // 62
       [function(){aioOpenAioOptions();}, "g.aioOptions", 0, "", null], // 63
       [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 64
@@ -91,7 +91,7 @@ var aioActionTable = [
       [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, "", ["browser"]], // 76
       [function(){aioNextPrevLink(true);}, "g.nextLink", 0, "", ["browser"]], // 77
       [function(){aioFastForward();}, "g.fastForward", 0, "", ["browser"]], // 78
-      [function(){aioSelectionAsSearchTerm();}, "g.searchSelection", 0, "", ["browser", "messenger"]], // 79
+      [function(shiftKey){aioSelectionAsSearchTerm(false, shiftKey);}, "g.searchSelection", 0, "", ["browser", "messenger"]], // 79
       [function(){aioSaveImageAs();}, "g.saveImageAs", 0, "", ["browser", "messenger"]], // 80
       [function(){aioNextPrevLink(false);}, "g.prevLink", 0, "", ["browser"]], // 81
       [function(){aioGotoLastTab();}, "g.lastTab", 0, "", ["browser", "messenger"]], // 82
@@ -156,7 +156,7 @@ function aioInitGestTable() {
   }
 }
 
-function aioFireGesture(aGesture) {
+function aioFireGesture(aGesture, shiftKey) {
   var index = aioGestTable[aGesture];
   if (index == null) {
      index = aioGestTable["+" + aGesture.substr(-2)];
@@ -174,7 +174,7 @@ function aioFireGesture(aGesture) {
        
        if (allowedWinTypes === null || allowedWinTypes.indexOf(aioWindowType) >=0) {
          aioStatusMessage(aioActionTable[index][1], 2000);
-         aioActionTable[index][0]();
+         aioActionTable[index][0](shiftKey);
        } else {
          aioStatusMessage(aioActionTable[index][1] + " - " + aioGetStr("g.aborted"), 2000);
        }
@@ -574,7 +574,7 @@ function aioVScrollDocument(relativeScroll, aValue) {
      else scrollObj.nodeToScroll.scrollTop = aValue;
 }
 
-function aioSelectionAsURL() {
+function aioSelectionAsURL(reverseBg) {
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var url = winWrapper.getSelection().toString();
@@ -589,17 +589,17 @@ function aioSelectionAsURL() {
 
   if (!url || !/\./.test(url) || /\s/.test(url)) {
     // invalid address, do web search instead
-    aioSelectionAsSearchTerm(true);
+    aioSelectionAsSearchTerm(true, reverseBg);
     return;
   }
   
   if (url.search(/^\w+:/) == -1) // make sure it has some sort of protocol
      if (url.indexOf("@") == -1) url = "http://" + url;
      else url = "mailto:" + url;
-  aioLinkInTab(url, true, false);
+  aioLinkInTab(url, true, false, reverseBg);
 }
 
-function aioSelectionAsSearchTerm(alwaysNewTab) {
+function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var searchStr = winWrapper.getSelection().toString();
@@ -612,14 +612,39 @@ function aioSelectionAsSearchTerm(alwaysNewTab) {
       searchBar.value = searchStr;
 
       if (alwaysNewTab) {
-        var oldPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+        var oldOpenTab = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
         aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
+        
+        if (reverseBg) {
+          var oldLoadInBg = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !oldLoadInBg);
+        }
+        
         BrowserSearch.loadSearch(searchStr, true);
-        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldPref);
+        
+        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldOpenTab);
+        
+        if (reverseBg) {
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", oldLoadInBg);
+        }
+        
       } else {
         // may open in tab or window depending on browser prefs
+        var openTab = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+        
+        if (openTab && reverseBg) {
+          // we can easily control background opening in new tab but not in new window
+          var oldLoadInBg = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !oldLoadInBg);
+        }
+        
         BrowserSearch.loadSearch(searchStr, true);
+        
+        if (openTab && reverseBg) {
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", oldLoadInBg);
+        }
       }
+      
       break;
    
     case "messenger":
@@ -808,12 +833,17 @@ function aioGetReferrer() {
   return null;
 }
 
-function aioLinkInTab(url, usePref, bg) {
+function aioLinkInTab(url, usePref, bg, reverseBg) {
   url = aioSanitizeUrl(url);
   
   if (aioWindowType == "browser") {
     var tab = aioContent.addTab(url, aioGetReferrer());
     var loadInBg = (usePref && (aioPrefRoot.getBoolPref("browser.tabs.loadInBackground") != bg)) || (!usePref && bg);
+    
+    if (reverseBg) {
+      loadInBg = !loadInBg;
+    }
+    
     if (!loadInBg) aioContent.selectedTab = tab;
   
   } else {
@@ -828,10 +858,10 @@ function aioSanitizeUrl(url) {
     return url;
 }
 
-function aioDupTab() {
+function aioDupTab(reverseBg) {
   switch (aioWindowType) {
     case "browser":
-      aioLinkInTab(window.content.document.location.href, true, false);
+      aioLinkInTab(window.content.document.location.href, true, false, reverseBg);
       break;
     
     case "messenger":
@@ -937,16 +967,26 @@ function aioSetToNormalZ(aWindow) {
   xulwin.zLevel = xulwin.normalZ;
 }
 
-function aioOpenNewWindow(background) {
+/**
+ * @param url URL to open, if null then URL will be detected from the underlying
+ * link or image.
+ * @param {Bool} background
+ */
+function aioOpenNewWindow(url, background, noSanitize) {
   var s = (background && aioIsWin) ? ",alwaysLowered" : "";
-  var win;
-  if (aioOpenLinkInNew && aioOnLink.length) {
-     win = aioNewWindow(aioOnLink[0].href, s);
+  
+  if (url === null) {
+    if (aioOpenLinkInNew && aioOnLink.length) {
+       url = aioOnLink[0].href;
+    }
+    else {
+       if (aioOnImage) url = aioOnImage.src;
+       else url = "";
+    }    
   }
-  else {
-     if (aioOnImage) win = aioNewWindow(aioOnImage.src, s);
-     else win = aioNewWindow("", s);
-  }
+  
+  var win = aioNewWindow(url, s, noSanitize);
+  
   if (background) {
     if (aioIsWin) {
       setTimeout(function(a){aioSetToNormalZ(a);}, 500, win);
@@ -963,11 +1003,11 @@ function aioOpenNewWindow(background) {
   }
 }
 
-function aioDupWindow() {
+function aioDupWindow(background) {
   switch (aioWindowType) {
     case "browser":
     case "source":
-      aioNewWindow(window.content.document.location.href, "", true);
+      aioOpenNewWindow(window.content.document.location.href, background, true);
       break;
     
     case "messenger":
