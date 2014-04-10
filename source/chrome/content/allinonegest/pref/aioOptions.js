@@ -57,8 +57,14 @@ function init() {
     var addon = em.getItemForID(myGUID);
     document.getElementById("versId").value += " " + addon.version;
   }
-//  var tabbox = document.getElementsByTagName('tabbox')[0];
-//  tabbox.selectedIndex = 1;
+  
+  restoreLastSelectedPanel();
+  
+  var tabpanels = document.getElementsByTagName('tabpanels');
+  
+  for (var i=0; i<tabpanels.length; i++) {
+    tabpanels[i].addEventListener("select", rememberSelectedPanel);
+  }
 }
 
 function doEnabling() {
@@ -179,7 +185,9 @@ function restoreDefaultGestures() {
   pref.setCharPref("allinonegest.functionString", defaultFunctionString);
   pref.setCharPref("allinonegest.rockerString", defaultRockerString);
   
-  window.opener.aioOpenAioOptionsDelayed(400);
+  if (typeof window.opener.aioOpenAioOptionsDelayed == "function") {
+    window.opener.aioOpenAioOptionsDelayed(400);
+  }
   closeWindow(true);
 }
 
@@ -262,5 +270,20 @@ function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
     gestureString: newGest.join("|"),
     functionString: newFunc.join("|")
   };
+}
+
+function rememberSelectedPanel() {
+  var tabIndex = document.getElementById("tabpanId").selectedIndex;
+  Application.storage.set("aioOptionsLastTab", tabIndex);
+  dump("save: " + tabIndex + "\n");
+}
+
+function restoreLastSelectedPanel() {
+  var tabIndex = Application.storage.get("aioOptionsLastTab", null);
+  dump("restore: " + tabIndex + "\n");
+  
+  if (tabIndex !== null) {
+    document.getElementsByTagName('tabbox')[0].selectedIndex = tabIndex;
+  }
 }
 
