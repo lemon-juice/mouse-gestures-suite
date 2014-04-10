@@ -45,5 +45,7 @@ return
 		Send {Tab}{Tab}
 		Sleep 500
 		Send ^q
+		Sleep 1500
+		Run C:\Program Files\SeaMonkey\seamonkey.exe -console
 	}
 return
