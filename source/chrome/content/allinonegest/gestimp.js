@@ -106,6 +106,8 @@ var aioActionTable = [
       [function(){aioDetachTab();}, "g.detachTab", 0, "", ["browser"]], //91
       [function(){aioDetachTabAndDoubleStack();}, "g.detachTabAndDoubleStack", 0, "", ["browser"]], //92
       [function(){aioDoubleStackWindows();}, "g.doubleStack2Windows", 0, "", null], //93
+      
+// Unused legacy actions:
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
 //      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, "", null], // 90
 //      [function(){aioCloseRightTabs(false);}, "g.CloseRightTab", 0, "", null], // 91
@@ -572,40 +574,6 @@ function aioVScrollDocument(relativeScroll, aValue) {
      else scrollObj.nodeToScroll.scrollTop = aValue;
 }
 
-function aioHScrollDocument(relativeScroll, aValue) { // contributed by Ingo Fröhlich aka get-a-byte
-  var scrollObj = aioFindNodeToScroll(aioSrcEvent.target);
-  if (scrollObj.scrollType & 1) return; // 1 = vertical scroll only  3 = no scrolling
-  var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
-  if (relativeScroll) {
-     var val = Math.round(scrollObj.realWidth * 0.8 * aValue);
-     if (!val) val = aValue;
-     if (useScrollToBy) scrollObj.clientFrame.scrollBy(val, 0);
-     else scrollObj.nodeToScroll.scrollLeft += val;
-  }
-  else
-     if (useScrollToBy) scrollObj.clientFrame.scrollTo(aValue, 0)
-     else scrollObj.nodeToScroll.scrollLeft = aValue;
-}
-
-function aioCScrollDocument(aValueH, aValueV) { // contributed by Ingo Fröhlich aka get-a-byte
-  var scrollObj = aioFindNodeToScroll(aioSrcEvent.target);
-  if (scrollObj.scrollType == 3) return;
-  var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
-  if (useScrollToBy)
-     scrollObj.clientFrame.scrollTo(aValueH, aValueV);
-  else {
-     scrollObj.nodeToScroll.scrollLeft = aValueH;
-     scrollObj.nodeToScroll.scrollTop = aValueV;
-  }
-  if (useScrollToBy)
-     scrollObj.clientFrame.scrollTo(Math.round(aioSrcEvent.view.scrollLeft / 2),
-                                    Math.round(aioSrcEvent.view.scrollTop / 2));
-  else {
-     scrollObj.nodeToScroll.scrollLeft = Math.round(scrollObj.nodeToScroll.scrollLeft / 2);
-     scrollObj.nodeToScroll.scrollTop = Math.round(scrollObj.nodeToScroll.scrollTop / 2);
-  }
-}
-
 function aioSelectionAsURL() {
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
@@ -678,17 +646,6 @@ function aioZoomReduce() {
 
 function aioZoomReset() {
   ZoomManager.reset();
-}
-
-function aioFullZoomOperation(aOper) {
-  if (aOper) {
-     var toggleZoom = ZoomManager.useFullZoom;
-     if (!toggleZoom) ZoomManager.useFullZoom = true;
-     if (aOper == 1) FullZoom.enlarge();
-     else FullZoom.reduce();
-     ZoomManager.useFullZoom = toggleZoom;
-  }
-  else FullZoom.reset();
 }
 
 function aioImageResize(s) {
@@ -834,47 +791,6 @@ function aioRemoveAllTabsBut() {
   if (!reallyClose) return;
   for (var i = childNodes.length - 1; i >= 0; --i)
     if (childNodes[i] != ltab && !childNodes[i].pinned) aioContent.removeTab(childNodes[i]);
-}
-
-function aioCloseRightTabs(all) { // contributed by Holger Kratz
-  var childNodes = aioContent.mTabContainer.childNodes;
-  var tabPos = aioContent.mCurrentTab._tPos;
-  if (tabPos >= childNodes.length - 1) return;
-  if (all) {
-     var numToClose = childNodes.length - tabPos - 1;
-     if (!aioNeverWarnOnCloseOtherTabs && numToClose > 1)
-        var reallyClose = aioWarnOnCloseMultipleTabs(numToClose);
-     else reallyClose = true;
-     if (!reallyClose) return;
-     for (var i = childNodes.length - 1; i > tabPos; --i)
-       aioContent.removeTab(childNodes[i]);
-  }
-  else aioContent.removeTab(childNodes[tabPos + 1]);
-}
-
-function aioCloseLeftTabs(all) { // contributed by Holger Kratz
-  var childNodes = aioContent.mTabContainer.childNodes;
-  var tabPos = aioContent.mCurrentTab._tPos;
-  if (tabPos == 0) return;
-  if (all) var end = 0; else end = tabPos - 1;
-  var numToClose = tabPos - end;
-  if (!aioNeverWarnOnCloseOtherTabs && numToClose > 1)
-     var reallyClose = aioWarnOnCloseMultipleTabs(numToClose);
-  else reallyClose = true;
-  if (!reallyClose) return;
-  for (var i = tabPos - 1; i >= end; --i)
-    aioContent.removeTab(childNodes[i]);
-}
-
-function aioCloseAllTabs() { // contributed by Holger Kratz
-  var childNodes = aioContent.mTabContainer.childNodes;
-  var numToClose = childNodes.length;
-  if (!aioNeverWarnOnCloseOtherTabs && numToClose > 1)
-     var reallyClose = aioWarnOnCloseMultipleTabs(numToClose);
-  else reallyClose = true;
-  if (!reallyClose) return;
-  for (var i = childNodes.length - 1; i >= 0; --i)
-    aioContent.removeTab(childNodes[i]);
 }
 
 function aioGetReferrer() {
@@ -1403,10 +1319,6 @@ function aioOpenAioOptionsDelayed(delay) {
 function aioOpenBookmarksManager() {
   toOpenWindowByType("bookmarks:manager",
     "chrome://communicator/content/bookmarks/bookmarksManager.xul");
-}
-
-function aioOpenAddonManager() {
-  BrowserOpenAddonsMgr();
 }
 
 function aioOpenDownloadManager() {
