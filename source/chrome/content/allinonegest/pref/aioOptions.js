@@ -42,21 +42,12 @@ function init() {
                pref.getCharPref("allinonegest.rockerString"));
   setScrollGesturesVisibility(document.getElementById("wheelScrollOptions").value == 0);
   const myGUID = "mousegesturessuite@lemon_juice.addons.mozilla.org";
-  try {
-    // Firefox 4 i.e. Mozilla 2 and later
-    Components.utils.import("resource://gre/modules/AddonManager.jsm");
-    AddonManager.getAddonByID(myGUID,
-                              function(addon) {
-                                 document.getElementById("versId").value += " " + addon.version;
-                              });
-  }
-  catch (err) {
-    // Firefox 3.6 i.e. Mozilla 1.9.2 and before
-    var em = Components.classes["@mozilla.org/extensions/manager;1"]
-             .getService(Components.interfaces.nsIExtensionManager);
-    var addon = em.getItemForID(myGUID);
-    document.getElementById("versId").value += " " + addon.version;
-  }
+  
+  Components.utils.import("resource://gre/modules/AddonManager.jsm");
+  AddonManager.getAddonByID(myGUID,
+    function(addon) {
+       document.getElementById("versId").value += " " + addon.version;
+    });
   
   restoreLastSelectedPanel();
   
