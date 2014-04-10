@@ -266,12 +266,10 @@ function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
 function rememberSelectedPanel() {
   var tabIndex = document.getElementById("tabpanId").selectedIndex;
   Application.storage.set("aioOptionsLastTab", tabIndex);
-  dump("save: " + tabIndex + "\n");
 }
 
 function restoreLastSelectedPanel() {
   var tabIndex = Application.storage.get("aioOptionsLastTab", null);
-  dump("restore: " + tabIndex + "\n");
   
   if (tabIndex !== null) {
     document.getElementsByTagName('tabbox')[0].selectedIndex = tabIndex;
