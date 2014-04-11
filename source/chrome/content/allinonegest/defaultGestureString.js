@@ -6,7 +6,7 @@ const defaultGestureString =
   "|||||||LU|LD||" +
   "||||LDUR|URD|LDRDL|LDR|LDRL|RDU|" +
   "|RUD||DRDLU||||||DRL|" + 
-  "|LDU|||||||||" +
+  "|LDU||||||||||" +
   "||RDR||||||||" +
   "";
 // this is the order of displayed gestures in options
