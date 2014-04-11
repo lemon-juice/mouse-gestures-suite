@@ -6,7 +6,7 @@ const defaultGestureString =
   "|||||||LU|LD||" +
   "||||LDUR|URD|LDRDL|LDR|LDRL|RDU|" +
   "|RUD||DRDLU||||||DRL|" + 
-  "||||||||||" +
+  "|LDU|||||||||" +
   "||RDR||||||||" +
   "";
 // this is the order of displayed gestures in options
@@ -18,7 +18,7 @@ const defaultFunctionString =
   "30|31|32|27|28|41|80|72|73|74|" +
   "89|90|29|56|43|19|20|21|55|22|" +
   "62|23|24|25|33|66|36|42|64|65|" +
-  "67|70|75|44|83|48|49|50|51|53|" +
+  "67|94|70|75|44|83|48|49|50|51|53|" +
   "88|68|46|63|77|81|84|85|78|86|" +
   "87";
 const defaultRockerString = "0|1|39|40";

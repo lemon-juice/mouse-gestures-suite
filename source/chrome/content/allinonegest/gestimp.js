@@ -106,6 +106,7 @@ var aioActionTable = [
       [function(){aioDetachTab();}, "g.detachTab", 0, "", ["browser"]], //91
       [function(){aioDetachTabAndDoubleStack();}, "g.detachTabAndDoubleStack", 0, "", ["browser"]], //92
       [function(){aioDoubleStackWindows();}, "g.doubleStack2Windows", 0, "", null], //93
+      [function(){aioToggleSidebar();}, "g.toggleSidebar", 0, "", ["browser", "messenger"]], //94
       
 // Unused legacy actions:
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
@@ -1764,6 +1765,18 @@ function aioClosePrintPreview() {
   }
 
   return false;
+}
+
+function aioToggleSidebar() {
+  switch (aioWindowType) {
+    case "browser":
+      SidebarShowHide();
+      break;
+    
+    case "messenger":
+      MsgToggleFolderPane(true);
+      break;
+  }
 }
 
 

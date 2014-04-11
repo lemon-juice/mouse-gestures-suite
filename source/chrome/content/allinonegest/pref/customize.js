@@ -232,6 +232,7 @@ var gestActionTable = [
       "g.detachTab", //91
       "g.detachTabAndDoubleStack", //92
       "g.doubleStack2Windows", //93
+      "g.toggleSidebar", //94
     ];
 var rockerGestName = [
       "g.leftRocker",
