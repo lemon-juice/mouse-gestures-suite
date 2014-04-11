@@ -57,3 +57,6 @@ table.gestlist td.wintypes span.messenger {
 table.gestlist td.wintypes span.mailcompose {
   color: #999900;
 }
+table.gestlist .shift-info {
+  color: purple;
+}
