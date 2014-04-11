@@ -1194,6 +1194,11 @@ function aioUpDir() { // from Stephen Clavering's GoUp
 }
 
 function aioRestMaxWin() {
+  if (window.fullScreen) {
+    window.fullScreen = false;
+    return;
+  }
+  
   if (window.windowState == STATE_MAXIMIZED) window.restore();
   else window.maximize();
  }
