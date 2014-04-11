@@ -597,14 +597,21 @@ function aioSelectionAsURL(reverseBg) {
   if (url.search(/^\w+:/) == -1) // make sure it has some sort of protocol
      if (url.indexOf("@") == -1) url = "http://" + url;
      else url = "mailto:" + url;
-  aioLinkInTab(url, true, false, reverseBg);
+  
+  aioLinkInTab(url, (aioWindowType == "browser"), false, reverseBg);
 }
 
+/**
+ * Search for selected text
+ */
 function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var searchStr = winWrapper.getSelection().toString();
   if (!searchStr) return;
+  
+  var openTabPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+  var loadInBgPref = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
   
   switch (aioWindowType) {
     case "browser":
@@ -613,51 +620,73 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
       searchBar.value = searchStr;
 
       if (alwaysNewTab) {
-        var oldOpenTab = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+        // always force opening in new tab
         aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
         
         if (reverseBg) {
-          var oldLoadInBg = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !oldLoadInBg);
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
         }
         
         BrowserSearch.loadSearch(searchStr, true);
         
-        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldOpenTab);
+        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", openTabPref);
         
         if (reverseBg) {
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", oldLoadInBg);
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
         }
         
       } else {
         // may open in tab or window depending on browser prefs
-        var openTab = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
-        
-        if (openTab && reverseBg) {
+        if (openTabPref && reverseBg) {
           // we can easily control background opening in new tab but not in new window
-          var oldLoadInBg = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !oldLoadInBg);
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
         }
         
         BrowserSearch.loadSearch(searchStr, true);
         
-        if (openTab && reverseBg) {
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", oldLoadInBg);
+        if (openTabPref && reverseBg) {
+          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
         }
+      }
+      
+      if (!openTabPref && reverseBg) {
+        // open in background window - focus on current window
+        setTimeout(function() {
+          window.focus();
+        }, 400);
+        setTimeout(function() {
+          window.focus();
+        }, 800);
       }
       
       break;
    
     case "messenger":
-       if (alwaysNewTab) {
-        var oldPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+      // in messenger we always open search in foreground tab unless reversed by Shift
+      aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", reverseBg);
+      
+      if (alwaysNewTab) {
         aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
         MsgOpenSearch(searchStr);
-        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", oldPref);
+        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", openTabPref);
+      
       } else {
         // may open in tab or window depending on browser prefs
         MsgOpenSearch(searchStr);
       }
+      
+      aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
+      
+      if (!openTabPref && reverseBg) {
+        // open in background window - focus on current window
+        setTimeout(function() {
+          window.focus();
+        }, 400);
+        setTimeout(function() {
+          window.focus();
+        }, 800);
+      }
+      
       break;
   }
 }
@@ -834,6 +863,13 @@ function aioGetReferrer() {
   return null;
 }
 
+/**
+ * @param {string} url
+ * @param {boolean} userPref Whether to respect pref "Switch to new tabs
+ * from opened links" in tabbed browsing preferences
+ * @param {boolean} bg Whether to open in background tab 
+ * @param {boolean} [reverseBg] Whether to reverse final background setting
+ */
 function aioLinkInTab(url, usePref, bg, reverseBg) {
   url = aioSanitizeUrl(url);
   
@@ -848,6 +884,10 @@ function aioLinkInTab(url, usePref, bg, reverseBg) {
     if (!loadInBg) aioContent.selectedTab = tab;
   
   } else {
+    if (reverseBg) {
+      bg = !bg;
+    }
+    
     openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg);
   }
 }
@@ -969,9 +1009,10 @@ function aioSetToNormalZ(aWindow) {
 }
 
 /**
- * @param url URL to open, if null then URL will be detected from the underlying
+ * @param {?string} url URL to open, if null then URL will be detected from the underlying
  * link or image.
- * @param {Bool} background
+ * @param {boolean} background
+ * @param {boolean} [noSanitize]
  */
 function aioOpenNewWindow(url, background, noSanitize) {
   var s = (background && aioIsWin) ? ",alwaysLowered" : "";
