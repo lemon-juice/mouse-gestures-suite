@@ -29,7 +29,10 @@ else trailZoom = domWindowUtils.screenPixelsPerCSSPixel;
   aioTrailZoom = (trailZoom == 1) ? 0 : trailZoom;
 
   aioTrailCont = targetDoc.createElementNS(xhtmlNS, "aioTrailContainer");
-  insertionNode.appendChild(aioTrailCont);
+  aioTrailCont.style.position = "fixed"; // improves drawing speed
+  
+  // insertBefore is much faster than appendChild on large documents
+  insertionNode.insertBefore(aioTrailCont, insertionNode.firstChild);
 
   aioTrailDot = targetDoc.createElementNS(xhtmlNS, "aioTrailDot");
   with (aioTrailDot.style) {
