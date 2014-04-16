@@ -826,9 +826,9 @@ function aioMouseUp(e) {
   
   if (aioGestInProgress) {
      var lastgesture = aioStrokes.join("");
-     // this killed right-click events on pages
-     //if (button != aioLMB || lastgesture) aioNukeEvent(e);  
-     //if (lastgesture) aioNukeEvent(e);
+     // @MOD: this killed right-click events on pages
+     // if (button != aioLMB || lastgesture) aioNukeEvent(e); // XXX to be investigated
+     if (lastgesture) aioNukeEvent(e); // XXX to be investigated
      aioEraseTrail();
      if (lastgesture) {
         window.addEventListener("click", aioGestClickHandler, true);
