@@ -565,7 +565,7 @@ function aioVScrollDocument(relativeScroll, aValue) {
   if (scrollObj.scrollType >= 2) return;
   var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
   if (relativeScroll) {
-     var val = Math.round(scrollObj.realHeight * 0.8 * aValue)
+     var val = Math.round(scrollObj.realHeight * 0.9 * aValue)
      if (!val) val = aValue;
 	 if (useScrollToBy) scrollObj.clientFrame.scrollBy(0, val);
      else scrollObj.nodeToScroll.scrollTop += val;
