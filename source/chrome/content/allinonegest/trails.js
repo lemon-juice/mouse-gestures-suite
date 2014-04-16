@@ -66,7 +66,7 @@ function aioDrawTrail(e) { // code from Walter Zorn
           aioDraw.x = newX; aioDraw.w = newW;
           aioDraw.lastDot.style.left = newX + "px";
           aioDraw.lastDot.style.width = newW + "px";
-//          dump("aggregating horizontally:" + newX + ", " + newW + "\n");
+          //dump("aggregating horizontally:" + newX + ", " + newW + "\n");
           return;
        }
        if (aioDraw.x == x && aioDraw.w == w) {
@@ -75,7 +75,7 @@ function aioDrawTrail(e) { // code from Walter Zorn
           aioDraw.y = newY; aioDraw.h = newH;
           aioDraw.lastDot.style.top = newY + "px";
           aioDraw.lastDot.style.height = newH + "px";
-//          dump("aggregating vertically:" + newY + ", " + newH + "\n");
+          //dump("aggregating vertically:" + newY + ", " + newH + "\n");
           return;
        }
     }
@@ -86,7 +86,7 @@ function aioDrawTrail(e) { // code from Walter Zorn
     dot.style.height = h + "px";
     aioTrailCont.appendChild(dot);
     aioDraw = {lastDot: dot, x: x, y: y, w: w, h: h} ;
-    aioDraw = null;   // don't optimize
+    //aioDraw = null;   // don't optimize
   }
 
   if (!aioTrailCont) return;
