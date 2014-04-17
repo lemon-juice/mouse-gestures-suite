@@ -238,7 +238,12 @@ function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
   var gestObj = {};
   
   for (var i=0; i<func.length; i++) {
-    gestObj[func[i]] = gest[i] ? gest[i] : "";
+    // we add gesture definitions to array because one gesture can have
+    // multiple definitions (gesture strings)
+    if (typeof gestObj[func[i]] == "undefined") {
+      gestObj[func[i]] = [];
+    }
+    gestObj[func[i]].push(gest[i] ? gest[i] : "");
   }
   
   // recreate strings in new order as defined in defaultFuncStr
@@ -246,13 +251,16 @@ function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
   var newFunc = [];
   
   for (var i=0; i<defaultFunc.length; i++) {
-    newFunc.push(defaultFunc[i]);
     
     if (gestObj.hasOwnProperty(defaultFunc[i])) {
-      newGest.push(gestObj[defaultFunc[i]]);
+      for (var j=0; j<gestObj[defaultFunc[i]].length; j++) {
+        newFunc.push(defaultFunc[i]);
+        newGest.push(gestObj[defaultFunc[i]][j]);
+      }
       
     } else {
       // new action not yet in prefs
+      newFunc.push(defaultFunc[i]);
       newGest.push("");
     }
   }
