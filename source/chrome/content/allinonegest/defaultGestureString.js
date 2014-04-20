@@ -21,4 +21,4 @@ const defaultFunctionString =
   "67|94|70|75|44|83|48|49|50|51|53|" +
   "88|68|46|63|77|81|84|85|78|86|" +
   "87";
-const defaultRockerString = "0|1|39|40";
+const defaultRockerString = "0|1|38|37";
