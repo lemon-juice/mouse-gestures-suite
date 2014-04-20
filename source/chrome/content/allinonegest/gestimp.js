@@ -107,6 +107,7 @@ var aioActionTable = [
       [function(){aioDetachTabAndDoubleStack();}, "g.detachTabAndDoubleStack", 0, "", ["browser"]], //92
       [function(){aioDoubleStackWindows();}, "g.doubleStack2Windows", 0, "", null], //93
       [function(){aioToggleSidebar();}, "g.toggleSidebar", 0, "", ["browser", "messenger"]], //94
+      [function(shiftKey){aioOpenNewWindow(null, shiftKey, false, true);}, "g.openPrivateWindow", 0, "", null], //95
       
 // Unused legacy actions:
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
@@ -1013,9 +1014,14 @@ function aioSetToNormalZ(aWindow) {
  * link or image.
  * @param {boolean} background
  * @param {boolean} [noSanitize]
+ * @param {boolean} [priv] indicates opening private window
  */
-function aioOpenNewWindow(url, background, noSanitize) {
-  var s = (background && aioIsWin) ? ",alwaysLowered" : "";
+function aioOpenNewWindow(url, background, noSanitize, priv) {
+  var flags = (background && aioIsWin) ? ",alwaysLowered" : "";
+  
+  if (priv) {
+    flags += ",private";
+  }
   
   if (url === null) {
     if (aioOpenLinkInNew && aioOnLink.length) {
@@ -1027,7 +1033,11 @@ function aioOpenNewWindow(url, background, noSanitize) {
     }    
   }
   
-  var win = aioNewWindow(url, s, noSanitize);
+  if (url == "" && priv) {
+    url = "about:privatebrowsing";
+  }
+  
+  var win = aioNewWindow(url, flags, noSanitize);
   
   if (background) {
     if (aioIsWin) {

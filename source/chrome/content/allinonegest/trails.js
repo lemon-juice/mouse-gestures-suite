@@ -15,7 +15,7 @@ var aioDraw = null;
 function aioStartTrail(e) {
   var targetDoc = e.target.ownerDocument;
   if (targetDoc.defaultView.top instanceof Window) targetDoc = targetDoc.defaultView.top.document;
-  if (targetDoc.contentType == "application/vnd.mozilla.xul+xml" || aioIsUnformattedXML(targetDoc)) return;
+  if (aioIsUnformattedXML(targetDoc)) return;
   var insertionNode = (targetDoc.documentElement) ? targetDoc.documentElement : targetDoc;
 
   var trailZoom = 0;
