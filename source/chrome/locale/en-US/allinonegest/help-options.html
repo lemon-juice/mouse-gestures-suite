@@ -32,7 +32,7 @@
         releasing the mouse button the gesture function is executed. If you
         started drawing a gesture and want to cancel it just stop moving the
         mouse and wait at least one second before releasing the mouse button.
-        Mouse gestures are available in browser, mail, view message and mail
+        Mouse gestures are available in browser, messenger, page source and mail
         compose windows. In some windows the range of available actions is
         limited - see <a href="#tab2">Gestures Customization</a> table for
         details.</li>
@@ -43,9 +43,10 @@
         gesture customization tab, select the gesture (at the end of the table)
         and click the <em>Edit function</em> button. Then clicking on any row
         will assign the function of the clicked row to the gesture. Rocker
-        gestures are available in browser, mail, view message and mail compose
-        windows. In some windows the range of available actions is limited - see
-        <a href="#tab2">Gestures Customization</a> table for details.<br>
+        gestures are available in browser, messenger, page source and mail
+        compose windows. In some windows the range of available actions is
+        limited - see <a href="#tab2">Gestures Customization</a> table for
+        details.<br>
         <br>
         Functions which have a repetitive nature can be repeated without
         releasing the trigger button. The <em>Allow repetition for actions that
@@ -56,7 +57,9 @@
         available in browser windows only.</li>
       <li> <strong>Scroll wheel navigation</strong> - perform your favorite
         actions by pressing a mouse button and scrolling mouse wheel at the same
-        time. This feature is available in browser windows only.</li>
+        time. This feature is complete in browser windows only. It also works in
+        messenger and page source windows only if <em>Perform Gesture Actions</em>
+        option is selected.</li>
       <li> <strong>Middle button scrolling</strong> - scroll pages or textareas
         by pressing the middle mouse button once and then moving the mouse up or
         down. <i>Grab and Drag</i> options allow you to scroll by moving the
@@ -109,8 +112,9 @@
     <ul>
       <li><em>{abbreviation.browser}</em> - browser window</li>
       <li><em>{abbreviation.source}</em> - view source window</li>
-      <li><em>{abbreviation.messenger}</em> - mail and message view window (in
-        the main mail window gestures work only in the message page)</li>
+      <li><em>{abbreviation.messenger}</em> - messenger window: main mail and
+        message view windows (in the main mail window gestures work only in the
+        message page)</li>
       <li><em>{abbreviation.mailcompose}</em> - mail compose window</li>
     </ul>
     <p>The Shift key can be used with some gestures that open a new tab or
@@ -1036,11 +1040,13 @@
         </tr>
         <tr>
           <td>{g.backwardWheel}</td>
-          <td class="wintypes"><span class="browser">{abbreviation.browser}</span></td>
+          <td class="wintypes"><span class="browser">{abbreviation.browser}</span> <span class="source">{abbreviation.source}</span>
+            <span class="messenger">{abbreviation.messenger}</span></td>
         </tr>
         <tr>
           <td>{g.forwardWheel}</td>
-          <td class="wintypes"><span class="browser">{abbreviation.browser}</span></td>
+          <td class="wintypes"><span class="browser">{abbreviation.browser}</span> <span class="source">{abbreviation.source}</span>
+            <span class="messenger">{abbreviation.messenger}</span></td>
         </tr>
       </tbody>
     </table>
@@ -1090,7 +1096,8 @@
         Some sites that use ClickHeat:<br>
         <ul>
           <li>toolserver.org - a site to which many Wikipedia pages link in
-            order to present geographic coordinates of locations, for example: <a
+            order to present geographic coordinates of locations, for example: <a
+
               target="_blank" href="http://toolserver.org/%7Egeohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city">http://toolserver.org/~geohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city</a></li>
           <li><a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>
             - the ClickHeat site</li>

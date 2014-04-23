@@ -722,7 +722,7 @@ function aioMouseDown(e) {
            else preventDefaultAction = e.button != aioLMB;
         }
         // it can be the start of a wheelscroll gesture as well
-        if (aioWheelEnabled && aioWindowType == "browser") {          
+        if (aioWheelEnabled && (aioWindowType == "browser" || aioWindowType == "messenger" || aioWindowType == "source")) {
            preventDefaultAction = preventDefaultAction || e.button != aioLMB;
            aioTabCount = aioRendering.childNodes.length;
            if (aioWheelRocker) {
