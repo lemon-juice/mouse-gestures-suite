@@ -527,7 +527,8 @@ function aioContextMenuEnabler(e) {
   if (!aioShowContextMenu && e.originalTarget.nodeName == "menupopup" && e.originalTarget.id
           && (e.originalTarget.id == "contentAreaContextMenu"
           || (e.originalTarget.id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
-          || e.originalTarget.id == "viewSourceContextMenu")
+          || e.originalTarget.id == "viewSourceContextMenu"
+          || e.originalTarget.id == "addonitem-popup")
     ) {
     
     e.preventDefault(); e.stopPropagation();
