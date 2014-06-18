@@ -296,7 +296,7 @@ function aioGetLocalizedStrings() {
 }
 
 function aioInit() { // overlay has finished loading or a pref was changed
-  dump("AiOGest: init\n");
+  //dump("AiOGest: init\n");
   var titleDelay, titleDuration, rockerString;
   const delayTable = [250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000];
   const durationTable = [2000, 3000, 4000, 5000, 6000, 7000, 8000];
@@ -505,7 +505,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
   }
 
   aioFirstInit = false;
-  dump("AiOGest: end init\n");
+  //dump("AiOGest: end init\n");
 }
 
 function aioTrigger(e, which) {
@@ -603,10 +603,7 @@ function aioFindLink(domNode, gesturing) { // Loop up the DOM looking for a link
       currNode = nextNode;
       if (currNode.namespaceURI == xhtmlNS) nodeNameLC = currNode.localName;
       else nodeNameLC = currNode.nodeName.toLowerCase();
-//      if (currNode.hasAttribute("onclick")) {
-//         dump("Has click handler " + nodeNameLC + "\n");
-//      }
-//      else dump("No click handler " + nodeNameLC + "\n");
+
       if (nodeNameLC == "img" && !aioOnImage && gesturing) aioOnImage = currNode;
       else {
          if (nodeNameLC == "a"  || nodeNameLC == "area" || currNode.hasAttributeNS(xlinkNS, "href"))
