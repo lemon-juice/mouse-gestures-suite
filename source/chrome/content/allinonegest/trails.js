@@ -7,7 +7,7 @@
  */
 var aioTrailDot;
 var aioTrailCont = null;
-var aioTrailZoom;
+var aioTrailZoom, scaledTrailWidth;
 var aioTrailX, aioTrailY, aioDocX, aioDocY;
 var aioDraw = null;
 
@@ -16,28 +16,45 @@ function aioStartTrail(e) {
   var targetDoc = e.target.ownerDocument;
   if (targetDoc.defaultView.top instanceof Window) targetDoc = targetDoc.defaultView.top.document;
   if (aioIsUnformattedXML(targetDoc)) return;
-  var insertionNode = (targetDoc.documentElement) ? targetDoc.documentElement : targetDoc;
 
   var trailZoom = 0;
   var domWindowUtils = targetDoc.defaultView.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-                           .getInterface(Components.interfaces.nsIDOMWindowUtils);
+                      .getInterface(Components.interfaces.nsIDOMWindowUtils);
+						   
   if (aioFxV18) trailZoom = domWindowUtils.fullZoom;
-else trailZoom = domWindowUtils.screenPixelsPerCSSPixel;
-  aioDocX = Math.floor(targetDoc.defaultView.mozInnerScreenX * trailZoom);
-  aioDocY = Math.floor(targetDoc.defaultView.mozInnerScreenY * trailZoom);
-
+	else trailZoom = domWindowUtils.screenPixelsPerCSSPixel;
+  
   aioTrailZoom = (trailZoom == 1) ? 0 : trailZoom;
 
   aioTrailCont = targetDoc.createElementNS(xhtmlNS, "aioTrailContainer");
-  aioTrailCont.style.position = "fixed"; // improves drawing speed
+  aioTrailCont.style.position = "fixed";
   
-  // insertBefore is much faster than appendChild on large documents
-  insertionNode.insertBefore(aioTrailCont, insertionNode.firstChild);
-
+  if (aioWindowType == 'browser') {
+	// insert trail outside viewable document to avoid DOM delays on large documents
+	aioTrailZoom = 0;
+	scaledTrailWidth = Math.max(Math.round(aioTrailSize * trailZoom), 1);
+	
+	var insertionNode = document.getElementById("content"); // tabbrowser
+	aioDocX = Math.floor(window.mozInnerScreenX * 1);
+	aioDocY = Math.floor(window.mozInnerScreenY * 1);
+	insertionNode.appendChild(aioTrailCont);
+	
+  } else {
+	aioTrailZoom = (trailZoom == 1) ? 0 : trailZoom;
+	scaledTrailWidth = aioTrailSize;
+	
+	var insertionNode = (targetDoc.documentElement) ? targetDoc.documentElement : targetDoc;
+	aioDocX = Math.floor(targetDoc.defaultView.mozInnerScreenX * trailZoom);
+	aioDocY = Math.floor(targetDoc.defaultView.mozInnerScreenY * trailZoom);
+	
+	// insertBefore is much faster than appendChild on large documents
+	insertionNode.insertBefore(aioTrailCont, insertionNode.firstChild);
+  }
+  
   aioTrailDot = targetDoc.createElementNS(xhtmlNS, "aioTrailDot");
   with (aioTrailDot.style) {
-     width = aioTrailSize + "px";
-     height = aioTrailSize + "px";
+     width = scaledTrailWidth + "px";
+     height = scaledTrailWidth + "px";
      background = aioTrailColor;
      border = "0px";
      position = "fixed";
@@ -58,7 +75,7 @@ function aioDrawTrail(e) { // code from Walter Zorn
        x = Math.floor(x / aioTrailZoom);
        y = Math.floor(y / aioTrailZoom);
     }
-
+	
     if (aioDraw) {
        if (aioDraw.y == y && aioDraw.h == h) {
           var newX = Math.min(x, aioDraw.x); // leftmost pixel
@@ -97,8 +114,11 @@ function aioDrawTrail(e) { // code from Walter Zorn
      aioTrailCont = null;
 	 return;
   }
-  var x1 = aioTrailX - aioDocX; var y1 = aioTrailY - aioDocY;
-  var x2 = e.screenX - aioDocX; var y2 = e.screenY - aioDocY;
+  var x1 = aioTrailX - aioDocX;
+  var y1 = aioTrailY - aioDocY;
+  var x2 = e.screenX - aioDocX;
+  var y2 = e.screenY - aioDocY;
+  
   if (x1 > x2) {
      var tmpx = x1; var tmpy = y1;
      x1 = x2; y1 = y2;
@@ -106,7 +126,7 @@ function aioDrawTrail(e) { // code from Walter Zorn
   }
   var dx = x2 - x1; var dy = Math.abs(y2 - y1);
   var yInc = (y1 > y2)? -1 : 1;
-  var s = aioTrailSize;
+  var s = scaledTrailWidth;
   if (dx >= dy) {
      if (dx > 0 && s-3 > 0) {
         ls = (s*dx*Math.sqrt(1+dy*dy/(dx*dx))-dx-(s>>1)*dy) / dx;
