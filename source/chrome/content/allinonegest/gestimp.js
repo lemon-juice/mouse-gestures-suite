@@ -1029,6 +1029,15 @@ function aioOpenNewWindow(url, background, noSanitize, priv) {
         }, 800);
       }, true);
     }
+  
+  } else if (priv) {
+    win.addEventListener('load', function() {
+      setTimeout(function() {
+        var inp = win.document.getAnonymousElementByAttribute(win.document.getElementById('urlbar'), 'anonid', 'input');
+        inp.value = '';
+        inp.focus();
+      }, 400);
+    });
   }
 }
 
