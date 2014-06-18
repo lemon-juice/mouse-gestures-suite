@@ -1510,22 +1510,11 @@ function _aioDetachTab(tabToDetach) {
   
   var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
 
-  if (typeof aioClonedData == "string") {
-    // sessionStore waits for the session history to be available,
-    // so we don't have to wait.
-    openedWindow.addEventListener('load',
-        function() {
-          var os = Components.classes["@mozilla.org/observer-service;1"]
-                             .getService(Components.interfaces.nsIObserverService);
-          os.notifyObservers(null, "duplicatethistab:new-window-set-cloned-data", "");
-        }, false);
-  } else {
-    // Wait until session history is available in the new window
-    openedWindow.addEventListener('load',
-        function() {
-          _aioWaitForSessionHistory(10, openedWindow);
-        }, false);
-  }
+  // Wait until session history is available in the new window
+  openedWindow.addEventListener('load',
+      function() {
+        _aioWaitForSessionHistory(10, openedWindow);
+      }, false);
   
   return openedWindow;
 }
@@ -1555,15 +1544,10 @@ function _aioWaitForSessionHistory(attempts, openedWindow) {
  * get the data from the tab which is to be cloned.
  *
  * @param aTab:       tabbrowser tab which should be cloned.
- * returns either a JSON string or an object containing the data which should be cloned.
+ * returns object containing the data which should be cloned.
  */
 function _aioGetClonedData(aTab)
 {
-  // try sessionStore first
-  var tabState = _aioGetSessionStoreTabState(aTab);
-  if (tabState)
-    return tabState;
-
   var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
   var clonedData = new Array();
   clonedData[0] = _aioCopyTabHistory(browser.webNavigation.sessionHistory);
@@ -1578,20 +1562,12 @@ function _aioGetClonedData(aTab)
 /* setClonedData
  * sets the data cloned from the original tab into a new tab.
  * @param aTab:        the new tab the data has to be set to.
- * @param aClonedData: JSON string or object containing the data.
+ * @param aClonedData: object containing the data.
  *
  * returns  boolean to indicate successfullness
  */
 function _aioSetClonedData(aTab, aClonedData)
 {
-  // if aClonedData is a JSON string we can use sessionStore.
-  if (typeof(aClonedData) == "string") {
-    var ss = Components.classes["@mozilla.org/browser/sessionstore;1"]
-                       .getService(Components.interfaces.nsISessionStore);
-    ss.setTabState(aTab, aClonedData);
-    return true;
-  }
-
   var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
   function setTextZoom(attempts) {
     browser.markupDocumentViewer.textZoom = aClonedData[3];
@@ -1674,27 +1650,6 @@ function _aioCloneHistoryEntry(aEntry) {
     }
   }
   return newEntry;
-}
-
-/* getSessionStoreTabState
- *
- * uses SessionStore api to get the tab state from the tab to duplicate,
- * adjusting the data to follow preferences for Duplicate Tab
- *
- * returns: JSON string of tabState if success, null otherwise
- * */
-function _aioGetSessionStoreTabState(aTab)
-{
-  var ss = null;
-  if ("@mozilla.org/browser/sessionstore;1" in Components.classes) {
-    ss = Components.classes["@mozilla.org/browser/sessionstore;1"]
-                   .getService(Components.interfaces.nsISessionStore);
-  }
-  if (!ss || !ss.getTabState || !ss.setTabState)
-    return null;
-
-  var tabState = ss.getTabState(aTab);
-  return tabState;
 }
 
 // copy a sessionHistory and put it into an array
