@@ -71,6 +71,7 @@ function aioDrawTrail(e) { // code from Walter Zorn
   var ls, ad, p, pr, pru, ox, oy;
 
   function appendDot(x, y, w , h) {
+	
     if (aioTrailZoom) {
        x = Math.floor(x / aioTrailZoom);
        y = Math.floor(y / aioTrailZoom);
@@ -96,14 +97,20 @@ function aioDrawTrail(e) { // code from Walter Zorn
           return;
        }
     }
-    var dot = aioTrailDot.cloneNode(true);
-    dot.style.left = x + "px";
-    dot.style.top = y + "px";
-    dot.style.width = w + "px";
-    dot.style.height = h + "px";
-    aioTrailCont.appendChild(dot);
-    aioDraw = {lastDot: dot, x: x, y: y, w: w, h: h} ;
-    //aioDraw = null;   // don't optimize
+	
+	try {
+	  var dot = aioTrailDot.cloneNode(true);
+	  dot.style.left = x + "px";
+	  dot.style.top = y + "px";
+	  dot.style.width = w + "px";
+	  dot.style.height = h + "px";
+	  aioTrailCont.appendChild(dot);
+	  aioDraw = {lastDot: dot, x: x, y: y, w: w, h: h} ;
+      //aioDraw = null;   // don't optimize
+	
+	} catch (err){
+	  // probably dead object (on page reload)
+	};
   }
 
   if (!aioTrailCont) return;
