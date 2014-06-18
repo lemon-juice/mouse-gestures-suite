@@ -53,11 +53,7 @@ The following license applies to all files
  *       Ben Basson
  *
  *  trails.js
- *    The Original Code is Mouse Gesture for Mozilla.
- *    The Initial Developer of the Original Code is Jens Bannmann.
- *    Portions created by the Jens Bannmann are Copyright (C) 2003 Jens Bannmann. All Rights Reserved.
- *    aioDrawTrail has been rewritten using code from Walter Zorn (wz_jsgraphics.js)
- *    Portions created by Walter Zorn are Copyright (C) 2002-2004 Walter Zorn. All Rights Reserved.
+ *    Code rewritten to draw on <canvas> by Michal Koscielny.
  *
  *  aioSchemaBuilder.xul
  *    The Original Code is The Amazing TabDownloader 
@@ -67,7 +63,7 @@ The following license applies to all files
  *  For all other modules
  *    The original code base for this extension is the "All-in-One Gestures" extension
  *    by Marc Boullet <boullet.marc@orange.fr> for Firefox.
- *    The Current Developer of the code is Michal Koscielny
+ *    The Current Developer of the code is Michal Koscielny.
  * 
  *
  * Alternatively, the contents of this file may be used under the terms of
