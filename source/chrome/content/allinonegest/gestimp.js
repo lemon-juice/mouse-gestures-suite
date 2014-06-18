@@ -821,34 +821,11 @@ function aioGotoLastTab() {
   }
 }
 
-function aioWarnOnCloseMultipleTabs(numToClose) {
-     return true;
-     // the below doesn't work in SM, it's non-standard anyway, so probably we don't need it
-     /* var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-                                   .getService(Components.interfaces.nsIPromptService);
-     var bundle = aioContent.mStringBundle;
-     window.focus();
-     var button = promptService.confirmEx(
-              window,
-              bundle.getString("tabs.closeWarningTitle"),
-              bundle.getFormattedString("tabs.closeWarningMultipleTabs", [numToClose]),
-              (promptService.BUTTON_TITLE_IS_STRING * promptService.BUTTON_POS_0)
-              + (promptService.BUTTON_TITLE_CANCEL * promptService.BUTTON_POS_1),
-              bundle.getString("tabs.closeButtonMultiple"),
-              null, null, null,
-              {value : 0});
-     return button == 0; */
-}
-
 function aioRemoveAllTabsBut() {
   var ltab = aioContent.mCurrentTab;
   if (ltab.pinned) return;
   var childNodes = aioContent.mTabContainer.childNodes;
-  var numToClose = childNodes.length - 1;
-  if (!aioNeverWarnOnCloseOtherTabs && numToClose > 1)
-     var reallyClose = aioWarnOnCloseMultipleTabs(numToClose);
-  else reallyClose = true;
-  if (!reallyClose) return;
+
   for (var i = childNodes.length - 1; i >= 0; --i)
     if (childNodes[i] != ltab && !childNodes[i].pinned) aioContent.removeTab(childNodes[i]);
 }

@@ -40,7 +40,7 @@ var aioRockMode, aioWheelMode, aioHistIfDown;
 var aioSpecialCursor, aioLeftDefault, aioPreferPaste, aioNoAltWithGest;
 var aioSingleNewWindow, aioOpenLinkInNew, aioPanToAS, aioReverseScroll;
 var aioShowTitletip, aioTTHover, aioShiftForTitle, aioTitleDelay, aioTitleDuration;
-var aioScrollAlaAcrobat, aioNeverWarnOnCloseOtherTabs = true, aioNextsString, aioPrevsString;
+var aioScrollAlaAcrobat, aioNextsString, aioPrevsString;
 var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
 var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
 var aioRockerAction = [], aioRockMultiple = [];
@@ -94,7 +94,7 @@ var aioSmooth = null, aioSmoothInterval;
 var aioGrabTarget, aioScrollMode;
 var aioTabsNb;
 var aioBeingUninstalled = false;
-const aioGUID = "{8b86149f-01fb-4842-9dd8-4d7eb02fd055}";
+const aioGUID = "mousegesturessuite@lemon_juice.addons.mozilla.org";
 
 // Preferences observers
 const aioPrefListener = {
