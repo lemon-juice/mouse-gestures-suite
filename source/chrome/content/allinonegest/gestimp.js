@@ -81,7 +81,7 @@ var aioActionTable = [
       [function(){aioActionOnPage(1);}, "g.translate", 0, "", ["browser"]], // 66
       [function(){aioOpenDownloadManager();}, "g.downloadMgr", 0, "", null], // 67
       [function(){aioSavePageAs();}, "g.savePageAs", 0, "", null], // 68
-      [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 69
+      [function(){aioGoToPreviousSelectedTab();}, "g.prevSelectedTab", 1, "", ["browser"]], // 69
       [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, "", null], // 70
       [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, "", ["browser"]], // 71
       [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73", ["browser", "source", "messenger"]], // 72
@@ -186,25 +186,6 @@ function aioFireGesture(aGesture, shiftKey) {
   aioDownButton = aioNoB;
 }
 
-function aioSetTabId(node) {
-  if (!node) return null;
-  var nodeId = node.getAttribute("aioTabId");
-  if (!nodeId) {
-     nodeId = "t" + aioUnique++;
-     node.setAttribute("aioTabId", nodeId);
-  }
-  return nodeId;
-}
-
-function aioCorrectFocus(e) {
-  var tabs = aioContent.mTabContainer.childNodes;
-  for (var i = 0; i < tabs.length; ++i)
-     if (tabs[i].selected && (aioRendering.selectedIndex != i)) {
-        aioRendering.selectedIndex = i;
-        aioContent.mTabBox.removeEventListener('select', aioCorrectFocus, true);
-        return;
-     }
-}
 
 /*  Gesture actions */
 
@@ -216,6 +197,26 @@ function aioBackForward(back) {
     content.focus();
   }
 }
+
+function aioPreviousSelectedTab() {
+  var lTab;
+  if (aioTabFocusHistory.length < 2) return null;
+  var tabId = aioTabFocusHistory[aioTabFocusHistory.length - 2].focused;
+  for (var i = 0; i < aioContent.mTabs.length; ++i) {
+    lTab = aioContent.mTabContainer.childNodes[i];
+    if (lTab.getAttribute("aioTabId") == tabId) return lTab;
+  }
+  return null;
+}
+
+function aioGoToPreviousSelectedTab() {
+  var lTab = aioPreviousSelectedTab();
+  if (lTab) {
+     aioTabFocusHistory.pop();
+     aioContent.selectedTab = lTab;
+  }
+}
+
 
 function aioPrint() {
   switch (aioWindowType) {
@@ -1776,6 +1777,28 @@ function aioToggleSidebar() {
   }
 }
 
+function aioTabFocus(e) {
+  var activeTab = aioContent.mTabContainer.childNodes[aioContent.mTabContainer.selectedIndex];
+  var activeId = activeTab.getAttribute("aioTabId");
+  
+  if (activeId) {
+     if (aioTabFocusHistory[aioTabFocusHistory.length - 1].focused == activeId) {
+      return; // already at top
+    
+     } else {
+        for (i = 0; i < aioTabFocusHistory.length; ++i) //search for a duplicated entry
+          if (aioTabFocusHistory[i].focused == activeId) {
+             aioTabFocusHistory.splice(i, 1); // Found: delete it
+          }
+        aioTabFocusHistory.push({focused: activeId});
+     }
+     
+  } else { // tab's never been visited
+     activeId = "t" + aioUnique++;
+     activeTab.setAttribute("aioTabId", activeId);
+     aioTabFocusHistory.push({focused: activeId});
+  }
+}
 
 
 function aioNullAction() {

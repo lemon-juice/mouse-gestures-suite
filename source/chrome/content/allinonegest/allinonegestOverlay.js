@@ -49,6 +49,7 @@ var aio2Buttons;  // .... prefs
 var aioDisableClickHeat;
 var aioFxV18;
 var aioDefNextSearch, aioDefPrevSearch;
+var aioTabFocusHistory = [];
 
 // global variables for rocker gesture
 const aioOpp = [aioRMB, aioNoB, aioLMB, aioNoB];
@@ -421,32 +422,40 @@ function aioInit() { // overlay has finished loading or a pref was changed
      
      aioFxV18 = versionComparator.compare(geckoVersion, "18.0") >= 0;
 
-     switch (aioWindowType) {
-       case 'browser':
-         aioContent = document.getElementById("content");
-         aioRendering = aioContent.mPanelContainer;
-         aioStatusBar = document.getElementById("statusbar-display");
-         break;
-         
-       case 'messenger':
-         aioContent = document.getElementById("messagepane");
-         aioRendering = document.getElementById("messagepane");
-         aioStatusBar = document.getElementById("statusText");
-         break;
-         
-       case 'mailcompose':
-         aioContent = aioContent = document.getElementById("appcontent");
-         aioRendering = document.getElementById("content-frame");
-         aioStatusBar = document.getElementById("statusText");
-         break;
-         
-       case 'source':
-         aioContent = aioContent = document.getElementById("appcontent");
-         aioRendering = document.getElementById("content");
-         aioStatusBar = document.getElementById("statusbar-line-col");
-         break;
-     }
-     
+	switch (aioWindowType) {
+	  case 'browser':
+		aioContent = document.getElementById("content");
+		aioRendering = aioContent.mPanelContainer;
+		aioStatusBar = document.getElementById("statusbar-display");
+		
+		aioContent.tabContainer.addEventListener("TabSelect", aioTabFocus, true);
+		var activeId = "t" + aioUnique++;
+		if (aioContent.mTabContainer) {
+		  aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
+		  aioTabFocusHistory.push({focused: activeId});
+		}
+
+		break;
+		
+	  case 'messenger':
+		aioContent = document.getElementById("messagepane");
+		aioRendering = document.getElementById("messagepane");
+		aioStatusBar = document.getElementById("statusText");
+		break;
+		
+	  case 'mailcompose':
+		aioContent = aioContent = document.getElementById("appcontent");
+		aioRendering = document.getElementById("content-frame");
+		aioStatusBar = document.getElementById("statusText");
+		break;
+		
+	  case 'source':
+		aioContent = aioContent = document.getElementById("appcontent");
+		aioRendering = document.getElementById("content");
+		aioStatusBar = document.getElementById("statusbar-line-col");
+		break;
+	}
+	
    
      aioContextPopup = document.getElementById("contentAreaContextMenu");
      aioMainWin = document.getElementById("main-window");
@@ -454,11 +463,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioRendering.addEventListener("mousedown", aioMouseDown, true);
      document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
 
-     var activeId = "" + aioUnique++;
-     if (aioContent.mTabContainer) {
-       aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
-     }
-     
      window.addEventListener("mouseup", aioMouseUp, true);
      window.addEventListener("draggesture", aioDragGesture, true);
      window.addEventListener("unload", aioWindowUnload, false);
