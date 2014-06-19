@@ -1006,8 +1006,7 @@ function aioOpenNewWindow(url, background, noSanitize, priv) {
        url = aioOnLink[0].href;
     }
     else {
-       if (aioOnImage) url = aioOnImage.src;
-       else url = "";
+       url = "";
     }    
   }
   
