@@ -801,7 +801,7 @@ function aioUndoCloseTab() {
     undoCloseTab();
   }
   catch (e) { // SM
-    gBrowser.restoreTab(0);
+    gBrowser.undoCloseTab(0);
   }
 }
 
