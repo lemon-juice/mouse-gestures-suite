@@ -8,8 +8,6 @@ overlay chrome://messenger/content/messengercompose/messengercompose.xul chrome:
 overlay chrome://global/content/viewSource.xul chrome://allinonegest/content/allinonegestOverlay.xul
 overlay chrome://global/content/viewPartialSource.xul chrome://allinonegest/content/allinonegestOverlay.xul
 
-overlay	chrome://browser/content/pref/pref-advanced.xul	chrome://allinonegest/content/pref/aioPrefAdvancedOverlay.xul
-
 overlay	chrome://communicator/content/tasksOverlay.xul	chrome://allinonegest/content/TasksOverlay.xul
 
 content	allinonegest	jar:chrome/allinonegest.jar!/content/allinonegest/
