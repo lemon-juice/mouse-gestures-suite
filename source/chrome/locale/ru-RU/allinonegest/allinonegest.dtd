@@ -34,6 +34,7 @@
 <!ENTITY trails.enable "Включить отображение жеста">
 <!ENTITY trails.color "Цвет следа">
 <!ENTITY trails.size "Размер следа">
+<!ENTITY trails.smooth "Smooth (slower on old hardware)">
 
 <!ENTITY linktooltip.label "Всплывающая подсказка ссылки">
 <!ENTITY linktooltip.shift "Для отображения нажать клавишу Shift">

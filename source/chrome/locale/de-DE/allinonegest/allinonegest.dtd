@@ -34,6 +34,7 @@
 <!ENTITY trails.enable             "Mausspur aktivieren">
 <!ENTITY trails.color              "Farbe der Spur">
 <!ENTITY trails.size               "Größe der Spur">
+<!ENTITY trails.smooth "Smooth (slower on old hardware)">
 
 <!ENTITY linktooltip.label     "Infokasten über Hyperlinks ('Link Tooltip')">
 <!ENTITY linktooltip.shift         "Zum Anzeigen Umschalttaste (Shift) gedrückt halten">

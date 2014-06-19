@@ -2,7 +2,7 @@
  * Drawing gesture trails
  */
 var aioTrailCont = null;
-var aioCtx;
+var aioCtx, aioTrailPoints;;
 var aioDocX, aioDocY;
 
 function aioStartTrail(e) {
@@ -50,16 +50,38 @@ function aioStartTrail(e) {
   aioCtx.lineCap = 'round';
   aioCtx.strokeStyle = aioTrailColor;
   
-  aioCtx.beginPath();
-  aioCtx.moveTo(e.screenX - aioDocX, e.screenY - aioDocY);
+  if (aioSmoothTrail) {
+	aioTrailPoints = [];
+    aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
+
+  } else {
+	aioCtx.beginPath();
+	aioCtx.moveTo(e.screenX - aioDocX, e.screenY - aioDocY);
+  }
 }
 
 function aioDrawTrail(e) {
-  aioCtx.lineTo(e.screenX - aioDocX, e.screenY - aioDocY);
+  if (aioSmoothTrail) {
+	// erasing all canvas and drawing all line again results in smooth line
+	aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
+	
+	aioCtx.clearRect(0, 0, aioTrailCont.width, aioTrailCont.height);
+	aioCtx.beginPath();
+	aioCtx.moveTo(aioTrailPoints[0][0], aioTrailPoints[0][1]);
+	
+	for (var i = 1, len=aioTrailPoints.length; i < len; i++) {
+	  aioCtx.lineTo(aioTrailPoints[i][0], aioTrailPoints[i][1]);
+	}
+	
+  } else {
+	aioCtx.lineTo(e.screenX - aioDocX, e.screenY - aioDocY);
+  }
+  
   aioCtx.stroke();
 }
 
 function aioEraseTrail() {
+  aioTrailPoints = null;
   try {
      aioTrailCont.parentNode.removeChild(aioTrailCont);
   }

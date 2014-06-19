@@ -34,6 +34,7 @@
 <!ENTITY trails.enable             "Visualizza traccia gesture">
 <!ENTITY trails.color              "Colore traccia">
 <!ENTITY trails.size               "Dimensione traccia">
+<!ENTITY trails.smooth "Smooth (slower on old hardware)">
 
 <!ENTITY linktooltip.label     "Descrizione link: Preferenze">
 <!ENTITY linktooltip.shift         "Tenere premuto tasto maiuscole per mostrare descrizione">

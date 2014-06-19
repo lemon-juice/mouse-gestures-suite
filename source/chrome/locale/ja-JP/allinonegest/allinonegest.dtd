@@ -34,6 +34,7 @@
 <!ENTITY trails.enable "ジェスチャの軌跡を描画する">
 <!ENTITY trails.color "軌跡の配色">
 <!ENTITY trails.size "軌跡の太さ">
+<!ENTITY trails.smooth "Smooth (slower on old hardware)">
 
 <!ENTITY linktooltip.label "リンク上での拡張ツールチップ">
 <!ENTITY linktooltip.shift "Shiftキーが押されているとき表示">

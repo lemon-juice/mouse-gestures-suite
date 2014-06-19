@@ -8,7 +8,7 @@ function getBrowserWindow() {
 }
 
 function init() {
-  var checkboxes  = ["mouse", "trailId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
+  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
@@ -87,7 +87,8 @@ function doEnabling() {
   var a1 = "disabled", a2 = "hidden";
 
   var idTable = [["trailId", c1, a1], ["trailColorId", c4, a1], ["trailPickerId", c4, a2],
-                 ["trailSizeId", c4, a1], ["plusId", c6, a1], ["minusId", c7, a1],
+                 ["trailSizeId", c4, a1], ["smoothId", c4, a1],
+                 ["plusId", c6, a1], ["minusId", c7, a1],
                  ["wheelScrollOptions", c2, a1], ["wheelScrollOptions0", c2, a1],
                  ["wheelScrollOptions1", c2, a1], ["wheelScrollOptions2", c2, a1],
                  ["wheelScrollOptions3", c2, a1],
@@ -120,7 +121,7 @@ function checkWheelRocker() {
 }    
 
 function savePrefs() {
-  var checkboxes  = ["mouse", "trailId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
+  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",

@@ -34,6 +34,7 @@
 <!ENTITY trails.enable             "Activer la trâce">
 <!ENTITY trails.color              "Couleur de la trâce">
 <!ENTITY trails.size               "Taille de la trâce">
+<!ENTITY trails.smooth "Smooth (slower on old hardware)">
 
 <!ENTITY linktooltip.label     "Info-bulle de lien: Préfs">
 <!ENTITY linktooltip.shift         "N'apparaît que si la touche MAJ est enfoncée">

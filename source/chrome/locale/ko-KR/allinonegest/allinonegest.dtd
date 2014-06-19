@@ -34,6 +34,7 @@
 <!ENTITY trails.enable            "자취 남기기">
 <!ENTITY trails.color             "색상:">
 <!ENTITY trails.size              "굵기:">
+<!ENTITY trails.smooth "Smooth (slower on old hardware)">
 
 <!ENTITY linktooltip.label        "링크 도움말: 설정">
 <!ENTITY linktooltip.shift        "Shift 키를 누를 때에만 표시합니다.">

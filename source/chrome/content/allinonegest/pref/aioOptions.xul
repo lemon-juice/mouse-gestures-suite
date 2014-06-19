@@ -81,6 +81,8 @@
         <image id="traitId" class="aio-border" src="transp.png"/>
         <button id="plusId" class="aio-smallButton" image="plus.png" oncommand="changeTrace(1)"/> 
        </hbox>
+       <checkbox id="smoothId" type="checkbox" pref="true" preftype="bool" label="&trails.smooth;"
+          prefstring="allinonegest.smoothTrail" oncommand="doEnabling();" class="aio-indent"/>
       </vbox>
      </groupbox>
      <groupbox orient="horizontal" flex="1">

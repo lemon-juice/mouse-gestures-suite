@@ -34,6 +34,7 @@
 <!ENTITY trails.enable             "启用手势轨迹">
 <!ENTITY trails.color              "轨迹颜色">
 <!ENTITY trails.size               "轨迹尺寸">
+<!ENTITY trails.smooth "Smooth (slower on old hardware)">
 
 <!ENTITY linktooltip.label     "链接提示:首选项">
 <!ENTITY linktooltip.shift         "按住Shift键显示">
