@@ -67,7 +67,7 @@ function doEnabling() {
   var c3 = document.getElementById("rocker").checked;
   var c4 = c1 && document.getElementById("trailId").checked;
   var c5 = c2 && wheelEl.value == 3;
-  var c6 = c4 && trailSize < 8;
+  var c6 = c4 && trailSize < 12;
   var c7 = c4 && trailSize > 1;
   var c8 = !c1or2 || document.getElementById("mousebuttOptions").value != 1;
   var c9 = c8 && document.getElementById("autoscroll").checked;
