@@ -39,6 +39,8 @@ function aioStartTrail(e) {
   aioTrailCont.style.top = "0";
   aioTrailCont.style.left = "0";
   aioTrailCont.style.pointerEvents = "none";
+  aioTrailCont.style.zIndex = 1000;
+  
   
   insertionNode.appendChild(aioTrailCont);
 
