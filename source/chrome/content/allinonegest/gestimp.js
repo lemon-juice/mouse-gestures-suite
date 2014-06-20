@@ -1030,7 +1030,7 @@ function aioOpenNewWindow(url, background, noSanitize, priv) {
       }, true);
     }
   
-  } else if (priv) {
+  } else if (priv && url == "about:privatebrowsing") {
     win.addEventListener('load', function() {
       setTimeout(function() {
         var inp = win.document.getAnonymousElementByAttribute(win.document.getElementById('urlbar'), 'anonid', 'input');

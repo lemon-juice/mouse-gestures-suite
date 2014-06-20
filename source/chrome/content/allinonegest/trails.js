@@ -6,9 +6,6 @@ var aioCtx, aioTrailPoints;;
 var aioDocX, aioDocY;
 
 function aioStartTrail(e) {
-  var targetDoc = e.target.ownerDocument;
-  if (targetDoc.defaultView.top instanceof Window) targetDoc = targetDoc.defaultView.top.document;
-  if (aioIsUnformattedXML(targetDoc)) return;
   
   aioDocX = window.mozInnerScreenX;
   aioDocY = window.mozInnerScreenY;
@@ -29,12 +26,13 @@ function aioStartTrail(e) {
 	case 'source':
 	  insertionNode = document.getElementById("appcontent");
 	  break;
-	
-	default:
-	  return;
+  }
+  
+  if (!insertionNode) {
+	return;
   }
 
-  aioTrailCont = targetDoc.createElementNS(xhtmlNS, "canvas");
+  aioTrailCont = document.createElementNS(xhtmlNS, "canvas");
   aioTrailCont.style.position = "fixed";
   aioTrailCont.width = window.outerWidth;
   aioTrailCont.height = window.outerHeight;
@@ -61,6 +59,8 @@ function aioStartTrail(e) {
 }
 
 function aioDrawTrail(e) {
+  if (!aioTrailCont) return;
+  
   if (aioSmoothTrail) {
 	// erasing all canvas and drawing all line again results in smooth line
 	aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
