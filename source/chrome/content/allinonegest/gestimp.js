@@ -948,11 +948,13 @@ function aioLinksInFiles() {
 function aioNewWindow(url, flag, noSanitize) {
   if (!noSanitize) url = aioSanitizeUrl(url);
   
+  var chromeURL = aioIsFx ? "chrome://browser/content/" : "chrome://navigator/content/";
+  
   if (window.content && window.content.document) {
      var charsetArg = "charset=" + window.content.document.characterSet;
-     return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
+     return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
   }
-  return window.openDialog("chrome://navigator/content/", "_blank", "chrome,all,dialog=no" + flag, url);
+  return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url);
 }
 
 function aioLinksInWindows() {

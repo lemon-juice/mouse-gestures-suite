@@ -48,6 +48,7 @@ var aioTrustAutoSelect;
 var aio2Buttons;  // .... prefs
 var aioDisableClickHeat;
 var aioFxV18;
+var aioWindowType, aioIsFx = false;
 var aioDefNextSearch, aioDefPrevSearch;
 var aioTabFocusHistory = [];
 
@@ -308,9 +309,16 @@ function aioInit() { // overlay has finished loading or a pref was changed
   }
   
   // detect window type
+  
+  
   switch (String(document.location)) {
     case "chrome://navigator/content/navigator.xul":
       aioWindowType = "browser";
+      break;
+	  
+    case "chrome://browser/content/browser.xul":
+      aioWindowType = "browser";
+	  aioIsFx = true;
       break;
      
     case "chrome://global/content/viewSource.xul":
@@ -428,6 +436,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		aioContent = document.getElementById("content");
 		aioRendering = aioContent.mPanelContainer;
 		aioStatusBar = document.getElementById("statusbar-display");
+		if (!aioStatusBar) {
+		  aioStatusBar = gBrowser.getStatusPanel();
+		}
 		
 		aioContent.tabContainer.addEventListener("TabSelect", aioTabFocus, true);
 		var activeId = "t" + aioUnique++;
@@ -1632,8 +1643,6 @@ function _aioRemoveEventsForFunction(target, func) {
 //  }
 //  return s;
 //}
-
-
 
 window.addEventListener("load",
   function() {

@@ -1,5 +1,5 @@
-
 overlay	chrome://navigator/content/navigator.xul	chrome://allinonegest/content/allinonegestOverlay.xul
+overlay	chrome://browser/content/browser.xul	chrome://allinonegest/content/allinonegestOverlay.xul
 
 overlay chrome://messenger/content/messenger.xul chrome://allinonegest/content/allinonegestOverlay.xul
 overlay chrome://messenger/content/messageWindow.xul chrome://allinonegest/content/allinonegestOverlay.xul
@@ -9,6 +9,7 @@ overlay chrome://global/content/viewSource.xul chrome://allinonegest/content/all
 overlay chrome://global/content/viewPartialSource.xul chrome://allinonegest/content/allinonegestOverlay.xul
 
 overlay	chrome://communicator/content/tasksOverlay.xul	chrome://allinonegest/content/TasksOverlay.xul
+overlay	chrome://browser/content/browser.xul	chrome://allinonegest/content/TasksOverlay.xul
 
 content	allinonegest	jar:chrome/allinonegest.jar!/content/allinonegest/
 content	allinonegest-en jar:chrome/allinonegest.jar!/locale/en-US/allinonegest/
