@@ -35,7 +35,7 @@ var aioActionTable = [
       [function(){aioViewSource(1);}, "g.viewFrameSource", 0, "", ["browser", "messenger"]], // 20
       [function(){aioViewCookies();}, "g.viewSiteCookies", 0, "", ["browser"]], // 21
       [function(){BrowserPageInfo();}, "g.pageInfo", 0, "", ["browser", "messenger"]], // 22
-      [function(){toJavaScriptConsole();}, "g.jsConsole", 0, "", null], // 23
+      [function(){aioOpenConsole();}, "g.jsConsole", 0, "", null], // 23
       [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 24
       [function(){aioBookmarkCurrentPage();}, "g.addBookmark", 0, "", ["browser"]], // 25
       [function(){aioDoubleWin();}, "g.doubleStackWin", 0, "", ["browser", "source", "messenger"]], // 26
@@ -1798,6 +1798,17 @@ function aioTabFocus(e) {
      activeId = "t" + aioUnique++;
      activeTab.setAttribute("aioTabId", activeId);
      aioTabFocusHistory.push({focused: activeId});
+  }
+}
+
+function aioOpenConsole() {
+  if (aioIsFx) {
+    if (gDevToolsBrowser) {
+      gDevToolsBrowser.toggleToolboxCommand(gBrowser);
+    }
+    
+  } else {
+    toJavaScriptConsole();
   }
 }
 
