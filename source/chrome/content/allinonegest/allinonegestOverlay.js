@@ -308,17 +308,18 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioGetLocalizedStrings();
   }
   
+  XULAppInfo = Components.classes["@mozilla.org/xre/app-info;1"]
+                .getService(Components.interfaces.nsIXULAppInfo);
+				
+  if (XULAppInfo.ID == '{ec8030f7-c20a-464f-9b0e-13a3a9e97384}') {
+	aioIsFx = true;  // if false, then SM
+  }
+  
   // detect window type
-  
-  
   switch (String(document.location)) {
     case "chrome://navigator/content/navigator.xul":
-      aioWindowType = "browser";
-      break;
-	  
     case "chrome://browser/content/browser.xul":
-      aioWindowType = "browser";
-	  aioIsFx = true;
+     aioWindowType = "browser";
       break;
      
     case "chrome://global/content/viewSource.xul":
