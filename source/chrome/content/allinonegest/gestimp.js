@@ -603,8 +603,9 @@ function aioSelectionAsURL(reverseBg) {
   if (url.search(/^\w+:/) == -1) // make sure it has some sort of protocol
      if (url.indexOf("@") == -1) url = "http://" + url;
      else url = "mailto:" + url;
+   
   
-  aioLinkInTab(url, (aioWindowType == "browser"), false, reverseBg);
+  aioLinkInTab(url, false, false, reverseBg);
 }
 
 /**
