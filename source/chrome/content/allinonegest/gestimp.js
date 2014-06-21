@@ -1197,12 +1197,15 @@ function aioHomePage() {
 }
 
 function aioGetHomePageUrl() {
-  var prefb = Components.classes["@mozilla.org/preferences-service;1"]
-                       .getService(Components.interfaces.nsIPrefService);
-
-  var uri = prefb.getComplexValue("browser.startup.homepage",
-                                  Components.interfaces.nsISupportsString).data;
-  return uri;
+  if (aioIsFx) {
+    return gHomeButton.getHomePage();
+  } else {
+    var prefb = Components.classes["@mozilla.org/preferences-service;1"]
+                         .getService(Components.interfaces.nsIPrefService);
+  
+    return prefb.getComplexValue("browser.startup.homepage",
+                                    Components.interfaces.nsISupportsString).data;
+  }
 }
 
 function aioUpDir() { // from Stephen Clavering's GoUp
