@@ -833,12 +833,13 @@ function aioGotoLastTab() {
 }
 
 function aioRemoveAllTabsBut() {
-  var ltab = aioContent.mCurrentTab;
-  if (ltab.pinned) return;
-  var childNodes = aioContent.mTabContainer.childNodes;
-
-  for (var i = childNodes.length - 1; i >= 0; --i)
-    if (childNodes[i] != ltab && !childNodes[i].pinned) aioContent.removeTab(childNodes[i]);
+  if (aioWindowType == 'browser') {
+    if (aioIsFx) {
+      gBrowser.removeAllTabsBut(aioContent.mCurrentTab);
+    } else {
+      BrowserCloseOtherTabs();
+    }
+  }
 }
 
 function aioGetReferrer() {
