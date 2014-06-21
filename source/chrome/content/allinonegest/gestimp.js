@@ -298,7 +298,11 @@ function aioFavoriteURL(suffix) {
       break;
     
     default:
-      openNewTabWindowOrExistingWith(kNewTab, shortcutURL, null, false);
+      if (aioIsFx) {
+        openNewTabWith(shortcutURL);
+      } else {
+        openNewTabWindowOrExistingWith(kNewTab, shortcutURL, null, false);
+      }
   }
 }
 
@@ -878,7 +882,11 @@ function aioLinkInTab(url, usePref, bg, reverseBg) {
       bg = !bg;
     }
     
-    openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg);
+    if (aioIsFx) {
+      openNewTabWith(url);
+    } else {
+      openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg);
+    }
   }
 }
 
@@ -912,7 +920,11 @@ function aioOpenInNewTab(bg) {
       else aioLinkInTab("about:blank", false, true);
       
     } else {
+      if (aioIsFx) {
+        openNewTabWith("about:blank");
+      } else {
         openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, !!bg);
+      }
     }
   }
 }
@@ -925,7 +937,11 @@ function aioLinksInTabs() {
   
   } else {
     if (aioOnLink.length > 0) {
-      openNewTabWindowOrExistingWith(kNewTab, aioSanitizeUrl(aioOnLink[0].href), null, false);
+      if (aioIsFx) {
+        openNewTabWith(aioSanitizeUrl(aioOnLink[0].href));
+      } else {
+        openNewTabWindowOrExistingWith(kNewTab, aioSanitizeUrl(aioOnLink[0].href), null, false);
+      }
       
       var links = [];
       for (var i = 1; i < aioOnLink.length; ++i) {
@@ -934,7 +950,11 @@ function aioLinksInTabs() {
       
       setTimeout(function() {
         for (var i = 0; i < links.length; ++i) {
-          openNewTabWindowOrExistingWith(kNewTab, links[i], null, false);
+          if (aioIsFx) {
+            openNewTabWith(links[i]);
+          } else {
+            openNewTabWindowOrExistingWith(kNewTab, links[i], null, false);
+          }
         }
       }, 500);
     }
@@ -1481,7 +1501,11 @@ function aioOpenBlankTab() {
       break;
     
     default:
-      openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+      if (aioIsFx) {
+        openNewTabWith("about:blank");
+      } else {
+        openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+      }
   }
 }
 
