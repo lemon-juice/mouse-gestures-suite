@@ -4,13 +4,14 @@
 var aioTrailCont = null;
 var aioCtx, aioTrailPoints;;
 var aioDocX, aioDocY;
+var minX, miny, maxX, maxY;
+var haftTrailSize;
+var insertionNode;
 
 function aioStartTrail(e) {
   
   aioDocX = window.mozInnerScreenX;
   aioDocY = window.mozInnerScreenY;
-  
-  var insertionNode;
   
   // insert trail outside viewable document to avoid DOM delays on large documents
   switch (aioWindowType) {
@@ -31,7 +32,74 @@ function aioStartTrail(e) {
   if (!insertionNode) {
 	return;
   }
+  
+  haftTrailSize = Math.ceil(aioTrailSize / 2);
+  
+  var x = e.screenX - aioDocX;
+  var y = e.screenY - aioDocY;
+  
+  aioTrailPoints = [];
+  aioTrailPoints.push([x, y]);
+  
+  minX = x - haftTrailSize;
+  maxX = x + haftTrailSize;
+  minY = y - haftTrailSize;
+  maxY = y + haftTrailSize;
+}
 
+function aioDrawTrail(e) {
+  if (!insertionNode) return;
+  
+  if (!aioTrailCont) {
+	aioMakeTrailCanvas();
+  }
+  
+  var x = e.screenX - aioDocX;
+  var y = e.screenY - aioDocY;
+  
+  if (aioSmoothTrail) {
+	// erasing all canvas and drawing all line again results in smooth line
+	aioTrailPoints.push([x, y]);
+	
+	// we make canvas the size only as large as necessary, because full size canvas
+	// cause flash objects in window mode to disappear
+	if (x + haftTrailSize > maxX) {
+	  maxX = x + haftTrailSize;
+	} else if (x - haftTrailSize < minX) {
+	  minX = x - haftTrailSize;
+	}
+	
+	if (y + haftTrailSize > maxY) {
+	  maxY = y + haftTrailSize;
+	} else if (y - haftTrailSize < minY) {
+	  minY = y - haftTrailSize;
+	}
+	
+	aioTrailCont.style.left = minX + "px";
+	aioTrailCont.style.top = minY + "px";
+	aioTrailCont.width = maxX - minX;
+	aioTrailCont.height = maxY - minY;
+	
+	aioSetCtxProperties();
+	  
+	var shiftX = aioTrailCont.offsetLeft;
+	var shiftY = aioTrailCont.offsetTop;
+	  
+	aioCtx.beginPath();
+	aioCtx.moveTo(aioTrailPoints[0][0] - shiftX, aioTrailPoints[0][1] - shiftY);
+	
+	for (var i = 1, len=aioTrailPoints.length; i < len; i++) {
+	  aioCtx.lineTo(aioTrailPoints[i][0] - shiftX, aioTrailPoints[i][1] - shiftY);
+	}
+	
+  } else {
+	aioCtx.lineTo(x, y);
+  }
+  
+  aioCtx.stroke();
+}
+
+function aioMakeTrailCanvas() {
   aioTrailCont = document.createElementNS(xhtmlNS, "canvas");
   aioTrailCont.style.position = "fixed";
   aioTrailCont.width = window.outerWidth;
@@ -39,47 +107,24 @@ function aioStartTrail(e) {
   aioTrailCont.style.top = "0";
   aioTrailCont.style.left = "0";
   aioTrailCont.style.pointerEvents = "none";
-  aioTrailCont.style.zIndex = 1000;
-  
+  aioTrailCont.style.zIndex = 10000;
   
   insertionNode.appendChild(aioTrailCont);
 
   aioCtx = aioTrailCont.getContext('2d');
+  aioSetCtxProperties();
+  
+  if (!aioSmoothTrail) {
+	aioCtx.beginPath();
+	aioCtx.moveTo(aioTrailPoints[0][0], aioTrailPoints[0][1]);
+  }
+}
+
+function aioSetCtxProperties() {
   aioCtx.lineWidth = aioTrailSize;
   aioCtx.lineJoin = 'round';
   aioCtx.lineCap = 'round';
   aioCtx.strokeStyle = aioTrailColor;
-  
-  if (aioSmoothTrail) {
-	aioTrailPoints = [];
-    aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
-
-  } else {
-	aioCtx.beginPath();
-	aioCtx.moveTo(e.screenX - aioDocX, e.screenY - aioDocY);
-  }
-}
-
-function aioDrawTrail(e) {
-  if (!aioTrailCont) return;
-  
-  if (aioSmoothTrail) {
-	// erasing all canvas and drawing all line again results in smooth line
-	aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
-	
-	aioCtx.clearRect(0, 0, aioTrailCont.width, aioTrailCont.height);
-	aioCtx.beginPath();
-	aioCtx.moveTo(aioTrailPoints[0][0], aioTrailPoints[0][1]);
-	
-	for (var i = 1, len=aioTrailPoints.length; i < len; i++) {
-	  aioCtx.lineTo(aioTrailPoints[i][0], aioTrailPoints[i][1]);
-	}
-	
-  } else {
-	aioCtx.lineTo(e.screenX - aioDocX, e.screenY - aioDocY);
-  }
-  
-  aioCtx.stroke();
 }
 
 function aioEraseTrail() {
@@ -89,4 +134,5 @@ function aioEraseTrail() {
   }
   catch(err) {}
   aioTrailCont = null;
+  insertionNode = null;
 }
