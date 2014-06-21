@@ -1413,14 +1413,22 @@ function aioOpenAioOptionsDelayed(delay) {
 }
 
 function aioOpenBookmarksManager() {
-  toOpenWindowByType("bookmarks:manager",
-    "chrome://communicator/content/bookmarks/bookmarksManager.xul");
+  if (aioIsFx) {
+    PlacesCommandHook.showPlacesOrganizer('AllBookmarks');
+  } else {
+    toOpenWindowByType("bookmarks:manager",
+      "chrome://communicator/content/bookmarks/bookmarksManager.xul");
+  }
 }
 
 function aioOpenDownloadManager() {
-  toOpenWindowByType("Download:Manager",
-                          "chrome://communicator/content/downloads/downloadmanager.xul",
-                          "chrome,dialog=no,resizable");
+  if (aioIsFx) {
+    BrowserDownloadsUI();
+  } else {
+    toOpenWindowByType("Download:Manager",
+                            "chrome://communicator/content/downloads/downloadmanager.xul",
+                            "chrome,dialog=no,resizable");
+  }
 }
 
 function aioImageInWindow() {
