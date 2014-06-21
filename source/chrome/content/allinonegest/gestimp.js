@@ -611,6 +611,11 @@ function aioSelectionAsURL(reverseBg) {
  * Search for selected text
  */
 function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
+  if (aioIsFx) {
+    BrowserSearch.loadSearchFromContext(getBrowserSelection());
+    return;
+  }
+  
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var searchStr = winWrapper.getSelection().toString();
