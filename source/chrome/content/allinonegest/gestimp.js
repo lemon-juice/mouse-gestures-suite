@@ -235,7 +235,11 @@ function aioPrint() {
 function aioPrintPreview() {
   switch (aioWindowType) {
     case "browser":
-      BrowserPrintPreview();
+      if (aioIsFx) {
+        PrintUtils.printPreview(PrintPreviewListener);
+      } else {
+        BrowserPrintPreview();
+      }
       break;
    
     case "source":
@@ -1780,7 +1784,11 @@ function aioClosePrintPreview() {
 function aioToggleSidebar() {
   switch (aioWindowType) {
     case "browser":
-      SidebarShowHide();
+      if (aioIsFx) {
+        toggleSidebar('viewHistorySidebar');
+      } else {
+        SidebarShowHide();
+      }
       break;
     
     case "messenger":
