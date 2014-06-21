@@ -4,6 +4,8 @@
 var aioTrailCont = null;
 var aioCtx, aioTrailPoints;;
 var aioDocX, aioDocY;
+var minX, miny, maxX, maxY;
+var haftTrailSize;
 var insertionNode;
 
 function aioStartTrail(e) {
@@ -31,8 +33,18 @@ function aioStartTrail(e) {
 	return;
   }
   
+  haftTrailSize = Math.ceil(aioTrailSize / 2);
+  
+  var x = e.screenX - aioDocX;
+  var y = e.screenY - aioDocY;
+  
   aioTrailPoints = [];
-  aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
+  aioTrailPoints.push([x, y]);
+  
+  minX = x - haftTrailSize;
+  maxX = x + haftTrailSize;
+  minY = y - haftTrailSize;
+  maxY = y + haftTrailSize;
 }
 
 function aioDrawTrail(e) {
@@ -42,20 +54,46 @@ function aioDrawTrail(e) {
 	aioMakeTrailCanvas();
   }
   
+  var x = e.screenX - aioDocX;
+  var y = e.screenY - aioDocY;
+  
   if (aioSmoothTrail) {
 	// erasing all canvas and drawing all line again results in smooth line
-	aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
+	aioTrailPoints.push([x, y]);
 	
-	aioCtx.clearRect(0, 0, aioTrailCont.width, aioTrailCont.height);
+	// we make canvas the size only as large as necessary, because full size canvas
+	// cause flash objects in window mode to disappear
+	if (x + haftTrailSize > maxX) {
+	  maxX = x + haftTrailSize;
+	} else if (x - haftTrailSize < minX) {
+	  minX = x - haftTrailSize;
+	}
+	
+	if (y + haftTrailSize > maxY) {
+	  maxY = y + haftTrailSize;
+	} else if (y - haftTrailSize < minY) {
+	  minY = y - haftTrailSize;
+	}
+	
+	aioTrailCont.style.left = minX + "px";
+	aioTrailCont.style.top = minY + "px";
+	aioTrailCont.width = maxX - minX;
+	aioTrailCont.height = maxY - minY;
+	
+	aioSetCtxProperties();
+	  
+	var shiftX = aioTrailCont.offsetLeft;
+	var shiftY = aioTrailCont.offsetTop;
+	  
 	aioCtx.beginPath();
-	aioCtx.moveTo(aioTrailPoints[0][0], aioTrailPoints[0][1]);
+	aioCtx.moveTo(aioTrailPoints[0][0] - shiftX, aioTrailPoints[0][1] - shiftY);
 	
 	for (var i = 1, len=aioTrailPoints.length; i < len; i++) {
-	  aioCtx.lineTo(aioTrailPoints[i][0], aioTrailPoints[i][1]);
+	  aioCtx.lineTo(aioTrailPoints[i][0] - shiftX, aioTrailPoints[i][1] - shiftY);
 	}
 	
   } else {
-	aioCtx.lineTo(e.screenX - aioDocX, e.screenY - aioDocY);
+	aioCtx.lineTo(x, y);
   }
   
   aioCtx.stroke();
@@ -74,15 +112,19 @@ function aioMakeTrailCanvas() {
   insertionNode.appendChild(aioTrailCont);
 
   aioCtx = aioTrailCont.getContext('2d');
-  aioCtx.lineWidth = aioTrailSize;
-  aioCtx.lineJoin = 'round';
-  aioCtx.lineCap = 'round';
-  aioCtx.strokeStyle = aioTrailColor;
+  aioSetCtxProperties();
   
   if (!aioSmoothTrail) {
 	aioCtx.beginPath();
 	aioCtx.moveTo(aioTrailPoints[0][0], aioTrailPoints[0][1]);
   }
+}
+
+function aioSetCtxProperties() {
+  aioCtx.lineWidth = aioTrailSize;
+  aioCtx.lineJoin = 'round';
+  aioCtx.lineCap = 'round';
+  aioCtx.strokeStyle = aioTrailColor;
 }
 
 function aioEraseTrail() {
