@@ -4,13 +4,12 @@
 var aioTrailCont = null;
 var aioCtx, aioTrailPoints;;
 var aioDocX, aioDocY;
+var insertionNode;
 
 function aioStartTrail(e) {
   
   aioDocX = window.mozInnerScreenX;
   aioDocY = window.mozInnerScreenY;
-  
-  var insertionNode;
   
   // insert trail outside viewable document to avoid DOM delays on large documents
   switch (aioWindowType) {
@@ -31,35 +30,17 @@ function aioStartTrail(e) {
   if (!insertionNode) {
 	return;
   }
-
-  aioTrailCont = document.createElementNS(xhtmlNS, "canvas");
-  aioTrailCont.style.position = "fixed";
-  aioTrailCont.width = window.outerWidth;
-  aioTrailCont.height = window.outerHeight;
-  aioTrailCont.style.top = "0";
-  aioTrailCont.style.left = "0";
-  aioTrailCont.style.pointerEvents = "none";
   
-  insertionNode.appendChild(aioTrailCont);
-
-  aioCtx = aioTrailCont.getContext('2d');
-  aioCtx.lineWidth = aioTrailSize;
-  aioCtx.lineJoin = 'round';
-  aioCtx.lineCap = 'round';
-  aioCtx.strokeStyle = aioTrailColor;
-  
-  if (aioSmoothTrail) {
-	aioTrailPoints = [];
-    aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
-
-  } else {
-	aioCtx.beginPath();
-	aioCtx.moveTo(e.screenX - aioDocX, e.screenY - aioDocY);
-  }
+  aioTrailPoints = [];
+  aioTrailPoints.push([e.screenX - aioDocX, e.screenY - aioDocY]);
 }
 
 function aioDrawTrail(e) {
-  if (!aioTrailCont) return;
+  if (!insertionNode) return;
+  
+  if (!aioTrailCont) {
+	aioMakeTrailCanvas();
+  }
   
   if (aioSmoothTrail) {
 	// erasing all canvas and drawing all line again results in smooth line
@@ -80,6 +61,30 @@ function aioDrawTrail(e) {
   aioCtx.stroke();
 }
 
+function aioMakeTrailCanvas() {
+  aioTrailCont = document.createElementNS(xhtmlNS, "canvas");
+  aioTrailCont.style.position = "fixed";
+  aioTrailCont.width = window.outerWidth;
+  aioTrailCont.height = window.outerHeight;
+  aioTrailCont.style.top = "0";
+  aioTrailCont.style.left = "0";
+  aioTrailCont.style.pointerEvents = "none";
+  aioTrailCont.style.zIndex = 10000;
+  
+  insertionNode.appendChild(aioTrailCont);
+
+  aioCtx = aioTrailCont.getContext('2d');
+  aioCtx.lineWidth = aioTrailSize;
+  aioCtx.lineJoin = 'round';
+  aioCtx.lineCap = 'round';
+  aioCtx.strokeStyle = aioTrailColor;
+  
+  if (!aioSmoothTrail) {
+	aioCtx.beginPath();
+	aioCtx.moveTo(aioTrailPoints[0][0], aioTrailPoints[0][1]);
+  }
+}
+
 function aioEraseTrail() {
   aioTrailPoints = null;
   try {
@@ -87,4 +92,5 @@ function aioEraseTrail() {
   }
   catch(err) {}
   aioTrailCont = null;
+  insertionNode = null;
 }
