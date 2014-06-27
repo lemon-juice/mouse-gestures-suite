@@ -34,7 +34,7 @@ var aioActionTable = [
       [function(){aioViewSource(0);}, "g.viewPageSource", 0, "", ["browser", "messenger"]], // 19
       [function(){aioViewSource(1);}, "g.viewFrameSource", 0, "", ["browser", "messenger"]], // 20
       [function(){aioViewCookies();}, "g.viewSiteCookies", 0, "", ["browser"]], // 21
-      [function(){BrowserPageInfo();}, "g.pageInfo", 0, "", ["browser", "messenger"]], // 22
+      [function(){aioPageInfo();}, "g.pageInfo", 0, "", ["browser", "messenger"]], // 22
       [function(){aioOpenConsole();}, "g.jsConsole", 0, "", null], // 23
       [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 24
       [function(){aioBookmarkCurrentPage();}, "g.addBookmark", 0, "", ["browser"]], // 25
@@ -193,7 +193,12 @@ function aioBackForward(back) {
   if (aioWindowType == 'messenger') {
     back ? goDoCommand('cmd_goBack') : goDoCommand('cmd_goForward');
   } else {
-    back ? BrowserBack() : BrowserForward();
+    if (aioGestureTab) {
+      var history = aioGestureTab.linkedBrowser.contentWindow.history;
+      back ? history.back() : history.forward();
+    } else {
+      back ? BrowserBack() : BrowserForward();
+    }
     content.focus();
   }
 }
@@ -256,7 +261,16 @@ function aioPrintPreview() {
 function aioReload(skipCache) {
   switch (aioWindowType) {
     case "browser":
-      skipCache ? BrowserReloadSkipCache() : BrowserReload();
+      if (aioGestureTab) {
+        if (skipCache) {
+          aioGestureTab.linkedBrowser.reloadWithFlags(Components.interfaces.nsIWebNavigation.LOAD_FLAGS_BYPASS_CACHE);
+        } else {
+          aioGestureTab.linkedBrowser.reload();
+        }
+        
+      } else {
+        skipCache ? BrowserReloadSkipCache() : BrowserReload();
+      }
       break;
 
     case "messenger":
@@ -272,7 +286,11 @@ function aioReload(skipCache) {
 function aioStopLoading() {
   switch (aioWindowType) {
     case "browser":
-      BrowserStop();
+      if (aioGestureTab) {
+        aioGestureTab.linkedBrowser.stop();
+      } else {
+        BrowserStop();
+      }
       break;
 
     case "messenger":
@@ -781,7 +799,11 @@ function aioCloseCurrTab(lastTabClosesWindow) {
   switch (aioWindowType) {
     case "browser":
       if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) {
-        aioContent.removeCurrentTab();
+        if (aioGestureTab) {
+          aioContent.removeTab(aioGestureTab);
+        } else {
+          aioContent.removeCurrentTab();
+        }
       } else if (typeof(BrowserCloseWindow) == "function") {
         BrowserCloseWindow();
       } else {
@@ -838,11 +860,7 @@ function aioGotoLastTab() {
 
 function aioRemoveAllTabsBut() {
   if (aioWindowType == 'browser') {
-    if (aioIsFx) {
-      gBrowser.removeAllTabsBut(aioContent.mCurrentTab);
-    } else {
-      BrowserCloseOtherTabs();
-    }
+    gBrowser.removeAllTabsBut(aioGestureTab ? aioGestureTab : aioContent.mCurrentTab);
   }
 }
 
@@ -900,7 +918,8 @@ function aioSanitizeUrl(url) {
 function aioDupTab(reverseBg) {
   switch (aioWindowType) {
     case "browser":
-      aioLinkInTab(window.content.document.location.href, true, false, reverseBg);
+      var url = aioGestureTab ? aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
+      aioLinkInTab(url, true, false, reverseBg);
       break;
     
     case "messenger":
@@ -1287,10 +1306,14 @@ function aioDebugProps(obj) {
   alert(s);
 }
 
+function aioPageInfo() {
+  BrowserPageInfo(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : null);
+}
+
 function aioFrameInfo() {
   var targetDoc = aioSrcEvent.target.ownerDocument;
   if (targetDoc.defaultView.frameElement) BrowserPageInfo(targetDoc); // it's a frame
-  else BrowserPageInfo();
+  else BrowserPageInfo(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : null);
 }
 
 function aioShowHideStatusBar() {
@@ -1303,8 +1326,11 @@ function aioViewSource(frame) {
     goDoCommand("cmd_viewPageSource");
     
   } else {
-    if (frame) BrowserViewSourceOfDocument(aioSrcEvent.target.ownerDocument);
-    else BrowserViewSourceOfDocument(window.content.document);
+    if (frame) {
+      BrowserViewSourceOfDocument(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : aioSrcEvent.target.ownerDocument);
+    } else {
+      BrowserViewSourceOfDocument(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
+    }
   }
 }
 
@@ -1513,7 +1539,7 @@ function aioSavePageAs() {
   switch (aioWindowType) {
     case "browser":
     case "source":
-      saveDocument(window.content.document);
+      saveDocument(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
       break;
     
     case "messenger":
@@ -1527,14 +1553,17 @@ function aioDetachTab() {
   var tabLength = gBrowser.tabContainer.childNodes.length;
   if (tabLength <= 1) return;
 
-  _aioDetachTab(gBrowser.selectedTab);
+  _aioDetachTab(aioGestureTab ? aioGestureTab : gBrowser.selectedTab);
 }
 
 // detach next tab and double stack windows
 function aioDetachTabAndDoubleStack() {
   var tabLength = gBrowser.tabContainer.childNodes.length;
   if (tabLength <= 1) return;
-
+  
+  if (aioGestureTab) {
+    aioContent.selectedTab = aioGestureTab;
+  }
   var curTabIndex = gBrowser.tabContainer.selectedIndex;
   var tabToDetach;
   

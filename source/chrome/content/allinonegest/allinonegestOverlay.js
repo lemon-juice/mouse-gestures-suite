@@ -51,6 +51,7 @@ var aioFxV18;
 var aioWindowType, aioIsFx = false;
 var aioDefNextSearch, aioDefPrevSearch;
 var aioTabFocusHistory = [];
+var aioGestureTab;  // contains reference to tab if gesture was performed on a tab
 
 // global variables for rocker gesture
 const aioOpp = [aioRMB, aioNoB, aioLMB, aioNoB];
@@ -435,7 +436,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	switch (aioWindowType) {
 	  case 'browser':
 		aioContent = document.getElementById("content");
-		aioRendering = aioContent.mPanelContainer;
+		aioRendering = aioContent;
 		aioStatusBar = document.getElementById("statusbar-display");
 		if (!aioStatusBar) {
 		  aioStatusBar = gBrowser.getStatusPanel();
@@ -685,6 +686,12 @@ function aioMouseDown(e) {
 	aioDisableClickHeatEvents(e);
   }
   
+  aioGestureTab = null;
+  
+  if (aioWindowType == "browser" && (e.originalTarget.nodeName == 'tab' || e.originalTarget.nodeName == 'xul:tab')) {
+	aioGestureTab = e.originalTarget;
+  }
+  
   aioShowContextMenu = false;
   aioBackRocking = false;
   if (e.button == aioOpp[aioDownButton] && aioRockEnabled) {
@@ -739,7 +746,7 @@ function aioMouseDown(e) {
         // it can be the start of a wheelscroll gesture as well
         if (aioWheelEnabled && (aioWindowType == "browser" || aioWindowType == "messenger" || aioWindowType == "source")) {
            preventDefaultAction = preventDefaultAction || e.button != aioLMB;
-           aioTabCount = aioRendering.childNodes.length;
+           aioTabCount = aioContent.mPanelContainer.childNodes.length;
            if (aioWheelRocker) {
               if (!aioGestInProgress) {
                  aioSrcEvent = e;
@@ -972,18 +979,31 @@ function _aioCreatePU(arg1, arg2, arg3) {
   if (this.popupType == "popup") {
     for (var i = this.popupStart; i < this.popupStart + this.popupLength; ++i) {
       popupElem = document.createElementNS(xulNS, "menuitem");
-      if (arg1)
+      if (arg1) {
          label = getWebNavigation().sessionHistory.getEntryAtIndex(i, false).title;
-      else label = aioContent.mTabContainer.childNodes[i].label;
+      }
+      else {
+		if (aioContent.mTabContainer.childNodes[i]) {
+		  label = aioContent.mTabContainer.childNodes[i].label;
+		} else {
+		  label = aioContent.ownerDocument.title;
+		}
+	  }
 
       popupElem.setAttribute("class", "menuitem-iconic");
       popupElem.setAttribute("style", "max-width:40em;");
       popupElem.setAttribute("label", label);
-      if (arg1)
+      if (arg1) {
          img = (i < this.initialItem) ? aioBackURL : (i == this.initialItem) ?
                 aioContent.mTabContainer.childNodes[aioContent.mTabContainer.selectedIndex].getAttribute("image") : aioNextURL;
-      else img = aioContent.mTabContainer.childNodes[i].getAttribute("image");
-      popupElem.setAttribute("image", img);
+	  } else {
+		
+		if (aioContent.mTabContainer.childNodes[i]) {
+		  img = aioContent.mTabContainer.childNodes[i].getAttribute("image");
+		}
+	  }
+      if (img) popupElem.setAttribute("image", img);
+	  
       if (this.lastFirst) this.scrollerNode.insertBefore(popupElem, this.scrollerNode.firstChild);
       else this.scrollerNode.appendChild(popupElem);
     }
@@ -1150,7 +1170,7 @@ function aioLinkTTEnd(e) {
 }
 
 function aioSwitchTabs(e) {
-  if (typeof(TabbrowserService) == "object" || aioRendering.childNodes.length <= 1)  return;
+  if (typeof(TabbrowserService) == "object" || aioContent.mPanelContainer.childNodes.length <= 1)  return;
   aioNukeEvent(e);
   aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == aioReverseScroll ? -1 : 1, true);
 }
