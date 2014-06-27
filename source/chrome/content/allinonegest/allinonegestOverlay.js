@@ -547,14 +547,21 @@ function aioIsUnformattedXML(aDoc) {
 }
 
 function aioContextMenuEnabler(e) {
-  if (!aioShowContextMenu && e.originalTarget.nodeName == "menupopup" && e.originalTarget.id
-          && (e.originalTarget.id == "contentAreaContextMenu"
-          || (e.originalTarget.id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
-          || e.originalTarget.id == "viewSourceContextMenu"
-          || e.originalTarget.id == "addonitem-popup")
+  //dump("\nctx: " + debugAllAttr(e.originalTarget) + "\n");
+  if (!aioShowContextMenu && (e.originalTarget.nodeName == "menupopup" || e.originalTarget.nodeName == "xul:menupopup")) {
+	
+	var id = e.originalTarget.id ? e.originalTarget.id : null;
+	
+	if (id == "contentAreaContextMenu"
+	  || (id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
+	  || id == "viewSourceContextMenu"
+	  || id == "addonitem-popup"
+	  || id == "toolbar-context-menu" // Fx
+	  || id == "tabContextMenu" // Fx
+	  || e.originalTarget.getAttribute('anonid') == "tabContextMenu" // SM
     ) {
-    
-    e.preventDefault(); e.stopPropagation();
+	  e.preventDefault(); e.stopPropagation();
+	}
   }
 }
 
