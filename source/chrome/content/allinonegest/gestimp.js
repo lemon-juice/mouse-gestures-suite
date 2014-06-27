@@ -615,8 +615,14 @@ function aioSelectionAsURL(reverseBg) {
   url = url.replace(/[\.,\'\"\)\?!>\]]+$/, ""); // strip bad ending characters
   url = url.replace(/\\/g,"/"); // change \ to /
   url = url.trim();
+  
+  var invalidUrl = (!url || !/\./.test(url) || /\s/.test(url));
+  
+  if (url.indexOf("about:") == 0) {
+    invalidUrl = false;
+  }
 
-  if (!url || !/\./.test(url) || /\s/.test(url)) {
+  if (invalidUrl) {
     // invalid address, do web search instead
     aioSelectionAsSearchTerm(true, reverseBg);
     return;
