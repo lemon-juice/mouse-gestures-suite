@@ -17,7 +17,7 @@ const xmlNS = "http://www.w3.org/XML/1998/namespace";
 const xulNS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const aioKProperties = "chrome://allinonegest/locale/allinonegest.properties";
 // global variables for mouse gestures
-var aioContent, aioRendering, aioContextPopup, aioMainWin, aioStatusBar;
+var aioContent, aioRendering, aioTabRendering, aioContextPopup, aioMainWin, aioStatusBar;
 var aioIsWin, aioIsMac, aioIsNix;
 var aioFirstInit = true;
 var aioGrid = 15; // minimal gesture has to be 'grid' pixels long
@@ -437,6 +437,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	  case 'browser':
 		aioContent = document.getElementById("content");
 		aioRendering = aioContent;
+		aioTabRendering = document.getElementById("TabsToolbar"); // Fx
 		aioStatusBar = document.getElementById("statusbar-display");
 		if (!aioStatusBar) {
 		  aioStatusBar = gBrowser.getStatusPanel();
@@ -475,6 +476,10 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioMainWin = document.getElementById("main-window");
     
      aioRendering.addEventListener("mousedown", aioMouseDown, true);
+	 if (aioTabRendering) {
+	  aioTabRendering.addEventListener("mousedown", aioMouseDown, true);
+	 }
+	 
      document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
 
      window.addEventListener("mouseup", aioMouseUp, true);
@@ -688,8 +693,21 @@ function aioMouseDown(e) {
   
   aioGestureTab = null;
   
-  if (aioWindowType == "browser" && (e.originalTarget.nodeName == 'tab' || e.originalTarget.nodeName == 'xul:tab')) {
-	aioGestureTab = e.originalTarget;
+  if (aioWindowType == "browser") {
+	var tg = e.originalTarget;
+	if (tg.nodeName == 'xul:tab' ||
+		(tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
+	  // tab in SM
+	  aioGestureTab = e.originalTarget;
+	
+	} else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
+	  // tab in Fx
+	  var tab = tg.parentNode.parentNode.parentNode;
+	  
+	  if (tab.nodeName == 'tab') {
+		aioGestureTab = tab;
+	  }
+	}
   }
   
   aioShowContextMenu = false;
