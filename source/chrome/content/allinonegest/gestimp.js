@@ -1323,8 +1323,29 @@ function aioFrameInfo() {
 }
 
 function aioShowHideStatusBar() {
+  var bar = document.getElementById("status4evar-status-bar");
+  if (bar) {
+    bar.collapsed = !bar.collapsed;
+    return;
+  }
+  
+  var bar = document.getElementById("ctraddon_addon-bar");
+  if (bar) {
+    bar.collapsed = !bar.collapsed;
+    return;
+  }
+  
+  var bar = document.getElementById("addon-bar");
+  if (bar) {
+    bar.collapsed = !bar.collapsed;
+    return;
+  }
+  
   var bar = document.getElementById("status-bar");
-  if (bar) bar.hidden = !bar.hidden;
+  if (bar) {
+    bar.hidden = !bar.hidden;
+    return;
+  }
 }
 
 function aioViewSource(frame) {
