@@ -42,7 +42,7 @@ var aioSingleNewWindow, aioOpenLinkInNew, aioPanToAS, aioReverseScroll;
 var aioShowTitletip, aioTTHover, aioShiftForTitle, aioTitleDelay, aioTitleDuration;
 var aioScrollAlaAcrobat, aioNextsString, aioPrevsString;
 var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
-var aioGoUpInNewTab, aioNoHorizScroll, aioNoGestureOnFlash;
+var aioGoUpInNewTab, aioNoHorizScroll;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
 var aio2Buttons;  // .... prefs
@@ -369,8 +369,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioSingleNewWindow=aioPref.getBoolPref("singleWindow");}, function(){aioPref.setBoolPref("singleWindow",false);}, function(){return false;}],
      [function(){aioOpenLinkInNew=aioPref.getBoolPref("openLinkInNew");}, function(){aioPref.setBoolPref("openLinkInNew",true);}, function(){return false;}],
      [function(){aioGoUpInNewTab=aioPref.getBoolPref("goUpInNewTab");}, function(){aioPref.setBoolPref("goUpInNewTab",false);}, function(){return false;}],
-     [function(){aioNoGestureOnFlash=aioPref.getBoolPref("noGestOnFlash");}, function(){aioPref.setBoolPref("noGestOnFlash",true);}, function(){return false;}],
-     [function(){aioReverseScroll=aioPref.getBoolPref("reverseScrolling");}, function(){aioPref.setBoolPref("reverseScrolling",false);}, function(){return false;}],
+      [function(){aioReverseScroll=aioPref.getBoolPref("reverseScrolling");}, function(){aioPref.setBoolPref("reverseScrolling",false);}, function(){return false;}],
      [function(){aioStartOnLinks=aioPref.getBoolPref("evenOnLink");}, function(){aioPref.setBoolPref("evenOnLink",false);}, function(){return false;}],
      [function(){aioShowTitletip=aioPref.getBoolPref("showLinkTooltip");}, function(){aioPref.setBoolPref("showLinkTooltip",false);}, function(){return false;}],
      [function(){aioTTHover=aioPref.getBoolPref("TTHover");}, function(){aioPref.setBoolPref("TTHover",true);}, function(){return false;}],
@@ -743,10 +742,6 @@ function aioMouseDown(e) {
      }
   }
   else {
-     if (aioNoGestureOnFlash && e.button == aioRMB) {
-	    var targetName = e.target.localName.toLowerCase();
-	    if (targetName == "object" || targetName == "embed") return;
-     }
      if (aioTrigger(e, false)) {
         var preventDefaultAction = false;
         if (aioGestEnabled && aioIsKeyOK(e)) {
