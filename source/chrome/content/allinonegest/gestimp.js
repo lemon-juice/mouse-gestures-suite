@@ -1103,7 +1103,9 @@ function aioDupWindow(background) {
   switch (aioWindowType) {
     case "browser":
     case "source":
-      aioOpenNewWindow(window.content.document.location.href, background, true);
+      var url = aioGestureTab ? aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
+      
+      aioOpenNewWindow(url, background, true);
       break;
     
     case "messenger":
