@@ -1872,7 +1872,7 @@ function aioToggleSidebar() {
   switch (aioWindowType) {
     case "browser":
       if (aioIsFx) {
-        toggleSidebar('viewHistorySidebar');
+        toggleSidebar('viewBookmarksSidebar');
       } else {
         SidebarShowHide();
       }
