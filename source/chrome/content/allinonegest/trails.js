@@ -129,11 +129,13 @@ function aioSetCtxProperties() {
 }
 
 function aioIndicateGestureTimeout() {
-  if (aioTrailCont) {
-	try {
+ try {
+   if (aioTrailCont) {
 	  aioTrailCont.style.opacity = 0.5;
-	} catch(err) {}
-  }
+   }
+   aioStatusBar.label += "  [X]";
+  
+  } catch(err) {}
 }
 
 function aioEraseTrail() {
