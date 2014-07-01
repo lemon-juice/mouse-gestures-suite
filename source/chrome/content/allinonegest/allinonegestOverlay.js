@@ -606,8 +606,21 @@ function aioGestMove(e) {
      else tempMove = x_dir > 0 ? "R" : "L";
      if (!aioStrokes.length || aioStrokes[aioStrokes.length-1] != tempMove) {
         aioStrokes.push(tempMove); aioLocaleGest.push(aioShortGest[tempMove]);
-        var index = aioGestTable[aioStrokes.join("")];
-        if (index != null) aioCurrGest = aioActionTable[index][1]; else aioCurrGest = aioUnknownStr;
+		
+		var sequence = aioStrokes.join("");
+        var index = aioGestTable[sequence];
+		
+		if (index == null) {
+		   index = aioGestTable["+" + sequence.substr(-2)];
+		   if (index == null)
+			  index = aioGestTable["+" + sequence.substr(-3)];
+		}
+		
+        if (index != null) {
+		  aioCurrGest = aioActionTable[index][1];
+		} else {
+		  aioCurrGest = aioUnknownStr;
+		}
      }
      aioStatusMessage(aioGestStr + ": " + aioLocaleGest + " (" + aioCurrGest + ")", 0);
   }
