@@ -28,7 +28,7 @@ var aioActionTable = [
       [function(){aioRemoveAllTabsBut();}, "g.closeOther", 0, "", ["browser"]], // 13
       [function(){aioRestMaxWin();}, "g.restMaxWin", 1, "", null], // 14
       [function(){window.minimize();}, "g.minWin", 0, "", null], // 15
-      [function(){BrowserFullScreen();}, "g.fullScreen", 1, "", ["browser"]], // 16
+      [function(){aioFullScreen();}, "g.fullScreen", 1, "", null], // 16
       [function(shiftKey){aioSelectionAsURL(shiftKey);}, "g.openSelection", 0, "", ["browser", "messenger"]], // 17
       [function(){aioCloseCurrTab(true);}, "g.closeDoc", 2, "", null], // 18
       [function(){aioViewSource(0);}, "g.viewPageSource", 0, "", ["browser", "messenger"]], // 19
@@ -1300,6 +1300,17 @@ function aioRestMaxWin() {
   if (window.windowState == STATE_MAXIMIZED) window.restore();
   else window.maximize();
  }
+
+function aioFullScreen() {
+  switch (aioWindowType) {
+    case 'browser':
+      BrowserFullScreen();
+      break;
+    
+    default:
+      aioRestMaxWin();
+  }
+}
 
 function aioDebugProps(obj) {
   var s="";
