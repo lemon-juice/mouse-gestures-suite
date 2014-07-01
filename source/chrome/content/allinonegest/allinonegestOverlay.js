@@ -22,6 +22,7 @@ var aioIsWin, aioIsMac, aioIsNix;
 var aioFirstInit = true;
 var aioGrid = 15; // minimal gesture has to be 'grid' pixels long
 var aioDelay = 1000; // delay before aborting gesture
+var aioDelayTO;
 var aioGestInProgress = false;
 var aioOldX, aioOldY; // old coords from previous gesture stroke
 var aioGestStr, aioUnknownStr, aioCurrGest;
@@ -592,6 +593,12 @@ function aioGestMove(e) {
   //only add if movement enough to make a gesture
   if (absX < aioGrid && absY < aioGrid) return;
   aioLastEvtTime = new Date(); // e.timeStamp is broken on Linux
+  
+  if (aioDelayTO) {
+	clearTimeout(aioDelayTO);
+  }  
+  aioDelayTO = setTimeout(aioIndicateGestureTimeout, aioDelay);
+  
   aioDrawTrail(e);
   var pente = absY <= 5 ? 100 : absX / absY; // 5 should be grid/tangent(60)
   if (pente < 0.58 || pente > 1.73) { //between 30° & 60°, wait
@@ -868,9 +875,8 @@ function aioMouseUp(e) {
   
   if (aioGestInProgress) {
      var lastgesture = aioStrokes.join("");
-     // @MOD: this killed right-click events on pages
-     // if (button != aioLMB || lastgesture) aioNukeEvent(e); // XXX to be investigated
-     if (lastgesture) aioNukeEvent(e); // XXX to be investigated
+	 
+     if (lastgesture) aioNukeEvent(e);
      aioEraseTrail();
      if (lastgesture) {
         window.addEventListener("click", aioGestClickHandler, true);

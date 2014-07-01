@@ -53,6 +53,7 @@ function aioDrawTrail(e) {
   if (!aioTrailCont) {
 	aioMakeTrailCanvas();
   }
+  aioTrailCont.style.opacity = 1;
   
   var x = e.screenX - aioDocX;
   var y = e.screenY - aioDocY;
@@ -125,6 +126,14 @@ function aioSetCtxProperties() {
   aioCtx.lineJoin = 'round';
   aioCtx.lineCap = 'round';
   aioCtx.strokeStyle = aioTrailColor;
+}
+
+function aioIndicateGestureTimeout() {
+  if (aioTrailCont) {
+	try {
+	  aioTrailCont.style.opacity = 0.5;
+	} catch(err) {}
+  }
 }
 
 function aioEraseTrail() {
