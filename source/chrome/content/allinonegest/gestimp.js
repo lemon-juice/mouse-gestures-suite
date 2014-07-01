@@ -178,7 +178,7 @@ function aioFireGesture(aGesture, shiftKey) {
          aioStatusMessage(aioActionTable[index][1], 2000);
          aioActionTable[index][0](shiftKey);
        } else {
-         aioStatusMessage(aioActionTable[index][1] + " - " + aioGetStr("g.aborted"), 2000);
+         aioStatusMessage(aioActionTable[index][1] + " — " + aioGetStr("g.aborted"), 2000);
        }
      }
      catch(err) {}

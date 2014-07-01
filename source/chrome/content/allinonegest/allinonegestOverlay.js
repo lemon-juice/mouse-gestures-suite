@@ -596,7 +596,7 @@ function aioGestMove(e) {
   
   if (aioDelayTO) {
 	clearTimeout(aioDelayTO);
-  }  
+  }
   aioDelayTO = setTimeout(aioIndicateGestureTimeout, aioDelay);
   
   aioDrawTrail(e);
@@ -753,6 +753,7 @@ function aioMouseDown(e) {
         }
      }
      aioKillGestInProgress();
+	 aioStatusMessage("", 0);
      aioContent.removeEventListener("DOMMouseScroll", aioWheelNav, true);
      if (!aioRockMultiple[func] || (aioRockMultiple[func] == 2 && aioRockMode == 0)) aioDownButton = aioNoB;
      else { // multiple ops allowed
@@ -866,6 +867,10 @@ function aioDisplayContextMenu(e) {
 }
 
 function aioMouseUp(e) {
+  if (aioDelayTO) {
+	clearTimeout(aioDelayTO);
+  }
+  
   if (aioIsMac && e.button == aioLMB && e.ctrlKey) var button = aioRMB;
   else button = e.button;
   if (aioBackRocking && button == aioLMB) {
