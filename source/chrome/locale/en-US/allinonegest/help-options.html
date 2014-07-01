@@ -109,7 +109,37 @@
         enabled.</li>
     </ul>
     <h2 id="tab2">Gestures Customization</h2>
-    <p><strong>Gesture</strong> column - shows your currently defines gestures.</p>
+    <span style="font-weight: bold;">The Shift key</span> can be used with some
+    gestures that open a new tab or window to reverse the opening in background
+    versus foreground – just like you can use Shift for the same purpose when
+    middle-clicking on links. For example, action <em>{g.browserOpenTabInFg}</em>
+    normally opens a new foreground tab but if performed with Shift pressed it
+    will open a tab in background. Conversely, if an action opens a new
+    tab/window in foreground then the Shift key will change it to open in
+    background. Actions affected by the Shift key are marked in their
+    descriptions below.
+    <p><span style="font-weight: bold;">Some gestures can be initiated on
+        browser tabs</span> and then they will apply to the target tab even if
+      it is not active. Here is the list of actions that can affect targeted
+      tabs via gestures:</p>
+    <ul>
+      <li><em>{g.closeTab}</em></li>
+      <li><em>{g.closeDoc}</em></li>
+      <li><em>{g.closeOther}</em></li>
+      <li><em>{g.browserBack}</em></li>
+      <li><em>{g.browserForward}</em></li>
+      <li><em>{g.browserReload}</em></li>
+      <li><em>{g.browserReloadSkipCache}</em> </li>
+      <li><em>{g.browserStop}</em></li>
+      <li><em>{g.reloadFrame}</em> (applies to top frame when invoked on tab)</li>
+      <li><em>{g.duplicateTab}</em></li>
+      <li><em>{g.duplicateWindow}</em></li>
+      <li><em>{g.detachTab}</em></li>
+      <li><em>{g.detachTabAndDoubleStack}</em> </li>
+      <li><em>{g.viewPageSource}</em></li>
+      <li><em>{g.viewFrameSource}</em> (applies to top frame when invoked on
+        tab)</li>
+    </ul>
     <p><strong>Available in</strong> column - shows in what window types the
       function is available:</p>
     <ul>
@@ -120,21 +150,14 @@
         message page)</li>
       <li><em>{abbreviation.mailcompose}</em> - mail compose window</li>
     </ul>
-    <p>The Shift key can be used with some gestures that open a new tab or
-      window to reverse the opening in background versus foreground – just like
-      you can use Shift for the same purpose when middle-clicking on links. For
-      example, action <em>{g.browserOpenTabInFg}</em> normally opens a new
-      foreground tab but if performed with Shift pressed it will open a tab in
-      background. Conversely, if an action opens a new tab/window in foreground
-      then the Shift key will change it to open in background. Actions affected
-      by the Shift key are marked in their descriptions below.</p>
     <ul>
     </ul>
     <table class="gestlist">
       <thead>
         <tr>
-          <th>Function</th>
-          <th>Gesture</th>
+          <th style="width: 203.067px;">Function</th>
+          <th style="width: 53.9333px;">Current<br>
+            Gesture</th>
           <th>Available in</th>
           <th>Description</th>
         </tr>
