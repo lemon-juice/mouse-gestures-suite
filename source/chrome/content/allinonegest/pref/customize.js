@@ -234,6 +234,7 @@ var gestActionTable = [
       "g.doubleStack2Windows", //93
       "g.toggleSidebar", //94
       "g.openPrivateWindow", //95
+      "g.toggleBookmarksToolbar", //96
     ];
 var rockerGestName = [
       "g.leftRocker",

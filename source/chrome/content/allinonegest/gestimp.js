@@ -108,6 +108,7 @@ var aioActionTable = [
       [function(){aioDoubleStackWindows();}, "g.doubleStack2Windows", 0, "", null], //93
       [function(){aioToggleSidebar();}, "g.toggleSidebar", 0, "", ["browser", "messenger"]], //94
       [function(shiftKey){aioOpenNewWindow(null, shiftKey, false, true);}, "g.openPrivateWindow", 0, "", null], //95
+      [function(){aioToggleBookmarksToolbar();}, "g.toggleBookmarksToolbar", 0, "", ["browser"]], //96
       
 // Unused legacy actions:
 //      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
@@ -1358,6 +1359,17 @@ function aioShowHideStatusBar() {
   if (bar) {
     bar.hidden = !bar.hidden;
     return;
+  }
+}
+
+function aioToggleBookmarksToolbar() {
+  var bar = document.getElementById("PersonalToolbar");
+  if (bar) {
+    if (aioIsFx) {
+      window.setToolbarVisibility(bar, bar.collapsed);
+    } else {
+      bar.hidden = !bar.hidden;
+    }
   }
 }
 
