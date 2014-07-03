@@ -32,7 +32,7 @@ var aioOnLink = []; // array of objects representing the links traversed during 
 var aioOnImage = null; // contains an image DOM node
 var aioSrcEvent; // event which started the active gesture
 var aioBundle; // String bundle for localized strings
-var aioShowContextMenu = false;
+var aioShowContextMenu = true;
 var aioGestEnabled, aioRockEnabled;  // prefs ....
 var aioTrailEnabled, aioTrailColor, aioTrailSize, aioSmoothTrail, aioTrailOpacity;
 var aioWheelEnabled, aioScrollEnabled, aioNoScrollMarker, aioStartOnLinks;
@@ -483,6 +483,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
      document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
 
      window.addEventListener("mouseup", aioMouseUp, true);
+     window.addEventListener("mouseup", function() {
+	  aioShowContextMenu = true;
+	 }, true);
      window.addEventListener("draggesture", aioDragGesture, true);
      window.addEventListener("unload", aioWindowUnload, false);
      window.addEventListener("keypress", aioKeyPressed, true);
@@ -547,7 +550,8 @@ function aioIsUnformattedXML(aDoc) {
 }
 
 function aioContextMenuEnabler(e) {
-  //dump("\nctx: " + debugAllAttr(e.originalTarget) + "\n");
+  //dump("\ntarget: " + e.target.nodeName + "; id=" + e.target.id + "\n");
+  //dump("ctx: " + e.originalTarget.nodeName + "; id=" + e.originalTarget.id + "\n");
   if (!aioShowContextMenu && (e.originalTarget.nodeName == "menupopup" || e.originalTarget.nodeName == "xul:menupopup")) {
 	
 	var id = e.originalTarget.id ? e.originalTarget.id : null;
@@ -556,11 +560,12 @@ function aioContextMenuEnabler(e) {
 	  || (id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
 	  || id == "viewSourceContextMenu"
 	  || id == "addonitem-popup"
-	  || id == "toolbar-context-menu" // Fx
+	  || (aioIsFx && id == "toolbar-context-menu") // Fx
 	  || id == "tabContextMenu" // Fx
 	  || e.originalTarget.getAttribute('anonid') == "tabContextMenu" // SM
     ) {
 	  e.preventDefault(); e.stopPropagation();
+	  //dump("ctx: preventDefault\n");
 	}
   }
 }
@@ -896,6 +901,7 @@ function aioMouseUp(e) {
 	 
      if (lastgesture) aioNukeEvent(e);
      aioEraseTrail();
+	 
      if (lastgesture) {
         window.addEventListener("click", aioGestClickHandler, true);
 		var shiftKey = e.shiftKey;
