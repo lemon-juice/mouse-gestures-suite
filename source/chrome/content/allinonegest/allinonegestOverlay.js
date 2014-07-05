@@ -768,45 +768,56 @@ function aioMouseDown(e) {
      }
   }
   else {
-     if (aioTrigger(e, false)) {
-        var preventDefaultAction = false;
-        if (aioGestEnabled && aioIsKeyOK(e)) {
-           aioSrcEvent = e;
-           // Don't start gesture on scrollbars, input elements, etc.
-           // @MOD: added " || e.button != aioLMB)" - to enable on inputs on right and middle buttons
-           targetName  = e.target.nodeName.toLowerCase();
-           if ((aioIsAreaOK(e, false) || e.button != aioLMB) && targetName != 'toolbarbutton'
-               && !aioGestInProgress) {
-              var canGesture = true;
-              if (e.button == aioLMB) canGesture = aioGesturableURI();
-              preventDefaultAction = e.button != aioLMB || (!aioLeftDefault && canGesture) ||
-                           targetName == "html" || targetName == "body" || e.target.ownerDocument == aioContent.ownerDocument;
-              aioGestInProgress = true;
-              aioAddLink(e);  // Check if started over a link
-              aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
-              if (aioTrailEnabled) aioStartTrail(e);
-              window.addEventListener("mousemove", aioGestMove, true);
-           }
-           else preventDefaultAction = e.button != aioLMB;
-        }
-        // it can be the start of a wheelscroll gesture as well
-        if (aioWheelEnabled && (aioWindowType == "browser" || aioWindowType == "messenger" || aioWindowType == "source")) {
-           preventDefaultAction = preventDefaultAction || e.button != aioLMB;
-           aioTabCount = (aioWindowType == "browser") ? aioContent.mPanelContainer.childNodes.length : 0;
-           if (aioWheelRocker) {
-              if (!aioGestInProgress) {
-                 aioSrcEvent = e;
-                 aioAddLink(e);
-              }
-           }
-           else aioTTNode = aioFindLink(e.target, false);
-           if (aioWheelRocker || aioTabCount >= 1 || aioTTNode)
-              aioContent.addEventListener("DOMMouseScroll", aioWheelNav, true);
-        }
-        // @MOD: this killed right-click events on pages
-        // if (preventDefaultAction) aioNukeEvent(e);
-        if (preventDefaultAction && e.button == aioLMB) aioNukeEvent(e);
-        aioOldX = e.screenX; aioOldY = e.screenY;
+	if (e.button == aioRMB) {
+	  // turn off gesture on active flash because right click event may be triggered
+	  // and the gesture may end up unfinished after choosing a context menu flash option
+	  var targetName = e.target.localName.toLowerCase();
+	  if ((targetName == "object" || targetName == "embed")
+		&& e.target.actualType == "application/x-shockwave-flash"
+		&& e.target.activated) {
+	    return;
+	  }
+    }
+	 
+    if (aioTrigger(e, false)) {
+       var preventDefaultAction = false;
+       if (aioGestEnabled && aioIsKeyOK(e)) {
+         aioSrcEvent = e;
+         // Don't start gesture on scrollbars, input elements, etc.
+         // @MOD: added " || e.button != aioLMB)" - to enable on inputs on right and middle buttons
+         targetName  = e.target.nodeName.toLowerCase();
+         if ((aioIsAreaOK(e, false) || e.button != aioLMB) && targetName != 'toolbarbutton'
+              && !aioGestInProgress) {
+             var canGesture = true;
+             if (e.button == aioLMB) canGesture = aioGesturableURI();
+             preventDefaultAction = e.button != aioLMB || (!aioLeftDefault && canGesture) ||
+                          targetName == "html" || targetName == "body" || e.target.ownerDocument == aioContent.ownerDocument;
+             aioGestInProgress = true;
+             aioAddLink(e);  // Check if started over a link
+             aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
+             if (aioTrailEnabled) aioStartTrail(e);
+             window.addEventListener("mousemove", aioGestMove, true);
+          }
+          else preventDefaultAction = e.button != aioLMB;
+       }
+       // it can be the start of a wheelscroll gesture as well
+       if (aioWheelEnabled && (aioWindowType == "browser" || aioWindowType == "messenger" || aioWindowType == "source")) {
+          preventDefaultAction = preventDefaultAction || e.button != aioLMB;
+          aioTabCount = (aioWindowType == "browser") ? aioContent.mPanelContainer.childNodes.length : 0;
+          if (aioWheelRocker) {
+             if (!aioGestInProgress) {
+                aioSrcEvent = e;
+                aioAddLink(e);
+             }
+          }
+          else aioTTNode = aioFindLink(e.target, false);
+          if (aioWheelRocker || aioTabCount >= 1 || aioTTNode)
+             aioContent.addEventListener("DOMMouseScroll", aioWheelNav, true);
+       }
+       // @MOD: this killed right-click events on pages
+       // if (preventDefaultAction) aioNukeEvent(e);
+       if (preventDefaultAction && e.button == aioLMB) aioNukeEvent(e);
+       aioOldX = e.screenX; aioOldY = e.screenY;
      }
      else {
         if (aioTrigger(e, true) && aioDownButton == aioNoB && aioScrollEnabled && aioIsAreaOK(e, true) &&
@@ -1710,7 +1721,7 @@ function _aioRemoveEventsForFunction(target, func) {
 //function aioDebugObj(o) {
 //  var s="";
 //  for (var key in o) {
-//	s += key + "=" + o[key] + "\n";
+//	s += key + "=" + o[key] + "; ";
 //  }
 //  return s;
 //}
