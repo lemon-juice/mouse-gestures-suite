@@ -17,8 +17,8 @@
       <li><a href="#tab2">Gestures Customization</a></li>
       <li><a href="#tab3">Advanced Prefs #1</a></li>
       <li><a href="#tab4">Advanced Prefs #2</a></li>
-      <li><a href="#tab5">Saving and porting Mouse Gesture preferences</a></li>
-      <li><a href="#tab6">Restoring defaults</a></li>
+      <li><a href="#exp-imp">Exporting, importing Mouse Gesture preferences
+          &amp; restoring defaults</a></li>
     </ol>
     <h2 id="tab1">General Preferences</h2>
     <strong>Enable</strong> - enable/disable main features:<br>
@@ -1150,44 +1150,11 @@
         Preferences</a>.</p>
     <p><strong>Tab scrolling</strong> - enabled to reverse scrolling direction
       of tabs if <em>Scroll wheel in tab bar</em> is enabled.</p>
-    <h2 id="tab5">Saving and porting Mouse Gesture preferences (for advanced
-      users)</h2>
-    <p>At the moment this extension doesn't offer exporting and importing
-      preferences but you can do it manually:</p>
-    <ol>
-      <li>Locate your <a target="_blank" href="http://kb.mozillazine.org/Profile_folder_-_SeaMonkey">profile
-
-
-
-
-
-
-          folder</a>.</li>
-      <li>Close Seamonkey.</li>
-      <li>Open prefs.js in a notepad (backup prefs.js before making any changes
-        in case something goes wrong).</li>
-      <li>Preferences for mouse gestures are those starting with
-        "allinonegest.". Find a block of lines like this:<br>
-        <code>user_pref("allinonegest.TTHover", true);<br>
-          user_pref("allinonegest.autoscrollCursor", true);<br>
-          ...</code></li>
-      <li>Select and copy all lines containing mouse gesture preferences. You
-        can save them in a new file for future use or import to another profile
-        or Seamonkey installation.</li>
-      <li>To import preferences to another profile, open prefs.js of that
-        profile and paste the preferences into the file. If "allinonegest."
-        preferences already exist delete them first so you don't end up with
-        duplicates. It doesn't matter if mouse gestures are already installed or
-        not in the new profile, just make sure Seamonkey is not running when you
-        modify the file.</li>
-    </ol>
-    <h2 id="tab6">Restoring defaults</h2>
-    <p>In order to restore default mouse gesture definitions, go to the <strong>Gestures
-        Customization</strong> tab and press the <em>Restore defaults</em>
-      button.</p>
-    <p>If you want to restore all mouse gesture options to their defaults close
-      Seamonkey and delete all "allinonegest." preferences in prefs.js (see
-      previous section for details). When you next run Seamonkey the default
-      preferences will be restored.</p>
+    <h2 id="exp-imp">Exporting, importing Mouse Gesture preferences &amp;
+      restoring defaults</h2>
+    Use the buttons in the <em>Import/Export</em> group in Advanced Prefs #2.
+    These operations will apply to all mouse gesture settings including the
+    gesture definitions.<br>
+    <br>
   </body>
 </html>
