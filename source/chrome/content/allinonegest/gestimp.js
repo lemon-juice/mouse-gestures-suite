@@ -1515,12 +1515,6 @@ function aioOpenAioOptions() {
   window.openDialog(aioDir + "pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
 }
 
-function aioOpenAioOptionsDelayed(delay) {
-  setTimeout(function() {
-    aioOpenAioOptions();
-  }, delay);
-}
-
 function aioOpenBookmarksManager() {
   if (aioIsFx) {
     PlacesCommandHook.showPlacesOrganizer('AllBookmarks');

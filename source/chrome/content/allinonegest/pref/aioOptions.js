@@ -177,10 +177,7 @@ function restoreDefaultGestures() {
   pref.setCharPref("allinonegest.functionString", defaultFunctionString);
   pref.setCharPref("allinonegest.rockerString", defaultRockerString);
   
-  if (typeof window.opener.aioOpenAioOptionsDelayed == "function") {
-    window.opener.aioOpenAioOptionsDelayed(400);
-  }
-  closeWindow(true);
+  reopenPrefWindow();
 }
 
 function openHelp(tabIndex) {
@@ -482,10 +479,7 @@ function importSettings() {
   inputStream.close();
   
   if (countSet > 0) {
-    if (typeof window.opener.aioOpenAioOptionsDelayed == "function") {
-      window.opener.aioOpenAioOptionsDelayed(400);
-    }
-    closeWindow(true);
+    reopenPrefWindow();
   } else {
     alert("Error: could not import any settings from this file.");
   }
@@ -508,10 +502,7 @@ function restoreDefaultSettings() {
     aioPref.clearUserPref(name);
   }
   
-  if (typeof window.opener.aioOpenAioOptionsDelayed == "function") {
-    window.opener.aioOpenAioOptionsDelayed(400);
-  }
-  closeWindow(true);
+  reopenPrefWindow();
 }
 
 function getPrefsForImportExport() {
@@ -559,5 +550,17 @@ function getPrefsForImportExport() {
     ['wheelpref2', 'int'],
     ['wheelscrolling', 'bool'],
   ];
+}
+
+function reopenPrefWindow() {
+  window.opener.aioOpenAioOptionsDelayed = function() {
+    var openerWin = window.opener;
+    openerWin.setTimeout(function() {
+      openerWin.openDialog("chrome://allinonegest/content/pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
+    }, 400);
+  }
+  
+  window.opener.aioOpenAioOptionsDelayed();
+  closeWindow(true);
 }
 
