@@ -101,6 +101,11 @@
 <!ENTITY aioTabscroll.label    "分頁捲動">
 <!ENTITY aioTabscroll.revScroll    "當滾輪向下捲動時將分頁向左捲動">
 
+<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioImport.label "Import Settings">
+<!ENTITY aioExport.label "Export Settings">
+<!ENTITY aioRestore.label "Restore Default Settings">
+
 <!ENTITY flipper.title         "數字翻頁器規則建立器">
 <!ENTITY flipper.label         "請選擇文件網址的數字部份。">
 

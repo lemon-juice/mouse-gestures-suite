@@ -96,6 +96,11 @@
 <!ENTITY aioTabscroll.label    "标签滚动">
 <!ENTITY aioTabscroll.revScroll    "滚轮向后滚动时向左滚动标签页">
 
+<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioImport.label "Import Settings">
+<!ENTITY aioExport.label "Export Settings">
+<!ENTITY aioRestore.label "Restore Default Settings">
+
 <!ENTITY flipper.title         "数字翻页规则生成器">
 <!ENTITY flipper.label         "选择文档URL变化的数字部分.">
 

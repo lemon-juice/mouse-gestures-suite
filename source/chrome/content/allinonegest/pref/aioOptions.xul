@@ -357,6 +357,16 @@
            prefstring="allinonegest.reverseScrolling" label="&aioTabscroll.revScroll;" />
      </vbox>
    </groupbox>
+   
+   <groupbox orient="horizontal">
+     <caption label="&aioImportExport.label;"/>
+     <hbox>
+       <button label="&aioImport.label;" oncommand="importSettings();" />
+       <button label="&aioExport.label;" oncommand="exportSettings();" />
+       <button label="&aioRestore.label;" oncommand="restoreDefaultSettings();" />
+     </hbox>
+   </groupbox>
+   
    <spring flex="1"/>
    </vbox>
    <spacer flex="1"/>

@@ -96,6 +96,11 @@
 <!ENTITY aioTabscroll.label    "Tab scrolling">
 <!ENTITY aioTabscroll.revScroll    "Scroll tabs to the left when the wheel is rotated backward">
 
+<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioImport.label "Import Settings">
+<!ENTITY aioExport.label "Export Settings">
+<!ENTITY aioRestore.label "Restore Default Settings">
+
 <!ENTITY flipper.title         "Digit Flipper Schema Builder">
 <!ENTITY flipper.label         "Select the numerical part of the document URL that varies.">
 

@@ -96,6 +96,11 @@
 <!ENTITY aioTabscroll.label       "탭 이동">
 <!ENTITY aioTabscroll.revScroll   "휠을 뒤로 스크롤하면 왼쪽 탭으로 이동합니다.">
 
+<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioImport.label "Import Settings">
+<!ENTITY aioExport.label "Export Settings">
+<!ENTITY aioRestore.label "Restore Default Settings">
+
 <!ENTITY flipper.title            "숫자 변경 기능">
 <!ENTITY flipper.label            "숫자가 변경되는 부분을 선택하십시오.">
 

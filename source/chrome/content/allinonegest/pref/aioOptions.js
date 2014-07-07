@@ -285,3 +285,279 @@ function restoreLastSelectedPanel() {
   }
 }
 
+function exportSettings() {
+  savePrefs();
+  
+  var data = "# Mouse Gestures Suite settings - saved on " + new Date().toString() + "\n";
+  var aioPrefService = Components.classes["@mozilla.org/preferences-service;1"]
+                       .getService(Components.interfaces.nsIPrefService);
+  var aioPref = aioPrefService.getBranch("allinonegest.");
+  
+  var prefs = getPrefsForImportExport();
+  var name, type, val;
+  
+  try {
+    for (var i=0; i<prefs.length; i++) {
+      name = prefs[i][0];
+      type = prefs[i][1];
+      
+      switch (type) {
+        case 'bool':
+          val = aioPref.getBoolPref(name) ? 'true' : 'false';
+          break;
+        
+        case 'int':
+          val = aioPref.getIntPref(name);
+          break;
+        
+        case 'char':
+          val = aioPref.getCharPref(name);
+          break;
+        
+        default:
+          continue;
+      }
+      
+      data += name + "=" + val + "\n";    
+    }
+  } catch (err) {
+    // prefs can be non-existent after restoring defaults
+    alert("Cannot export settings. Open new browser window and try exporting again.");
+    return;
+  }
+   
+  var nsIFilePicker = Components.interfaces.nsIFilePicker;
+  var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+  //var strBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].
+  //                       getService(Components.interfaces.nsIStringBundleService);
+  //var aioBundle = strBundleService.createBundle("chrome://allinonegest/locale/allinonegest.properties");
+  
+  var windowTitle = "Save Mouse Gestures Suite settings...";
+  
+  picker.init(window, windowTitle, nsIFilePicker.modeSave);
+  picker.defaultString = "gesture-settings.txt";
+  picker.defaultExtension = "txt";
+  picker.appendFilters(nsIFilePicker.filterText);
+  picker.appendFilters(nsIFilePicker.filterAll);
+  
+  var lastDir = Application.storage.get("aioSettingsDir", null);
+  
+  if (lastDir) {
+    var file = Components.classes["@mozilla.org/file/local;1"]
+                  .createInstance(Components.interfaces.nsILocalFile);
+    file.initWithPath(lastDir);
+    picker.displayDirectory = file;
+  }
+
+  var rv = picker.show();
+  if (rv != nsIFilePicker.returnOK && rv != nsIFilePicker.returnReplace) return;
+  
+  if (!picker.file || picker.file.path.length <= 0) return;
+  
+  var segm = picker.file.path.split(/([/\\])/);
+  segm.pop();
+  segm.pop();
+  var dir = segm.join("");
+  Application.storage.set("aioSettingsDir", dir);
+  
+  const MODE_WRONLY   = 0x02;
+  const MODE_CREATE   = 0x08;
+  const MODE_TRUNCATE = 0x20;
+  const PERM_RW_RW_R  = parseInt("0664", 8);
+  
+  var outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"].
+		     createInstance(Components.interfaces.nsIFileOutputStream);
+             
+  outputStream.init(picker.file, MODE_WRONLY | MODE_CREATE | MODE_TRUNCATE, PERM_RW_RW_R, 0);
+  
+  outputStream.write(data, data.length);
+  outputStream.close();
+  alert("Settings saved!");
+}
+
+function importSettings() {
+  var aioPrefService = Components.classes["@mozilla.org/preferences-service;1"]
+                       .getService(Components.interfaces.nsIPrefService);
+  var aioPref = aioPrefService.getBranch("allinonegest.");
+
+  const MODE_RDONLY   = 0x01;
+  const PERM_R_R_R    = parseInt("0444", 8);
+  var nsIFilePicker = Components.interfaces.nsIFilePicker;
+  var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+  
+  var windowTitle = "Load Mouse Gestures Suite settings...";
+  
+  picker.init(window, windowTitle, nsIFilePicker.modeOpen);
+  picker.defaultExtension = "txt";
+  picker.appendFilters(nsIFilePicker.filterText);
+  picker.appendFilters(nsIFilePicker.filterAll);
+  
+  var lastDir = Application.storage.get("aioSettingsDir", null);
+  
+  if (lastDir) {
+    var file = Components.classes["@mozilla.org/file/local;1"]
+                  .createInstance(Components.interfaces.nsILocalFile);
+    file.initWithPath(lastDir);
+    picker.displayDirectory = file;
+  }
+
+  var rv = picker.show();
+  
+  if (rv != nsIFilePicker.returnOK || !picker.file || picker.file.path.length <= 0) return;
+  
+  
+  var ioPr = getPrefsForImportExport();
+  var prefs = {};
+  
+  for (var i=0; i<ioPr.length; i++) {
+    prefs[ioPr[i][0]] = ioPr[i][1];
+  }
+  
+  var inputStream = Components.classes["@mozilla.org/network/file-input-stream;1"].
+                    createInstance(Components.interfaces.nsIFileInputStream);
+  inputStream.init(picker.file, MODE_RDONLY, PERM_R_R_R, 0);
+  
+  var lis = inputStream.QueryInterface(Components.interfaces.nsILineInputStream);
+  var inpLine = {}, more;
+  var line, delimPos;
+  var name, val, saveVal;
+  var countSet = 0;
+  var firstLine = true;
+
+  do {
+      more = lis.readLine(inpLine);
+      line = inpLine.value.replace(/[\r\n]/g, "");
+      
+      if (firstLine && line.indexOf("# Mouse Gestures Suite settings") != 0) {
+        inputStream.close();
+        alert("Error: this is not a valid settings file.");
+        return;
+      }
+      
+      if (line.substr(0,1) != '#') {
+        delimPos = line.indexOf('=');
+        
+        if (delimPos > 0) {
+          name = line.substr(0, delimPos);
+          val = line.substr(delimPos+1);
+          saveVal = null;
+          
+          if (prefs[name]) { // only allowed prefs
+            switch (prefs[name]) {
+              case 'bool':
+                if (val == 'true') {
+                  saveVal = true;
+                } else if (val == 'false') {
+                  saveVal = false;
+                }
+                
+                if (saveVal !== null) {
+                  aioPref.setBoolPref(name, saveVal);
+                  countSet++;
+                }
+                break;
+              
+              case 'int':
+                saveVal = parseInt(val, 10);
+                
+                if (!isNaN(saveVal)) {
+                  aioPref.setIntPref(name, saveVal);
+                  countSet++;
+                }
+                break;
+             
+              case 'char':
+                saveVal = val.substr(0, 2000);
+                
+                aioPref.setCharPref(name, saveVal);
+                countSet++;
+                break;
+            }
+          }
+        }
+      }
+      firstLine = false;
+  } while (more);
+  
+  inputStream.close();
+  
+  if (countSet > 0) {
+    if (typeof window.opener.aioOpenAioOptionsDelayed == "function") {
+      window.opener.aioOpenAioOptionsDelayed(400);
+    }
+    closeWindow(true);
+  } else {
+    alert("Error: could not import any settings from this file.");
+  }
+}
+
+function restoreDefaultSettings() {
+  if (!confirm("This will reset all your mouse gesture settings including gesture definitions.\n\nContinue?")) {
+    return;
+  }
+  
+  var aioPrefService = Components.classes["@mozilla.org/preferences-service;1"]
+                       .getService(Components.interfaces.nsIPrefService);
+  var aioPref = aioPrefService.getBranch("allinonegest.");
+  
+  var prefs = getPrefsForImportExport();
+  var name;
+  
+  for (var i=0; i<prefs.length; i++) {
+    name = prefs[i][0];
+    aioPref.clearUserPref(name);
+  }
+  
+  if (typeof window.opener.aioOpenAioOptionsDelayed == "function") {
+    window.opener.aioOpenAioOptionsDelayed(400);
+  }
+  closeWindow(true);
+}
+
+function getPrefsForImportExport() {
+  return [
+    ['TTHover', 'bool'],
+    ['autoscrollCursor', 'bool'],
+    ['autoscrollNoMarker', 'bool'],
+    ['autoscrollRate', 'int'],
+    ['autoscrolling2', 'bool'],
+    ['autoscrollpref', 'int'],
+    ['disableClickHeat', 'bool'],
+    ['dragAlaAcrobat', 'bool'],
+    ['evenOnLink', 'bool'],
+    ['functionString', 'char'],
+    ['gestureString', 'char'],
+    ['gestureTrails', 'bool'],
+    ['goUpInNewTab', 'bool'],
+    ['isActive', 'bool'],
+    ['leftDefault', 'bool'],
+    ['mouse', 'bool'],
+    ['mouse2buttons', 'bool'],
+    ['mousebuttonpref', 'int'],
+    ['nextsString', 'char'],
+    ['noAltGest', 'bool'],
+    ['noHorizScroll', 'bool'],
+    ['openLinkInNew', 'bool'],
+    ['panning', 'bool'],
+    ['prevsString', 'char'],
+    ['reverseScrolling', 'bool'],
+    ['rockerString', 'char'],
+    ['rockertypepref', 'int'],
+    ['rocking', 'bool'],
+    //['savedAutoscroll', 'bool'],
+    ['shiftForTitle', 'bool'],
+    ['showLinkTooltip', 'bool'],
+    ['singleWindow', 'bool'],
+    ['smoothTrail', 'bool'],
+    ['tabBar', 'bool'],
+    ['titleDelay', 'int'],
+    ['titleDuration', 'int'],
+    ['trailColor', 'char'],
+    ['trailSize', 'int'],
+    ['trustAutoSelect', 'bool'],
+    ['wheelHistoryIfCw', 'bool'],
+    ['wheelpref2', 'int'],
+    ['wheelscrolling', 'bool'],
+  ];
+}
+

@@ -96,6 +96,11 @@
 <!ENTITY aioTabscroll.label "タブスクロール">
 <!ENTITY aioTabscroll.revScroll "タブバー上で、マウスホイール下で左のタブに切り替える (デフォルトは右に)">
 
+<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioImport.label "Import Settings">
+<!ENTITY aioExport.label "Export Settings">
+<!ENTITY aioRestore.label "Restore Default Settings">
+
 <!ENTITY flipper.title "数値切り替えの設定">
 <!ENTITY flipper.label "数値切り替えに使用する、URLの数字の部分を選択してください。">
 
