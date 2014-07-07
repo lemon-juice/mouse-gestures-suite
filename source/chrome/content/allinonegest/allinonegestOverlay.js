@@ -300,7 +300,6 @@ function aioGetLocalizedStrings() {
 }
 
 function aioInit() { // overlay has finished loading or a pref was changed
-  //dump("AiOGest: init\n");
   var titleDelay, titleDuration, rockerString;
   const delayTable = [250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000];
   const durationTable = [2000, 3000, 4000, 5000, 6000, 7000, 8000];
@@ -531,7 +530,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
   }
 
   aioFirstInit = false;
-  //dump("AiOGest: end init\n");
 }
 
 function aioTrigger(e, which) {
@@ -783,9 +781,8 @@ function aioMouseDown(e) {
        var preventDefaultAction = false;
        if (aioGestEnabled && aioIsKeyOK(e)) {
          aioSrcEvent = e;
-         // Don't start gesture on scrollbars, input elements, etc.
-         // @MOD: added " || e.button != aioLMB)" - to enable on inputs on right and middle buttons
          targetName  = e.target.nodeName.toLowerCase();
+		 
          if ((aioIsAreaOK(e, false) || e.button != aioLMB) && targetName != 'toolbarbutton'
               && !aioGestInProgress) {
              var canGesture = true;
@@ -814,8 +811,7 @@ function aioMouseDown(e) {
           if (aioWheelRocker || aioTabCount >= 1 || aioTTNode)
              aioContent.addEventListener("DOMMouseScroll", aioWheelNav, true);
        }
-       // @MOD: this killed right-click events on pages
-       // if (preventDefaultAction) aioNukeEvent(e);
+	   
        if (preventDefaultAction && e.button == aioLMB) aioNukeEvent(e);
        aioOldX = e.screenX; aioOldY = e.screenY;
      }
