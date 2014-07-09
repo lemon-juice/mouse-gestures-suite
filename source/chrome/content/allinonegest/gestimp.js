@@ -452,7 +452,7 @@ function aiogestDOMLoaded(e) {
 
 function aioGesturesPage() {
   aioContent.addEventListener("DOMContentLoaded", aiogestDOMLoaded, false);
-  if (window.content.document.location.href != "about:blank") {
+  if (!/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
     aioLinkInTab(aioKGestures, false, false);
   } else {
     loadURI(aioKGestures);
@@ -608,7 +608,6 @@ function aioSelectionAsURL(reverseBg) {
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var url = winWrapper.getSelection().toString();
-  if (!url) return;
   
   // the following by Ted Mielczarek
   //url = url.replace(/\s/g, ""); // Strip any space characters
@@ -638,18 +637,29 @@ function aioSelectionAsURL(reverseBg) {
 }
 
 /**
- * Search for selected text
+ * Search for selected text. If no text selected, open search page.
  */
 function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
   if (aioIsFx) {
-    BrowserSearch.loadSearchFromContext(getBrowserSelection());
+    var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
+    var searchStr = getBrowserSelection();
+
+    if (searchStr) {
+      BrowserSearch.loadSearchFromContext(searchStr);
+    } else {
+      if (BrowserSearch._loadSearch) {
+        BrowserSearch._loadSearch("", newWinOrTab);
+      } else { // older Fx
+        BrowserSearch.loadSearch("", newWinOrTab);
+      }
+    }
+    
     return;
   }
   
   var focusedWindow = document.commandDispatcher.focusedWindow;
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var searchStr = winWrapper.getSelection().toString();
-  if (!searchStr) return;
   
   var openTabPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
   var loadInBgPref = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
@@ -659,6 +669,8 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
       searchBar = BrowserSearch.searchBar;
       if (!searchBar) return;
       searchBar.value = searchStr;
+      
+      var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
 
       if (alwaysNewTab) {
         // always force opening in new tab
@@ -668,7 +680,7 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
           aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
         }
         
-        BrowserSearch.loadSearch(searchStr, true);
+        BrowserSearch.loadSearch(searchStr, newWinOrTab);
         
         aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", openTabPref);
         
@@ -683,7 +695,7 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
           aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
         }
         
-        BrowserSearch.loadSearch(searchStr, true);
+        BrowserSearch.loadSearch(searchStr, newWinOrTab);
         
         if (openTabPref && reverseBg) {
           aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
@@ -1242,7 +1254,7 @@ function aioHomePage() {
  
   switch (aioWindowType) {
     case "browser":
-      if (aioGoUpInNewTab && window.content.document.location.href != "about:blank") {
+      if (aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
         aioLinkInTab(url, false, false);
       }
       else {
