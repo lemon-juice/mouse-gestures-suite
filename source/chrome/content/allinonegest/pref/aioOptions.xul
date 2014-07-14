@@ -299,7 +299,13 @@
        </grid>
      </vbox>
    </groupbox>
-   
+   <groupbox orient="horizontal">
+     <caption label="&aioTabscroll.label;"/>
+     <vbox>
+       <checkbox id="reverseId" type="checkbox" pref="true" preftype="bool"
+           prefstring="allinonegest.reverseScrolling" label="&aioTabscroll.revScroll;" />
+     </vbox>
+   </groupbox>
    <groupbox orient="horizontal">
      <caption label="&siteSpecific.label;"/>
      <vbox>
@@ -350,13 +356,39 @@
       </hbox>
      </vbox>
    </groupbox>
-   <groupbox orient="horizontal">
-     <caption label="&aioTabscroll.label;"/>
-     <vbox>
-       <checkbox id="reverseId" type="checkbox" pref="true" preftype="bool"
-           prefstring="allinonegest.reverseScrolling" label="&aioTabscroll.revScroll;" />
-     </vbox>
-   </groupbox>
+   
+  <groupbox orient="horizontal">
+    <caption label="&siteSpecific.label;"/>
+    <listbox rows="5" class="list" id="siteList" seltype="multiple" width="450" ondblclick="editRule();">
+      <listcols>
+        <listcol flex="1"/>
+        <splitter class="tree-splitter"/>
+        <listcol flex="1"/>
+      </listcols>
+      <listhead>
+        <listheader label="URL" width="300" />
+        <listheader label="Type" width="150" />
+      </listhead>
+      <listitem>
+        <listcell label="mysite.com/*" />
+        <listcell label="prioritize gestures" value="P" />
+      </listitem>
+      <listitem>
+        <listcell label="www.google.com" />
+        <listcell label="disable gestures" value="D" />
+      </listitem>
+      <listitem>
+        <listcell label="www.google.pl" />
+        <listcell label="do nothing" value="N" />
+      </listitem>
+    </listbox>
+    
+    <vbox style="margin-top: 25px">
+     <button label="Add Rule" oncommand="addRule();" />
+     <button label="Edit Rule" oncommand="editRule();" />
+     <button label="Delete" oncommand="deleteRule();" />
+    </vbox>
+  </groupbox>
    
    <groupbox orient="horizontal">
      <caption label="&aioImportExport.label;"/>

@@ -564,3 +564,40 @@ function reopenPrefWindow() {
   closeWindow(true);
 }
 
+
+function addRule() {
+  openEditRuleWin(true);
+}
+
+function editRule() {
+  var listBox = document.getElementById('siteList');
+  if (listBox.selectedCount != 1) {
+    alert("Please select one item to edit.");
+    return;
+  }
+  openEditRuleWin(false);
+}
+
+function deleteRule() {
+  var listBox = document.getElementById('siteList');
+  var selectedCount = listBox.selectedCount;
+  
+  if (listBox.selectedCount == 0) {
+    alert("Please select items to delete.");
+    return;
+  }
+  
+  for (var c=0; c<selectedCount; c++) {
+    var listItem = listBox.selectedItems[0];
+    listItem.parentNode.removeChild(listItem);
+  }
+}
+
+function openEditRuleWin(newRule) {
+  var x = window.screenX + 40;
+  var y = window.screenY + Math.round(window.outerHeight / 2 - 150);
+  
+  var suffix = newRule ? "?new=1" : "";
+  
+  window.openDialog("chrome://allinonegest/content/pref/aioEditRule.xul" + suffix, "", "width=450,height=170,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
+}
