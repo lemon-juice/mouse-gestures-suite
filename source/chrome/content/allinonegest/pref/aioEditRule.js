@@ -49,6 +49,11 @@ function saveRule() {
     return false;
   }
   
+  if (URL.indexOf('\\') >= 0) {
+    alert("Backslash \\ is not allowed in URL.");
+    return false;
+  }
+  
  // try to find find existing url on list
   var existingItem;
   listItems = siteList.getElementsByTagName('listitem');

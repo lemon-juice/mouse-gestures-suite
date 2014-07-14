@@ -156,6 +156,28 @@ function savePrefs() {
   pref.setComplexValue("allinonegest.nextsString", Components.interfaces.nsISupportsString, str);
   str.data = document.getElementById("prevsStringId").value;
   pref.setComplexValue("allinonegest.prevsString", Components.interfaces.nsISupportsString, str);
+  
+  // save site-specific URLs
+  var listItems = document.getElementById('siteList').getElementsByTagName('listitem');
+  var cells, url, val;
+  var prefStr = "";
+  
+  for (var i=0; i<listItems.length; i++) {
+    cells = listItems[i].getElementsByTagName('listcell');
+    url = cells[0].getAttribute('label');
+    val = cells[1].getAttribute('value');
+    
+    if (i > 0) {
+      prefStr += '\\\\';
+    }
+    
+    prefStr += url + '\\' + val;
+  }
+  
+  var str = Components.classes[ "@mozilla.org/supports-string;1" ].createInstance(Components.interfaces.nsISupportsString);
+  str.data = prefStr;
+  pref.setComplexValue("allinonegest.sitesList", Components.interfaces.nsISupportsString, str);
+  
   return true;
 }
 
