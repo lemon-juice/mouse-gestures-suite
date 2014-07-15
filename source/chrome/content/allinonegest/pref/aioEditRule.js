@@ -13,7 +13,6 @@ function initEditRuleConst() {
     D: bundle.getString("opt.sitePrefD"),
     N: bundle.getString("opt.sitePrefN")
   }
-  dump(typeof ruleActionMap + ";\n");
 }
 
 function initEditRule() {

@@ -797,6 +797,14 @@ function aioPrioritizeGestures(e) {
 function aioMouseDown(e) {
   aioPrioritizeGestures(e);
   
+  if (aioSitePref == 'D') {
+	// disable gestures
+	if (e.button != aioLMB || aioGestButton == aioLMB) {
+	  aioStatusMessage(aioGetStr("opt.sitePrefD"), 1000);
+	}
+	return;
+  }
+  
   if (aioDisableClickHeat && aioWindowType == "browser") {
 	aioDisableClickHeatEvents(e);
   }
@@ -964,6 +972,11 @@ function aioMouseUp(e) {
 	clearTimeout(aioDelayTO);
   }
   aioPrioritizeGestures(e);
+  
+  if (aioSitePref == 'D') {
+	// disable gestures
+	return;
+  }
   
   if (aioIsMac && e.button == aioLMB && e.ctrlKey) var button = aioRMB;
   else button = e.button;
