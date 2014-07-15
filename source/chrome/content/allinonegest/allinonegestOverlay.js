@@ -586,16 +586,52 @@ function aioInit() { // overlay has finished loading or a pref was changed
 }
 
 function aioParseSiteList() {
-  var url= window.content.document.location.href;
-  var urlPattern;
+  var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
+  
+  var url = window.content.document.location.href;
+  
+  var hashPos = url.indexOf('#');
+  if (hashPos >= 0) {
+	// strip hash
+	url = url.substr(0, hashPos);
+  }
+  
+  matches = url.match(/^(\w+:\/\/)?(.*)$/);
+  var urlWithoutProtocol = matches[2];
   
   aioSitePref = null;
+  
   for (var i=0, len=aioSiteList.length; i<len; i++) {
-	urlPattern = aioSiteList[i][0];
+	searchUrl = aioSiteList[i][0];
+	var hashPos = searchUrl.indexOf('#');
+	if (hashPos >= 0) {
+	  // strip hash
+	  searchUrl = searchUrl.substr(0, hashPos);
+	}
 	
-	if (urlPattern == url) {
+	// detect protocol (index 1)
+	matches = searchUrl.match(/^(\w+:\/\/)?(.*)$/);
+	
+	if (!matches[2].match(/\//g)) {
+	  // there shoulb be at least 1 slash - append it
+	  searchUrl += "/";
+	}
+	
+	if (matches[1]) {
+	  // has protocol - full comparison
+	  urlToTest = url;
+	} else {
+	  // no protocol - omit protocol in comparison
+	  urlToTest = urlWithoutProtocol;
+	}
+	
+	searchUrlEsc = searchUrl.replace(/([.+?^${}()|\[\]\/\\])/g, "\\$1")
+	  .replace(/\*/g, '.*');
+	urlRegex = new RegExp('^' + searchUrlEsc + '$');
+	
+	if (urlRegex.test(urlToTest)) {
 	  aioSitePref = aioSiteList[i][1];
-	  dump("aioSitePref=" + aioSitePref + "\n");
+	  //dump("aioSitePref=" + aioSitePref + "\n");
 	}
   }
 }
