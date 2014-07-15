@@ -17,7 +17,9 @@ ul li {
   margin: 0.5em 0;
 }
 :target {
-  border-bottom: 2px dashed black;
+  background-color: #fffbd8;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
 }
 table {
   border-spacing: 0;

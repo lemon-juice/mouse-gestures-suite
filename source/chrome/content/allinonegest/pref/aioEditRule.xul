@@ -15,8 +15,7 @@
       buttons="accept, cancel, help"
       onload="initEditRule();"
       ondialogaccept="return saveRule();"
-      
-      ondialoghelp="openHelp();"
+      ondialoghelp="openSiteListHelp();"
       persist="width height screenX screenY">
 
 <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>

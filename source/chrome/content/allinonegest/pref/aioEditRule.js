@@ -119,7 +119,7 @@ function addSiteListItem(listBox, url, actionVal, actionLabel) {
   listBox.appendChild(listItem);
 }
 
-
-function openHelp() {
-  
+function openSiteListHelp() {
+  var win = window.open("chrome://allinonegest-en/content/help-options.html#siteList", "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=850,height=660");
+  win.focus(); 
 }

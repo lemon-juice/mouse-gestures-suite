@@ -1105,44 +1105,9 @@
         releasing the trigger button. This also applies to actions: <em>{g.closeDoc}</em>,
         <em>{g.closeTab}</em> and <em>{g.undoCloseTab}</em>.</li>
     </ul>
-    <p><strong>Site specific behavior</strong>:<br>
-    </p>
+    <p><strong>Tab scrolling</strong> - enabled to reverse scrolling direction
+      of tabs if <em>Scroll wheel in tab bar</em> is enabled.</p>
     <ul>
-      <li><strong>Disable ClickHeat scripts</strong> - ClickHeat by Labsmedia
-        (at <a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>)
-        is a javascript library for collecting mouse clicks on web pages and
-        then presenting them on a <i>clicks heatmap</i>. The problem is that
-        this particular library has an inherent flaw in that it locks up the
-        browser for half a second after every mouse click by performing a
-        CPU-intensive loop that really does nothing apart from waiting. This
-        short browser lock-up is enough to interfere with mouse gesture
-        detection since the extension can't really trace mouse movements during
-        that time. By enabling this option ClickHeat will be disabled on the
-        sites you visit. If ClickHeat has been detected and suppressed then
-        after every mouse button press the status bar will show message <em>{g.ClickHeatDisabled}</em>.
-        A side effect of this will be that your clicks will not be sent over to
-        the site owner but you can actually treat it as an advantage! This
-        option is disabled by default because it affects the behavior of web
-        pages you visit and can potentially cause some other side effects (but
-        that is <em>very</em> unlikely - ClickHeat is detected by the presence
-        of <em>catchClickHeat()</em> javascript function on web pages). Turn it
-        on for best mouse gesture experience.<br>
-        <br>
-        Some sites that use ClickHeat:<br>
-        <ul>
-          <li>toolserver.org - a site to which many Wikipedia pages link in
-            order to present geographic coordinates of locations, for example: <a
-              target="_blank" href="http://toolserver.org/%7Egeohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city">http://toolserver.org/~geohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city</a></li>
-          <li><a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>
-            - the ClickHeat site</li>
-        </ul>
-        <p>Unfortunately, there is no way for any mouse gesture extension to
-          work around the problems caused by such bad-behaving scripts so the
-          only practical solution is to simply block them (actually, this could
-          theoretically be solved with a multi-threaded component for tracing
-          mouse gestures but this is far beyond the scope of this extension).<br>
-        </p>
-      </li>
     </ul>
     <ul>
     </ul>
@@ -1151,8 +1116,55 @@
       button scrolling. Availability of most of these options depend on which
       type of middle button scrolling is enabled in the <a href="#tab1">General
         Preferences</a>.</p>
-    <p><strong>Tab scrolling</strong> - enabled to reverse scrolling direction
-      of tabs if <em>Scroll wheel in tab bar</em> is enabled.</p>
+    <p id="siteList"><strong>Site specific behavior</strong> - here you can
+      define rules for special handling of mouse gestures on specified sites and
+      web pages. For each web address (URL) you can define the following
+      actions:</p>
+    <ul>
+      <li><strong><em>{opt.sitePrefP}</em></strong> - use this on sites that
+        cause delays in gesture execution. Some sites use scripts that do some
+        'heavy stuff' when you click anywhere in the web page and the browser
+        gets locked up for a moment - even half a second lock-up is enough to
+        interfere with comfortable gesture drawing. With this option you will be
+        able to draw mouse gestures without delays, however the web page will
+        become blind to your right clicks and middle clicks. Usually, this is
+        not a problem but if a web page offers certain fearutures when you
+        right- or middle-click then these features will not work. Quite often
+        the problematic pages are those containg scripts for tracking mouse
+        clicks, for example <a target="_blank" href="http://www.labsmedia.com/clickheat/">http://www.labsmedia.com/clickheat/</a>.</li>
+      <li><strong><em>{opt.sitePrefD}</em></strong> - use this for turning off
+        mouse gestures completely on certain pages. It is quite rare but it may
+        happen that mouse gestures interfere with functionality of a web page
+        that uses scripts to detect mouse clicks and movements, especially when
+        combined with right- or middle-clicks.</li>
+      <li><strong><em>{opt.sitePrefN}</em></strong> - mouse gestures will work
+        normally, this option has the same effect as if you deleted the web site
+        from the list but the entry is preserved for future use.</li>
+    </ul>
+    <ul>
+    </ul>
+    <p><strong>URL</strong> format and examples:</p>
+    <ul>
+      <li><em>http://www.example.com/</em> or <em>https://www.example.com/contact</em>
+        - full URLs like this will match exactly the page at given address and
+        nothing else.</li>
+      <li><em>www.example.com/</em> (or <em>www.example.com</em>), or <em>www.example.com/contact</em>
+        - same as above but if no protocol is given then this will match pages
+        under any protocol like http:// or https://.</li>
+      <li><em>www.example.com/*</em> - use this to match any page within the
+        whole site/domain. The * character means "any number of characters or no
+        characters at all".</li>
+      <li><em>http://www.example.com/*.html</em> - this will match all pages at
+        <em>http://www.example.com/</em> whose URLs end with .html</li>
+      <li><em>http://www.example.com/about#contact</em> - any targets specified
+        with the hash character are ignored so it is the same as <em>http://www.example.com/about</em>.</li>
+    </ul>
+    <p>When you visit a site for which a special rule has been defined you will
+      see the information in the status bar when you press the right or middle
+      mouse button anywhere within the page - it will read <em>{opt.sitePrefP}</em>
+      or <em>{opt.sitePrefD}</em> depending on which option you have chosen. </p>
+    <ul>
+    </ul>
     <h2 id="exp-imp">Exporting, importing Mouse Gesture preferences &amp;
       restoring defaults</h2>
     Use the buttons in the <em>Import/Export</em> group in Advanced Prefs #2.
