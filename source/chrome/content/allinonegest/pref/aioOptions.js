@@ -8,6 +8,7 @@ function getBrowserWindow() {
 }
 
 function init() {
+  initEditRuleConst();
   var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",

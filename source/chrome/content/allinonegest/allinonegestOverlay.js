@@ -53,6 +53,8 @@ var aioWindowType, aioIsFx = false;
 var aioDefNextSearch, aioDefPrevSearch;
 var aioTabFocusHistory = [];
 var aioGestureTab;  // contains reference to tab if gesture was performed on a tab
+var aioSiteList = [];  // list of sites for enabling/disabling gestures
+var aioSitePref;  // D for disabled gestures, P for gestures priority
 
 // global variables for rocker gesture
 const aioOpp = [aioRMB, aioNoB, aioLMB, aioNoB];
@@ -383,8 +385,23 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
 	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]];
   
+  
+  aioSiteList = [];
   try {
-	aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString).data;
+	var items = aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString).data.split('\\\\');
+	
+	var segm, len = items.length;
+	
+  
+	for (i=0; i<len; i++) {
+	  segm = items[i].split('\\');
+	  if (!segm[1]) {
+		continue;
+	  }
+	  
+	  aioSiteList.push([segm[0], segm[1]]);
+	}
+	
   } catch (err) {
 	var str = Components.classes['@mozilla.org/supports-string;1'].createInstance(Components.interfaces.nsISupportsString);
     str.data = "";
@@ -456,6 +473,31 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		  aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
 		  aioTabFocusHistory.push({focused: activeId});
 		}
+		
+		// listener for url changes
+		var urlListener =
+		{
+		 QueryInterface: function(aIID)
+		 {
+		  if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
+			  aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
+			  aIID.equals(Components.interfaces.nsISupports))
+		   return this;
+		  throw Components.results.NS_NOINTERFACE;
+		 },
+		 onLocationChange: function(aProgress, aRequest, aURI)
+		 {
+		  aioParseSiteList();
+		 },
+		 onStateChange: function() {},
+		 onProgressChange: function() {},
+		 onStatusChange: function() {},
+		 onSecurityChange: function() {},
+		 onLinkIconAvailable: function() {}
+		};
+		
+		gBrowser.addProgressListener(urlListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
+		window.addEventListener("activate", aioParseSiteList);
 
 		break;
 		
@@ -538,6 +580,21 @@ function aioInit() { // overlay has finished loading or a pref was changed
   }
 
   aioFirstInit = false;
+}
+
+function aioParseSiteList() {
+  var url= window.content.document.location.href;
+  var urlPattern;
+  
+  aioSitePref = null;
+  for (var i=0, len=aioSiteList.length; i<len; i++) {
+	urlPattern = aioSiteList[i][0];
+	
+	if (urlPattern == url) {
+	  aioSitePref = aioSiteList[i][1];
+	  dump("aioSitePref=" + aioSitePref + "\n");
+	}
+  }
 }
 
 function aioTrigger(e, which) {
@@ -723,7 +780,20 @@ function aioGesturableURI() {
   return true;
 }
 
+function aioPrioritizeGestures(e) {
+  if (aioSitePref == 'P' && (
+	  (e.button == aioRMB && ((aioGestEnabled && aioGestButton == aioRMB) || aioRockEnabled || aioWheelEnabled))
+	  || (e.button == aioMMB && ((aioGestEnabled && aioGestButton == aioMMB) || aioWheelEnabled || aioScrollEnabled))
+	  )
+	) {
+	e.stopPropagation();
+	aioStatusMessage(aioGetStr("opt.sitePrefP"), 1000);
+  }
+}
+
 function aioMouseDown(e) {
+  aioPrioritizeGestures(e);
+  
   if (aioDisableClickHeat && aioWindowType == "browser") {
 	aioDisableClickHeatEvents(e);
   }
@@ -890,6 +960,7 @@ function aioMouseUp(e) {
   if (aioDelayTO) {
 	clearTimeout(aioDelayTO);
   }
+  aioPrioritizeGestures(e);
   
   if (aioIsMac && e.button == aioLMB && e.ctrlKey) var button = aioRMB;
   else button = e.button;

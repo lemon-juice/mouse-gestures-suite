@@ -96,6 +96,10 @@
 <!ENTITY aioTabscroll.label    "Tab scrolling">
 <!ENTITY aioTabscroll.revScroll    "Scroll tabs to the left when the wheel is rotated backward">
 
+<!ENTITY aioSitePrefP.label "Prioritize gestures">
+<!ENTITY aioSitePrefD.label "Disable gestures">
+<!ENTITY aioSitePrefN.label "Do nothing">
+
 <!ENTITY aioImportExport.label "Import/Export">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">

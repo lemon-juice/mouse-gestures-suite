@@ -1,12 +1,23 @@
 var addNew;
 var siteList;
-const ruleActionMap = {
-  P: "Prioritize gestures",
-  D: "Disable gestures",
-  N: "Do nothing"
+var bundle;
+var ruleActionMap;
+
+function initEditRuleConst() {
+  if (typeof bundle == 'undefined' || !bundle) {
+    bundle = document.getElementById("allinonegestbundle");
+  }
+  
+  ruleActionMap = {
+    P: bundle.getString("opt.sitePrefP"),
+    D: bundle.getString("opt.sitePrefD"),
+    N: bundle.getString("opt.sitePrefN")
+  }
+  dump(typeof ruleActionMap + ";\n");
 }
 
 function initEditRule() {
+  initEditRuleConst();
   addNew = (window.location.search.indexOf('new=1') > 0);
   siteList = window.opener.document.getElementById('siteList');
   
