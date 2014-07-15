@@ -360,7 +360,7 @@
    
   <groupbox orient="horizontal">
     <caption label="&siteSpecific.label;"/>
-    <listbox rows="5" class="list" id="siteList" seltype="multiple" width="450" ondblclick="editRule();">
+    <listbox rows="6" class="list" id="siteList" seltype="multiple" width="450" ondblclick="editRule();">
       <listcols>
         <listcol flex="1"/>
         <splitter class="tree-splitter"/>

@@ -349,7 +349,7 @@ function exportSettings() {
           break;
         
         case 'char':
-          val = aioPref.getCharPref(name);
+          val = aioPref.getComplexValue(name, Components.interfaces.nsISupportsString).data;
           break;
         
         default:
@@ -505,9 +505,10 @@ function importSettings() {
                 break;
              
               case 'char':
-                saveVal = val.substr(0, 2000);
+                var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+                str.data = val.substr(0, 2000);
+                aioPref.setComplexValue(name, Components.interfaces.nsISupportsString, str);
                 
-                aioPref.setCharPref(name, saveVal);
                 countSet++;
                 break;
             }
@@ -578,6 +579,7 @@ function getPrefsForImportExport() {
     ['rocking', 'bool'],
     //['savedAutoscroll', 'bool'],
     ['shiftForTitle', 'bool'],
+    ['sitesList', 'char'],
     ['showLinkTooltip', 'bool'],
     ['singleWindow', 'bool'],
     ['smoothTrail', 'bool'],
