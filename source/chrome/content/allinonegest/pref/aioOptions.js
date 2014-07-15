@@ -41,6 +41,9 @@ function init() {
   populateTree(gestureStrings.gestureString, gestureStrings.functionString,
                pref.getCharPref("allinonegest.rockerString"));
   setScrollGesturesVisibility(document.getElementById("wheelScrollOptions").value == 0);
+  
+  populateSiteList(pref.getComplexValue("allinonegest.sitesList", Components.interfaces.nsISupportsString).data);
+  
   const myGUID = "mousegesturessuite@lemon_juice.addons.mozilla.org";
   
   Components.utils.import("resource://gre/modules/AddonManager.jsm");
@@ -118,7 +121,22 @@ function doEnabling() {
 function checkWheelRocker() {
   setScrollGesturesVisibility(document.getElementById("wheelScrollOptions").value == 0);
   doEnabling();
-}    
+}
+
+function populateSiteList(prefStr) {
+  var listBox = document.getElementById('siteList');
+  var items = prefStr.split('\\\\');
+  var segm;
+  
+  for (i=0; i<items.length; i++) {
+    segm = items[i].split('\\');
+    if (segm.length != 2) {
+      continue;
+    }
+    
+    addSiteListItem(listBox, segm[0], segm[1], ruleActionMap[segm[1]]);
+  }
+}
 
 function savePrefs() {
   var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",

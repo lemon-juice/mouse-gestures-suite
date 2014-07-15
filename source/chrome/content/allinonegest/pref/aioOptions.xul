@@ -23,6 +23,7 @@
 <script type="application/x-javascript" src="customize.js"/>
 <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>
 <script type="application/x-javascript" src="aioOptions.js"/>
+<script type="application/x-javascript" src="aioEditRule.js"/>
 
 <stringbundleset id="stringbundleset"> 
   <stringbundle id="allinonegestbundle" src="chrome://allinonegest/locale/allinonegest.properties"/>
@@ -367,20 +368,13 @@
       </listcols>
       <listhead>
         <listheader label="URL" width="300" />
-        <listheader label="Type" width="150" />
+        <listheader label="Action" width="150" />
       </listhead>
-      <listitem>
+<!-- example: <listitem>
         <listcell label="mysite.com/*" />
         <listcell label="prioritize gestures" value="P" />
       </listitem>
-      <listitem>
-        <listcell label="www.google.com" />
-        <listcell label="disable gestures" value="D" />
-      </listitem>
-      <listitem>
-        <listcell label="www.google.pl" />
-        <listcell label="do nothing" value="N" />
-      </listitem>
+-->
     </listbox>
     
     <vbox style="margin-top: 25px">

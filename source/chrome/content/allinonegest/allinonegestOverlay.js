@@ -382,6 +382,14 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
      [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
 	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]];
+  
+  try {
+	aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString).data;
+  } catch (err) {
+	var str = Components.classes['@mozilla.org/supports-string;1'].createInstance(Components.interfaces.nsISupportsString);
+    str.data = "";
+    aioPref.setComplexValue("sitesList", Components.interfaces.nsISupportsString, str);
+  }
 
   const unixRe = new RegExp("unix|linux|sun|freebsd", "i");
   for (var i = 0; i < prefFuncs.length; ++i) {
