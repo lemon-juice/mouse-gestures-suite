@@ -528,6 +528,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		aioShowContextMenu = true;
 	   }, true);
 	 }
+	 
      window.addEventListener("draggesture", aioDragGesture, true);
      window.addEventListener("unload", aioWindowUnload, false);
      window.addEventListener("keypress", aioKeyPressed, true);
@@ -575,12 +576,15 @@ function aioInit() { // overlay has finished loading or a pref was changed
   aioFirstInit = false;
 }
 
+/* Parse site list preferences and determine if current page shoul be given
+ * special treatment (prioritize gestures or disable gestures)
+ */
 function aioParseSiteList() {
   var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
   
   var url = window.content.document.location.href;
   
-  var hashPos = url.indexOf('#');
+  var hashPos = url.indexOf('#'); // ignore hash part
   if (hashPos >= 0) {
 	// strip hash
 	url = url.substr(0, hashPos);
@@ -602,8 +606,8 @@ function aioParseSiteList() {
 	// detect protocol (index 1)
 	matches = searchUrl.match(/^(\w+:\/\/)?(.*)$/);
 	
-	if (!matches[2].match(/\//g)) {
-	  // there shoulb be at least 1 slash - append it
+	if (matches[2].indexOf('/') < 0 && matches[2].indexOf('*') < 0) {
+	  // there should be at least 1 slash - append it
 	  searchUrl += "/";
 	}
 	
@@ -813,6 +817,7 @@ function aioPrioritizeGestures(e) {
   if (aioSitePref == 'P' && (
 	  (e.button == aioRMB && ((aioGestEnabled && aioGestButton == aioRMB) || aioRockEnabled || aioWheelEnabled))
 	  || (e.button == aioMMB && ((aioGestEnabled && aioGestButton == aioMMB) || aioWheelEnabled || aioScrollEnabled))
+	  || (aioRockEnabled && e.button == aioLMB && aioDownButton == aioRMB)
 	  )
 	) {
 	e.stopPropagation();
@@ -821,7 +826,12 @@ function aioPrioritizeGestures(e) {
 }
 
 function aioMouseDown(e) {
-  aioPrioritizeGestures(e);
+  if (aioSitePref == 'P') {
+	// prioritize gestures - these listeners on document will prevent mouse clicks
+	// from reaching it
+	window.content.document.addEventListener("mousedown", aioPrioritizeGestures, true);
+	window.content.document.addEventListener("mouseup", aioPrioritizeGestures, true);
+  }
   
   if (aioSitePref == 'D') {
 	// disable gestures
@@ -997,7 +1007,6 @@ function aioMouseUp(e) {
   if (aioDelayTO) {
 	clearTimeout(aioDelayTO);
   }
-  aioPrioritizeGestures(e);
   
   if (aioSitePref == 'D') {
 	// disable gestures
