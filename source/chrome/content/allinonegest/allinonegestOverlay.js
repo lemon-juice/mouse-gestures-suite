@@ -388,23 +388,13 @@ function aioInit() { // overlay has finished loading or a pref was changed
   
   aioSiteList = [];
   try {
-	var items = aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString).data.split('\\\\');
+	var prefList = aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString);
 	
-	var segm, len = items.length;
-	
-  
-	for (i=0; i<len; i++) {
-	  segm = items[i].split('\\');
-	  if (!segm[1]) {
-		continue;
-	  }
-	  
-	  aioSiteList.push([segm[0], segm[1]]);
-	}
+	aioSiteList = JSON.parse(prefList);
 	
   } catch (err) {
 	var str = Components.classes['@mozilla.org/supports-string;1'].createInstance(Components.interfaces.nsISupportsString);
-    str.data = "";
+    str.data = "[]";
     aioPref.setComplexValue("sitesList", Components.interfaces.nsISupportsString, str);
   }
 
