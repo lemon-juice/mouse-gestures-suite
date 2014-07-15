@@ -532,9 +532,12 @@ function aioInit() { // overlay has finished loading or a pref was changed
      document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
 
      window.addEventListener("mouseup", aioMouseUp, true);
-     window.addEventListener("mouseup", function() {
-	  aioShowContextMenu = true;
-	 }, true);
+	 
+     if (!aioIsWin) {
+	  window.addEventListener("mouseup", function(e) {
+		aioShowContextMenu = true;
+	   }, true);
+	 }
      window.addEventListener("draggesture", aioDragGesture, true);
      window.addEventListener("unload", aioWindowUnload, false);
      window.addEventListener("keypress", aioKeyPressed, true);
