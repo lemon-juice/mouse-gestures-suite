@@ -362,13 +362,12 @@
     <caption label="&siteSpecific.label;"/>
     <listbox rows="6" class="list" id="siteList" seltype="multiple" width="450" ondblclick="editRule();">
       <listcols>
-        <listcol flex="1"/>
-        <splitter class="tree-splitter"/>
-        <listcol flex="1"/>
+        <listcol width="320"/>
+        <listcol width="130"/>
       </listcols>
       <listhead>
-        <listheader label="URL" width="300" />
-        <listheader label="Action" width="150" />
+        <listheader label="URL"/>
+        <listheader label="Action"/>
       </listhead>
 <!-- example: <listitem>
         <listcell label="mysite.com/*" />
