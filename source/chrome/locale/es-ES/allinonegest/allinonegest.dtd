@@ -11,8 +11,6 @@
 <!ENTITY aioAction.rockermode "Gestos 'rocker' y con la rueda: Permitir repetición en acciones que cargan la página">
 
 <!ENTITY siteSpecific.label        "Site specific behavior">
-<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
-
 <!ENTITY aioAction.singlewindow "'Abrir enlaces en ventanas': Una única ventana nueva con pestañas">
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioMMB.cursor "Autodesplazamiento: Mostrar cursor especial">

@@ -91,8 +91,6 @@
 <!ENTITY aioAction.rockermode      "Rocker-/Mausrad-Navigation: mehrere Befehle hintereinander erlauben">
 
 <!ENTITY siteSpecific.label        "Site specific behavior">
-<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
-
 <!ENTITY aioTabscroll.label    "Tabs durchblättern (Mausrad)">
 <!ENTITY aioTabscroll.revScroll    "Tabs nach links durchblättern, wenn das Rad nach unten bewegt wird">
 

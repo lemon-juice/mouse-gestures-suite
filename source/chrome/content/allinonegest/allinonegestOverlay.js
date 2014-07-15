@@ -47,7 +47,6 @@ var aioGoUpInNewTab, aioNoHorizScroll;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
 var aio2Buttons;  // .... prefs
-var aioDisableClickHeat;
 var aioFxV18;
 var aioWindowType, aioIsFx = false;
 var aioDefNextSearch, aioDefPrevSearch;
@@ -382,8 +381,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
      [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
      [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
-     [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
-	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]];
+     [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}]
+  ];
   
   
   aioSiteList = [];
@@ -839,10 +838,6 @@ function aioMouseDown(e) {
 	  aioStatusMessage(aioGetStr("opt.sitePrefD"), 1000);
 	}
 	return;
-  }
-  
-  if (aioDisableClickHeat && aioWindowType == "browser") {
-	aioDisableClickHeatEvents(e);
   }
   
   aioGestureTab = null;
@@ -1807,23 +1802,6 @@ function aioGrabNDragMouseUp(e) {
   if (aioScroll.cursorChangeable)
      aioScroll.nodeToScroll.style.cursor = "auto";
   setTimeout(function(){aioScrollEnd();}, 200);
-}
-
-// Disable clickheat.js events, because they cause delays in gestures
-// See http://www.labsmedia.com/clickheat/index.html
-function aioDisableClickHeatEvents(e) {
-  var targetWin = e.target.ownerDocument.defaultView.wrappedJSObject;
-  
-  if (typeof targetWin.catchClickHeat == "function") {
-	_aioRemoveEventsForFunction(targetWin.document, targetWin.catchClickHeat);
-	
-	var f=targetWin.document.getElementsByTagName("iframe");
-	for (var i=0; i<f.length; i++) {
-	  _aioRemoveEventsForFunction(f[i], targetWin.catchClickHeat);
-	}
-	
-	aioStatusMessage(aioGetStr("g.ClickHeatDisabled"));
-  }
 }
 
 // remove all event listeners for function on given target

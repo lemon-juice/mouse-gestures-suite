@@ -91,8 +91,6 @@
 <!ENTITY aioAction.rockermode "Жесты колесом прокрутки &amp; 'Rocker': Разрешить повторение для действий, загружающих страницы">
 
 <!ENTITY siteSpecific.label        "Site specific behavior">
-<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
-
 <!ENTITY aioTabscroll.label "Листание вкладок">
 <!ENTITY aioTabscroll.revScroll "При вращении колеса прокрутки на себя листать вкладки влево.">
 

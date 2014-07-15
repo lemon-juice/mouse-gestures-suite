@@ -91,8 +91,6 @@
 <!ENTITY aioAction.rockermode      "Gestes Bascule &amp; Molette: Permettre les répétitions pour les actions chargeant des pages">
 
 <!ENTITY siteSpecific.label        "Site specific behavior">
-<!ENTITY siteSpecific.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
-
 <!ENTITY aioTabscroll.label    "Défilement des onglets">
 <!ENTITY aioTabscroll.revScroll    "Défiler les onglets vers la gauche quand la molette tourne vers l'arrière">
 
