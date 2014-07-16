@@ -13,7 +13,7 @@ function init() {
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
-                     "goUpId"];
+                     "goUpId", "disableClickHeatId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
                      "scrollrateOptions"];
   var checkbox, radiogroup, i;
@@ -141,7 +141,7 @@ function savePrefs() {
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
-                     "goUpId"];
+                     "goUpId", "disableClickHeatId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
                      "scrollrateOptions"];
   var checkbox, radiogroup, i;
@@ -548,6 +548,7 @@ function getPrefsForImportExport() {
     ['autoscrollRate', 'int'],
     ['autoscrolling2', 'bool'],
     ['autoscrollpref', 'int'],
+    ['disableClickHeat', 'bool'],
     ['dragAlaAcrobat', 'bool'],
     ['evenOnLink', 'bool'],
     ['functionString', 'char'],

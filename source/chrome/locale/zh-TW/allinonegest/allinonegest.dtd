@@ -95,7 +95,10 @@
 <!ENTITY aioAction.prevlink        "尾隨上一個連結：">
 <!ENTITY aioAction.rockermode      "搖擺與滾輪手勢：允許重複載入頁面">
 
+<!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
+
 <!ENTITY aioTabscroll.label    "分頁捲動">
 <!ENTITY aioTabscroll.revScroll    "當滾輪向下捲動時將分頁向左捲動">
 

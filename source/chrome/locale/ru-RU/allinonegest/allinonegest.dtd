@@ -90,7 +90,10 @@
 <!ENTITY aioAction.prevlink "Следовать по ссылке prev">
 <!ENTITY aioAction.rockermode "Жесты колесом прокрутки &amp; 'Rocker': Разрешить повторение для действий, загружающих страницы">
 
+<!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
+
 <!ENTITY aioTabscroll.label "Листание вкладок">
 <!ENTITY aioTabscroll.revScroll "При вращении колеса прокрутки на себя листать вкладки влево.">
 

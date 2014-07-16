@@ -1107,7 +1107,44 @@
     </ul>
     <p><strong>Tab scrolling</strong> - enabled to reverse scrolling direction
       of tabs if <em>Scroll wheel in tab bar</em> is enabled.</p>
+    <p><strong>Script blocking on web pages</strong></p>
+    <p> </p>
     <ul>
+      <li><strong>Disable ClickHeat scripts</strong> - ClickHeat by Labsmedia
+        (at <a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>)
+        is a javascript library for collecting mouse clicks on web pages and
+        then presenting them on a <i>clicks heatmap</i>. The problem is that
+        this particular library has an inherent flaw in that it locks up the
+        browser for half a second after every mouse click by performing a
+        CPU-intensive loop that really does nothing apart from waiting. This
+        short browser lock-up is enough to interfere with mouse gesture
+        detection since the extension can't really trace mouse movements during
+        that time. By enabling this option ClickHeat will be disabled on the
+        sites you visit. If ClickHeat has been detected and suppressed then
+        after every mouse button press the status bar will show message <em>{g.ClickHeatDisabled}</em>.
+        A side effect of this will be that your clicks will not be sent over to
+        the site owner but you can actually treat it as an advantage! This
+        option is disabled by default because it affects the behavior of web
+        pages you visit and can potentially cause some other side effects (but
+        that is <em>very</em> unlikely - ClickHeat is detected by the presence
+        of <em>catchClickHeat()</em> javascript function on web pages). Turn it
+        on for best mouse gesture experience.<br>
+        <br>
+        Some sites that use ClickHeat:<br>
+        <ul>
+          <li>toolserver.org - a site to which many Wikipedia pages link in
+            order to present geographic coordinates of locations, for example: <a
+              target="_blank" href="http://toolserver.org/%7Egeohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city">http://toolserver.org/~geohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city</a></li>
+          <li><a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>
+            - the ClickHeat site</li>
+        </ul>
+        <p>Unfortunately, there is no way for any mouse gesture extension to
+          work around the problems caused by such bad-behaving scripts so the
+          only practical solution is to simply block them (actually, this could
+          theoretically be solved with a multi-threaded component for tracing
+          mouse gestures but this is far beyond the scope of this extension).<br>
+        </p>
+      </li>
     </ul>
     <ul>
     </ul>

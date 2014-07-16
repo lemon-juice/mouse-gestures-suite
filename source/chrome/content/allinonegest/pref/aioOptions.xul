@@ -307,6 +307,13 @@
            prefstring="allinonegest.reverseScrolling" label="&aioTabscroll.revScroll;" />
      </vbox>
    </groupbox>
+   <groupbox orient="horizontal">
+     <caption label="&scriptBlocking.label;"/>
+     <vbox>
+       <checkbox id="disableClickHeatId" type="checkbox" pref="true" preftype="bool"
+           prefstring="allinonegest.disableClickHeat" label="&scriptBlocking.disableClickHeat;" />
+     </vbox>
+   </groupbox>
 
    <spring flex="1"/>
    </vbox>

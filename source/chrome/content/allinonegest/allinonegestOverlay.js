@@ -18,6 +18,7 @@ const xulNS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const aioKProperties = "chrome://allinonegest/locale/allinonegest.properties";
 // global variables for mouse gestures
 var aioContent, aioRendering, aioTabRendering, aioContextPopup, aioMainWin, aioStatusBar;
+var aioBlockActionStatusMsg;
 var aioIsWin, aioIsMac, aioIsNix;
 var aioFirstInit = true;
 var aioGrid = 15; // minimal gesture has to be 'grid' pixels long
@@ -47,6 +48,7 @@ var aioGoUpInNewTab, aioNoHorizScroll;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
 var aio2Buttons;  // .... prefs
+var aioDisableClickHeat;
 var aioFxV18;
 var aioWindowType, aioIsFx = false;
 var aioDefNextSearch, aioDefPrevSearch;
@@ -381,8 +383,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
      [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
      [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
      [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
-     [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}]
-  ];
+     [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
+	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]];
   
   
   aioSiteList = [];
@@ -820,24 +822,31 @@ function aioPrioritizeGestures(e) {
 	  )
 	) {
 	e.stopPropagation();
-	aioStatusMessage(aioGetStr("opt.sitePrefP"), 1000);
+	aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefP") + ">";
+	aioStatusMessage(aioBlockActionStatusMsg, 1000);
   }
 }
 
 function aioMouseDown(e) {
+  aioBlockActionStatusMsg = "";
+  
   if (aioSitePref == 'P') {
 	// prioritize gestures - these listeners on document will prevent mouse clicks
 	// from reaching it
 	window.content.document.addEventListener("mousedown", aioPrioritizeGestures, true);
 	window.content.document.addEventListener("mouseup", aioPrioritizeGestures, true);
-  }
-  
-  if (aioSitePref == 'D') {
+	
+  } else if (aioSitePref == 'D') {
 	// disable gestures
 	if (e.button != aioLMB || aioGestButton == aioLMB) {
-	  aioStatusMessage(aioGetStr("opt.sitePrefD"), 1000);
+	  aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
+	  aioStatusMessage(aioBlockActionStatusMsg, 1000);
 	}
 	return;
+  }
+  
+  if (aioDisableClickHeat && aioWindowType == "browser") {
+	aioDisableClickHeatEvents(e);
   }
   
   aioGestureTab = null;
@@ -1007,6 +1016,7 @@ function aioMouseUp(e) {
 	// disable gestures
 	return;
   }
+  aioBlockActionStatusMsg = "";
   
   if (aioIsMac && e.button == aioLMB && e.ctrlKey) var button = aioRMB;
   else button = e.button;
@@ -1802,6 +1812,24 @@ function aioGrabNDragMouseUp(e) {
   if (aioScroll.cursorChangeable)
      aioScroll.nodeToScroll.style.cursor = "auto";
   setTimeout(function(){aioScrollEnd();}, 200);
+}
+
+// Disable clickheat.js events, because they cause delays in gestures
+// See http://www.labsmedia.com/clickheat/index.html
+function aioDisableClickHeatEvents(e) {
+  var targetWin = e.target.ownerDocument.defaultView.wrappedJSObject;
+  
+  if (typeof targetWin.catchClickHeat == "function") {
+	_aioRemoveEventsForFunction(targetWin.document, targetWin.catchClickHeat);
+	
+	var f=targetWin.document.getElementsByTagName("iframe");
+	for (var i=0; i<f.length; i++) {
+	  _aioRemoveEventsForFunction(f[i], targetWin.catchClickHeat);
+	}
+	
+	aioBlockActionStatusMsg += "<" + aioGetStr("g.ClickHeatDisabled") + ">";
+	aioStatusMessage(aioBlockActionStatusMsg, 1000);
+  }
 }
 
 // remove all event listeners for function on given target

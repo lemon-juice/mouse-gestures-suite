@@ -90,7 +90,10 @@
 <!ENTITY aioAction.prevlink        "Suivre le lien Précédent:">
 <!ENTITY aioAction.rockermode      "Gestes Bascule &amp; Molette: Permettre les répétitions pour les actions chargeant des pages">
 
+<!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
+
 <!ENTITY aioTabscroll.label    "Défilement des onglets">
 <!ENTITY aioTabscroll.revScroll    "Défiler les onglets vers la gauche quand la molette tourne vers l'arrière">
 
