@@ -577,13 +577,13 @@ function aioInit() { // overlay has finished loading or a pref was changed
   aioFirstInit = false;
 }
 
-/* Parse site list preferences and determine if current page shoul be given
+/* Parse site list preferences and determine if current page should be given
  * special treatment (prioritize gestures or disable gestures)
  */
 function aioParseSiteList() {
   var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
   
-  var url = window.content.document.location.href;
+  var url = window.content.top.location.href;
   
   var hashPos = url.indexOf('#'); // ignore hash part
   if (hashPos >= 0) {
@@ -835,6 +835,21 @@ function aioMouseDown(e) {
 	// from reaching it
 	window.content.document.addEventListener("mousedown", aioPrioritizeGestures, true);
 	window.content.document.addEventListener("mouseup", aioPrioritizeGestures, true);
+	
+	var frames = window.content.frames;
+	var framesB, i, j;
+	
+	for (i=0, len=frames.length; i<len; i++) {
+	  frames[i].addEventListener("mousedown", aioPrioritizeGestures, true);
+	  frames[i].addEventListener("mouseup", aioPrioritizeGestures, true);
+	  
+	  framesB = frames[i].frames;
+	  
+	  for (j=0, lenB=framesB.length; j<lenB; j++) {
+		framesB[j].addEventListener("mousedown", aioPrioritizeGestures, true);
+		framesB[j].addEventListener("mouseup", aioPrioritizeGestures, true);
+	  }
+	}
 	
   } else if (aioSitePref == 'D') {
 	// disable gestures
