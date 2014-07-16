@@ -215,7 +215,7 @@ function restoreDefaultGestures() {
 }
 
 function openHelp(tabIndex) {
-  var url = "allinonegest/locale/help.html";
+  var url = "allinonegest/locale/help.html"; // this is fake url, will need to be changed to provide true localization
   
   if (!chromeFileExists(url)) {
     // default English help
@@ -499,7 +499,7 @@ function importSettings() {
              
               case 'char':
                 var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
-                str.data = val.substr(0, 2000);
+                str.data = val.substr(0, 50000);
                 aioPref.setComplexValue(name, Components.interfaces.nsISupportsString, str);
                 
                 countSet++;
