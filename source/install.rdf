@@ -20,8 +20,8 @@
 	  <!-- Firefox -->
       <rdf:Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-        <em:minVersion>19</em:minVersion>
-        <em:maxVersion>32</em:maxVersion>
+        <em:minVersion>19.0</em:minVersion>
+        <em:maxVersion>32.*</em:maxVersion>
       </rdf:Description>
     </em:targetApplication>
   
