@@ -109,9 +109,9 @@ var aioActionTable = [
       [function(){aioToggleSidebar();}, "g.toggleSidebar", 0, "", ["browser", "messenger"]], //94
       [function(shiftKey){aioOpenNewWindow(null, shiftKey, false, true);}, "g.openPrivateWindow", 0, "", null], //95
       [function(){aioToggleBookmarksToolbar();}, "g.toggleBookmarksToolbar", 0, "", ["browser"]], //96
+      [function(){aioCloseRightTabs();}, "g.closeTabsToTheRight", 0, "", ["browser"]], // 97
       
 // Unused legacy actions:
-//      [function(){aioCloseRightTabs(true);}, "g.CloseAllRightTab", 0, "", null], // 89
 //      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, "", null], // 90
 //      [function(){aioCloseRightTabs(false);}, "g.CloseRightTab", 0, "", null], // 91
 //      [function(){aioCloseLeftTabs(false);}, "g.CloseLeftTabs", 0, "", null], // 92
@@ -882,6 +882,54 @@ function aioRemoveAllTabsBut() {
     gBrowser.removeAllTabsBut(aioGestureTab ? aioGestureTab : aioContent.mCurrentTab);
   }
 }
+
+function _aioIsRTL() {
+  var chromedir;
+  try {
+    var pref = Components.classes["@mozilla.org/preferences-service;1"]
+        .getService(Components.interfaces.nsIPrefBranch);
+    var locale = pref.getCharPref("general.useragent.locale");
+    chromedir = pref.getCharPref("intl.uidirection." + locale);
+  } catch(e) {}
+  
+  return chromedir == "rtl";
+}
+
+function aioCloseRightTabs() {
+  var tab = aioGestureTab ? aioGestureTab : aioContent.mCurrentTab;
+  
+  if (typeof gBrowser.removeTabsToTheEndFrom == 'function') {
+    gBrowser.removeTabsToTheEndFrom(tab); // Fx
+    
+  } else {
+    if (_aioIsRTL()) {
+      _aioCloseTabsBefore(tab);
+    } else {
+      _aioCloseTabsAfter(tab);
+    }
+  }
+}
+
+function _aioCloseTabsBefore(tab) {
+  var tabs = gBrowser.tabContainer.childNodes;
+  var i;
+  for( i=tabs.length-1; tabs[i] != tab; i--) {}
+  for (i--; i>=0; i--) {
+    if(!tabs[i].pinned){
+      gBrowser.removeTab(tabs[i]);
+    }
+  }
+}
+
+function _aioCloseTabsAfter(tab) {
+  var tabs = gBrowser.tabContainer.childNodes;
+  for (var i=tabs.length-1; tabs[i] != tab; i--) {
+    if(!tabs[i].pinned) {
+      gBrowser.removeTab(tabs[i]);
+    }
+  }
+}
+
 
 function aioGetReferrer() {
   try {

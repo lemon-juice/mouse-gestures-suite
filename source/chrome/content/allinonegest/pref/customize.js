@@ -235,6 +235,7 @@ var gestActionTable = [
       "g.toggleSidebar", //94
       "g.openPrivateWindow", //95
       "g.toggleBookmarksToolbar", //96
+      "g.closeTabsToTheRight", //97
     ];
 var rockerGestName = [
       "g.leftRocker",
