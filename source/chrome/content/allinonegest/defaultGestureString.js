@@ -1,5 +1,5 @@
 const defaultGestureString =
-  "L|R|UD|UDU||||U|UDR||" + 
+  "L|R|UD|||||U|UDR||" + 
   "DUD|DU|DLD|DLU|D|DUR|URDL|RUDR|UL|UR||LDL||" +
   "DRDR|DRLR|LUL|DR|RLR||+RU|+RUL|||RDUR|RU|" +
   "DL|DRD|LUD|DURD|||||ULU||" +
