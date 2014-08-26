@@ -478,9 +478,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		 },
 		 onLocationChange: function(aProgress, aRequest, aURI)
 		 {
-		  if (aProgress.isLoadingDocument && aURI.spec != "about:blank") {
-			aioParseSiteList();
-		  }
+		  aioParseSiteList();
 		 },
 		 onStateChange: function() {},
 		 onProgressChange: function() {},
@@ -491,7 +489,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		
 		gBrowser.addProgressListener(urlListener);
 		window.addEventListener("activate", aioParseSiteList);
-
 		break;
 		
 	  case 'messenger':
@@ -583,9 +580,13 @@ function aioInit() { // overlay has finished loading or a pref was changed
  * special treatment (prioritize gestures or disable gestures)
  */
 function aioParseSiteList() {
-  var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
-  
   var url = window.content.top.location.href;
+  
+  if (url == "about:blank") {
+	return;
+  }
+   
+  var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
   
   var hashPos = url.indexOf('#'); // ignore hash part
   if (hashPos >= 0) {

@@ -1,4 +1,4 @@
-set xpi_name=mouse-gestures-suite-1.5.1.xpi
+set xpi_name=mouse-gestures-suite-1.5.3.xpi
 rmdir "D:\dev\aio-gestures-build" /S /Q
 xcopy "D:\dev\aio-gestures\source" "D:\dev\aio-gestures-build" /I /E /Q
 
