@@ -478,7 +478,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		 },
 		 onLocationChange: function(aProgress, aRequest, aURI)
 		 {
-		  aioParseSiteList();
+		  if (aProgress.isLoadingDocument && aURI.spec != "about:blank") {
+			aioParseSiteList();
+		  }
 		 },
 		 onStateChange: function() {},
 		 onProgressChange: function() {},
@@ -487,7 +489,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		 onLinkIconAvailable: function() {}
 		};
 		
-		gBrowser.addProgressListener(urlListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
+		gBrowser.addProgressListener(urlListener);
 		window.addEventListener("activate", aioParseSiteList);
 
 		break;
