@@ -26,7 +26,7 @@ var aioDelay = 1000; // delay before aborting gesture
 var aioDelayTO;
 var aioGestInProgress = false;
 var aioOldX, aioOldY; // old coords from previous gesture stroke
-var aioGestStr, aioUnknownStr, aioCurrGest;
+var aioGestStr, aioUnknownStr, aioCurrGest, aioRockerString;
 var aioStrokes = [], aioLocaleGest = [], aioShortGest = [];
 var aioLastEvtTime; // time of last gesture stroke
 var aioOnLink = []; // array of objects representing the links traversed during gesture
@@ -101,14 +101,26 @@ var aioSmooth = null, aioSmoothInterval;
 var aioGrabTarget, aioScrollMode;
 var aioTabsNb;
 var aioBeingUninstalled = false;
+var aioPrefObserverTimeout;
+var aioPrefObserverDisabled = false;
 const aioGUID = "mousegesturessuite@lemon_juice.addons.mozilla.org";
 
 // Preferences observers
 const aioPrefListener = {
   domain: "allinonegest.",
   observe: function(subject, topic, prefName) {// when AiO pref was changed, reinit
-    if (topic != "nsPref:changed") return;
-    aioInit();
+    if (topic != "nsPref:changed" || aioPrefObserverDisabled) return;
+	
+	// run aioInit() delayed and only once if the observer is fired multiple times
+	// in a short period
+	if (aioPrefObserverTimeout) {
+	  clearTimeout(aioPrefObserverTimeout);
+	}
+	
+	aioPrefObserverTimeout = setTimeout(function() {
+	  //dump("Observer runs aioInit()\n");
+	  aioInit();
+	}, 300);
   }
 };
 const aioStdPrefListener = {
@@ -303,7 +315,8 @@ function aioGetLocalizedStrings() {
 }
 
 function aioInit() { // overlay has finished loading or a pref was changed
-  var titleDelay, titleDuration, rockerString;
+  //dump("aioInit\n");
+  var titleDelay, titleDuration;
   const delayTable = [250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000];
   const durationTable = [2000, 3000, 4000, 5000, 6000, 7000, 8000];
 
@@ -343,50 +356,53 @@ function aioInit() { // overlay has finished loading or a pref was changed
     default:
       aioWindowType = null;
   }
+  
 
   // read prefs or set Defaults
-  const prefFuncs = [ // get pref value, set default value, check value range
-     [function(){aioActionString=aioPref.getCharPref("gestureString");}, function(){aioPref.setCharPref("gestureString",defaultGestureString);}, function(){return !aioActionString;}],
-     [function(){aioFuncString=aioPref.getCharPref("functionString");}, function(){aioPref.setCharPref("functionString",defaultFunctionString);}, function(){return !aioFuncString;}],
-     [function(){rockerString=aioPref.getCharPref("rockerString");}, function(){aioPref.setCharPref("rockerString",defaultRockerString);}, function(){return !rockerString;}],
-     [function(){aioGestButton=aioPref.getIntPref("mousebuttonpref");}, function(){aioPref.setIntPref("mousebuttonpref",aioRMB);}, function(){return aioGestButton<0||aioGestButton>2;}],
-     [function(){aioGestEnabled=aioPref.getBoolPref("mouse");}, function(){aioPref.setBoolPref("mouse",true);}, function(){return false;}],
-     [function(){aioTrailEnabled=aioPref.getBoolPref("gestureTrails");}, function(){aioPref.setBoolPref("gestureTrails",true);}, function(){return false;}],
-     [function(){aioTrailColor=aioPref.getCharPref("trailColor");}, function(){aioPref.setCharPref("trailColor","#009900");}, function(){return false;}],
-     [function(){aioTrailSize=aioPref.getIntPref("trailSize");}, function(){aioPref.setIntPref("trailSize",3);}, function(){return aioTrailSize<1||aioTrailSize>12;}],
+  var prefFuncs = [ // get pref value, set default value, check value range
+	 [function(){aioActionString=aioPref.getCharPref("gestureString");}, function(){aioPref.setCharPref("gestureString",defaultGestureString);}, function(){return !aioActionString;}],
+	 [function(){aioFuncString=aioPref.getCharPref("functionString");}, function(){aioPref.setCharPref("functionString",defaultFunctionString);}, function(){return !aioFuncString;}],
+     [function(){aioRockerString=aioPref.getCharPref("rockerString");}, function(){aioPref.setCharPref("rockerString",defaultRockerString);}, function(){return !aioRockerString;}],
+	 [function(){aioGestButton=aioPref.getIntPref("mousebuttonpref");}, function(){aioPref.setIntPref("mousebuttonpref",aioRMB);}, function(){return aioGestButton<0||aioGestButton>2;}],
+	 [function(){aioGestEnabled=aioPref.getBoolPref("mouse");}, function(){aioPref.setBoolPref("mouse",true);}, function(){return false;}],
+	 [function(){aioTrailEnabled=aioPref.getBoolPref("gestureTrails");}, function(){aioPref.setBoolPref("gestureTrails",true);}, function(){return false;}],
+	 [function(){aioTrailColor=aioPref.getCharPref("trailColor");}, function(){aioPref.setCharPref("trailColor","#009900");}, function(){return false;}],
+	 [function(){aioTrailSize=aioPref.getIntPref("trailSize");}, function(){aioPref.setIntPref("trailSize",3);}, function(){return aioTrailSize<1||aioTrailSize>12;}],
 	 [function(){aioSmoothTrail=aioPref.getBoolPref("smoothTrail");}, function(){aioPref.setBoolPref("smoothTrail",true);}, function(){return false;}],
-     //[function(){aioTrailOpacity=aioPref.getIntPref("trailOpacity");}, function(){aioPref.setIntPref("trailOpacity",100);}, function(){return aioTrailOpacity<0||aioTrailOpacity>100;}],
-     [function(){aioRockEnabled=aioPref.getBoolPref("rocking");}, function(){aioPref.setBoolPref("rocking",true);}, function(){return false;}],
-     [function(){aioWheelEnabled=aioPref.getBoolPref("wheelscrolling");}, function(){aioPref.setBoolPref("wheelscrolling",true);}, function(){return false;}],
-     [function(){aioASEnabled=aioPref.getBoolPref("autoscrolling2");}, function(){aioPref.setBoolPref("autoscrolling2",true);}, function(){return false;}],
-     [function(){aioTabSwitching=aioPref.getBoolPref("tabBar");}, function(){aioPref.setBoolPref("tabBar",true);}, function(){return false;}],
-     [function(){aioWhatAS=aioPref.getIntPref("autoscrollpref");}, function(){aioPref.setIntPref("autoscrollpref",1);}, function(){return aioWhatAS<0||aioWhatAS>3;}],
-     [function(){aioScrollRate=aioPref.getIntPref("autoscrollRate");}, function(){aioPref.setIntPref("autoscrollRate",0);}, function(){return aioScrollRate<0||aioScrollRate>2;}],
-     [function(){aioNoScrollMarker=aioPref.getBoolPref("autoscrollNoMarker");}, function(){aioPref.setBoolPref("autoscrollNoMarker",false);}, function(){return false;}],
-     [function(){aioWheelMode=aioPref.getIntPref("wheelpref2");}, function(){aioPref.setIntPref("wheelpref2",0);}, function(){return aioWheelMode<0||aioWheelMode>3;}],
-     [function(){aioHistIfDown=aioPref.getBoolPref("wheelHistoryIfCw");}, function(){aioPref.setBoolPref("wheelHistoryIfCw",true);}, function(){return false;}],
-     [function(){aioRockMode=aioPref.getIntPref("rockertypepref");}, function(){aioPref.setIntPref("rockertypepref",1);}, function(){return aioRockMode<0||aioRockMode>1;}],
-     [function(){aioSpecialCursor=aioPref.getBoolPref("autoscrollCursor");}, function(){aioPref.setBoolPref("autoscrollCursor",false);}, function(){return false;}],
-     [function(){aioNoAltWithGest=aioPref.getBoolPref("noAltGest");}, function(){aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
-     [function(){aioLeftDefault=aioPref.getBoolPref("leftDefault");}, function(){aioPref.setBoolPref("leftDefault",false);}, function(){return false;}],
-     [function(){aioSingleNewWindow=aioPref.getBoolPref("singleWindow");}, function(){aioPref.setBoolPref("singleWindow",false);}, function(){return false;}],
-     [function(){aioOpenLinkInNew=aioPref.getBoolPref("openLinkInNew");}, function(){aioPref.setBoolPref("openLinkInNew",true);}, function(){return false;}],
-     [function(){aioGoUpInNewTab=aioPref.getBoolPref("goUpInNewTab");}, function(){aioPref.setBoolPref("goUpInNewTab",false);}, function(){return false;}],
-      [function(){aioReverseScroll=aioPref.getBoolPref("reverseScrolling");}, function(){aioPref.setBoolPref("reverseScrolling",false);}, function(){return false;}],
-     [function(){aioStartOnLinks=aioPref.getBoolPref("evenOnLink");}, function(){aioPref.setBoolPref("evenOnLink",false);}, function(){return false;}],
-     [function(){aioShowTitletip=aioPref.getBoolPref("showLinkTooltip");}, function(){aioPref.setBoolPref("showLinkTooltip",false);}, function(){return false;}],
-     [function(){aioTTHover=aioPref.getBoolPref("TTHover");}, function(){aioPref.setBoolPref("TTHover",true);}, function(){return false;}],
-     [function(){aioShiftForTitle=aioPref.getBoolPref("shiftForTitle");}, function(){aioPref.setBoolPref("shiftForTitle",true);}, function(){return false;}],
-     [function(){titleDelay=aioPref.getIntPref("titleDelay");}, function(){aioPref.setIntPref("titleDelay",2);}, function(){return titleDelay<0||titleDelay>9;}],
-     [function(){titleDuration=aioPref.getIntPref("titleDuration");}, function(){aioPref.setIntPref("titleDuration",3);}, function(){return titleDuration<0||titleDuration>6;}],
-     [function(){aio2Buttons=aioPref.getBoolPref("mouse2buttons");}, function(){aioPref.setBoolPref("mouse2buttons",false);}, function(){return false;}],
-     [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
-     [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
-     [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
-     [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
-	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]];
-  
-  
+	 //[function(){aioTrailOpacity=aioPref.getIntPref("trailOpacity");}, function(){aioPref.setIntPref("trailOpacity",100);}, function(){return aioTrailOpacity<0||aioTrailOpacity>100;}],
+	 [function(){aioRockEnabled=aioPref.getBoolPref("rocking");}, function(){aioPref.setBoolPref("rocking",true);}, function(){return false;}],
+	 [function(){aioWheelEnabled=aioPref.getBoolPref("wheelscrolling");}, function(){aioPref.setBoolPref("wheelscrolling",true);}, function(){return false;}],
+	 [function(){aioASEnabled=aioPref.getBoolPref("autoscrolling2");}, function(){aioPref.setBoolPref("autoscrolling2",true);}, function(){return false;}],
+	 [function(){aioTabSwitching=aioPref.getBoolPref("tabBar");}, function(){aioPref.setBoolPref("tabBar",true);}, function(){return false;}],
+	 [function(){aioWhatAS=aioPref.getIntPref("autoscrollpref");}, function(){aioPref.setIntPref("autoscrollpref",1);}, function(){return aioWhatAS<0||aioWhatAS>3;}],
+	 [function(){aioScrollRate=aioPref.getIntPref("autoscrollRate");}, function(){aioPref.setIntPref("autoscrollRate",0);}, function(){return aioScrollRate<0||aioScrollRate>2;}],
+	 [function(){aioNoScrollMarker=aioPref.getBoolPref("autoscrollNoMarker");}, function(){aioPref.setBoolPref("autoscrollNoMarker",false);}, function(){return false;}],
+	 [function(){aioWheelMode=aioPref.getIntPref("wheelpref2");}, function(){aioPref.setIntPref("wheelpref2",0);}, function(){return aioWheelMode<0||aioWheelMode>3;}],
+	 [function(){aioHistIfDown=aioPref.getBoolPref("wheelHistoryIfCw");}, function(){aioPref.setBoolPref("wheelHistoryIfCw",true);}, function(){return false;}],
+	 [function(){aioRockMode=aioPref.getIntPref("rockertypepref");}, function(){aioPref.setIntPref("rockertypepref",1);}, function(){return aioRockMode<0||aioRockMode>1;}],
+	 [function(){aioSpecialCursor=aioPref.getBoolPref("autoscrollCursor");}, function(){aioPref.setBoolPref("autoscrollCursor",false);}, function(){return false;}],
+	 [function(){aioNoAltWithGest=aioPref.getBoolPref("noAltGest");}, function(){aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
+	 [function(){aioLeftDefault=aioPref.getBoolPref("leftDefault");}, function(){aioPref.setBoolPref("leftDefault",false);}, function(){return false;}],
+	 [function(){aioSingleNewWindow=aioPref.getBoolPref("singleWindow");}, function(){aioPref.setBoolPref("singleWindow",false);}, function(){return false;}],
+	 [function(){aioOpenLinkInNew=aioPref.getBoolPref("openLinkInNew");}, function(){aioPref.setBoolPref("openLinkInNew",true);}, function(){return false;}],
+	 [function(){aioGoUpInNewTab=aioPref.getBoolPref("goUpInNewTab");}, function(){aioPref.setBoolPref("goUpInNewTab",false);}, function(){return false;}],
+	  [function(){aioReverseScroll=aioPref.getBoolPref("reverseScrolling");}, function(){aioPref.setBoolPref("reverseScrolling",false);}, function(){return false;}],
+	 [function(){aioStartOnLinks=aioPref.getBoolPref("evenOnLink");}, function(){aioPref.setBoolPref("evenOnLink",false);}, function(){return false;}],
+	 [function(){aioShowTitletip=aioPref.getBoolPref("showLinkTooltip");}, function(){aioPref.setBoolPref("showLinkTooltip",false);}, function(){return false;}],
+	 [function(){aioTTHover=aioPref.getBoolPref("TTHover");}, function(){aioPref.setBoolPref("TTHover",true);}, function(){return false;}],
+	 [function(){aioShiftForTitle=aioPref.getBoolPref("shiftForTitle");}, function(){aioPref.setBoolPref("shiftForTitle",true);}, function(){return false;}],
+	 [function(){titleDelay=aioPref.getIntPref("titleDelay");}, function(){aioPref.setIntPref("titleDelay",2);}, function(){return titleDelay<0||titleDelay>9;}],
+	 [function(){titleDuration=aioPref.getIntPref("titleDuration");}, function(){aioPref.setIntPref("titleDuration",3);}, function(){return titleDuration<0||titleDuration>6;}],
+	 [function(){aio2Buttons=aioPref.getBoolPref("mouse2buttons");}, function(){aioPref.setBoolPref("mouse2buttons",false);}, function(){return false;}],
+	 [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
+	 [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
+	 [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
+	 [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
+	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]
+  ];
+
+  aioPrefObserverDisabled = true;
+
   aioSiteList = [];
   try {
 	var prefList = aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString);
@@ -400,31 +416,38 @@ function aioInit() { // overlay has finished loading or a pref was changed
   }
 
   const unixRe = new RegExp("unix|linux|sun|freebsd", "i");
+  
   for (var i = 0; i < prefFuncs.length; ++i) {
     try {prefFuncs[i][0]();}
-    catch(err) {prefFuncs[i][1](); return;}
-    if (prefFuncs[i][2]()) {prefFuncs[i][1](); return;}
+    catch(err) {prefFuncs[i][1](); prefFuncs[i][0]()}
+    if (prefFuncs[i][2]()) {prefFuncs[i][1](); prefFuncs[i][0]()}
   }
+  
+  
   try {
     aioNextsString = aioPref.getComplexValue("nextsString", Components.interfaces.nsISupportsString).data;
   }
   catch(err) {
     var str = Components.classes['@mozilla.org/supports-string;1'].createInstance(Components.interfaces.nsISupportsString);
     str.data = aioDefNextSearch;
+    aioNextsString = aioDefNextSearch;
     aioPref.setComplexValue("nextsString", Components.interfaces.nsISupportsString, str);
-    return;
   }
+  
   try {
     aioPrevsString = aioPref.getComplexValue("prevsString", Components.interfaces.nsISupportsString).data;
   }
   catch(err) {
     str = Components.classes['@mozilla.org/supports-string;1'].createInstance(Components.interfaces.nsISupportsString);
     str.data = aioDefPrevSearch;
+    aioPrevsString = aioDefPrevSearch;
     aioPref.setComplexValue("prevsString", Components.interfaces.nsISupportsString, str);
-    return;
   }
   if (aioNoAltWithGest) aioLeftDefault = false;
   aioWheelRocker = aioWheelMode == 0;
+  
+  aioPrefObserverDisabled = false;
+  
 
   aioStdPrefChanged();
   aioScrollEnabled = aioASEnabled && aioWhatAS != 1;
@@ -535,7 +558,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
   }
 
   aioInitGestTable();
-  var rockerFuncs = rockerString.split("|");
+  var rockerFuncs = aioRockerString.split("|");
   var rFunc;
   for (i = 0; i < rockerFuncs.length; ++i)
     if (rockerFuncs[i].charAt(0) == "/") {
