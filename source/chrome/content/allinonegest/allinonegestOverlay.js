@@ -688,7 +688,6 @@ function aioContextMenuEnabler(e) {
 	  || e.originalTarget.getAttribute('anonid') == "tabContextMenu" // SM
     ) {
 	  e.preventDefault(); e.stopPropagation();
-	  //dump("ctx: preventDefault\n");
 	}
   }
 }
@@ -883,6 +882,9 @@ function aioMouseDown(e) {
 	  aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
 	  aioStatusMessage(aioBlockActionStatusMsg, 1000);
 	}
+	
+	// sometimes context menu can get disabled in Windows in D mode
+	aioShowContextMenu = true;
 	return;
   }
   
