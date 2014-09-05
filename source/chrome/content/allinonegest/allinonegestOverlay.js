@@ -56,6 +56,7 @@ var aioTabFocusHistory = [];
 var aioGestureTab;  // contains reference to tab if gesture was performed on a tab
 var aioSiteList = [];  // list of sites for enabling/disabling gestures
 var aioSitePref;  // D for disabled gestures, P for gestures priority
+var aioPrevParsedURL;
 
 // global variables for rocker gesture
 const aioOpp = [aioRMB, aioNoB, aioLMB, aioNoB];
@@ -499,9 +500,13 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		   return this;
 		  throw Components.results.NS_NOINTERFACE;
 		 },
-		 onLocationChange: function(aProgress, aRequest, aURI)
+		 onLocationChange: function(aProgress, aRequest, aURI, aFlags)
 		 {
-		  aioParseSiteList();
+		  if (!(aFlags & Components.interfaces.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
+			// don't run this when only URL hash changed or tab switched;
+			// Fx runs it even on tab switching.
+			aioParseSiteList();
+		  }
 		 },
 		 onStateChange: function() {},
 		 onProgressChange: function() {},
@@ -511,7 +516,13 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		};
 		
 		gBrowser.addProgressListener(urlListener);
-		window.addEventListener("activate", aioParseSiteList);
+		
+		gBrowser.tabContainer.addEventListener("TabSelect", aioParseSiteList, false);
+		
+		window.addEventListener("activate", function() {
+		  // we need delay because aioInit() is run with delay after pref change
+		  setTimeout(aioParseSiteList, 600);
+		});
 		break;
 		
 	  case 'messenger':
@@ -594,6 +605,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
       if (platform.indexOf('linux') != -1)
          document.getElementById("navigator-toolbox").removeEventListener("DOMMouseScroll", aioSwitchTabs, true);
     }
+	
+	aioPrevParsedURL = null;
   }
 
   aioFirstInit = false;
@@ -608,6 +621,12 @@ function aioParseSiteList() {
   if (url == "about:blank") {
 	return;
   }
+  
+  if (url === aioPrevParsedURL) {
+	return;
+  }
+  
+  aioPrevParsedURL = url;
    
   var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
   
@@ -652,7 +671,6 @@ function aioParseSiteList() {
 	
 	if (urlRegex.test(urlToTest)) {
 	  aioSitePref = aioSiteList[i][1];
-	  //dump("aioSitePref=" + aioSitePref + "\n");
 	}
   }
 }
