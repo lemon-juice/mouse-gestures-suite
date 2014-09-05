@@ -871,6 +871,28 @@ function aioPrioritizeGestures(e) {
 }
 
 function aioMouseDown(e) {
+  
+  // detect gesture start on tab
+  aioGestureTab = null;
+  
+  if (aioWindowType == "browser") {
+	var tg = e.originalTarget;
+	if (tg.nodeName == 'xul:tab' ||
+		(tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
+	  // tab in SM
+	  aioGestureTab = e.originalTarget;
+	
+	} else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
+	  // tab in Fx
+	  var tab = tg.parentNode.parentNode.parentNode;
+	  
+	  if (tab.nodeName == 'tab') {
+		aioGestureTab = tab;
+	  }
+	}
+  }
+  
+
   aioBlockActionStatusMsg = "";
   
   if (aioSitePref == 'P') {
@@ -894,39 +916,23 @@ function aioMouseDown(e) {
 	  }
 	}
 	
-  } else if (aioSitePref == 'D') {
+  } else if (aioSitePref == 'D' && !aioGestureTab) {
 	// disable gestures
-	if (e.button != aioLMB || aioGestButton == aioLMB) {
-	  aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
-	  aioStatusMessage(aioBlockActionStatusMsg, 1000);
-	}
 	
 	// sometimes context menu can get disabled in Windows in D mode
 	aioShowContextMenu = true;
-	return;
+	
+	if (!aioGestureTab) {
+	  if (e.button != aioLMB || aioGestButton == aioLMB) {
+		aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
+		aioStatusMessage(aioBlockActionStatusMsg, 1000);
+	  }
+	  return;
+	}
   }
   
   if (aioDisableClickHeat && aioWindowType == "browser") {
 	aioDisableClickHeatEvents(e);
-  }
-  
-  aioGestureTab = null;
-  
-  if (aioWindowType == "browser") {
-	var tg = e.originalTarget;
-	if (tg.nodeName == 'xul:tab' ||
-		(tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
-	  // tab in SM
-	  aioGestureTab = e.originalTarget;
-	
-	} else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
-	  // tab in Fx
-	  var tab = tg.parentNode.parentNode.parentNode;
-	  
-	  if (tab.nodeName == 'tab') {
-		aioGestureTab = tab;
-	  }
-	}
   }
   
   aioShowContextMenu = false;
@@ -1073,7 +1079,7 @@ function aioMouseUp(e) {
 	clearTimeout(aioDelayTO);
   }
   
-  if (aioSitePref == 'D') {
+  if (aioSitePref == 'D' && !aioGestureTab) {
 	// disable gestures
 	return;
   }
