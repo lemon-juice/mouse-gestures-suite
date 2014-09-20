@@ -27,15 +27,16 @@ var aioDelayTO;
 var aioGestInProgress = false;
 var aioOldX, aioOldY; // old coords from previous gesture stroke
 var aioGestStr, aioUnknownStr, aioCurrGest, aioRockerString;
+var aioGesturesEnabled;
 var aioStrokes = [], aioLocaleGest = [], aioShortGest = [];
 var aioLastEvtTime; // time of last gesture stroke
 var aioOnLink = []; // array of objects representing the links traversed during gesture
 var aioOnImage = null; // contains an image DOM node
 var aioSrcEvent; // event which started the active gesture
 var aioBundle; // String bundle for localized strings
-var aioShowContextMenu = true;
+var aioShowContextMenu;
 var aioGestEnabled, aioRockEnabled;  // prefs ....
-var aioTrailEnabled, aioTrailColor, aioTrailSize, aioSmoothTrail, aioTrailOpacity;
+var aioTrailEnabled, aioTrailColor, aioTrailSize, aioSmoothTrail;
 var aioWheelEnabled, aioScrollEnabled, aioNoScrollMarker, aioStartOnLinks;
 var aioWhatAS, aioASEnabled, aioTabSwitching, aioSmoothScroll;
 var aioRockMode, aioWheelMode, aioHistIfDown;
@@ -370,10 +371,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	 [function(){aioTrailColor=aioPref.getCharPref("trailColor");}, function(){aioPref.setCharPref("trailColor","#009900");}, function(){return false;}],
 	 [function(){aioTrailSize=aioPref.getIntPref("trailSize");}, function(){aioPref.setIntPref("trailSize",3);}, function(){return aioTrailSize<1||aioTrailSize>12;}],
 	 [function(){aioSmoothTrail=aioPref.getBoolPref("smoothTrail");}, function(){aioPref.setBoolPref("smoothTrail",true);}, function(){return false;}],
-	 //[function(){aioTrailOpacity=aioPref.getIntPref("trailOpacity");}, function(){aioPref.setIntPref("trailOpacity",100);}, function(){return aioTrailOpacity<0||aioTrailOpacity>100;}],
 	 [function(){aioRockEnabled=aioPref.getBoolPref("rocking");}, function(){aioPref.setBoolPref("rocking",true);}, function(){return false;}],
-	 [function(){aioWheelEnabled=aioPref.getBoolPref("wheelscrolling");}, function(){aioPref.setBoolPref("wheelscrolling",true);}, function(){return false;}],
-	 [function(){aioASEnabled=aioPref.getBoolPref("autoscrolling2");}, function(){aioPref.setBoolPref("autoscrolling2",true);}, function(){return false;}],
+	 [function(){aioWheelEnabled=aioPref.getBoolPref("wheelscrolling");}, function(){aioPref.setBoolPref("wheelscrolling",true);}, function(){return false;}], // Scroll wheel navigation
+	 [function(){aioASEnabled=aioPref.getBoolPref("autoscrolling2");}, function(){aioPref.setBoolPref("autoscrolling2",true);}, function(){return false;}], // Middle button scrolling
 	 [function(){aioTabSwitching=aioPref.getBoolPref("tabBar");}, function(){aioPref.setBoolPref("tabBar",true);}, function(){return false;}],
 	 [function(){aioWhatAS=aioPref.getIntPref("autoscrollpref");}, function(){aioPref.setIntPref("autoscrollpref",1);}, function(){return aioWhatAS<0||aioWhatAS>3;}],
 	 [function(){aioScrollRate=aioPref.getIntPref("autoscrollRate");}, function(){aioPref.setIntPref("autoscrollRate",0);}, function(){return aioScrollRate<0||aioScrollRate>2;}],
@@ -451,6 +451,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
   
 
   aioStdPrefChanged();
+  aioGesturesEnabled = (aioGestEnabled || aioRockEnabled || aioWheelEnabled);
+  aioShowContextMenu = true;
+  
   aioScrollEnabled = aioASEnabled && aioWhatAS != 1;
   const httpProtocolHandler = Components.classes["@mozilla.org/network/protocol;1?name=http"]
                                    .getService(Components.interfaces.nsIHttpProtocolHandler);
@@ -568,22 +571,26 @@ function aioInit() { // overlay has finished loading or a pref was changed
      window.addEventListener("keypress", aioKeyPressed, true);
   }
 
-  aioInitGestTable();
-  var rockerFuncs = aioRockerString.split("|");
-  var rFunc;
-  for (i = 0; i < rockerFuncs.length; ++i)
-    if (rockerFuncs[i].charAt(0) == "/") {
-       aioRockerAction[i] = function(){void(0);};
-       aioRockMultiple[i] = 0;
-    }
-    else {
-       rFunc = rockerFuncs[i] - 0;
-       if (rFunc < 0 || rFunc >= aioActionTable.length) {rockerFuncs[i] = "0"; rFunc = 0;}
-       aioRockerAction[i] = aioActionTable[rFunc][0];
-       aioRockMultiple[i] = aioActionTable[rFunc][2];
-    }
-  aioWheelBothWays = rockerFuncs[2].charAt(0) != "/" && rockerFuncs[3].charAt(0) != "/" && 
-     (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == aioActionTable[rockerFuncs[3] - 0][3]);
+  if (aioGesturesEnabled) {
+	aioInitGestTable();
+	
+	var rockerFuncs = aioRockerString.split("|");
+	var rFunc;
+	for (i = 0; i < rockerFuncs.length; ++i)
+	  if (rockerFuncs[i].charAt(0) == "/") {
+		 aioRockerAction[i] = function(){void(0);};
+		 aioRockMultiple[i] = 0;
+	  }
+	  else {
+		 rFunc = rockerFuncs[i] - 0;
+		 if (rFunc < 0 || rFunc >= aioActionTable.length) {rockerFuncs[i] = "0"; rFunc = 0;}
+		 aioRockerAction[i] = aioActionTable[rFunc][0];
+		 aioRockMultiple[i] = aioActionTable[rFunc][2];
+	  }
+	aioWheelBothWays = rockerFuncs[2].charAt(0) != "/" && rockerFuncs[3].charAt(0) != "/" && 
+	   (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == aioActionTable[rockerFuncs[3] - 0][3]);
+  }
+  
   aioTitleDelay = delayTable[titleDelay];
   aioTitleDuration = durationTable[titleDuration];
   aioScrollMax = aioScrollLoop[aioScrollRate]; aioASPeriod = aioASBasicPeriod / aioScrollMax;
@@ -872,72 +879,76 @@ function aioPrioritizeGestures(e) {
 
 function aioMouseDown(e) {
   
-  // detect gesture start on tab
-  aioGestureTab = null;
-  
-  if (aioWindowType == "browser") {
-	var tg = e.originalTarget;
-	if (tg.nodeName == 'xul:tab' ||
-		(tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
-	  // tab in SM
-	  aioGestureTab = e.originalTarget;
+  if (aioGesturesEnabled) {
+	// detect gesture start on tab
+	aioGestureTab = null;
 	
-	} else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
-	  // tab in Fx
-	  var tab = tg.parentNode.parentNode.parentNode;
+	if (aioWindowType == "browser") {
+	  var tg = e.originalTarget;
+	  if (tg.nodeName == 'xul:tab' ||
+		  (tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
+		// tab in SM
+		aioGestureTab = e.originalTarget;
 	  
-	  if (tab.nodeName == 'tab') {
-		aioGestureTab = tab;
-	  }
-	}
-  }
-  
-
-  aioBlockActionStatusMsg = "";
-  
-  if (aioSitePref == 'P') {
-	// prioritize gestures - these listeners on document will prevent mouse clicks
-	// from reaching it
-	window.content.document.addEventListener("mousedown", aioPrioritizeGestures, true);
-	window.content.document.addEventListener("mouseup", aioPrioritizeGestures, true);
-	
-	var frames = window.content.frames;
-	var framesB, i, j;
-	
-	for (i=0, len=frames.length; i<len; i++) {
-	  frames[i].addEventListener("mousedown", aioPrioritizeGestures, true);
-	  frames[i].addEventListener("mouseup", aioPrioritizeGestures, true);
-	  
-	  framesB = frames[i].frames;
-	  
-	  for (j=0, lenB=framesB.length; j<lenB; j++) {
-		framesB[j].addEventListener("mousedown", aioPrioritizeGestures, true);
-		framesB[j].addEventListener("mouseup", aioPrioritizeGestures, true);
+	  } else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
+		// tab in Fx
+		var tab = tg.parentNode.parentNode.parentNode;
+		
+		if (tab.nodeName == 'tab') {
+		  aioGestureTab = tab;
+		}
 	  }
 	}
 	
-  } else if (aioSitePref == 'D' && !aioGestureTab) {
-	// disable gestures
+  
+	aioBlockActionStatusMsg = "";
 	
-	// sometimes context menu can get disabled in Windows in D mode
-	aioShowContextMenu = true;
-	
-	if (!aioGestureTab) {
-	  if (e.button != aioLMB || aioGestButton == aioLMB) {
-		aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
-		aioStatusMessage(aioBlockActionStatusMsg, 1000);
+	if (aioSitePref == 'P') {
+	  // prioritize gestures - these listeners on document will prevent mouse clicks
+	  // from reaching it
+	  window.content.document.addEventListener("mousedown", aioPrioritizeGestures, true);
+	  window.content.document.addEventListener("mouseup", aioPrioritizeGestures, true);
+	  
+	  var frames = window.content.frames;
+	  var framesB, i, j;
+	  
+	  for (i=0, len=frames.length; i<len; i++) {
+		frames[i].addEventListener("mousedown", aioPrioritizeGestures, true);
+		frames[i].addEventListener("mouseup", aioPrioritizeGestures, true);
+		
+		framesB = frames[i].frames;
+		
+		for (j=0, lenB=framesB.length; j<lenB; j++) {
+		  framesB[j].addEventListener("mousedown", aioPrioritizeGestures, true);
+		  framesB[j].addEventListener("mouseup", aioPrioritizeGestures, true);
+		}
 	  }
-	  return;
+	  
+	} else if (aioSitePref == 'D' && !aioGestureTab) {
+	  // disable gestures
+	  
+	  // sometimes context menu can get disabled in Windows in D mode
+	  aioShowContextMenu = true;
+	  
+	  if (!aioGestureTab) {
+		if (e.button != aioLMB || aioGestButton == aioLMB) {
+		  aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
+		  aioStatusMessage(aioBlockActionStatusMsg, 1000);
+		}
+		return;
+	  }
 	}
+	
+	if (aioDisableClickHeat && aioWindowType == "browser") {
+	  aioDisableClickHeatEvents(e);
+	}
+	
+	aioShowContextMenu = false;
+	aioBackRocking = false;
   }
   
-  if (aioDisableClickHeat && aioWindowType == "browser") {
-	aioDisableClickHeatEvents(e);
-  }
-  
-  aioShowContextMenu = false;
-  aioBackRocking = false;
-  if (e.button == aioOpp[aioDownButton] && aioRockEnabled) {
+  if (aioGesturesEnabled && e.button == aioOpp[aioDownButton] && aioRockEnabled) {
+	// rocker gestures
      if (e.button == aioRMB) {
         var func = 1;
         aioSrcEvent = e;
@@ -962,7 +973,7 @@ function aioMouseDown(e) {
      }
   }
   else {
-	if (e.button == aioRMB) {
+	if (aioGesturesEnabled && e.button == aioRMB) {
 	  // turn off gesture on active flash because right click event may be triggered
 	  // and the gesture may end up unfinished after choosing a context menu flash option
 	  var targetName = e.target.localName.toLowerCase();
@@ -973,7 +984,7 @@ function aioMouseDown(e) {
 	  }
     }
 	 
-    if (aioTrigger(e, false)) {
+    if (aioGesturesEnabled && aioTrigger(e, false)) {
        var preventDefaultAction = false;
        if (aioGestEnabled && aioIsKeyOK(e)) {
          aioSrcEvent = e;
@@ -1012,8 +1023,11 @@ function aioMouseDown(e) {
        aioOldX = e.screenX; aioOldY = e.screenY;
      }
      else {
+		// middle button scrolling
         if (aioTrigger(e, true) && aioDownButton == aioNoB && aioScrollEnabled && aioIsAreaOK(e, true) &&
             (aioStartOnLinks  || !aioFindLink(e.target, false)) && !(aioPreferPaste && aioIsPastable(e))) {
+		  aioShowContextMenu = false;
+		  
            window.removeEventListener("mouseup", aioMouseUp, true);
            aioRendering.removeEventListener("mousedown", aioMouseDown, true);
            window.addEventListener("click", aioASClick, true);
@@ -1075,6 +1089,10 @@ function aioDisplayContextMenu(e) {
 }
 
 function aioMouseUp(e) {
+  if (!aioGesturesEnabled) {
+	return;
+  }
+  
   if (aioDelayTO) {
 	clearTimeout(aioDelayTO);
   }
