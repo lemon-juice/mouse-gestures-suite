@@ -21,10 +21,6 @@ function gestCustomizeTreeView(columnids) {
   this.stdRowCount = -1;
   this.hoveredRow = -1;
   this.topOrBottom = false;
-  this.feedbackBottom = kAtomService.getAtom("aioHovered");
-  this.feedbackTop = kAtomService.getAtom("aioHoverCol");
-  this.gestEnabled = kAtomService.getAtom("aioGestEnabled");
-  this.gestDisabled = kAtomService.getAtom("aioGestDisabled");
   this.before = false;
 }
 
@@ -63,9 +59,14 @@ gestCustomizeTreeView.prototype = {
   },
 
   getRowProperties: function(row, prop) {
-    if (row == this.hoveredRow)
-       if (this.topOrBottom) prop.AppendElement(this.feedbackTop);
-       else prop.AppendElement(this.feedbackBottom);
+    if (row == this.hoveredRow) {
+      if (this.topOrBottom) {
+        return "aioHoverCol";
+      } else {
+        return "aioHovered";
+      }
+    }
+    return "";
   },
 
   setCellValue: function(row, column, value) { },
@@ -74,11 +75,12 @@ gestCustomizeTreeView.prototype = {
 
   getCellProperties: function(row, column) {
     if (column.id == "enabledColId") {
-       if (isEnabledTable[row]) return this.gestDisabled;
-       else return this.gestEnabled;
-     }
+      if (isEnabledTable[row]) return "aioGestDisabled";
+      else return "aioGestEnabled";
+    }
+    return "";
   },
-  getColumnProperties: function(column, prop) { },
+  getColumnProperties: function(column) { },
   isContainer: function(index) {return false;},
   isContainerOpen: function(index) {return false;},
   isSeparator: function(index) {return index == this.stdRowCount},
@@ -753,6 +755,7 @@ function performUndo() {
   if (row < rowCount) buttEnable(["edfuncId"], [isDuplicable(row)]);
 }
 
+/*
 function eraseDropFeedback() {
   var rowToInvalidate = gestView.hoveredRow;
   if (rowToInvalidate < 0) return;
@@ -830,6 +833,22 @@ function onDropOnTree(e) {
   e.stopPropagation();
 }
 
+function performRowsMove(dragEndRow, dragStartRow) {
+  var i;
+  var initialRowObj = aioGetRowValue(dragStartRow);
+  if (dragStartRow <= dragEndRow)
+    for (i = dragStartRow; i < dragEndRow; ++i) aioSetRowValue(i, aioGetRowValue(i + 1));
+  else {
+     ++dragEndRow;
+     for (i = dragStartRow; i > dragEndRow; --i) aioSetRowValue(i, aioGetRowValue(i - 1));
+  }
+  aioSetRowValue(dragEndRow, initialRowObj);
+  gestView.hoveredRow = -1;
+  treeBox.invalidate();
+  setTimeout(function(a){selectRow(a);}, 0, dragEndRow);
+}
+*/
+
 function aioGetRowValue(aRow) {
   var rowObj = {fTxt: "", gTxt: "", aTxt: "", fNbr: "", eChr: "", roId: ""};
   rowObj.fTxt = gestView.getCellText(aRow, functionCol);
@@ -848,19 +867,4 @@ function aioSetRowValue(aRow, rowObj) {
   funcNbTable[aRow] = rowObj.fNbr;
   isEnabledTable[aRow] = rowObj.eChr;
   rowIdTable[aRow] = rowObj.roId;
-}
-
-function performRowsMove(dragEndRow, dragStartRow) {
-  var i;
-  var initialRowObj = aioGetRowValue(dragStartRow);
-  if (dragStartRow <= dragEndRow)
-    for (i = dragStartRow; i < dragEndRow; ++i) aioSetRowValue(i, aioGetRowValue(i + 1));
-  else {
-     ++dragEndRow;
-     for (i = dragStartRow; i > dragEndRow; --i) aioSetRowValue(i, aioGetRowValue(i - 1));
-  }
-  aioSetRowValue(dragEndRow, initialRowObj);
-  gestView.hoveredRow = -1;
-  treeBox.invalidate();
-  setTimeout(function(a){selectRow(a);}, 0, dragEndRow);
 }

@@ -187,9 +187,8 @@
   <tabpanel orient="vertical">
    <vbox flex="50">
       <tree id="gesttree" hidecolumnpicker="true" flex="1"
-          onselect="selectionInTree();" ondraggesture="onBeginRowDrag(event);"
-          onmousedown="mouseDownInTree(event);" ondragover="onDragOverTree(event);"
-          ondragdrop="onDropOnTree(event);" ondragexit="onDragOutTree(event);">
+          onselect="selectionInTree();"
+          onmousedown="mouseDownInTree(event);">
         <treecols>
           <treecol persist="width" flex="8" id="functionId" label="&customize.function;"/>
           <splitter class="tree-splitter"/>
