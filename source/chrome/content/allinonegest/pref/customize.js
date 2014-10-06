@@ -519,6 +519,16 @@ function mouseDownInTree(e) {
   }
 }
 
+function dblClickInTree(e) {
+  if (e.originalTarget.localName != "treechildren") return;
+  var r = {}, c = {}, type = {};
+  treeBox.getCellAt(e.clientX, e.clientY, r, c, type);
+  
+  if (c.value.id == 'gestTextId' || c.value.id == 'functionId') {
+    editCurrentRow(false);
+  }
+}
+
 function selectionInTree() {
   var sels = getSelections();
   if (sels.length != 1) {

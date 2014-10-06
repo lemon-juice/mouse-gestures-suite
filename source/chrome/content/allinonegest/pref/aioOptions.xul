@@ -188,7 +188,8 @@
    <vbox flex="50">
       <tree id="gesttree" hidecolumnpicker="true" flex="1"
           onselect="selectionInTree();"
-          onmousedown="mouseDownInTree(event);">
+          onmousedown="mouseDownInTree(event);"
+          ondblclick="dblClickInTree(event);">
         <treecols>
           <treecol persist="width" flex="8" id="functionId" label="&customize.function;"/>
           <splitter class="tree-splitter"/>
