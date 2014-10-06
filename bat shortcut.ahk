@@ -19,7 +19,7 @@
 		Sleep 200
 		Send {Tab}{Tab}
 		Sleep 500
-		Send {Enter}
+		Send r
 	}
 return
 
