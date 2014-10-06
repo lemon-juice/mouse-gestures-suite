@@ -16,7 +16,8 @@
   <description>&flipper.label;</description>
   <separator/>
   <textbox id="urlSelector" readonly="true" multiline="true" onkeyup="exitOnReturn(event);"
-           onmouseup="selectionChanged();"/>
+           onmouseup="selectionChanged();"
+           onpopupshowing="return false" />
   <separator/>
 
 </dialog>

@@ -361,6 +361,7 @@ function aioIncURL(inc) { // derived from MagPie by Ben Goodger
      return;
   }
 
+  aioClearRocker();
   var rv = { };
   openDialog(aioDir + "aioSchemaBuilder.xul", "", "chrome,centerscreen,modal=yes", currSpec, rv);
   if ("key" in rv) {
