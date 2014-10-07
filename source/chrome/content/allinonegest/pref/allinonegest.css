@@ -18,6 +18,7 @@ treechildren::-moz-tree-image(enabledColId, aioGestDisabled) {
 }
 treecol.infoColHeader {
   list-style-image: url("info.png");
+  width: 20px;
 }
 treechildren::-moz-tree-image(hasInfo) {
   list-style-image: url("info.png");
