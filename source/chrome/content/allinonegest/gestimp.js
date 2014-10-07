@@ -510,7 +510,7 @@ function aioCopyClipBoardToURLBar() {
      data = data.value.QueryInterface(Components.interfaces.nsISupportsString);
      var url = data.data.substring(0, dataLen.value / 2);
      if (gURLBar) gURLBar.value = url;
-     aioLinkInTab(url, true, false);
+     aioLinkInTab(url, false, false);
   }
 }
 
