@@ -80,7 +80,11 @@ gestCustomizeTreeView.prototype = {
     }
     if (column.id == "infoColId") {
       var token = this.getActionToken(row);
-      return token ? "hasInfo" : "";
+      var props = token ? "hasInfo" : "";
+      if (token && helpTable[token]) {
+        props += " documented";
+      }
+      return props;
     }
     return "";
   },
@@ -601,7 +605,7 @@ function showPopupInfo(row, e) {
   // show info popup
   var token = gestView.getActionToken(row);
   
-  if (token) {
+  if (token && helpTable[token]) {
     var popup = document.getElementById('infoPopup');
     popup.openPopup(null, "", e.clientX - 5, e.clientY + 18, false, false);
     
@@ -610,7 +614,7 @@ function showPopupInfo(row, e) {
     while(div.firstChild) 
         div.removeChild(div.firstChild);
     
-    var html = '<h1 id="title"></h1>' + (helpTable[token] ? helpTable[token] : "");
+    var html = '<h1 id="title"></h1>' + helpTable[token];
     
     //safely convert HTML string to a simple DOM object, stripping it of JavaScript and more complex tags
     var injectHTML = Components.classes["@mozilla.org/feed-unescapehtml;1"] 

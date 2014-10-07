@@ -21,6 +21,8 @@ treecol.infoColHeader {
 }
 treechildren::-moz-tree-image(hasInfo) {
   list-style-image: url("info.png");
+}
+treechildren::-moz-tree-image(hasInfo, documented) {
   cursor: pointer;
 }
 #infoPopup {
