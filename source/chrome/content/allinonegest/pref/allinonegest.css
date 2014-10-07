@@ -21,6 +21,10 @@ treecol.infoColHeader {
 }
 treechildren::-moz-tree-image(hasInfo) {
   list-style-image: url("info.png");
+  opacity: 0.5;
+}
+treechildren::-moz-tree-image(hover, hasInfo, documented) {
+  opacity: 1;
 }
 treechildren::-moz-tree-image(hasInfo, documented) {
   cursor: pointer;
@@ -30,7 +34,7 @@ treechildren::-moz-tree-image(hasInfo, documented) {
   max-width: 400px;
 }
 html|div#infoPopupContent {
-  padding: 1ex;
+  padding: 2.5ex;
 }
 html|h1#title {
   padding: 0;

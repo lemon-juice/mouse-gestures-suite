@@ -607,7 +607,7 @@ function showPopupInfo(row, e) {
   
   if (token && helpTable[token]) {
     var popup = document.getElementById('infoPopup');
-    popup.openPopup(null, "", e.clientX - 5, e.clientY + 18, false, false);
+    popup.openPopup(null, "", e.clientX - 10, e.clientY + 18, false, false);
     
     var div = document.getElementById('infoPopupContent');
     

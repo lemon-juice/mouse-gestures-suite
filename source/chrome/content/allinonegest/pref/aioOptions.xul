@@ -192,7 +192,7 @@
           onmousedown="mouseDownInTree(event);"
           ondblclick="dblClickInTree(event);">
         <treecols>
-          <treecol id="infoColId" persist="width" class="infoColHeader"
+          <treecol id="infoColId" persist="width" class="treecol-image infoColHeader"
                    fixed="true" tooltiptext="Click for info"/>
           <splitter class="tree-splitter"/>
           <treecol persist="width" flex="8" id="functionId" label="&customize.function;"/>
