@@ -441,6 +441,11 @@ function ReadFile(file) {
     var str=scriptableStream.read(input.available());
     scriptableStream.close();
     input.close();
+    
+    var utf8Converter = Components.classes["@mozilla.org/intl/utf8converterservice;1"].
+        getService(Components.interfaces.nsIUTF8ConverterService);
+    var str = utf8Converter.convertURISpecToUTF8(str, "UTF-8"); 
+    
     return str;
 }
 
