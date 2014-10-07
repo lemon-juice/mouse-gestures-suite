@@ -5,7 +5,7 @@
 	ifWinActive ahk_class MozillaWindowClass
 	{
 		Send ^+a
-		Sleep 500
+		Sleep 700
 		Send ^o
 		WinWait ahk_class #32770 ; Open File dialog
 		Sleep 500
@@ -30,7 +30,7 @@ return
 	ifWinActive ahk_class MozillaWindowClass
 	{
 		Send ^+a
-		Sleep 500
+		Sleep 700
 		Send ^o
 		WinWait ahk_class #32770 ; Open File dialog
 		Sleep 500

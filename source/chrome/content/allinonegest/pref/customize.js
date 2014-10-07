@@ -33,15 +33,15 @@ gestCustomizeTreeView.prototype = {
   },
 
   getCellText: function(row, column) {
-    return this.data[row][column.index] || "";
+    return this.data[row].row[column.index] || "";
   },
 
   setCellText: function(row, column, value) {
-    this.data[row][column.index] = value;
+    this.data[row].row[column.index] = value;
   },
 
-  addRow: function(row) {
-    this.rows = this.data.push(row);
+  addRow: function(row, token) {
+    this.rows = this.data.push({"row": row, "token": token});
     this.rowCountChanged(this.rows - 1, 1);
   },
 
@@ -78,6 +78,10 @@ gestCustomizeTreeView.prototype = {
       if (isEnabledTable[row]) return "aioGestDisabled";
       else return "aioGestEnabled";
     }
+    if (column.id == "infoColId") {
+      var token = this.getActionToken(row);
+      return token ? "hasInfo" : "";
+    }
     return "";
   },
   getColumnProperties: function(column) { },
@@ -102,7 +106,14 @@ gestCustomizeTreeView.prototype = {
   cycleCell: function(row, column) { },
   isEditable: function(row, column) {return false;},
   performAction: function(action) { },
-  performActionOnCell: function(action, row, column) { }
+  performActionOnCell: function(action, row, column) { },
+  
+  getActionToken: function(row) {
+    return this.data[row] ? this.data[row].token : null;
+  },
+  setActionToken: function(token, row) {
+    this.data[row].token = token;
+  }
 };
 
 const kAioMime = "text/allinone-row";
@@ -130,6 +141,7 @@ var selTable = [], selHasRocker = false, selMissingDup = false;
 var dragService = Components.classes[kDragContractId].getService(kDSIID);
 var abbrTable = [], isEnabledTable = [], funcNbTable = [], rowIdTable = [];
 var rockFuncTable = [];
+var helpTable = {};
 var uniqueRowId;
 
 
@@ -139,7 +151,7 @@ var uniqueRowId;
 // Do not re-use the index - when you want to add new action then create it with the
 // next index in sequence, otherwise it may not appear in customization pane.
 
-var gestActionTable = [
+var gestActionTableTokens = [
       "g.browserBack", //0
       "g.browserForward", //1
       "g.browserReload", //2
@@ -239,6 +251,7 @@ var gestActionTable = [
       "g.toggleBookmarksToolbar", //96
       "g.closeTabsToTheRight", //97
     ];
+var gestActionTable = [];
 var rockerGestName = [
       "g.leftRocker",
       "g.rightRocker",
@@ -277,7 +290,7 @@ function setScrollGesturesVisibility(show) {
            isEnabledTable[j] = "/";
         }
         else isEnabledTable[j] = "";
-        gestView.addRow([gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]]);
+        gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], null);
         abbrTable[j] = "?"; funcNbTable[j] = rockFuncTable[i]; rowIdTable[j] = ++uniqueRowId + "";
      }
   }
@@ -310,11 +323,25 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   edfuncLabel = edfuncButton.label;
   addgestLabel = document.getElementById("addId").label;
   bundle = document.getElementById("allinonegestbundle");
-  var maxActions = gestActionTable.length;
-  for (var i = 0; i < maxActions; ++i) {
-    if (gestActionTable[i] != "g.nullAction") {
-      gestActionTable[i] = bundle.getString(gestActionTable[i]);
+  var maxActions = gestActionTableTokens.length;
+  
+  // load help descriptions for each action
+  var parser = new DOMParser();
+  var helpDoc = parser.parseFromString(ReadFile("chrome://allinonegest-en/content/help-options.html"), "text/html");
+  var docTrs = helpDoc.querySelectorAll("table.gestlist tbody tr");
+  var tds, matches, txt;
+  for (var i=0; i<docTrs.length; i++) {
+    tds = docTrs[i].getElementsByTagName('td');
+    if (tds.length >= 4) {
+      matches = /^\{([\w.]+)\}$/.exec(tds[0].firstChild.data.trim());
+      if (matches && tds[3].textContent.trim()) {
+        helpTable[matches[1]] = tds[3].innerHTML;
+      }
     }
+  }
+  
+  for (var i = 0; i < maxActions; ++i) {
+    gestActionTable[i] = (gestActionTableTokens[i] != "g.nullAction") ? bundle.getString(gestActionTableTokens[i]) : gestActionTableTokens[i];
   }
   rockerCount = rockerGestName.length;
   for (i = 0; i < rockerCount; ++i)
@@ -337,10 +364,11 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   gestureTree = document.getElementById("gesttree");
   treeBox = gestureTree.treeBoxObject;
   
-  gestView = new gestCustomizeTreeView(["functionId", "enabledColId", "gestTextId"]);
+  gestView = new gestCustomizeTreeView(["infoColId", "functionId", "enabledColId", "gestTextId"]);
   functionCol = gestureTree.columns["functionId"];
   gestureCol = gestureTree.columns["gestTextId"];
   enabledCol = gestureTree.columns["enabledColId"];
+  infoCol = gestureTree.columns["infoColId"];
   treeBoxView = gestView;
 
   treeBox.view = gestView;
@@ -361,18 +389,18 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
         isEnabledTable[j] = "";
      }
      rowIdTable[j] = j + "";
-     gestView.addRow([gestActionTable[func], "", expandedText(abbrTable[j])]);
+     gestView.addRow(["", gestActionTable[func], "", expandedText(abbrTable[j])], gestActionTableTokens[func]);
      maxFunc = Math.max(maxFunc, func);
      ++j;
   }
   rowCount = abbrTable.length;
   for (i = maxFunc + 1; i < maxActions; ++i) { // enter actions new to this version
-     gestView.addRow([gestActionTable[i], "", expandedText("")]);
+     gestView.addRow(["", gestActionTable[i], "", expandedText("")], gestActionTableTokens[i]);
      abbrTable[rowCount] = ""; funcNbTable[rowCount] = i + ""; rowIdTable[rowCount] = rowCount + "";
      isEnabledTable[rowCount++] = "";
   }
   gestView.stdRowCount = rowCount;
-  gestView.addRow(["", "", ""]);  // separator
+  gestView.addRow(["", "", "", ""], null);  // separator
   abbrTable[rowCount] = ""; funcNbTable[rowCount] = ""; rowIdTable[rowCount] = rowCount + "";
   totalCount = rowCount + rockerCount + 1;
   j = rowCount + 1;
@@ -384,12 +412,47 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
      else isEnabledTable[j] = "";
      func = rockFuncTable[i] - 0;
      if (func < 0 || func >= maxActions) rockFuncTable[i] = "0";
-     gestView.addRow([gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]]);
+     gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], null);
      abbrTable[j] = "?"; funcNbTable[j] = rockFuncTable[i]; rowIdTable[j] = j + "";
   }
   uniqueRowId = totalCount;
   clearSelectionTable();
   setTimeout(function(){selectRow(0);}, 0); // some sync
+}
+
+function ReadFile(file) {
+    var ioService=Components.classes["@mozilla.org/network/io-service;1"]
+        .getService(Components.interfaces.nsIIOService);
+    var scriptableStream=Components
+        .classes["@mozilla.org/scriptableinputstream;1"]
+        .getService(Components.interfaces.nsIScriptableInputStream);
+
+    var channel=ioService.newChannel(file,null,null);
+    var input=channel.open();
+    scriptableStream.init(input);
+    var str=scriptableStream.read(input.available());
+    scriptableStream.close();
+    input.close();
+    return str;
+}
+
+// replace {placeholders} with transated text from .properties file
+function aioTraslate(docFragment) {
+  var elems = docFragment.querySelectorAll('*');
+  var elem, txt, matches;
+
+  for (var i = 0; i < elems.length; i++) {
+    elem = elems[i];
+
+    if (elem.firstChild && elem.firstChild.nodeName == '#text' && elem.firstChild.data) {
+      txt = elem.firstChild.data.trim();
+      matches = /^\{([\w.]+)\}$/.exec(txt);
+
+      if (matches) {
+        elem.firstChild.data = bundle.getString(matches[1]);
+      }
+    }
+  }
 }
 
 function buttEnable(idTable, condTable) {
@@ -497,6 +560,11 @@ function mouseDownInTree(e) {
      treeBox.invalidateCell(r.value, c.value);
      return;
   }
+  
+  if (c.value.id == 'infoColId') {
+    showPopupInfo(r.value, e);
+  }
+  
   if (swapping || editing || funcEditing) {
      if (swapping) { // on the selected row since selectionInTree has not been called
         swapping = false;
@@ -526,6 +594,32 @@ function dblClickInTree(e) {
   
   if (c.value.id == 'gestTextId' || c.value.id == 'functionId') {
     editCurrentRow(false);
+  }
+}
+
+function showPopupInfo(row, e) {
+  // show info popup
+  var token = gestView.getActionToken(row);
+  
+  if (token) {
+    var popup = document.getElementById('infoPopup');
+    popup.openPopup(null, "", e.clientX - 5, e.clientY + 18, false, false);
+    
+    var div = document.getElementById('infoPopupContent');
+    
+    while(div.firstChild) 
+        div.removeChild(div.firstChild);
+    
+    var html = '<h1 id="title"></h1>' + (helpTable[token] ? helpTable[token] : "");
+    
+    //safely convert HTML string to a simple DOM object, stripping it of JavaScript and more complex tags
+    var injectHTML = Components.classes["@mozilla.org/feed-unescapehtml;1"] 
+    .getService(Components.interfaces.nsIScriptableUnescapeHTML) 
+    .parseFragment(html, false, null, div); 
+    
+    aioTraslate(injectHTML);
+    injectHTML.getElementById('title').textContent = bundle.getString(token);
+    div.appendChild(injectHTML);
   }
 }
 
@@ -710,7 +804,7 @@ function swapTwoRows() {
 function addGesture() {
   var currRow = getSelections()[0];
   var currFunc = funcNbTable[currRow];
-  gestView.addRow([gestActionTable[currFunc - 0], "", expandedText("")]);
+  gestView.addRow(["", gestActionTable[currFunc - 0], "", expandedText("")], gestActionTableTokens[currFunc - 0]);
   abbrTable[totalCount] = ""; funcNbTable[totalCount] = currFunc; rowIdTable[totalCount] = ++uniqueRowId + "";
   isEnabledTable[totalCount] = "";
   saveForUndo(totalCount, ++gUndoId); swapFunc.pop(); swapFunc.push("%");
@@ -867,6 +961,7 @@ function aioGetRowValue(aRow) {
   rowObj.fNbr = funcNbTable[aRow];
   rowObj.eChr = isEnabledTable[aRow];
   rowObj.roId = rowIdTable[aRow];
+  rowObj.token = gestView.getActionToken(aRow);
   return rowObj;
 }
 
@@ -877,4 +972,5 @@ function aioSetRowValue(aRow, rowObj) {
   funcNbTable[aRow] = rowObj.fNbr;
   isEnabledTable[aRow] = rowObj.eChr;
   rowIdTable[aRow] = rowObj.roId;
+  gestView.setActionToken(rowObj.token, aRow);
 }

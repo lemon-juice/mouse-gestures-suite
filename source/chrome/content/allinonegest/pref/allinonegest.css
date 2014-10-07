@@ -1,18 +1,40 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
-treechildren:-moz-tree-row(aioHovered) {
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+treechildren::-moz-tree-row(aioHovered) {
   background: #F0F0F0 url("feedback.png") no-repeat bottom left;
 }
-treechildren:-moz-tree-row(aioHoverCol) {
+treechildren::-moz-tree-row(aioHoverCol) {
   background: #F0F0F0 url("feedback.png") no-repeat top left;
 }
 treecol.enableColHeader {
   list-style-image: url("enabled.png");
 }
-treechildren:-moz-tree-image(enabledColId aioGestEnabled) {
+treechildren::-moz-tree-image(enabledColId, aioGestEnabled) {
   list-style-image: url("enabled.png");
 }
-treechildren:-moz-tree-image(enabledColId aioGestDisabled) {
+treechildren::-moz-tree-image(enabledColId, aioGestDisabled) {
   list-style-image: url("disabled.png");
+}
+treecol.infoColHeader {
+  list-style-image: url("info.png");
+}
+treechildren::-moz-tree-image(hasInfo) {
+  list-style-image: url("info.png");
+  cursor: pointer;
+}
+#infoPopup {
+  min-width: 250px;
+  max-width: 400px;
+}
+html|div#infoPopupContent {
+  padding: 1ex;
+}
+html|h1#title {
+  padding: 0;
+  margin: 0 0 1ex 0;
+  font-size: 120%;
+  text-decoration: underline !important;
 }
 .aio-indent {
 margin-left: 27px;

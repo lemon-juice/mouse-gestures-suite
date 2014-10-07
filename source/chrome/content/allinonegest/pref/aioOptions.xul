@@ -12,6 +12,7 @@
 
 <dialog id="allInOnePref"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      xmlns:html="http://www.w3.org/1999/xhtml"
       title="&allinonegest.label;"
       buttons="accept, cancel, help"
       onload="init();"
@@ -191,6 +192,9 @@
           onmousedown="mouseDownInTree(event);"
           ondblclick="dblClickInTree(event);">
         <treecols>
+          <treecol id="infoColId" persist="width" class="infoColHeader"
+                   fixed="true" tooltiptext="Click for info"/>
+          <splitter class="tree-splitter"/>
           <treecol persist="width" flex="8" id="functionId" label="&customize.function;"/>
           <splitter class="tree-splitter"/>
           <treecol id="enabledColId" persist="width" class="treecol-image enableColHeader"
@@ -200,6 +204,9 @@
         </treecols>
         <treechildren flex="1"/>
       </tree>
+      <panel id="infoPopup" position="after_start" onmousedown="this.hidePopup();">
+       <html:div id="infoPopupContent" type="content"/>
+      </panel>
    </vbox>
    <spacer flex="1"/>
    <vbox>
