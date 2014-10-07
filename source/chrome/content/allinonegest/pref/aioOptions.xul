@@ -204,9 +204,9 @@
         </treecols>
         <treechildren flex="1"/>
       </tree>
-      <panel id="infoPopup" position="after_start" onmousedown="this.hidePopup();">
+      <tooltip id="infoPopup" orient="vertical" noautohide="true" position="topleft" onpopuphidden="infoPopupHidden(event)">
        <html:div id="infoPopupContent" type="content"/>
-      </panel>
+      </tooltip>
    </vbox>
    <spacer flex="1"/>
    <vbox>

@@ -147,6 +147,7 @@ var abbrTable = [], isEnabledTable = [], funcNbTable = [], rowIdTable = [];
 var rockFuncTable = [];
 var helpTable = {};
 var uniqueRowId;
+var hidePopupTimer;
 
 
 // When you want to remove an action change its name to "g.nullAction" in the table
@@ -422,6 +423,9 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   uniqueRowId = totalCount;
   clearSelectionTable();
   setTimeout(function(){selectRow(0);}, 0); // some sync
+  
+  window.addEventListener("mousedown", hidePopupInfo, true);
+  window.addEventListener("blur", hidePopupInfo, false);
 }
 
 function ReadFile(file) {
@@ -604,10 +608,16 @@ function dblClickInTree(e) {
 function showPopupInfo(row, e) {
   // show info popup
   var token = gestView.getActionToken(row);
+  var popup = document.getElementById('infoPopup');
   
-  if (token && helpTable[token]) {
-    var popup = document.getElementById('infoPopup');
-    popup.openPopup(null, "", e.clientX - 10, e.clientY + 18, false, false);
+  if (token && helpTable[token] && popup.row != row) {
+    if (hidePopupTimer) {
+      clearTimeout(hidePopupTimer);
+      hidePopupTimer = null;
+    }
+    
+    popup.row = row;
+    popup.openPopup(null, "after_start", e.clientX - 14, e.clientY - 4, false, false);
     
     var div = document.getElementById('infoPopupContent');
     
@@ -625,6 +635,18 @@ function showPopupInfo(row, e) {
     injectHTML.getElementById('title').textContent = bundle.getString(token);
     div.appendChild(injectHTML);
   }
+}
+
+function hidePopupInfo() {
+  var popup = document.getElementById('infoPopup');
+  popup.hidePopup();
+}
+
+function infoPopupHidden(e) {
+  hidePopupTimer = setTimeout(function() {
+    var popup = document.getElementById('infoPopup');
+    popup.row = null;
+  }, 500);
 }
 
 function selectionInTree() {

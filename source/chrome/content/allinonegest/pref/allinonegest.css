@@ -30,19 +30,20 @@ treechildren::-moz-tree-image(hover, hasInfo, documented) {
 treechildren::-moz-tree-image(hasInfo, documented) {
   cursor: pointer;
 }
-#infoPopup {
-  min-width: 250px;
-  max-width: 400px;
-}
 html|div#infoPopupContent {
-  padding: 2.5ex;
+  padding: 1.5ex;
+  white-space: normal;
 }
-html|h1#title {
+html|div#infoPopupContent html|h1 {
   padding: 0;
   margin: 0 0 1ex 0;
   font-size: 120%;
-  text-decoration: underline !important;
+  text-decoration: underline;
 }
+html|div#infoPopupContent html|br {
+  line-height: 5px;
+}
+
 .aio-indent {
 margin-left: 27px;
 }
