@@ -173,7 +173,8 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Go to previous page in history. Equivalent to the browser back
+            button.<br>
           </td>
         </tr>
         <tr>
@@ -182,8 +183,8 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>Go to next page in history. Equivalent to the browser forward
+            button. </td>
         </tr>
         <tr>
           <td>{g.browserReload}</td>
@@ -191,7 +192,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Reload page (same as Control+R or F5).<br>
           </td>
         </tr>
         <tr>
@@ -200,7 +201,7 @@
           </td>
           <td><br>
           </td>
-          <td>Force reload from network (same as Control+Shift+R)</td>
+          <td>Force reload from network (same as Control+Shift+R).</td>
         </tr>
         <tr>
           <td>{g.browserStop}</td>
@@ -208,7 +209,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Stop loading page.<br>
           </td>
         </tr>
         <tr>
@@ -239,7 +240,7 @@
             <em>'Open new Tab/Window' opens link under performed gesture</em>.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window.</em></td>
+              foreground&lt;–&gt;background opening of tab/window.</em></td>
         </tr>
         <tr>
           <td>{g.browserOpenTabInBg}</td>
@@ -253,7 +254,7 @@
               performed gesture</em>.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window.</em></td>
+              foreground&lt;–&gt;background opening of tab/window.</em></td>
         </tr>
         <tr>
           <td>{g.openBlankTab}</td>
@@ -270,11 +271,11 @@
           </td>
           <td><br>
           </td>
-          <td>Duplicate current page in new tab. In Mail/News: open selected
-            message in new tab.<br>
+          <td>Open current page in new tab. In Mail/News: open selected message
+            in new tab.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window.</em><br>
+              foreground&lt;–&gt;background opening of tab/window.</em><br>
           </td>
         </tr>
         <tr>
@@ -283,11 +284,11 @@
           </td>
           <td><br>
           </td>
-          <td>Duplicate current page in new window. In Mail/News: open selected
+          <td>Open current page in new window. In Mail/News: open selected
             message in new window.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window.</em><br>
+              foreground&lt;–&gt;background opening of tab/window.</em><br>
           </td>
         </tr>
         <tr>
@@ -321,13 +322,13 @@
           </td>
           <td><br>
           </td>
-          <td>Open new foreground window or open link in new foreground window
-            if a link was found under gesture. Behavior of this action is
-            affected by advanced preference <em>'Open new Tab/Window' opens
-              link under performed gesture</em>.<br>
+          <td>Open new window or open link in new window if a link was found
+            under gesture. Behavior of this action is affected by advanced
+            preference <em>'Open new Tab/Window' opens link under performed
+              gesture</em>.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window.</em></td>
+              foreground&lt;–&gt;background opening of tab/window.</em></td>
         </tr>
         <tr>
           <td>{g.openWindowInBg}</td>
@@ -341,7 +342,7 @@
               link under performed gesture</em>.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window.</em></td>
+              foreground&lt;–&gt;background opening of tab/window.</em></td>
         </tr>
         <tr>
           <td>{g.openPrivateWindow}</td>
@@ -355,7 +356,7 @@
               performed gesture</em>.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window.</em></td>
+              foreground&lt;–&gt;background opening of tab/window.</em></td>
         </tr>
         <tr>
           <td>{g.doubleStackWin}</td>
@@ -374,7 +375,8 @@
           </td>
           <td><br>
           </td>
-          <td>Go to tab to the left.</td>
+          <td>Go to tab to the left. This action will wrap around if run on the
+            leftmost tab.</td>
         </tr>
         <tr>
           <td>{g.nextTab}</td>
@@ -382,7 +384,8 @@
           </td>
           <td><br>
           </td>
-          <td>Go to tab to the right.</td>
+          <td>Go to tab to the right. This action will wrap around if run on the
+            rightmost tab.</td>
         </tr>
         <tr>
           <td>{g.lastTab}</td>
@@ -406,7 +409,8 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Close tab. If run on page with one tab it will leave the browser
+            window open with one blank tab.<br>
           </td>
         </tr>
         <tr>
@@ -442,7 +446,7 @@
           </td>
           <td><br>
           </td>
-          <td>Close current tab or window if only one tab is open.</td>
+          <td>Close current tab. Close window if only one tab is open.</td>
         </tr>
         <tr>
           <td>{g.openSelection}</td>
@@ -455,7 +459,8 @@
             page of default search engine is opened.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window (SeaMonkey only).</em></td>
+              foreground&lt;–&gt;background opening of tab/window (SeaMonkey
+              only).</em></td>
         </tr>
         <tr>
           <td>{g.searchSelection}</td>
@@ -468,8 +473,7 @@
             the page of default search engine is opened.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;&ndash;&gt;background opening of tab/window</em><em class="shift-info"><em
-
+              foreground&lt;–&gt;background opening of tab/window</em><em class="shift-info"><em
                 class="shift-info"> (SeaMonkey only)</em>.</em></td>
         </tr>
         <tr>
@@ -565,7 +569,7 @@
           <td><br>
           </td>
           <td>Opens browser in full screen mode. For non-browser windows it does
-            the same as <em>{g.restMaxWin}</em>. </td>
+            the same thing as <em>{g.restMaxWin}</em>. </td>
         </tr>
         <tr>
           <td>{g.browserHome}</td>
@@ -600,7 +604,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Scroll down one page.<br>
           </td>
         </tr>
         <tr>
@@ -609,7 +613,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Scroll up one page.<br>
           </td>
         </tr>
         <tr>
@@ -618,7 +622,16 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Treat the URL of current page as a directory and change it so that
+            it points to the directory one level up. For example, page at <span
+              style="text-decoration: underline;">http://mysite.example.com/category/dogs?color=red</span>
+            will be subsequently converted to the following URLs:<br>
+            <ul>
+              <li>http://mysite.example.com/category/dogs</li>
+              <li>http://mysite.example.com/category/</li>
+              <li>http://mysite.example.com/</li>
+              <li>http://example.com/</li>
+            </ul>
           </td>
         </tr>
         <tr>
@@ -635,7 +648,9 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Increase text size on the page. Size of graphics and other
+            elements will also be increased if your browser is set up to zoom
+            full pages.<br>
           </td>
         </tr>
         <tr>
@@ -644,8 +659,9 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>Decrease text size on the page. Size of graphics and other
+            elements will also be decreased if your browser is set up to zoom
+            full pages. </td>
         </tr>
         <tr>
           <td>{g.resetZoom}</td>
@@ -662,7 +678,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Increase image size (will not work on background images).<br>
           </td>
         </tr>
         <tr>
@@ -671,8 +687,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>Decrease image size (will not work on background images). </td>
         </tr>
         <tr>
           <td>{g.resetImage}</td>
@@ -699,7 +714,8 @@
           <td><br>
           </td>
           <td>If performed over image zoom in the image. Otherwise zoom in text
-            on page.<br>
+            on page (along with graphics and other elements depending on your
+            browser settings).<br>
           </td>
         </tr>
         <tr>
@@ -709,7 +725,8 @@
           <td><br>
           </td>
           <td>If performed over image zoom out the image. Otherwise zoom out
-            text on page. </td>
+            text on page (along with graphics and other elements depending on
+            your browser settings). </td>
         </tr>
         <tr>
           <td>{g.resetSize}</td>
@@ -718,7 +735,8 @@
           <td><br>
           </td>
           <td>If performed over image reset the image size. Otherwise reset text
-            size on page. </td>
+            size on page (along with graphics and other elements depending on
+            your browser settings). </td>
         </tr>
         <tr>
           <td>{g.openImageInTab}</td>
@@ -744,7 +762,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Hide any object (html element) on page.<br>
           </td>
         </tr>
         <tr>
@@ -753,16 +771,18 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Undo hide last object. This will also work for multiple hidden
+            objects.<br>
           </td>
         </tr>
         <tr>
           <td>{g.hideFlash}</td>
           <td><br>
           </td>
-          <td><br>
+          <td style="width: 219.333px;"><br>
           </td>
-          <td>After hiding flash objects you can click each one to view.<br>
+          <td style="width: 427.9px;">Hide all flash objects on page. Later you
+            can click each one to show it again.<br>
           </td>
         </tr>
         <tr>
@@ -780,7 +800,8 @@
           </td>
           <td><br>
           </td>
-          <td>View frame source. If there is no frame then view page source.<br>
+          <td>View frame source. If there is no frame under gesture then view
+            page source.<br>
           </td>
         </tr>
         <tr>
@@ -789,7 +810,7 @@
           </td>
           <td><br>
           </td>
-          <td>View cookies on current site.<br>
+          <td>Show cookies on current site.<br>
           </td>
         </tr>
         <tr>
@@ -815,8 +836,8 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>View frame info. If there is no frame under gesture then view page
+            info. </td>
         </tr>
         <tr>
           <td>{g.jsConsole}</td>
@@ -824,7 +845,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Show error console. In Firefox – show web console.<br>
           </td>
         </tr>
         <tr>
@@ -833,7 +854,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Bookmark current page.<br>
           </td>
         </tr>
         <tr>
@@ -887,7 +908,9 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td style="height: 60px;">SeaMonkey: show or hide sidebar. In
+            Mail/News: show or hide Folder Pane.<br>
+            Firefox: show or hide bookmarks sidebar.<br>
           </td>
         </tr>
         <tr>
@@ -896,7 +919,9 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Show or hide status bar. In Firefox this action will work for
+            status bar or add-on bar only if you have <em>Status-4-Evar</em> or
+            <em>Classic Theme Restorer</em> extension installed.<br>
           </td>
         </tr>
         <tr>
@@ -924,7 +949,7 @@
           <td><br>
           </td>
           <td>Increment number in URL (for example, page number). If there are
-            multiple numbers you will be asked to choose the number to
+            multiple numbers you will be asked to choose which number to
             increment.<br>
           </td>
         </tr>
@@ -934,7 +959,8 @@
           </td>
           <td><br>
           </td>
-          <td>Decrement number in URL. </td>
+          <td>Decrement number in URL. If there are multiple numbers you will be
+            asked to choose which number to decrement.</td>
         </tr>
         <tr>
           <td>{g.clearDigitFlipper}</td>
@@ -943,7 +969,8 @@
           <td><br>
           </td>
           <td>Forget your choice about which number to increment/decrement in
-            URL.<br>
+            URL. Next time you will be asked again which number to
+            increment/decrement.<br>
           </td>
         </tr>
         <tr>
@@ -952,7 +979,7 @@
           </td>
           <td><br>
           </td>
-          <td>Save all links under gesture to files.<br>
+          <td>Save all links under gesture to disk.<br>
           </td>
         </tr>
         <tr>
@@ -1008,7 +1035,7 @@
           </td>
           <td>Link that contains one of the strings defined in <em>Advanced
               Prefs #1</em> will be followed. The <em>next</em> strings are
-            delimited with |. Useful for navigating to the next page.<br>
+            delimited with |. Useful for navigating to the next page on a site.<br>
           </td>
         </tr>
         <tr>
@@ -1017,8 +1044,10 @@
           </td>
           <td><br>
           </td>
-          <td>Like above.<br>
-          </td>
+          <td style="height: 60px;">Link that contains one of the strings
+            defined in <em>Advanced Prefs #1</em> will be followed. The <em>previous</em>
+            strings are delimited with |. Useful for navigating to the previous
+            page on a site. </td>
         </tr>
         <tr>
           <td>{g.smartBack1}</td>
@@ -1026,8 +1055,8 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>This will go back in history of current tab to the last page of
+            the previous site you were viewing. </td>
         </tr>
         <tr>
           <td>{g.smartBack2}</td>
@@ -1035,7 +1064,10 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>This will go back in history of current tab to the first page of
+            the site you are viewing. If you are already on the first page of
+            the site then this will move you to the first page of the previous
+            site in history.<br>
           </td>
         </tr>
         <tr>
@@ -1045,8 +1077,8 @@
           <td><br>
           </td>
           <td>This acts like the normal <strong>{g.browserForward}</strong>
-            function as far as there are pages in the forward history. Once at
-            the end, it acts like the <strong>{g.nextLink}</strong> function. </td>
+            function as far as there are pages in forward history. Once at the
+            end, it acts like the <strong>{g.nextLink}</strong> function. </td>
         </tr>
         <tr>
           <td>{g.smartForward1}</td>
@@ -1054,8 +1086,8 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>This will go forward in history of current tab to the first page
+            of the next site. </td>
         </tr>
         <tr>
           <td>{g.smartForward2}</td>
@@ -1063,8 +1095,10 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>This will go forward in history of current tab to the last page of
+            the site you are viewing. If you are already on the last page of the
+            site then this will move you to the last page of the next site in
+            history. </td>
         </tr>
         <tr>
           <td colspan="4"><br>
@@ -1147,8 +1181,7 @@
         Some sites that use ClickHeat:<br>
         <ul>
           <li>toolserver.org - a site to which many Wikipedia pages link in
-            order to present geographic coordinates of locations, for example: <a
-
+            order to present geographic coordinates of locations, for example: <a
               target="_blank" href="http://toolserver.org/%7Egeohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city">http://toolserver.org/~geohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city</a></li>
           <li><a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>
             - the ClickHeat site</li>
