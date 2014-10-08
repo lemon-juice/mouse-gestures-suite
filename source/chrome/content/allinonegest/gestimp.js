@@ -531,6 +531,8 @@ function aioNukeFlash() {
   var currFlash, height, width, top, next, span, text, view, disp, style;
   var topDocument = aioSrcEvent.target.ownerDocument.defaultView.top.document;
   var embeds = getElemsByTagNameForAllFrames(topDocument, "embed");
+  embeds = embeds.concat(getElemsByTagNameForAllFrames(topDocument, "object"));
+  
   for (var i = 0; i < embeds.length; ++i) {
     currFlash = embeds[i];
     if (currFlash.getAttribute("type") != "application/x-shockwave-flash") continue;
