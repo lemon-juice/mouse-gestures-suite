@@ -507,7 +507,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		 {
 		  if (!(aFlags & Components.interfaces.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
 			// don't run this when only URL hash changed or tab switched;
-			// Fx runs it even on tab switching.
+			// Fx and SM 2.29.1 and later run it even on tab switching.
 			aioParseSiteList();
 		  }
 		 },
@@ -625,16 +625,16 @@ function aioInit() { // overlay has finished loading or a pref was changed
 function aioParseSiteList() {
   var url = window.content.top.location.href;
   
-  if (url == "about:blank") {
-	return;
-  }
-  
   if (url === aioPrevParsedURL) {
 	return;
   }
   
   aioPrevParsedURL = url;
-   
+  
+  if (url == "about:blank") {
+	aioSitePref = null;
+	return;
+  }
   var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
   
   var hashPos = url.indexOf('#'); // ignore hash part
