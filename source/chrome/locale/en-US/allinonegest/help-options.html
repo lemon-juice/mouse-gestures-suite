@@ -775,7 +775,7 @@
           <td><br>
           </td>
           <td>Undo hide last object. This will also work for multiple hidden
-            objects.<br>
+            objects one by one.<br>
           </td>
         </tr>
         <tr>
@@ -1180,15 +1180,6 @@
         that is <em>very</em> unlikely - ClickHeat is detected by the presence
         of <em>catchClickHeat()</em> javascript function on web pages). Turn it
         on for best mouse gesture experience.<br>
-        <br>
-        Some sites that use ClickHeat:<br>
-        <ul>
-          <li>toolserver.org - a site to which many Wikipedia pages link in
-            order to present geographic coordinates of locations, for example: <a
-              target="_blank" href="http://toolserver.org/%7Egeohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city">http://toolserver.org/~geohack/geohack.php?pagename=Moskva&amp;params=55_45_N_37_35_E_type:city</a></li>
-          <li><a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>
-            - the ClickHeat site</li>
-        </ul>
         <p>Unfortunately, there is no way for any mouse gesture extension to
           work around the problems caused by such bad-behaving scripts so the
           only practical solution is to simply block them (actually, this could
@@ -1221,10 +1212,11 @@
         problematic pages are those containing scripts for tracking mouse
         clicks.</li>
       <li><strong><em>{opt.sitePrefD}</em></strong> - use this for turning off
-        mouse gestures completely on certain pages. It is quite rare but it may
-        happen that mouse gestures interfere with functionality of a web page
-        that uses scripts to detect mouse clicks and movements, especially when
-        combined with right- or middle-clicks.</li>
+        mouse gestures completely on certain pages. Even if mouse gestures are
+        turned off in this way in a web page they will still work if you
+        initiate them on a tab. It is quite rare but it may happen that mouse
+        gestures interfere with functionality of a web page, especially one that
+        makes use of right- or middle-clicks.</li>
       <li><strong><em>{opt.sitePrefN}</em></strong> - mouse gestures will work
         normally, this option has the same effect as if you deleted the web site
         from the list but the entry is preserved for future use.</li>
@@ -1233,19 +1225,28 @@
     </ul>
     <p><strong>URL</strong> format and examples:</p>
     <ul>
-      <li><em>http://www.example.com/</em> or <em>https://www.example.com/contact</em>
+      <li><span style="text-decoration: underline;">http://www.example.com/</span>
+        or <span style="text-decoration: underline;">https://www.example.com/contact</span>
         - full URLs like this will match exactly the page at given address and
         nothing else.</li>
-      <li><em>www.example.com/</em> (or <em>www.example.com</em>), or <em>www.example.com/contact</em>
-        - same as above but if no protocol is given then this will match pages
+      <li><span style="text-decoration: underline;">www.example.com/</span> (or
+        <span style="text-decoration: underline;">www.example.com</span>), or <span
+          style="text-decoration: underline;">www.example.com/contact</span> -
+        same as above but if no protocol is given then this will match pages
         under any protocol like http:// or https://.</li>
-      <li><em>www.example.com/*</em> - use this to match any page within the
-        whole site/domain. The * character means "any number of characters or no
-        characters at all".</li>
-      <li><em>http://www.example.com/*.html</em> - this will match all pages at
-        <em>http://www.example.com/</em> whose URLs end with .html</li>
-      <li><em>http://www.example.com/about#contact</em> - any targets specified
-        with the hash character are ignored so it is the same as <em>http://www.example.com/about</em>.</li>
+      <li><span style="text-decoration: underline;">www.example.com/*</span> -
+        use this to match any page within the whole site/domain. The * character
+        means "any number of characters or no characters at all".</li>
+      <li><span style="text-decoration: underline;">http://www.example.com/*.html</span>
+        - this will match all pages at <em>http://www.example.com/</em> whose
+        URLs end with .html</li>
+      <li><span style="text-decoration: underline;">http://www.example.com/about#contact</span>
+        - any targets specified with the hash character are ignored so it is the
+        same as <span style="text-decoration: underline;">http://www.example.com/about</span>.</li>
+      <li><span style="text-decoration: underline;">*.example.com/*</span> -
+        this will match all subdomains of <em>example.com</em>. Please note
+        this will not match <em>example.com</em> itself - you would been to add
+        a separate entry for that.</li>
     </ul>
     <p>When you visit a site for which a special rule has been defined you will
       see the information in the status bar when you press the right or middle
