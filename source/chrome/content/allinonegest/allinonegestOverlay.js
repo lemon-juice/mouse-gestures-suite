@@ -637,7 +637,7 @@ function aioParseSiteList() {
   }
   var searchUrl, searchUrlEsc, urlRegex, urlToTest, matches;
   
-  var hashPos = url.indexOf('#'); // ignore hash part
+  var hashPos = url.lastIndexOf('#'); // ignore hash part
   if (hashPos >= 0) {
 	// strip hash
 	url = url.substr(0, hashPos);

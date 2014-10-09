@@ -133,7 +133,15 @@ function insertRecentUrl(exactUrl) {
   }
   
   if (url) {
-    if (!exactUrl) {
+    if (exactUrl) {
+      // remove hash
+      var hashPos = url.lastIndexOf('#');
+      if (hashPos >= 0) {
+        // strip hash
+        url = url.substr(0, hashPos);
+      }
+
+    } else {
       // extract domain
       url = new URL(url).hostname + "/*";
     }

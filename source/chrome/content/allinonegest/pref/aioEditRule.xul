@@ -32,17 +32,17 @@
     <textbox id="siteURL" width="500" />
     <hbox>
       <button label="Insert rule for recently viewed site" oncommand="insertRecentUrl(false);" />
-      <button label="Insert rule for recently viewed web page" oncommand="insertRecentUrl(true);" />
+      <button label="Insert rule for recently viewed page" oncommand="insertRecentUrl(true);" />
     </hbox>
   </vbox>
 </groupbox>
 
-<hbox style="margin-top: 1ex">
-   <label value="Action:" />
-</hbox>
-<hbox>
-  <radiogroup id="siteAction" orient="horizontal">
-  </radiogroup>
-</hbox>
+<groupbox orient="horizontal">
+  <caption label="Action:" />
+  <hbox>
+    <radiogroup id="siteAction" orient="horizontal">
+    </radiogroup>
+  </hbox>
+</groupbox>
 
 </dialog>
