@@ -26,14 +26,18 @@
   <stringbundle id="brandbundle" src="chrome://global/locale/brand.properties"/>
 </stringbundleset>
 
-<hbox>
-   <label value="URL:" />
-</hbox>
-<hbox>
-   <textbox id="siteURL" width="430" />
-</hbox>
+<groupbox orient="horizontal">
+  <caption label="URL (wildcard characters * are allowed):"/>
+  <vbox>
+    <textbox id="siteURL" width="500" />
+    <hbox>
+      <button label="Insert rule for recently viewed site" oncommand="insertRecentUrl(false);" />
+      <button label="Insert rule for recently viewed web page" oncommand="insertRecentUrl(true);" />
+    </hbox>
+  </vbox>
+</groupbox>
 
-<hbox>
+<hbox style="margin-top: 1ex">
    <label value="Action:" />
 </hbox>
 <hbox>

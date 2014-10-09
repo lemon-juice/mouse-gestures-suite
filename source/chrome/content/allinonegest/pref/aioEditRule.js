@@ -123,3 +123,45 @@ function openSiteListHelp() {
   var win = window.open("chrome://allinonegest-en/content/help-options.html#siteList", "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=850,height=660");
   win.focus(); 
 }
+
+function insertRecentUrl(exactUrl) {
+  var win = window.opener.opener;
+  var url = win.content.document.location.href;
+  
+  if (url.indexOf('about:') == 0 || url.indexOf('chrome://allinonegest/') == 0) {
+    url = getLastUrlFromHistory();
+  }
+  
+  if (url) {
+    if (!exactUrl) {
+      // extract domain
+      url = new URL(url).hostname + "/*";
+    }
+    
+    document.getElementById('siteURL').value = url;
+  }
+}
+
+function getLastUrlFromHistory() {
+  var historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"]
+      .getService(Components.interfaces.nsINavHistoryService);
+  
+  var options = historyService.getNewQueryOptions(Components.interfaces.nsINavHistoryQueryOptions.SORT_BY_DATE_DESCENDING);
+  options.sortingMode = options.SORT_BY_DATE_DESCENDING;
+  options.queryType = options.QUERY_TYPE_HISTORY;
+  options.maxResults = 1;
+  
+  var query = historyService.getNewQuery();
+  
+  var result = historyService.executeQuery(query, options);
+  result.root.containerOpen = true;
+  var uri = null;
+
+  try {
+    var node = result.root.getChild(0);
+    uri = node.uri;
+  } catch (err) {};
+  
+  result.root.containerOpen = false;
+  return uri;
+}
