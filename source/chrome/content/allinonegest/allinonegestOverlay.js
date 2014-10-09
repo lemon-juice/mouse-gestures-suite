@@ -774,7 +774,7 @@ function aioGestMove(e) {
 		  aioCurrGest = aioUnknownStr;
 		}
      }
-     aioStatusMessage(aioGestStr + ": " + aioLocaleGest + " (" + aioCurrGest + ")", 0);
+     aioStatusMessage(aioGestStr + ": " + aioLocaleGest.join("") + " (" + aioCurrGest + ")", 0);
   }
   aioOldX = e.screenX; aioOldY = e.screenY;
 }
