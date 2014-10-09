@@ -178,7 +178,7 @@ function aioIndicateGestureTimeout() {
 	  }
 	  aioTimeoutCtx.stroke();
     }
-    aioStatusBar.label += "  [X]";
+	aioStatusMessage("  [X]", null, true);
   
   } catch(err) {}
 }

@@ -18,6 +18,7 @@ const xulNS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const aioKProperties = "chrome://allinonegest/locale/allinonegest.properties";
 // global variables for mouse gestures
 var aioContent, aioRendering, aioTabRendering, aioContextPopup, aioMainWin, aioStatusBar;
+var aioLastStatusMsg = "";
 var aioBlockActionStatusMsg;
 var aioIsWin, aioIsMac, aioIsNix;
 var aioFirstInit = true;

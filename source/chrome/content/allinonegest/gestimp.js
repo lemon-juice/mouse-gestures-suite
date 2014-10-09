@@ -132,15 +132,21 @@ var aioOrigBlurTab;
 var aioStatusMessageTO;
 const aioKGestures = aioDir + "show-gestures.html";
 
-function aioStatusMessage(msg, timeToClear) {
+function aioStatusMessage(msg, timeToClear, append) {
   if (aioStatusMessageTO) {
     clearTimeout(aioStatusMessageTO);
     aioStatusMessageTO = null;
   }
   
-  if (!msg) {
+  if (!msg && !append) {
     clearFauxStatusBar();
   }
+  
+  if (append) {
+    msg = aioLastStatusMsg + msg;
+  }
+  
+  aioLastStatusMsg = msg;
   
   var bar = document.getElementById("status-bar");
   var s4eBar = document.getElementById("status4evar-status-bar");
@@ -194,6 +200,7 @@ function clearFauxStatusBar() {
   if (tooltip) {
     tooltip.parentNode.removeChild(tooltip);
   }
+  aioLastStatusMsg = "";
 }
 
 function aioInitGestTable() {
