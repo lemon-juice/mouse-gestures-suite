@@ -133,15 +133,66 @@ var aioStatusMessageTO;
 const aioKGestures = aioDir + "show-gestures.html";
 
 function aioStatusMessage(msg, timeToClear) {
-  if (!aioStatusBar) return;
-  
   if (aioStatusMessageTO) {
     clearTimeout(aioStatusMessageTO);
+    aioStatusMessageTO = null;
   }
   
-  aioStatusBar.label = msg;
+  if (!msg) {
+    clearFauxStatusBar();
+  }
+  
+  var bar = document.getElementById("status-bar");
+  var s4eBar = document.getElementById("status4evar-status-bar");
+  var addonBar = document.getElementById("addon-bar");
+  if ((bar && (bar.hidden || bar.getAttribute('moz-collapsed') == "true")) // SM
+      || (s4eBar && s4eBar.getAttribute('collapsed') == "true" && aioStatusBar.getAttribute('inactive') == "true") // Fx with S4E
+      || (aioStatusBar && aioStatusBar.nodeName == 'statuspanel' && aioStatusBar.getAttribute('inactive') == "true" && addonBar && addonBar.getAttribute('collapsed') == "true") // Pale Moon
+    ) {
+    // create faux status bar if normal status bar is hidden
+    aioShowInFauxStatusBar(msg);
+  
+  } else if (aioStatusBar) {
+    aioStatusBar.label = msg;
+  }
+  
   if (timeToClear) {
     aioStatusMessageTO = setTimeout(function(){aioStatusMessage("", 0);}, timeToClear );
+  }
+}
+
+function aioShowInFauxStatusBar(msg) {
+  if (!msg) {
+    clearFauxStatusBar();
+    return;
+  }
+  
+  var tooltip = document.getElementById('aioFauxStatusBar');
+  
+  if (!tooltip) {
+    tooltip = document.createElementNS(xulNS, 'tooltip');
+    tooltip.id = "aioFauxStatusBar";
+    tooltip.setAttribute("noautohide", "true");
+    tooltip.setAttribute("orient", "vertical");
+    tooltip.style.position = 'fixed';
+    tooltip.style.bottom = '10px';
+    tooltip.style.left = '10px';
+    tooltip.style.pointerEvents = 'none';
+    aioContent.appendChild(tooltip);
+  }
+  
+  tooltip.textContent = msg;
+  if (tooltip.openPopup == 'function') {
+    // openPopup function doesn't exist in Mail
+    tooltip.openPopup(null, "after_start", 0, 0, false, false);
+  }
+}
+
+function clearFauxStatusBar() {
+  var tooltip = document.getElementById('aioFauxStatusBar');
+  
+  if (tooltip) {
+    tooltip.parentNode.removeChild(tooltip);
   }
 }
 
