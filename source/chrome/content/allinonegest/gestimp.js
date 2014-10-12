@@ -1009,6 +1009,7 @@ function aioGetReferrer() {
  * from opened links" in tabbed browsing preferences
  * @param {boolean} bg Whether to open in background tab 
  * @param {boolean} [reverseBg] Whether to reverse final background setting
+ * @returns {object|null} New tab if invoked from a browser window
  */
 function aioLinkInTab(url, usePref, bg, reverseBg) {
   url = aioSanitizeUrl(url);
@@ -1022,6 +1023,7 @@ function aioLinkInTab(url, usePref, bg, reverseBg) {
     }
     
     if (!loadInBg) aioContent.selectedTab = tab;
+    return tab;
   
   } else {
     if (reverseBg) {
@@ -1033,6 +1035,7 @@ function aioLinkInTab(url, usePref, bg, reverseBg) {
     } else {
       openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg);
     }
+    return null;
   }
 }
 
@@ -1063,9 +1066,24 @@ function aioOpenInNewTab(bg) {
   }
   else {
     if (aioWindowType == "browser") {
-      if (!bg) BrowserOpenTab();
-      else aioLinkInTab("about:blank", false, true);
+      if (aioGestureTab) {
+        // open new tab next to selected tab
+        var selectedTabPos = aioContent.getTabIndex ? aioContent.getTabIndex(aioGestureTab) : aioGestureTab._tPos;
+      }
       
+      if (!bg) {
+        BrowserOpenTab();
+        if (aioGestureTab) {
+          aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
+        }
+        
+      } else {
+        var newTab = aioLinkInTab("about:blank", false, true);
+        if (aioGestureTab) {
+          aioContent.moveTabTo(newTab, selectedTabPos + 1);
+        }
+      }
+    
     } else {
       if (aioIsFx) {
         openNewTabWith("about:blank");
@@ -1690,7 +1708,15 @@ function aioSwitchTab(advanceBy) {
 function aioOpenBlankTab() {
   switch (aioWindowType) {
     case "browser":
+      if (aioGestureTab) {
+        // open new tab next to selected tab
+        var selectedTabPos = aioContent.getTabIndex ? aioContent.getTabIndex(aioGestureTab) : aioGestureTab._tPos;
+      }
+      
       BrowserOpenTab();
+      if (aioGestureTab) {
+        aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
+      }
       break;
     
     default:

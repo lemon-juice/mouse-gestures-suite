@@ -133,6 +133,10 @@
       <li><em>{g.browserReloadSkipCache}</em> </li>
       <li><em>{g.browserStop}</em></li>
       <li><em>{g.reloadFrame}</em> (applies to top frame when invoked on tab)</li>
+      <li><em>{g.browserOpenTabInFg}</em>, <em>{g.browserOpenTabInBg}</em>, <em>{g.openBlankTab}</em>
+        <em class="shift-info">– </em>new blank tab will be opened next to the
+        selected tab<em><br>
+        </em></li>
       <li><em>{g.duplicateTab}</em></li>
       <li><em>{g.duplicateWindow}</em></li>
       <li><em>{g.detachTab}</em></li>
@@ -239,6 +243,10 @@
             gesture. Behavior of this action is affected by advanced preference
             <em>'Open new Tab/Window' opens link under performed gesture</em>.<br>
             <br>
+            If you initiate the gesture on a tab then a new tab will be opened
+            next to the selected tab (by default new blank tabs open at the
+            right end).<br>
+            <br>
             <em class="shift-info">Shift key can be used to reverse
               foreground&lt;–&gt;background opening of tab/window.</em></td>
         </tr>
@@ -253,6 +261,9 @@
             advanced preference <em>'Open new Tab/Window' opens link under
               performed gesture</em>.<br>
             <br>
+            If you initiate the gesture on a tab then a new tab will be opened
+            next to the selected tab.<br>
+            <br>
             <em class="shift-info">Shift key can be used to reverse
               foreground&lt;–&gt;background opening of tab/window.</em></td>
         </tr>
@@ -262,8 +273,11 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>Open blank tab.<br>
+            <br>
+            If you initiate the gesture on a tab then a new tab will be opened
+            next to the selected tab (by default new blank tabs open at the
+            right end). </td>
         </tr>
         <tr>
           <td>{g.duplicateTab}</td>
