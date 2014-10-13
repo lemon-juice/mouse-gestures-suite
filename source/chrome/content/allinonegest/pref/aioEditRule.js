@@ -143,7 +143,9 @@ function insertRecentUrl(exactUrl) {
 
     } else {
       // extract domain
-      url = new URL(url).hostname + "/*";
+      var a = document.createElementNS("http://www.w3.org/1999/xhtml", 'a');
+      a.href = url;
+      url = a.hostname + "/*";
     }
     
     document.getElementById('siteURL').value = url;
