@@ -1080,6 +1080,12 @@ function aioOpenInNewTab(bg) {
         BrowserOpenTab();
         if (aioGestureTab) {
           aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
+        
+          if (aioIsRocker && aioSrcEvent && aioSrcEvent.button == aioLMB) {
+            setTimeout(function() {
+              aioContent.mTabContainer.selectedIndex = selectedTabPos + 1;
+            }, 100);
+          }
         }
         
       } else {
@@ -1726,6 +1732,12 @@ function aioOpenBlankTab() {
       BrowserOpenTab();
       if (aioGestureTab) {
         aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
+        
+        if (aioIsRocker && aioSrcEvent && aioSrcEvent.button == aioLMB) {
+          setTimeout(function() {
+            aioContent.mTabContainer.selectedIndex = selectedTabPos + 1;
+          }, 100);
+        }
       }
       break;
     
