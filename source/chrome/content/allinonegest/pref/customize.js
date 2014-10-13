@@ -637,12 +637,13 @@ function showPopupInfo(row, e) {
     var html = '<h1 id="title"></h1>' + helpTable[token];
     
     //safely convert HTML string to a simple DOM object, stripping it of JavaScript and more complex tags
-    var injectHTML = Components.classes["@mozilla.org/feed-unescapehtml;1"] 
-    .getService(Components.interfaces.nsIScriptableUnescapeHTML) 
-    .parseFragment(html, false, null, div); 
+    var parserUtils = Components.classes["@mozilla.org/parserutils;1"]
+                  .getService(Components.interfaces.nsIParserUtils);
     
+    var injectHTML = parserUtils.parseFragment(html, 0, false, null, div);
     aioTraslate(injectHTML);
-    injectHTML.getElementById('title').textContent = bundle.getString(token);
+    injectHTML.firstChild.textContent = bundle.getString(token);
+    
     div.appendChild(injectHTML);
   }
 }
