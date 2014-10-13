@@ -332,7 +332,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
   XULAppInfo = Components.classes["@mozilla.org/xre/app-info;1"]
                 .getService(Components.interfaces.nsIXULAppInfo);
 				
-  if (XULAppInfo.ID == '{ec8030f7-c20a-464f-9b0e-13a3a9e97384}') {
+  if (XULAppInfo.ID != '{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}') {  // SM id
 	aioIsFx = true;  // if false, then SM
   }
   
