@@ -1072,6 +1072,11 @@ function aioOpenInNewTab(bg) {
       }
       
       if (!bg) {
+        if (aioIsRocker && !aioGestureTab && aioSrcEvent) {
+          // prevent selection from staying in unfinished state
+          _aioSendMouseUpEvent(aioSrcEvent);
+        }
+
         BrowserOpenTab();
         if (aioGestureTab) {
           aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
@@ -1713,6 +1718,11 @@ function aioOpenBlankTab() {
         var selectedTabPos = aioContent.getTabIndex ? aioContent.getTabIndex(aioGestureTab) : aioGestureTab._tPos;
       }
       
+      if (aioIsRocker && !aioGestureTab && aioSrcEvent) {
+        // prevent selection from staying in unfinished state
+        _aioSendMouseUpEvent(aioSrcEvent);
+      }
+
       BrowserOpenTab();
       if (aioGestureTab) {
         aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
@@ -2084,7 +2094,13 @@ function aioOpenConsole() {
   }
 }
 
-
 function aioNullAction() {
   alert("This action does not exist");
+}
+
+function _aioSendMouseUpEvent(e) {
+  var dwu = e.view.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+            .getInterface(Components.interfaces.nsIDOMWindowUtils);
+  
+  dwu.sendMouseEvent("mouseup", e.clientX, e.clientY, 0, 1, 0);
 }

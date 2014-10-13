@@ -34,6 +34,7 @@ var aioLastEvtTime; // time of last gesture stroke
 var aioOnLink = []; // array of objects representing the links traversed during gesture
 var aioOnImage = null; // contains an image DOM node
 var aioSrcEvent; // event which started the active gesture
+var aioIsRocker = false;
 var aioBundle; // String bundle for localized strings
 var aioShowContextMenu;
 var aioGestEnabled, aioRockEnabled;  // prefs ....
@@ -850,8 +851,10 @@ function aioClearRocker() {
 }
 
 function aioPerformRockerFunction(index) {
+  aioIsRocker = true;
   try {aioRockerAction[index]();}
   catch(err) {}
+  aioIsRocker = false;
 }
 
 function aioGesturableURI() {
