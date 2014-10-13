@@ -606,7 +606,12 @@ function dblClickInTree(e) {
   treeBox.getCellAt(e.clientX, e.clientY, r, c, type);
   
   if (c.value.id == 'gestTextId' || c.value.id == 'functionId') {
-    editCurrentRow(false);
+    // run default action only if its button is not disabled
+    if (document.getElementById('editId').getAttribute('disabled') != 'true') {
+      editCurrentRow(false);
+    } else if (document.getElementById('edfuncId').getAttribute('disabled') != 'true') {
+      editFunction();
+    }
   }
 }
 
