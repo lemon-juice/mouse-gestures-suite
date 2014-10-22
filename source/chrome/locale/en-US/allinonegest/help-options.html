@@ -222,7 +222,7 @@
           </td>
           <td><br>
           </td>
-          <td>Reload frame under gesture or reload page if no frame exists.</td>
+          <td>Reload frame under gesture or reload page if no frame was detected.</td>
         </tr>
         <tr>
           <td>{g.reloadAllTabs}</td>
@@ -639,14 +639,13 @@
           <td>Treat the URL of current page as a directory and change it so that
             it points to the directory one level up. For example, page at<br>
             <ul>
-              <li><span style="text-decoration: underline;">http://mysite.example.com/category/dogs?color=red</span></li>
+              <li><span style="text-decoration: underline;">http://animals.example.com/category/dogs</span></li>
             </ul>
             <span style="text-decoration: underline;"></span> will be
             subsequently converted to the following URLs:<br>
             <ul>
-              <li>http://mysite.example.com/category/dogs</li>
-              <li>http://mysite.example.com/category/</li>
-              <li>http://mysite.example.com/</li>
+              <li>http://<span style="text-decoration: underline;">animals</span>.example.com/category/</li>
+              <li>http://<span style="text-decoration: underline;">animals</span>.example.com/</li>
               <li>http://example.com/</li>
             </ul>
           </td>
