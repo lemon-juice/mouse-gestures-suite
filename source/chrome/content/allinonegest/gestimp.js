@@ -83,7 +83,7 @@ var aioActionTable = [
       [function(){aioSavePageAs();}, "g.savePageAs", 0, "", null], // 68
       [function(){aioGoToPreviousSelectedTab();}, "g.prevSelectedTab", 1, "", ["browser"]], // 69
       [function(){aioShowHideStatusBar();}, "g.showHideStatusBar", 1, "", null], // 70
-      [function(){aioSrcEvent.target.ownerDocument.location.reload();}, "g.reloadFrame", 0, "", ["browser"]], // 71
+      [function(){aioReloadFrame()}, "g.reloadFrame", 0, "", ["browser", "source", "messenger"]], // 71
       [function(){aioSetImgSize(true,true);}, "g.enlargeObject", 1, "73", ["browser", "source", "messenger"]], // 72
       [function(){aioSetImgSize(false,true);}, "g.reduceObject", 1, "72", ["browser", "source", "messenger"]], // 73
       [function(){aioResetImgSize(true);}, "g.resetSize", 1, "", ["browser", "source", "messenger"]], //74
@@ -338,6 +338,25 @@ function aioReload(skipCache) {
 
     case "source":
       ViewSourceReload();
+      break;
+  }
+}
+
+function aioReloadFrame() {
+  switch (aioWindowType) {
+    case "browser":
+      if (aioGestureTab) {
+        aioReload(false);
+        
+      } else {
+        // reload frame
+        aioSrcEvent.target.ownerDocument.location.reload();
+      }
+      break;
+
+    case "messenger":
+    case "source":
+      aioReload(false);
       break;
   }
 }
