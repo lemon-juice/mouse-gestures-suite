@@ -1546,9 +1546,7 @@ function aioAutoScrollKey(e) {
     case VK_UP   : if (aioScroll.scrollType < 2 && (aioScroll.isXML || aioScroll.isBody)) {
                       var inc = e.keyCode == VK_UP ? -20 : 20 ;
                       if (aioMarker) {
-                        aioMarkerY -= inc;
-                        aioMarker.moveTo(aioMarkerX + aioMainWin.boxObject.screenX,
-                          aioMarkerY + aioMainWin.boxObject.screenY);
+						aioMarker.moveBy(0, inc);
                       }
 
                       aioLastY -= inc;
@@ -1560,9 +1558,7 @@ function aioAutoScrollKey(e) {
     case VK_RIGHT: if (!(aioScroll.scrollType & 1) && (aioScroll.isXML || aioScroll.isBody)) {
                       inc = e.keyCode == VK_LEFT ? -20 : 20 ;
                       if (aioMarker) {
-                        aioMarkerX -= inc;
-                        aioMarker.moveTo(aioMarkerX + aioMainWin.boxObject.screenX,
-                          aioMarkerY + aioMainWin.boxObject.screenY);
+                        aioMarker.moveBy(inc, 0);
                       }
 
                       aioLastX -= inc;
@@ -1778,19 +1774,60 @@ function aioAddMarker(e) {
     el.style.cursor = aioCursors[aioScroll.scrollType];
     aioScroll.insertionNode.appendChild(el);
     aioOverlay = el;
+  } else {
+	aioOverlay = null;
   }
-  else aioOverlay = null;
+  
   // marker
   if (!aioNoScrollMarker) {
-     el = document.createElementNS(xulNS, "popup");
-     el.id = aioMarkerIds[aioScroll.scrollType];
-     document.documentElement.appendChild(el);
-     document.popupNode = null;
-     aioMarkerX = e.screenX - aioHalfMarker; aioMarkerY = e.screenY - aioHalfMarker;
-     el.openPopupAtScreen(aioMarkerX, aioMarkerY, false);
-     aioMarker = el;
+	switch (aioWindowType) {
+		case 'browser':
+		  insertionNode = document.getElementById("content"); // tabbrowser
+		  break;
+		
+		case 'messenger':
+		  insertionNode = document.getElementById("messagepanebox");
+		  break;
+		
+		case 'mailcompose':
+		case 'source':
+		  insertionNode = document.getElementById("appcontent");
+		  break;
+	}
+	
+	aioMarkerX = e.screenX - window.mozInnerScreenX - aioHalfMarker;
+	aioMarkerY = e.screenY - window.mozInnerScreenY - aioHalfMarker;
+	
+	var canvas = document.createElementNS(xhtmlNS, "canvas");
+	canvas.id = aioMarkerIds[aioScroll.scrollType];
+	canvas.style.position = "fixed";
+	canvas.width = window.outerWidth;
+	canvas.height = window.outerHeight;
+	canvas.style.top = "0";
+	canvas.style.left = "0";
+	canvas.style.pointerEvents = "none";
+	canvas.style.zIndex = 10000;
+  
+	insertionNode.appendChild(canvas);
+  
+	var ctx = canvas.getContext('2d');
+	var img = new Image();
+	img.onload = function() {
+	  ctx.drawImage(img, aioMarkerX, aioMarkerY);
+	}
+	img.src = aioMarkers[aioScroll.scrollType];
+	
+	aioMarker = canvas;
+	aioMarker.moveBy = function(shiftX, shiftY) {
+	  ctx.clearRect(aioMarkerX, aioMarkerY, aioMarkerSize, aioMarkerSize)
+	  aioMarkerX += shiftX;
+	  aioMarkerY += shiftY;
+	  ctx.drawImage(img, aioMarkerX, aioMarkerY);
+	};
+	
+  } else {
+	aioMarker = null;
   }
-  else aioMarker = null;
 
   return (aioScroll.isXML || aioScroll.isBody) - 0;
 }
@@ -1798,7 +1835,6 @@ function aioAddMarker(e) {
 function aioRemoveMarker() {
   if (aioMarker) {
     try {
-	    aioMarker.hidePopup();
       aioMarker.parentNode.removeChild(aioMarker);
 	}
 	catch(err) {}
@@ -1806,7 +1842,6 @@ function aioRemoveMarker() {
   }
   if (aioOverlay) {
     try {
-      aioOverlay.style.display = "none";
       aioOverlay.parentNode.removeChild(aioOverlay);
 	}
 	catch(err) {}
