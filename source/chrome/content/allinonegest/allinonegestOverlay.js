@@ -378,7 +378,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	 [function(){aioASEnabled=aioPref.getBoolPref("autoscrolling2");}, function(){aioPref.setBoolPref("autoscrolling2",true);}, function(){return false;}], // Middle button scrolling
 	 [function(){aioTabSwitching=aioPref.getBoolPref("tabBar");}, function(){aioPref.setBoolPref("tabBar",true);}, function(){return false;}],
 	 [function(){aioWhatAS=aioPref.getIntPref("autoscrollpref");}, function(){aioPref.setIntPref("autoscrollpref",1);}, function(){return aioWhatAS<0||aioWhatAS>3;}],
-	 [function(){aioScrollRate=aioPref.getIntPref("autoscrollRate");}, function(){aioPref.setIntPref("autoscrollRate",0);}, function(){return aioScrollRate<0||aioScrollRate>2;}],
+	 [function(){aioScrollRate=aioPref.getIntPref("autoscrollRate");}, function(){aioPref.setIntPref("autoscrollRate",1);}, function(){return aioScrollRate<0||aioScrollRate>2;}],
 	 [function(){aioNoScrollMarker=aioPref.getBoolPref("autoscrollNoMarker");}, function(){aioPref.setBoolPref("autoscrollNoMarker",false);}, function(){return false;}],
 	 [function(){aioWheelMode=aioPref.getIntPref("wheelpref2");}, function(){aioPref.setIntPref("wheelpref2",0);}, function(){return aioWheelMode<0||aioWheelMode>3;}],
 	 [function(){aioHistIfDown=aioPref.getBoolPref("wheelHistoryIfCw");}, function(){aioPref.setBoolPref("wheelHistoryIfCw",true);}, function(){return false;}],
