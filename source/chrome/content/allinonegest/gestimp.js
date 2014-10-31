@@ -825,15 +825,36 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
 }
 
 function aioZoomEnlarge() {
-  ZoomManager.enlarge()
+  switch (aioWindowType) {
+    case 'source':
+      ZoomManager.enlarge();
+      break;
+    
+    default:
+      FullZoom.enlarge();
+  }
 }
 
 function aioZoomReduce() {
-  ZoomManager.reduce()
+  switch (aioWindowType) {
+    case 'source':
+      ZoomManager.reduce();
+      break;
+    
+    default:
+      FullZoom.reduce();
+  }
 }
 
 function aioZoomReset() {
-  ZoomManager.reset();
+  switch (aioWindowType) {
+    case 'source':
+      ZoomManager.reset();
+      break;
+    
+    default:
+      FullZoom.reset();
+  }
 }
 
 function aioImageResize(s) {
