@@ -622,9 +622,10 @@ function aioNukeFlash() {
     if (next.previousSibling && next.previousSibling.nodeName.toLowerCase() == "span"
         && next.previousSibling.hasAttribute("aioFlash")) continue;
     view = next.ownerDocument.defaultView;
-    width = parseInt(view.getComputedStyle(next, "").getPropertyValue("width"));
-    height = parseInt(view.getComputedStyle(next, "").getPropertyValue("height"));
     disp = view.getComputedStyle(next, "").getPropertyValue("display");
+    width = currFlash.offsetWidth;
+    height = currFlash.offsetHeight;
+    
     if (height && width) {
        style = next.getAttribute("style") || "";
        next.setAttribute("style", style + "display:none;");
