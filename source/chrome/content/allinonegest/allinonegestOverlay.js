@@ -751,9 +751,9 @@ function aioGestMove(e) {
   if (aioDelayTO) {
 	clearTimeout(aioDelayTO);
   }
-  aioDelayTO = setTimeout(function() { mgsTrails.indicateGestureTimeout() }, aioDelay);
+  aioDelayTO = setTimeout(function() { mgsuiteTrails.indicateGestureTimeout() }, aioDelay);
   
-  mgsTrails.drawTrail(e);
+  mgsuiteTrails.drawTrail(e);
   var pente = absY <= 5 ? 100 : absX / absY; // 5 should be grid/tangent(60)
   if (pente < 0.58 || pente > 1.73) { //between 30° & 60°, wait
      if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
@@ -841,7 +841,7 @@ function aioKillGestInProgress(clearMode) {
      aioOnLink.length = 0;
      aioOnImage = null;
   }
-  mgsTrails.eraseTrail();
+  mgsuiteTrails.eraseTrail();
   window.removeEventListener("mousemove", aioGestMove, true);
 }
 
@@ -1003,7 +1003,7 @@ function aioMouseDown(e) {
              aioGestInProgress = true;
              aioAddLink(e);  // Check if started over a link
              aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
-             if (aioTrailEnabled) mgsTrails.startTrail(e);
+             if (aioTrailEnabled) mgsuiteTrails.startTrail(e);
              window.addEventListener("mousemove", aioGestMove, true);
           }
           else preventDefaultAction = e.button != aioLMB;
@@ -1131,7 +1131,7 @@ function aioMouseUp(e) {
      var lastgesture = aioStrokes.join("");
 	 
      if (lastgesture) aioNukeEvent(e);
-     mgsTrails.eraseTrail();
+     mgsuiteTrails.eraseTrail();
 	 
      if (lastgesture) {
         window.addEventListener("click", aioGestClickHandler, true);

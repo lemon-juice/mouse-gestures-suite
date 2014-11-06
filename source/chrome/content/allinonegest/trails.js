@@ -1,7 +1,9 @@
 /*
  * Drawing gesture trails
  */
-var mgsTrails = {
+"use strict";
+
+var mgsuiteTrails = {
 
   startTrail: function(e) {
 	
