@@ -18,104 +18,104 @@ var mgsTrails = {
 
   aioStartTrail: function(e) {
 	
-	mgsTrails.aioDocX = window.mozInnerScreenX;
-	mgsTrails.aioDocY = window.mozInnerScreenY;
+	this.aioDocX = window.mozInnerScreenX;
+	this.aioDocY = window.mozInnerScreenY;
 	
 	// insert trail outside viewable document to avoid DOM delays on large documents
 	switch (aioWindowType) {
 	  case 'browser':
-		mgsTrails.insertionNode = document.getElementById("content"); // tabbrowser
+		this.insertionNode = document.getElementById("content"); // tabbrowser
 		break;
 	  
 	  case 'messenger':
-		mgsTrails.insertionNode = document.getElementById("messagepanebox");
+		this.insertionNode = document.getElementById("messagepanebox");
 		break;
 	  
 	  case 'mailcompose':
 	  case 'source':
-		mgsTrails.insertionNode = document.getElementById("appcontent");
+		this.insertionNode = document.getElementById("appcontent");
 		break;
 	}
 	
-	if (!mgsTrails.insertionNode) {
+	if (!this.insertionNode) {
 	  return;
 	}
 	
-	mgsTrails.halfTrailSize = Math.ceil(aioTrailSize / 2);
+	this.halfTrailSize = Math.ceil(aioTrailSize / 2);
 	
-	var x = e.screenX - mgsTrails.aioDocX;
-	var y = e.screenY - mgsTrails.aioDocY;
+	var x = e.screenX - this.aioDocX;
+	var y = e.screenY - this.aioDocY;
 	
-	mgsTrails.aioTrailPoints = [];
-	mgsTrails.aioTrailPoints.push([x, y]);
+	this.aioTrailPoints = [];
+	this.aioTrailPoints.push([x, y]);
 	
-	mgsTrails.minX = x - mgsTrails.halfTrailSize;
-	mgsTrails.maxX = x + mgsTrails.halfTrailSize;
-	mgsTrails.minY = y - mgsTrails.halfTrailSize;
-	mgsTrails.maxY = y + mgsTrails.halfTrailSize;
+	this.minX = x - this.halfTrailSize;
+	this.maxX = x + this.halfTrailSize;
+	this.minY = y - this.halfTrailSize;
+	this.maxY = y + this.halfTrailSize;
   },
   
   aioDrawTrail: function(e) {
-	if (!mgsTrails.insertionNode) return;
+	if (!this.insertionNode) return;
 	
-	if (!mgsTrails.aioTrailCont) {
-	  var cnv = mgsTrails.aioMakeTrailCanvas();
-	  mgsTrails.aioTrailCont = cnv.canvas;
-	  mgsTrails.aioCtx = cnv.ctx;
+	if (!this.aioTrailCont) {
+	  var cnv = this.aioMakeTrailCanvas();
+	  this.aioTrailCont = cnv.canvas;
+	  this.aioCtx = cnv.ctx;
 	  
 	  if (!aioSmoothTrail) {
-		mgsTrails.aioSetCtxProperties(mgsTrails.aioCtx, 1);
+		this.aioSetCtxProperties(this.aioCtx, 1);
 	  }
 	}
 	
-	if (mgsTrails.aioTimeoutTrailCont && mgsTrails.aioTrailCont.style.display == 'none') {
-	  mgsTrails.aioTimeoutTrailCont.style.display = 'none';
-	  mgsTrails.aioTrailCont.style.display = 'block';
+	if (this.aioTimeoutTrailCont && this.aioTrailCont.style.display == 'none') {
+	  this.aioTimeoutTrailCont.style.display = 'none';
+	  this.aioTrailCont.style.display = 'block';
 	}
 	
-	var x = e.screenX - mgsTrails.aioDocX;
-	var y = e.screenY - mgsTrails.aioDocY;
-	mgsTrails.aioTrailPoints.push([x, y]);
+	var x = e.screenX - this.aioDocX;
+	var y = e.screenY - this.aioDocY;
+	this.aioTrailPoints.push([x, y]);
 	
 	if (aioSmoothTrail) {
 	  // erasing all canvas and drawing all line again results in smooth line
 	  
 	  // we make canvas the size only as large as necessary, because full size canvas
 	  // cause flash objects in window mode to disappear
-	  if (x + mgsTrails.halfTrailSize > mgsTrails.maxX) {
-		mgsTrails.maxX = x + mgsTrails.halfTrailSize;
-	  } else if (x - mgsTrails.halfTrailSize < mgsTrails.minX) {
-		mgsTrails.minX = x - mgsTrails.halfTrailSize;
+	  if (x + this.halfTrailSize > this.maxX) {
+		this.maxX = x + this.halfTrailSize;
+	  } else if (x - this.halfTrailSize < this.minX) {
+		this.minX = x - this.halfTrailSize;
 	  }
 	  
-	  if (y + mgsTrails.halfTrailSize > mgsTrails.maxY) {
-		mgsTrails.maxY = y + mgsTrails.halfTrailSize;
-	  } else if (y - mgsTrails.halfTrailSize < mgsTrails.minY) {
-		mgsTrails.minY = y - mgsTrails.halfTrailSize;
+	  if (y + this.halfTrailSize > this.maxY) {
+		this.maxY = y + this.halfTrailSize;
+	  } else if (y - this.halfTrailSize < this.minY) {
+		this.minY = y - this.halfTrailSize;
 	  }
 	  
-	  mgsTrails.aioTrailCont.style.left = mgsTrails.minX + "px";
-	  mgsTrails.aioTrailCont.style.top = mgsTrails.minY + "px";
-	  mgsTrails.aioTrailCont.width = mgsTrails.maxX - mgsTrails.minX; // this erases canvas
-	  mgsTrails.aioTrailCont.height = mgsTrails.maxY - mgsTrails.minY;
+	  this.aioTrailCont.style.left = this.minX + "px";
+	  this.aioTrailCont.style.top = this.minY + "px";
+	  this.aioTrailCont.width = this.maxX - this.minX; // this erases canvas
+	  this.aioTrailCont.height = this.maxY - this.minY;
 	  
-	  mgsTrails.aioSetCtxProperties(mgsTrails.aioCtx, 1);
+	  this.aioSetCtxProperties(this.aioCtx, 1);
 		
-	  var shiftX = mgsTrails.aioTrailCont.offsetLeft;
-	  var shiftY = mgsTrails.aioTrailCont.offsetTop;
+	  var shiftX = this.aioTrailCont.offsetLeft;
+	  var shiftY = this.aioTrailCont.offsetTop;
 		
-	  mgsTrails.aioCtx.beginPath();
-	  mgsTrails.aioCtx.moveTo(mgsTrails.aioTrailPoints[0][0] - shiftX, mgsTrails.aioTrailPoints[0][1] - shiftY);
+	  this.aioCtx.beginPath();
+	  this.aioCtx.moveTo(this.aioTrailPoints[0][0] - shiftX, this.aioTrailPoints[0][1] - shiftY);
 	  
-	  for (var i = 1, len=mgsTrails.aioTrailPoints.length; i < len; i++) {
-		mgsTrails.aioCtx.lineTo(mgsTrails.aioTrailPoints[i][0] - shiftX, mgsTrails.aioTrailPoints[i][1] - shiftY);
+	  for (var i = 1, len=this.aioTrailPoints.length; i < len; i++) {
+		this.aioCtx.lineTo(this.aioTrailPoints[i][0] - shiftX, this.aioTrailPoints[i][1] - shiftY);
 	  }
 	  
 	} else {
-	  mgsTrails.aioCtx.lineTo(x, y);
+	  this.aioCtx.lineTo(x, y);
 	}
 	
-	mgsTrails.aioCtx.stroke();
+	this.aioCtx.stroke();
   },
   
   aioMakeTrailCanvas: function() {
@@ -128,13 +128,13 @@ var mgsTrails = {
 	canvas.style.pointerEvents = "none";
 	canvas.style.zIndex = 10000;
 	
-	mgsTrails.insertionNode.appendChild(canvas);
+	this.insertionNode.appendChild(canvas);
   
 	var ctx = canvas.getContext('2d');
 	
 	if (!aioSmoothTrail) {
 	  ctx.beginPath();
-	  ctx.moveTo(mgsTrails.aioTrailPoints[0][0], mgsTrails.aioTrailPoints[0][1]);
+	  ctx.moveTo(this.aioTrailPoints[0][0], this.aioTrailPoints[0][1]);
 	}
 	
 	return {
@@ -153,38 +153,38 @@ var mgsTrails = {
   
   aioIndicateGestureTimeout: function() {
 	try {
-	  if (mgsTrails.aioTrailCont) {
-		mgsTrails.aioTrailCont.style.display = 'none';
+	  if (this.aioTrailCont) {
+		this.aioTrailCont.style.display = 'none';
 		
-		if (!mgsTrails.aioTimeoutTrailCont) {
+		if (!this.aioTimeoutTrailCont) {
 		  // instead of simply changing opacity of main canvas, we create another canvas
 		  // where we draw the same trail with smaller opacity line - we do this because
 		  // changing opacity of canvas causes it to hide behind window-mode flash objects
-		  var cnv = mgsTrails.aioMakeTrailCanvas();
-		  mgsTrails.aioTimeoutTrailCont = cnv.canvas;
-		  mgsTrails.aioTimeoutCtx = cnv.ctx;
+		  var cnv = this.aioMakeTrailCanvas();
+		  this.aioTimeoutTrailCont = cnv.canvas;
+		  this.aioTimeoutCtx = cnv.ctx;
 		} else {
 		  // reuse canvas created earlier
-		  mgsTrails.aioTimeoutTrailCont.style.display = 'block';
+		  this.aioTimeoutTrailCont.style.display = 'block';
 		}
-		mgsTrails.aioTimeoutTrailCont.style.top = mgsTrails.aioTrailCont.style.top;
-		mgsTrails.aioTimeoutTrailCont.style.left = mgsTrails.aioTrailCont.style.left;
-		mgsTrails.aioTimeoutTrailCont.width = mgsTrails.aioTrailCont.width;
-		mgsTrails.aioTimeoutTrailCont.height = mgsTrails.aioTrailCont.height;
+		this.aioTimeoutTrailCont.style.top = this.aioTrailCont.style.top;
+		this.aioTimeoutTrailCont.style.left = this.aioTrailCont.style.left;
+		this.aioTimeoutTrailCont.width = this.aioTrailCont.width;
+		this.aioTimeoutTrailCont.height = this.aioTrailCont.height;
 		
 		// draw all trail again with smaller opacity
-		mgsTrails.aioSetCtxProperties(mgsTrails.aioTimeoutCtx, 0.5);
+		this.aioSetCtxProperties(this.aioTimeoutCtx, 0.5);
 		
-		var shiftX = mgsTrails.aioTimeoutTrailCont.offsetLeft;
-		var shiftY = mgsTrails.aioTimeoutTrailCont.offsetTop;
+		var shiftX = this.aioTimeoutTrailCont.offsetLeft;
+		var shiftY = this.aioTimeoutTrailCont.offsetTop;
 		
-		mgsTrails.aioTimeoutCtx.beginPath();
-		mgsTrails.aioTimeoutCtx.moveTo(mgsTrails.aioTrailPoints[0][0] - shiftX, mgsTrails.aioTrailPoints[0][1] - shiftY);
+		this.aioTimeoutCtx.beginPath();
+		this.aioTimeoutCtx.moveTo(this.aioTrailPoints[0][0] - shiftX, this.aioTrailPoints[0][1] - shiftY);
 		
-		for (var i = 1, len=mgsTrails.aioTrailPoints.length; i < len; i++) {
-		  mgsTrails.aioTimeoutCtx.lineTo(mgsTrails.aioTrailPoints[i][0] - shiftX, mgsTrails.aioTrailPoints[i][1] - shiftY);
+		for (var i = 1, len=this.aioTrailPoints.length; i < len; i++) {
+		  this.aioTimeoutCtx.lineTo(this.aioTrailPoints[i][0] - shiftX, this.aioTrailPoints[i][1] - shiftY);
 		}
-		mgsTrails.aioTimeoutCtx.stroke();
+		this.aioTimeoutCtx.stroke();
 	  }
 	  aioStatusMessage("  [X]", null, true);
 	
@@ -192,21 +192,21 @@ var mgsTrails = {
   },
   
   aioEraseTrail: function() {
-	mgsTrails.aioTrailPoints = null;
+	this.aioTrailPoints = null;
 	// try-catch to prevent errors on page transitions during gesture drawing
 	try {
-	  if (mgsTrails.aioTrailCont) {
-		mgsTrails.aioTrailCont.parentNode.removeChild(mgsTrails.aioTrailCont);
+	  if (this.aioTrailCont) {
+		this.aioTrailCont.parentNode.removeChild(this.aioTrailCont);
 	  }
 	  
-	  if (mgsTrails.aioTimeoutTrailCont) {
-		mgsTrails.aioTimeoutTrailCont.parentNode.removeChild(mgsTrails.aioTimeoutTrailCont);
+	  if (this.aioTimeoutTrailCont) {
+		this.aioTimeoutTrailCont.parentNode.removeChild(this.aioTimeoutTrailCont);
 	  }
 	}
 	catch(err) {}
-	mgsTrails.aioTrailCont = null;
-	mgsTrails.aioTimeoutTrailCont = null;
-	mgsTrails.insertionNode = null;
+	this.aioTrailCont = null;
+	this.aioTimeoutTrailCont = null;
+	this.insertionNode = null;
   }
 }
 
