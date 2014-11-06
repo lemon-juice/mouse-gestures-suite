@@ -534,24 +534,24 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	  });
 	  break;
 	   
-	case 'messenger':
-	  aioContent = document.getElementById("messagepane");
-	  aioRendering = document.getElementById("messagepane");
-	  aioStatusBar = document.getElementById("statusText");
-	  break;
-	  
-	case 'mailcompose':
-	  aioContent = aioContent = document.getElementById("appcontent");
-	  aioRendering = document.getElementById("content-frame");
-	  aioStatusBar = document.getElementById("statusText");
-	  break;
-	  
-	case 'source':
-	  aioContent = aioContent = document.getElementById("appcontent");
-	  aioRendering = document.getElementById("content");
-	  aioStatusBar = document.getElementById("statusbar-line-col");
-	  break;
-  }
+	  case 'messenger':
+		aioContent = document.getElementById("messagepane");
+		aioRendering = document.getElementById("messagepane");
+		aioStatusBar = document.getElementById("statusText");
+		break;
+		
+	  case 'mailcompose':
+		aioContent = aioContent = document.getElementById("appcontent");
+		aioRendering = document.getElementById("content-frame");
+		aioStatusBar = document.getElementById("statusText");
+		break;
+		
+	  case 'source':
+		aioContent = aioContent = document.getElementById("appcontent");
+		aioRendering = document.getElementById("content");
+		aioStatusBar = document.getElementById("statusbar-line-col");
+		break;
+	}
    
   
 	aioContextPopup = document.getElementById("contentAreaContextMenu");
@@ -589,7 +589,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	
 	var rockerFuncs = aioRockerString.split("|");
 	var rFunc;
-	for (i = 0; i < rockerFuncs.length; ++i)
+	for (var i = 0; i < rockerFuncs.length; ++i)
 	  if (rockerFuncs[i].charAt(0) == "/") {
 		 aioRockerAction[i] = function(){void(0);};
 		 aioRockMultiple[i] = 0;

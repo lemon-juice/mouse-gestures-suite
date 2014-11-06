@@ -1,3 +1,5 @@
+"use strict";
+
 var trailSize;
 
 function getBrowserWindow() {
@@ -131,7 +133,7 @@ function populateSiteList(prefStr) {
     items = JSON.parse(prefStr);
   } catch(err){};
   
-  for (i=0; i<items.length; i++) {
+  for (var i=0; i<items.length; i++) {
     addSiteListItem(listBox, items[i][0], items[i][1], ruleActionMap[items[i][1]]);
   }
 }

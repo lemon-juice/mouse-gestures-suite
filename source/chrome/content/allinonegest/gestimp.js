@@ -749,7 +749,7 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
   
   switch (aioWindowType) {
     case "browser":
-      searchBar = BrowserSearch.searchBar;
+      var searchBar = BrowserSearch.searchBar;
       if (!searchBar) return;
       searchBar.value = searchStr;
       
@@ -875,11 +875,13 @@ function aioSetImgSize(aEnlarge, aMixed) {
      return;
   }
   var imgStr = aioOnImage.getAttribute("aioImgSize");
+  var imgTab;
+  
   if (!imgStr) {
      var view = aioOnImage.ownerDocument.defaultView;
      var w = parseInt(view.getComputedStyle(aioOnImage, "").getPropertyValue("width"));
      var h = parseInt(view.getComputedStyle(aioOnImage, "").getPropertyValue("height"));
-     var imgTab = [];
+     imgTab = [];
      imgTab[0] = w; imgTab[1] = h; imgTab[2] = 1;
   }
   else imgTab = imgStr.split("|");
@@ -1226,7 +1228,7 @@ function aioLinksInWindows() {
     }, true);
   }
   else
-     for (i = 0; i < aioOnLink.length; ++i) {
+     for (var i = 0; i < aioOnLink.length; ++i) {
         aioNewWindow(url = aioSanitizeUrl(aioOnLink[i].href), "");
      }
 }
@@ -1375,15 +1377,15 @@ function aioNextPrevLink(next) { // submitted by Christian Kruse
   for (var j = 0; j < nextArray.length; ++j)
      re[j] = new RegExp(nextArray[j], "i");
   links = doc.links;
-  for (j = 0; j < re.length; ++j)
-    for (i = 0; i < links.length; ++i) // search for exact match
+  for (var j = 0; j < re.length; ++j)
+    for (var i = 0; i < links.length; ++i) // search for exact match
       if (links[i].textContent && links[i].textContent.search(re[j]) != -1 &&
           nextArray[j].length == links[i].textContent.length && links[i].href) {
          loadURI(links[i].href);
          return;
       }
-  for (j = 0; j < re.length; ++j)
-    for (i = 0; i < links.length; ++i) { // search for partial match
+  for (var j = 0; j < re.length; ++j)
+    for (var i = 0; i < links.length; ++i) { // search for partial match
       if (links[i].textContent && links[i].textContent.search(re[j]) != -1 && links[i].href) {
          loadURI(links[i].href);
          return;
@@ -1845,6 +1847,8 @@ function aioDetachTabAndDoubleStack() {
 
 // detach given tab to new window
 // returns opened window object
+var aioClonedData;
+
 function _aioDetachTab(tabToDetach) {
   var tabLength = gBrowser.tabContainer.childNodes.length;
   if (tabLength <= 1) return null;

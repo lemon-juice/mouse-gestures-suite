@@ -4,6 +4,7 @@
  * handling of gesture customization tree
  *
  */
+"use strict";
 
 //******** define a js object to implement nsITreeView
 function gestCustomizeTreeView(columnids) {
@@ -289,7 +290,7 @@ function setScrollGesturesVisibility(show) {
      var k = rockerCount;
      rockerCount += kNumberOfWheelGestures;
      j = totalCount;  totalCount += kNumberOfWheelGestures;
-     for (i = k; i < rockerCount; ++i, ++j) {
+     for (var i = k; i < rockerCount; ++i, ++j) {
         if (rockFuncTable[i].charAt(0) == "/") {
            rockFuncTable[i] = rockFuncTable[i].substr(1);
            isEnabledTable[j] = "/";
@@ -373,7 +374,6 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   functionCol = gestureTree.columns["functionId"];
   gestureCol = gestureTree.columns["gestTextId"];
   enabledCol = gestureTree.columns["enabledColId"];
-  infoCol = gestureTree.columns["infoColId"];
   treeBoxView = gestView;
 
   treeBox.view = gestView;
