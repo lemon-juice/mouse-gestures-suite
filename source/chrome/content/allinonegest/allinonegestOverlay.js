@@ -868,17 +868,6 @@ function aioPerformRockerFunction(index) {
   aioIsRocker = false;
 }
 
-function aioGesturableURI() {
-  var aioNoGestureURI = ["http://mail.google.com/mail/"];  // provisoire
-  var uri;
-  var currSpec = aioContent.selectedBrowser.webNavigation.currentURI.spec;
-  for (var i = 0; i < aioNoGestureURI.length; ++i) {
-    uri = aioNoGestureURI[i];
-    if (currSpec.length >= uri.length && currSpec.substr(0, uri.length) == uri) return false;
-  }
-  return true;
-}
-
 function aioPrioritizeGestures(e) {
   if (aioSitePref == 'P' && (
 	  (e.button == mgsuite.RMB && ((aioGestEnabled && aioGestButton == mgsuite.RMB) || aioRockEnabled || aioWheelEnabled))
@@ -1000,25 +989,24 @@ function aioMouseDown(e) {
     }
 	 
     if (aioGesturesEnabled && aioTrigger(e, false)) {
-       var preventDefaultAction = false;
-       if (aioGestEnabled && aioIsKeyOK(e)) {
-         aioSrcEvent = e;
-         targetName  = e.target.nodeName.toLowerCase();
+      var preventDefaultAction = false;
+      if (aioGestEnabled && aioIsKeyOK(e)) {
+        aioSrcEvent = e;
+        targetName  = e.target.nodeName.toLowerCase();
 		 
-         if ((aioIsAreaOK(e, false) || e.button != mgsuite.LMB) && targetName != 'toolbarbutton'
-              && !aioGestInProgress) {
-             var canGesture = true;
-             if (e.button == mgsuite.LMB) canGesture = aioGesturableURI();
-             preventDefaultAction = e.button != mgsuite.LMB || (!aioLeftDefault && canGesture) ||
-                          targetName == "html" || targetName == "body" || e.target.ownerDocument == aioContent.ownerDocument;
-             aioGestInProgress = true;
-             aioAddLink(e);  // Check if started over a link
-             aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
-             if (aioTrailEnabled) mgsuiteTrails.startTrail(e);
-             window.addEventListener("mousemove", aioGestMove, true);
+        if ((aioIsAreaOK(e, false) || e.button != mgsuite.LMB) && targetName != 'toolbarbutton'
+            && !aioGestInProgress) {
+             
+			preventDefaultAction = e.button != mgsuite.LMB || !aioLeftDefault ||
+						 targetName == "html" || targetName == "body" || e.target.ownerDocument == aioContent.ownerDocument;
+			aioGestInProgress = true;
+			aioAddLink(e);  // Check if started over a link
+			aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
+			if (aioTrailEnabled) mgsuiteTrails.startTrail(e);
+			window.addEventListener("mousemove", aioGestMove, true);
           }
           else preventDefaultAction = e.button != mgsuite.LMB;
-       }
+      }
        // it can be the start of a wheelscroll gesture as well
        if (aioWheelEnabled && (aioWindowType == "browser" || aioWindowType == "messenger" || aioWindowType == "source")) {
           preventDefaultAction = preventDefaultAction || e.button != mgsuite.LMB;
