@@ -84,9 +84,7 @@ const aioMarkerIds = ["aioscrollerNSEW", "aioscrollerNS", "aioscrollerEW"];
 const aioDist =  [0, 20, 40, 60, 80, 100, 130, 180, 300, 5000];
 const aioRatio = [.0, .067, .083, .108, .145, .2, .3, .45, .65, .9];
 const aioScrollLoop = [1, 2, 4];
-var aioSofar = []; aioSofar[1] = 0;
-for (var ii = 1; ii < aioDist.length - 1; ++ii)
-   aioSofar[ii+1] = aioSofar[ii] + (aioDist[ii] - aioDist[ii-1]) * aioRatio[ii];
+var aioSofar;
 const aioCursors = ["move", "n-resize", "e-resize"];
 var aioScrollCount, aioScrollRate, aioScrollMax, aioASPeriod;
 const aioASBasicPeriod = 40;
@@ -468,14 +466,15 @@ function aioInit() { // overlay has finished loading or a pref was changed
   else
      versionComparator = Components.classes["@mozilla.org/updates/version-checker;1"]
                           .getService(Components.interfaces.nsIVersionChecker);
+  
   if (aioFirstInit) {
-     aioIsWin = false; aioIsMac = false; aioIsNix = false;
-     if (platform.indexOf('win') != -1) aioIsWin = true;
-     else
-        if (platform.indexOf('mac') != -1) aioIsMac = true;
-        else aioIsNix = platform.search(unixRe) != -1;
+	aioIsWin = false; aioIsMac = false; aioIsNix = false;
+	if (platform.indexOf('win') != -1) aioIsWin = true;
+	else
+	   if (platform.indexOf('mac') != -1) aioIsMac = true;
+	   else aioIsNix = platform.search(unixRe) != -1;
      
-     aioFxV18 = versionComparator.compare(geckoVersion, "18.0") >= 0;
+    aioFxV18 = versionComparator.compare(geckoVersion, "18.0") >= 0;
 
 	switch (aioWindowType) {
 	  case 'browser':
@@ -497,80 +496,87 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		// listener for url changes
 		var urlListener =
 		{
-		 QueryInterface: function(aIID)
-		 {
-		  if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
-			  aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
-			  aIID.equals(Components.interfaces.nsISupports))
-		   return this;
-		  throw Components.results.NS_NOINTERFACE;
-		 },
-		 onLocationChange: function(aProgress, aRequest, aURI, aFlags)
-		 {
-		  if (!(aFlags & Components.interfaces.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
-			// don't run this when only URL hash changed or tab switched;
-			// Fx and SM 2.29.1 and later run it even on tab switching.
-			aioParseSiteList();
-		  }
-		 },
-		 onStateChange: function() {},
-		 onProgressChange: function() {},
-		 onStatusChange: function() {},
-		 onSecurityChange: function() {},
-		 onLinkIconAvailable: function() {}
-		};
-		
-		gBrowser.addProgressListener(urlListener);
-		
-		gBrowser.tabContainer.addEventListener("TabSelect", aioParseSiteList, false);
-		
-		window.addEventListener("activate", function() {
-		  // we need delay because aioInit() is run with delay after pref change
-		  setTimeout(aioParseSiteList, 600);
-		});
-		break;
-		
-	  case 'messenger':
-		aioContent = document.getElementById("messagepane");
-		aioRendering = document.getElementById("messagepane");
-		aioStatusBar = document.getElementById("statusText");
-		break;
-		
-	  case 'mailcompose':
-		aioContent = aioContent = document.getElementById("appcontent");
-		aioRendering = document.getElementById("content-frame");
-		aioStatusBar = document.getElementById("statusText");
-		break;
-		
-	  case 'source':
-		aioContent = aioContent = document.getElementById("appcontent");
-		aioRendering = document.getElementById("content");
-		aioStatusBar = document.getElementById("statusbar-line-col");
-		break;
+		QueryInterface: function(aIID)
+		{
+		 if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
+			 aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
+			 aIID.equals(Components.interfaces.nsISupports))
+		  return this;
+		 throw Components.results.NS_NOINTERFACE;
+		},
+		onLocationChange: function(aProgress, aRequest, aURI, aFlags)
+		{
+		 if (!(aFlags & Components.interfaces.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
+		   // don't run this when only URL hash changed or tab switched;
+		   // Fx and SM 2.29.1 and later run it even on tab switching.
+		   aioParseSiteList();
+		 }
+		},
+		onStateChange: function() {},
+		onProgressChange: function() {},
+		onStatusChange: function() {},
+		onSecurityChange: function() {},
+		onLinkIconAvailable: function() {}
+	  };
+	  
+	  gBrowser.addProgressListener(urlListener);
+	  
+	  gBrowser.tabContainer.addEventListener("TabSelect", aioParseSiteList, false);
+	  
+	  window.addEventListener("activate", function() {
+		// we need delay because aioInit() is run with delay after pref change
+		setTimeout(aioParseSiteList, 600);
+	  });
+	  break;
+	   
+	case 'messenger':
+	  aioContent = document.getElementById("messagepane");
+	  aioRendering = document.getElementById("messagepane");
+	  aioStatusBar = document.getElementById("statusText");
+	  break;
+	  
+	case 'mailcompose':
+	  aioContent = aioContent = document.getElementById("appcontent");
+	  aioRendering = document.getElementById("content-frame");
+	  aioStatusBar = document.getElementById("statusText");
+	  break;
+	  
+	case 'source':
+	  aioContent = aioContent = document.getElementById("appcontent");
+	  aioRendering = document.getElementById("content");
+	  aioStatusBar = document.getElementById("statusbar-line-col");
+	  break;
+  }
+   
+  
+	aioContextPopup = document.getElementById("contentAreaContextMenu");
+	aioMainWin = document.getElementById("main-window");
+   
+	aioRendering.addEventListener("mousedown", aioMouseDown, true);
+	if (aioTabRendering) {
+	  aioTabRendering.addEventListener("mousedown", aioMouseDown, true);
 	}
 	
-   
-     aioContextPopup = document.getElementById("contentAreaContextMenu");
-     aioMainWin = document.getElementById("main-window");
-    
-     aioRendering.addEventListener("mousedown", aioMouseDown, true);
-	 if (aioTabRendering) {
-	  aioTabRendering.addEventListener("mousedown", aioMouseDown, true);
-	 }
-	 
-     document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
+	document.documentElement.addEventListener("popupshowing", aioContextMenuEnabler, true);
 
-     window.addEventListener("mouseup", aioMouseUp, true);
-	 
-     if (!aioIsWin) {
+	window.addEventListener("mouseup", aioMouseUp, true);
+	
+	if (!aioIsWin) {
 	  window.addEventListener("mouseup", function(e) {
-		aioShowContextMenu = true;
-	   }, true);
-	 }
-	 
-     window.addEventListener("draggesture", aioDragGesture, true);
-     window.addEventListener("unload", aioWindowUnload, false);
-     window.addEventListener("keypress", aioKeyPressed, true);
+	    aioShowContextMenu = true;
+	  }, true);
+	}
+	
+	window.addEventListener("draggesture", aioDragGesture, true);
+	window.addEventListener("unload", aioWindowUnload, false);
+	window.addEventListener("keypress", aioKeyPressed, true);
+	
+	// init some autoscroll variables
+	aioSofar = [];
+	aioSofar[1] = 0;
+	for (var ii = 1; ii < aioDist.length - 1; ++ii) {
+	   aioSofar[ii+1] = aioSofar[ii] + (aioDist[ii] - aioDist[ii-1]) * aioRatio[ii];
+	}
   }
 
   if (aioGesturesEnabled) {
@@ -584,10 +590,10 @@ function aioInit() { // overlay has finished loading or a pref was changed
 		 aioRockMultiple[i] = 0;
 	  }
 	  else {
-		 rFunc = rockerFuncs[i] - 0;
-		 if (rFunc < 0 || rFunc >= aioActionTable.length) {rockerFuncs[i] = "0"; rFunc = 0;}
-		 aioRockerAction[i] = aioActionTable[rFunc][0];
-		 aioRockMultiple[i] = aioActionTable[rFunc][2];
+		rFunc = rockerFuncs[i] - 0;
+		if (rFunc < 0 || rFunc >= aioActionTable.length) {rockerFuncs[i] = "0"; rFunc = 0;}
+		aioRockerAction[i] = aioActionTable[rFunc][0];
+		aioRockMultiple[i] = aioActionTable[rFunc][2];
 	  }
 	aioWheelBothWays = rockerFuncs[2].charAt(0) != "/" && rockerFuncs[3].charAt(0) != "/" && 
 	   (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == aioActionTable[rockerFuncs[3] - 0][3]);
@@ -1779,6 +1785,8 @@ function aioAddMarker(e) {
   }
   
   // marker
+  var insertionNode;
+  
   if (!aioNoScrollMarker) {
 	switch (aioWindowType) {
 		case 'browser':

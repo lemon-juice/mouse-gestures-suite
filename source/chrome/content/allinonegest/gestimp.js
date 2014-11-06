@@ -591,14 +591,14 @@ function aioCopyClipBoardToURLBar() {
   }
 }
 
-function getElemsByTagNameForAllFrames(frameDoc, tagName) {
+function _aioGetElemsByTagNameForAllFrames(frameDoc, tagName) {
   var elsWithTag = [];
   var frames = frameDoc.getElementsByTagName("frame");
   for (var i = 0; i < frames.length; ++ i)
-      elsWithTag = elsWithTag.concat(getElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
+      elsWithTag = elsWithTag.concat(_aioGetElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
   frames = frameDoc.getElementsByTagName("iframe");
   for (i = 0; i < frames.length; ++ i)
-      elsWithTag = elsWithTag.concat(getElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
+      elsWithTag = elsWithTag.concat(_aioGetElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
   var lEls = frameDoc.getElementsByTagName(tagName);
   for (i = 0; i < lEls.length; ++i) elsWithTag.push(lEls[i]);
   return elsWithTag;
@@ -607,8 +607,8 @@ function getElemsByTagNameForAllFrames(frameDoc, tagName) {
 function aioNukeFlash() {
   var currFlash, height, width, top, next, span, text, view, disp, style;
   var topDocument = aioSrcEvent.target.ownerDocument.defaultView.top.document;
-  var embeds = getElemsByTagNameForAllFrames(topDocument, "embed");
-  embeds = embeds.concat(getElemsByTagNameForAllFrames(topDocument, "object"));
+  var embeds = _aioGetElemsByTagNameForAllFrames(topDocument, "embed");
+  embeds = embeds.concat(_aioGetElemsByTagNameForAllFrames(topDocument, "object"));
   
   for (var i = 0; i < embeds.length; ++i) {
     currFlash = embeds[i];
