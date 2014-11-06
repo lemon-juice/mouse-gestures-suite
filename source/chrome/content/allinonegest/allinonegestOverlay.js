@@ -5,6 +5,8 @@
  * event handling and scrollwheel navigation for All-in-One Gestures
  *
  */
+"use strict";
+
 var mgsuite = {
   // 'Constants'
   LMB: 0,

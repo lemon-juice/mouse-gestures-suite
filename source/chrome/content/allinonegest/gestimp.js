@@ -5,6 +5,8 @@
  * code for gesture functions
  *
  */
+"use strict";
+
 var aioGestTable;
 // aioActionTable's 3rd column denotes rocker multiple operations. 0: Not allowed, 1: Allowed 2: Conditional
 // 4th column denotes the buddy action if any
@@ -2122,7 +2124,7 @@ function aioTabFocus(e) {
       return; // already at top
     
      } else {
-        for (i = 0; i < aioTabFocusHistory.length; ++i) //search for a duplicated entry
+        for (var i = 0; i < aioTabFocusHistory.length; ++i) //search for a duplicated entry
           if (aioTabFocusHistory[i].focused == activeId) {
              aioTabFocusHistory.splice(i, 1); // Found: delete it
           }
