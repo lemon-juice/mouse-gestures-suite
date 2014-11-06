@@ -914,7 +914,7 @@ function aioMouseDown(e) {
 	  window.content.document.addEventListener("mouseup", aioPrioritizeGestures, true);
 	  
 	  var frames = window.content.frames;
-	  var framesB, i, j;
+	  var framesB, i, j, len, lenB;
 	  
 	  for (i=0, len=frames.length; i<len; i++) {
 		frames[i].addEventListener("mousedown", aioPrioritizeGestures, true);
