@@ -83,7 +83,7 @@ function aioGetTextForTitle(linkNode) { // from pageInfo.js; modified by M.B.
 }
 
 function aioShowTitle(e) {
-  if (aioDownButton != aioNoB || aioTTShown || (aioShiftForTitle && !e.shiftKey)) return;
+  if (aioDownButton != mgsuite.NoB || aioTTShown || (aioShiftForTitle && !e.shiftKey)) return;
   var linkNode = aioFindLink(e.target, false);
   if (!linkNode) return;
   aioGetTextForTitle(linkNode); // prevent native title to popup
