@@ -5,6 +5,8 @@
  * handling of link tooltips
  *
  */
+"use strict";
+
 function aioHasNewWindowTarget(node) { // code from Chris Cook's Tabbrowser Preferences
   function notExistingFrameName(containerFrame, targetFrame) {
     for (var i = 0; i < containerFrame.length; ++i) {
