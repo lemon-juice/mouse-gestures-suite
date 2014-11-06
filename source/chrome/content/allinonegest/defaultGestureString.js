@@ -1,4 +1,8 @@
-const defaultGestureString =
+var mgsuiteDefaults = {};
+
+Object.defineProperty(mgsuiteDefaults, 'gestureString', {
+  writable: false,
+  value: 
   "L|R|UD|||||U|UDR||" + 
   "DUD|DU|DLD|DLU|D|DUR|URDL|RUDR|UL|UR||LDL||" +
   "DRDR|DRLR|LUL|DR|RLR||+RU|+RUL|||RDUR|RU|" +
@@ -8,9 +12,12 @@ const defaultGestureString =
   "|RUD||DRDLU||||||DRL|" + 
   "|LDU|LDUL||||||||||" +
   "||RDR||||||||" +
-  "";
-// this is the order of displayed gestures in options
-const defaultFunctionString =
+  ""
+});
+
+Object.defineProperty(mgsuiteDefaults, 'functionString', {
+  writable: false,
+  value: 
   "0|1|2|3|4|71|76|9|54|59|" + 
   "10|7|91|92|6|61|95|26|12|11|82|69|47|" +
   "13|97|52|18|17|79|35|34|57|58|93|14|" +
@@ -20,5 +27,11 @@ const defaultFunctionString =
   "62|23|24|25|33|66|36|42|64|65|" +
   "67|94|96|70|75|44|83|48|49|50|51|53|" +
   "88|68|46|63|77|81|84|85|78|86|" +
-  "87";
-const defaultRockerString = "0|1|38|37";
+  "87"
+});
+
+Object.defineProperty(mgsuiteDefaults, 'rockerString', {
+  writable: false,
+  value: "0|1|38|37"
+});
+

@@ -364,9 +364,9 @@ function aioInit() { // overlay has finished loading or a pref was changed
 
   // read prefs or set Defaults
   var prefFuncs = [ // get pref value, set default value, check value range
-	 [function(){aioActionString=aioPref.getCharPref("gestureString");}, function(){aioPref.setCharPref("gestureString",defaultGestureString);}, function(){return !aioActionString;}],
-	 [function(){aioFuncString=aioPref.getCharPref("functionString");}, function(){aioPref.setCharPref("functionString",defaultFunctionString);}, function(){return !aioFuncString;}],
-     [function(){aioRockerString=aioPref.getCharPref("rockerString");}, function(){aioPref.setCharPref("rockerString",defaultRockerString);}, function(){return !aioRockerString;}],
+	 [function(){aioActionString=aioPref.getCharPref("gestureString");}, function(){aioPref.setCharPref("gestureString",mgsuiteDefaults.gestureString);}, function(){return !aioActionString;}],
+	 [function(){aioFuncString=aioPref.getCharPref("functionString");}, function(){aioPref.setCharPref("functionString",mgsuiteDefaults.functionString);}, function(){return !aioFuncString;}],
+     [function(){aioRockerString=aioPref.getCharPref("rockerString");}, function(){aioPref.setCharPref("rockerString",mgsuiteDefaults.rockerString);}, function(){return !aioRockerString;}],
 	 [function(){aioGestButton=aioPref.getIntPref("mousebuttonpref");}, function(){aioPref.setIntPref("mousebuttonpref",aioRMB);}, function(){return aioGestButton<0||aioGestButton>2;}],
 	 [function(){aioGestEnabled=aioPref.getBoolPref("mouse");}, function(){aioPref.setBoolPref("mouse",true);}, function(){return false;}],
 	 [function(){aioTrailEnabled=aioPref.getBoolPref("gestureTrails");}, function(){aioPref.setBoolPref("gestureTrails",true);}, function(){return false;}],
