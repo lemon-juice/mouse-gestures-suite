@@ -329,7 +329,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
      aioGetLocalizedStrings();
   }
   
-  XULAppInfo = Components.classes["@mozilla.org/xre/app-info;1"]
+  var XULAppInfo = Components.classes["@mozilla.org/xre/app-info;1"]
                 .getService(Components.interfaces.nsIXULAppInfo);
 				
   if (XULAppInfo.ID != '{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}') {  // SM id
@@ -751,9 +751,9 @@ function aioGestMove(e) {
   if (aioDelayTO) {
 	clearTimeout(aioDelayTO);
   }
-  aioDelayTO = setTimeout(aioIndicateGestureTimeout, aioDelay);
+  aioDelayTO = setTimeout(mgsTrails.aioIndicateGestureTimeout, aioDelay);
   
-  aioDrawTrail(e);
+  mgsTrails.aioDrawTrail(e);
   var pente = absY <= 5 ? 100 : absX / absY; // 5 should be grid/tangent(60)
   if (pente < 0.58 || pente > 1.73) { //between 30° & 60°, wait
      if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
@@ -841,7 +841,7 @@ function aioKillGestInProgress(clearMode) {
      aioOnLink.length = 0;
      aioOnImage = null;
   }
-  aioEraseTrail();
+  mgsTrails.aioEraseTrail();
   window.removeEventListener("mousemove", aioGestMove, true);
 }
 
@@ -1003,7 +1003,7 @@ function aioMouseDown(e) {
              aioGestInProgress = true;
              aioAddLink(e);  // Check if started over a link
              aioStrokes = []; aioLocaleGest = []; aioCurrGest = "";
-             if (aioTrailEnabled) aioStartTrail(e);
+             if (aioTrailEnabled) mgsTrails.aioStartTrail(e);
              window.addEventListener("mousemove", aioGestMove, true);
           }
           else preventDefaultAction = e.button != aioLMB;
@@ -1131,7 +1131,7 @@ function aioMouseUp(e) {
      var lastgesture = aioStrokes.join("");
 	 
      if (lastgesture) aioNukeEvent(e);
-     aioEraseTrail();
+     mgsTrails.aioEraseTrail();
 	 
      if (lastgesture) {
         window.addEventListener("click", aioGestClickHandler, true);
