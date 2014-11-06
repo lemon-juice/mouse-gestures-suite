@@ -141,7 +141,7 @@ function aioStatusMessage(msg, timeToClear, append) {
   }
   
   if (!msg && !append) {
-    clearFauxStatusBar();
+    aioClearFauxStatusBar();
   }
   
   if (append) {
@@ -171,7 +171,7 @@ function aioStatusMessage(msg, timeToClear, append) {
 
 function aioShowInFauxStatusBar(msg) {
   if (!msg) {
-    clearFauxStatusBar();
+    aioClearFauxStatusBar();
     return;
   }
   
@@ -196,7 +196,7 @@ function aioShowInFauxStatusBar(msg) {
   }
 }
 
-function clearFauxStatusBar() {
+function aioClearFauxStatusBar() {
   var tooltip = document.getElementById('aioFauxStatusBar');
   
   if (tooltip) {
