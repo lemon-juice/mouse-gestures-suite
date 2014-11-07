@@ -36,7 +36,7 @@ var aioActionTable = [
       [function(){aioViewSource(0);}, "g.viewPageSource", 0, "", ["browser", "messenger"]], // 19
       [function(){aioViewSource(1);}, "g.viewFrameSource", 0, "", ["browser", "messenger"]], // 20
       [function(){aioViewCookies();}, "g.viewSiteCookies", 0, "", ["browser"]], // 21
-      [function(){aioPageInfo();}, "g.pageInfo", 0, "", ["browser", "messenger"]], // 22
+      [function(){aioPageInfo();}, "g.pageInfo", 0, "", ["browser"]], // 22
       [function(){aioOpenConsole();}, "g.jsConsole", 0, "", null], // 23
       [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 24
       [function(){aioBookmarkCurrentPage();}, "g.addBookmark", 0, "", ["browser"]], // 25
