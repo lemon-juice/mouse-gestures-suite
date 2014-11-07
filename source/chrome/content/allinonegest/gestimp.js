@@ -1266,14 +1266,14 @@ function aioLinksInWindows() {
     win.addEventListener("load", function () {
       setTimeout(function() {
         for (var i = 0; i < gestureLinks.length; ++i) {
-          win.gBrowser.addTab(url = aioSanitizeUrl(gestureLinks[i]));
+          win.gBrowser.addTab(aioSanitizeUrl(gestureLinks[i]));
         }
       }, 100);
     }, true);
   }
   else
      for (var i = 0; i < aioOnLink.length; ++i) {
-        aioNewWindow(url = aioSanitizeUrl(aioOnLink[i].href), "");
+        aioNewWindow(aioSanitizeUrl(aioOnLink[i].href), "");
      }
 }
 
