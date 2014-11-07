@@ -31,7 +31,7 @@ function buildSchema() {
 }
 
 function exitOnReturn(e) {
-  if ((e.keyCode == e.DOM_VK_RETURN || e.keyCode == e.DOM_VK_ENTER) &&
+  if ((e.keyCode == e.DOM_VK_RETURN) &&
       !gOKButton.hasAttribute("disabled")) document.documentElement.acceptDialog();
   else selectionChanged();
 }
