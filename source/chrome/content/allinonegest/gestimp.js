@@ -1531,25 +1531,6 @@ function aioHomePage() {
   }
 }
 
-//function aioGetHomePageUrl() {
-//  if (aioIsFx) {
-//    return gHomeButton.getHomePage();
-//  
-//  } else {
-//    switch (aioWindowType) {
-//      case 'browser':
-//        
-//        
-//        break;
-//    }
-//    //var prefb = Components.classes["@mozilla.org/preferences-service;1"]
-//    //                     .getService(Components.interfaces.nsIPrefService);
-//    //
-//    //return prefb.getComplexValue("browser.startup.homepage",
-//    //                                Components.interfaces.nsISupportsString).data;
-//  }
-//}
-
 function aioUpDir() { // from Stephen Clavering's GoUp
   function getUp(url) {
     var origUrl = url;
