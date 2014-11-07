@@ -31,7 +31,7 @@ var aioActionTable = [
       [function(){aioRestMaxWin();}, "g.restMaxWin", 1, "", null], // 14
       [function(){window.minimize();}, "g.minWin", 0, "", null], // 15
       [function(){aioFullScreen();}, "g.fullScreen", 1, "", null], // 16
-      [function(shiftKey){aioSelectionAsURL(shiftKey);}, "g.openSelection", 0, "", ["browser", "messenger"]], // 17
+      [function(shiftKey){aioSelectionAsURL(shiftKey);}, "g.openSelection", 0, "", ["browser", "source", "messenger", "mailcompose"]], // 17
       [function(){aioCloseCurrTab(true);}, "g.closeDoc", 2, "", null], // 18
       [function(){aioViewSource(0);}, "g.viewPageSource", 0, "", ["browser", "messenger"]], // 19
       [function(){aioViewSource(1);}, "g.viewFrameSource", 0, "", ["browser", "messenger"]], // 20
@@ -93,7 +93,7 @@ var aioActionTable = [
       [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, "", ["browser"]], // 76
       [function(){aioNextPrevLink(true);}, "g.nextLink", 0, "", ["browser"]], // 77
       [function(){aioFastForward();}, "g.fastForward", 0, "", ["browser"]], // 78
-      [function(shiftKey){aioSelectionAsSearchTerm(false, shiftKey);}, "g.searchSelection", 0, "", ["browser", "messenger"]], // 79
+      [function(shiftKey){aioSelectionAsSearchTerm(false, shiftKey);}, "g.searchSelection", 0, "", ["browser", "source", "messenger", "mailcompose"]], // 79
       [function(){aioSaveImageAs();}, "g.saveImageAs", 0, "", ["browser", "messenger"]], // 80
       [function(){aioNextPrevLink(false);}, "g.prevLink", 0, "", ["browser"]], // 81
       [function(){aioGotoLastTab();}, "g.lastTab", 0, "", ["browser", "messenger"]], // 82
@@ -723,7 +723,7 @@ function aioSelectionAsURL(reverseBg) {
  * Search for selected text. If no text selected, open search page.
  */
 function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
-  if (aioIsFx) {
+  if (aioIsFx && aioWindowType == 'browser') {
     var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
     var searchStr = getBrowserSelection();
 
@@ -744,14 +744,16 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
   var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
   var searchStr = winWrapper.getSelection().toString();
   
-  var openTabPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
-  var loadInBgPref = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
+  try {
+    // this will not work in Fx
+    var openTabPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+    var loadInBgPref = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
+  } catch (err) {};
   
   switch (aioWindowType) {
     case "browser":
       var searchBar = BrowserSearch.searchBar;
-      if (!searchBar) return;
-      searchBar.value = searchStr;
+      if (searchBar) searchBar.value = searchStr;
       
       var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
 
@@ -824,7 +826,49 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
       }
       
       break;
-  }
+    
+    case "source":
+    case "mailcompose":
+      if (aioIsFx) {
+        openLinkIn("about:blank", "tab", {inBackground: false});
+        
+        setTimeout(function() {
+          var win = Services.wm.getMostRecentWindow("navigator:browser");
+          if (win) {
+            var bs = win.BrowserSearch;
+            if (bs._loadSearch) {
+              bs._loadSearch(searchStr, false);
+            } else { // older Fx
+              bs.loadSearch(searchStr, false);
+            }
+          }
+        }, 500);
+        
+      } else {
+        // SM
+        var tabWin = openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+        
+        if (tabWin.nodeName && tabWin.nodeName == 'tab') {
+          var bs = tabWin.ownerDocument.defaultView.BrowserSearch;
+          var searchBar = bs.searchBar;
+          if (searchBar) searchBar.value = searchStr;
+          bs.loadSearch(searchStr, false);
+          
+        } else {
+          // new window
+          tabWin.addEventListener('load', function() {
+            var bs = tabWin.BrowserSearch;
+            var searchBar = bs.searchBar;
+            if (searchBar) searchBar.value = searchStr;
+            setTimeout(function() {
+              bs.loadSearch(searchStr, false);
+            }, 500);
+          });
+        }
+      }
+      
+      break;
+   }
 }
 
 function aioZoomEnlarge() {
