@@ -1476,35 +1476,79 @@ function aioFastForward() {
 }
 
 function aioHomePage() {
-  var url = aioGetHomePageUrl();
-  if (!url) return;
- 
-  switch (aioWindowType) {
-    case "browser":
-      if (aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
-        aioLinkInTab(url, false, false);
-      }
-      else {
-        loadURI(url);
-      }
-      break;
+  if (aioIsFx) {
     
-    default:
-      aioLinkInTab(url, false, false);
+    switch (aioWindowType) {
+      case "browser":
+        var url = gHomeButton.getHomePage();
+        if (aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
+          aioLinkInTab(url, false, false);
+        } else {
+          loadURI(url);
+        }
+
+        break;
+      
+      default:
+        openLinkIn("about:blank", "tab", {inBackground: false});
+        
+        setTimeout(function() {
+          var win = Services.wm.getMostRecentWindow("navigator:browser");
+          if (win) {
+            win.BrowserHome();
+          }
+        }, 500);
+    }
+    
+  } else {
+    // SM
+    switch (aioWindowType) {
+      case "browser":
+        var homePage = getHomePage();
+        var where = (aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) ? 'tab' : 'current';
+        openUILinkArrayIn(homePage, where);
+        
+        break;
+      
+      default:    
+        var tabWin = openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+        
+        if (tabWin.nodeName && tabWin.nodeName == 'tab') {
+          var win = tabWin.ownerDocument.defaultView;
+          var homePage = win.getHomePage();
+          win.openUILinkArrayIn(homePage, 'current');
+          
+        } else {
+          // new window
+          tabWin.addEventListener('load', function() {
+            setTimeout(function() {
+              var homePage = tabWin.getHomePage();
+              tabWin.openUILinkArrayIn(homePage, 'current');
+            }, 250);
+          });
+        }
+    }
   }
 }
 
-function aioGetHomePageUrl() {
-  if (aioIsFx) {
-    return gHomeButton.getHomePage();
-  } else {
-    var prefb = Components.classes["@mozilla.org/preferences-service;1"]
-                         .getService(Components.interfaces.nsIPrefService);
-  
-    return prefb.getComplexValue("browser.startup.homepage",
-                                    Components.interfaces.nsISupportsString).data;
-  }
-}
+//function aioGetHomePageUrl() {
+//  if (aioIsFx) {
+//    return gHomeButton.getHomePage();
+//  
+//  } else {
+//    switch (aioWindowType) {
+//      case 'browser':
+//        
+//        
+//        break;
+//    }
+//    //var prefb = Components.classes["@mozilla.org/preferences-service;1"]
+//    //                     .getService(Components.interfaces.nsIPrefService);
+//    //
+//    //return prefb.getComplexValue("browser.startup.homepage",
+//    //                                Components.interfaces.nsISupportsString).data;
+//  }
+//}
 
 function aioUpDir() { // from Stephen Clavering's GoUp
   function getUp(url) {
