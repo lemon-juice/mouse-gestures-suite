@@ -115,7 +115,7 @@ var mgsuiteTrails = {
 	canvas.style.top = "0";
 	canvas.style.left = "0";
 	canvas.style.pointerEvents = "none";
-	canvas.style.zIndex = 10000;
+	canvas.style.zIndex = 2147483647;  // needed for full screen invoked by full screen API
 	
 	this.insertionNode.appendChild(canvas);
   

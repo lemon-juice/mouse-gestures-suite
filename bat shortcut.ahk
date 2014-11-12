@@ -14,7 +14,7 @@
 		SendInput D:\dev\aio-gestures\*.xpi{Enter} ; Open last xpi file in folder
 		Sleep 500
 		Send +{Tab}{End}{Enter}
-		Sleep 1500
+		Sleep 2000
 		Send {Enter}
 		Sleep 200
 		Send {Tab}{Tab}
@@ -39,7 +39,7 @@ return
 		SendInput D:\dev\aio-gestures\*.xpi{Enter} ; Open last xpi file in folder
 		Sleep 500
 		Send +{Tab}{End}{Enter}
-		Sleep 1500
+		Sleep 2000
 		Send {Enter}
 		Sleep 200
 		Send {Tab}{Tab}
