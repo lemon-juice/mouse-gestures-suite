@@ -637,5 +637,5 @@ function openEditRuleWin(newRule) {
   
   var suffix = newRule ? "?new=1" : "";
   
-  window.openDialog("chrome://allinonegest/content/pref/aioEditRule.xul" + suffix, "", "width=540,height=230,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
+  window.openDialog("chrome://allinonegest/content/pref/aioEditRule.xul" + suffix, "", "width=590,height=230,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
 }

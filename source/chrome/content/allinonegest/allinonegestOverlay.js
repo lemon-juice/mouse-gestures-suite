@@ -869,7 +869,8 @@ function aioPerformRockerFunction(index) {
 }
 
 function aioPrioritizeGestures(e) {
-  if (aioSitePref == 'P' && (
+  if ((aioSitePref == 'P' || aioSitePref == 'M')
+	  && (
 	  (e.button == mgsuite.RMB && ((aioGestEnabled && aioGestButton == mgsuite.RMB) || aioRockEnabled || aioWheelEnabled))
 	  || (e.button == mgsuite.MMB && ((aioGestEnabled && aioGestButton == mgsuite.MMB) || aioWheelEnabled || aioScrollEnabled))
 	  || (aioRockEnabled && e.button == mgsuite.LMB && aioDownButton == mgsuite.RMB)
@@ -911,24 +912,32 @@ function aioMouseDown(e) {
   
 	aioBlockActionStatusMsg = "";
 	
-	if (aioSitePref == 'P') {
+	if (aioSitePref == 'P' || aioSitePref == 'M') {
 	  // prioritize gestures - these listeners on document will prevent mouse clicks
 	  // from reaching it
-	  window.content.document.addEventListener("mousedown", aioPrioritizeGestures, true);
-	  window.content.document.addEventListener("mouseup", aioPrioritizeGestures, true);
+	  var addPrioritizeEvents = function(elem) {
+		elem.addEventListener("mousedown", aioPrioritizeGestures, true);
+		elem.addEventListener("mouseup", aioPrioritizeGestures, true);
+		
+		if (aioSitePref == 'M') {
+		  // prioritize more
+		  elem.addEventListener("click", aioPrioritizeGestures, true);
+		  elem.addEventListener("contextmenu", aioPrioritizeGestures, true);
+		}
+	  }
+	  
+	  addPrioritizeEvents(window.content.document);
 	  
 	  var frames = window.content.frames;
 	  var framesB, i, j, len, lenB;
 	  
 	  for (i=0, len=frames.length; i<len; i++) {
-		frames[i].addEventListener("mousedown", aioPrioritizeGestures, true);
-		frames[i].addEventListener("mouseup", aioPrioritizeGestures, true);
+		addPrioritizeEvents(frames[i]);
 		
 		framesB = frames[i].frames;
 		
 		for (j=0, lenB=framesB.length; j<lenB; j++) {
-		  framesB[j].addEventListener("mousedown", aioPrioritizeGestures, true);
-		  framesB[j].addEventListener("mouseup", aioPrioritizeGestures, true);
+		  addPrioritizeEvents(framesB[j]);
 		}
 	  }
 	  

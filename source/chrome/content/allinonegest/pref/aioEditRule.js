@@ -9,8 +9,9 @@ function initEditRuleConst() {
   }
   
   ruleActionMap = {
-    P: bundle.getString("opt.sitePrefP"),
     D: bundle.getString("opt.sitePrefD"),
+    P: bundle.getString("opt.sitePrefP"),
+    M: bundle.getString("opt.sitePrefM"),
     N: bundle.getString("opt.sitePrefN")
   }
 }
@@ -22,8 +23,9 @@ function initEditRule() {
   
   // add radio options
   var actionRadio = document.getElementById('siteAction');
-  addRadioOption(actionRadio, 'P', ruleActionMap.P);
   addRadioOption(actionRadio, 'D', ruleActionMap.D);
+  addRadioOption(actionRadio, 'P', ruleActionMap.P);
+  addRadioOption(actionRadio, 'M', ruleActionMap.M);
   addRadioOption(actionRadio, 'N', ruleActionMap.N);
   
   if (addNew) {
