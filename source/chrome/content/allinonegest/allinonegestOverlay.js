@@ -876,7 +876,11 @@ function aioPrioritizeGestures(e) {
 	  )
 	) {
 	e.stopPropagation();
-	aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefP") + ">";
+	
+	var prefStr = aioGetStr("opt.sitePrefP");
+	if (aioBlockActionStatusMsg.indexOf(prefStr) < 0) {
+	  aioBlockActionStatusMsg += "<" + prefStr + ">";
+	}
 	aioStatusMessage(aioBlockActionStatusMsg, 1000);
   }
 }
@@ -1031,22 +1035,22 @@ function aioMouseDown(e) {
             (aioStartOnLinks  || !aioFindLink(e.target, false)) && !(aioPreferPaste && aioIsPastable(e))) {
 		  aioShowContextMenu = false;
 		  
-           window.removeEventListener("mouseup", aioMouseUp, true);
-           aioRendering.removeEventListener("mousedown", aioMouseDown, true);
-           window.addEventListener("click", aioASClick, true);
-           aioLastEvtTime = new Date();
-           aioLastX = e.screenX; aioLastY = e.screenY;
-           window.addEventListener("mousemove", aioScrollMove, true);
-           aioNukeEvent(e);
-           switch (aioWhatAS) {
-             case 0: aioAutoScrollStart(e);
-                     break;
-             case 2: aioRendering.addEventListener("mouseup", aioStartAS, true);
-                     aioGrabTarget = e.target;
-                     aioScrollMode = 1;
-                     break;
-             case 3: aioGrabNDrag(e.target);
-           }
+		  window.removeEventListener("mouseup", aioMouseUp, true);
+		  aioRendering.removeEventListener("mousedown", aioMouseDown, true);
+		  window.addEventListener("click", aioASClick, true);
+		  aioLastEvtTime = new Date();
+		  aioLastX = e.screenX; aioLastY = e.screenY;
+		  window.addEventListener("mousemove", aioScrollMove, true);
+		  
+		  switch (aioWhatAS) {
+			case 0: aioAutoScrollStart(e);
+					break;
+			case 2: aioRendering.addEventListener("mouseup", aioStartAS, true);
+					aioGrabTarget = e.target;
+					aioScrollMode = 1;
+					break;
+			case 3: aioGrabNDrag(e.target);
+		  }
         }
      }
      aioDownButton = e.button;
@@ -1575,7 +1579,7 @@ function aioAutoScrollStop(e) {
 }
         
 function aioScrollEnd() {
-   window.removeEventListener("click", aioASClick, true);
+  window.removeEventListener("click", aioASClick, true);
 }
 
 function aioASClick(e) { // prevent Unix pastes
@@ -1585,25 +1589,25 @@ function aioASClick(e) { // prevent Unix pastes
 function aioAutoScrollUp(e) {
   if (aioScrollFingerFree || ((new Date() - aioLastEvtTime) > aioDelay &&
       (!aioPanToAS || Math.abs(e.screenX - aioLastX) >= aioHalfMarker || Math.abs(e.screenY - aioLastY) >= aioHalfMarker))) {
-     if (aioIntervalID) window.clearInterval(aioIntervalID);
-     aioIntervalID = null;
-     aioNukeEvent(e);
-     if (e.type == "mousedown") {
-        aioRemoveMarker();
-        window.removeEventListener("mousemove", aioScrollMove, true);
-     }
-     else {
-        aioDownButton = mgsuite.NoB;
-        window.removeEventListener("mouseup", aioAutoScrollUp, true);
-        window.removeEventListener("mousedown", aioAutoScrollUp, true);
-        window.removeEventListener("mousemove", aioScrollMove, true);
-        window.removeEventListener("DOMMouseScroll", aioAutoScrollStop, true);
-        aioAcceptASKeys = false;
-        window.addEventListener("mouseup", aioMouseUp, true);
-        aioRendering.addEventListener("mousedown", aioMouseDown, true);
-        aioRemoveMarker();
-        setTimeout(function(){aioScrollEnd();}, 200);
-     }
+	if (aioIntervalID) window.clearInterval(aioIntervalID);
+	aioIntervalID = null;
+	
+	if (e.type == "mousedown") {
+	   aioRemoveMarker();
+	   window.removeEventListener("mousemove", aioScrollMove, true);
+	}
+    else {
+	  aioDownButton = mgsuite.NoB;
+	  window.removeEventListener("mouseup", aioAutoScrollUp, true);
+	  window.removeEventListener("mousedown", aioAutoScrollUp, true);
+	  window.removeEventListener("mousemove", aioScrollMove, true);
+	  window.removeEventListener("DOMMouseScroll", aioAutoScrollStop, true);
+	  aioAcceptASKeys = false;
+	  window.addEventListener("mouseup", aioMouseUp, true);
+	  aioRendering.addEventListener("mousedown", aioMouseDown, true);
+	  aioRemoveMarker();
+	  setTimeout(function(){aioScrollEnd();}, 200);
+    }
   }
   else aioScrollFingerFree = true;
 }
@@ -1748,17 +1752,13 @@ else zoom = domWindowUtils.screenPixelsPerCSSPixel;
   }
   return retObj;
 }
-/*
-   The following submitted by Erik Arvidsson; slightly modified by Matthew Ratzloff
-   Modified by Marc Boullet
-*/
+/* Display autoscroll marker */
 function aioAddMarker(e) {
   aioScroll = aioFindNodeToScroll(e.target);
   if (aioScroll.scrollType == 3) { // nothing to scroll
      aioScrollFingerFree = true; // exit on next mouse up
      return 2;
   }
-  aioNukeEvent(e);
 
   if (aioSpecialCursor && !aioNoScrollMarker && !aioScroll.XMLPrettyPrint) {
     // overlay
@@ -1901,7 +1901,6 @@ function aioStartAS(e) {
    aioAutoScrollStart(e);
    aioScrollFingerFree = true;
    if (aioScroll.scrollType == 3) aioAutoScrollUp(e);
-   else aioNukeEvent(e);
 } 
 
 function aioGrabNDrag(target) {
@@ -1911,7 +1910,6 @@ function aioGrabNDrag(target) {
   if (aioScroll.scrollType == 3) return; // nothing to scroll
   if (!aioScroll.isXML && aioScroll.nodeToScroll.nodeName.toLowerCase() != "select") {
      aioScroll.cursorChangeable = true;
-//     aioScroll.nodeToScroll.style.cursor = "move";
      aioScroll.nodeToScroll.style.cursor = "url(chrome://allinonegest/content/allscroll.png), move";
   }
   if (aioScrollAlaAcrobat) {aioScroll.ratioX = -1; aioScroll.ratioY = -1; }
@@ -1928,7 +1926,6 @@ function aioGrabNDragMove(e) {
 }
 
 function aioGrabNDragMouseUp(e) {
-  aioNukeEvent(e);
   aioDownButton = mgsuite.NoB;
   window.removeEventListener("mouseup", aioGrabNDragMouseUp, true);
   window.removeEventListener("mousemove", aioScrollMove, true);
