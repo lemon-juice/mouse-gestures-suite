@@ -878,7 +878,7 @@ function aioPrioritizeGestures(e) {
 	) {
 	e.stopPropagation();
 	
-	var prefStr = aioGetStr("opt.sitePrefP");
+	var prefStr = aioGetStr("opt.sitePref" + aioSitePref);
 	if (aioBlockActionStatusMsg.indexOf(prefStr) < 0) {
 	  aioBlockActionStatusMsg += "<" + prefStr + ">";
 	}
