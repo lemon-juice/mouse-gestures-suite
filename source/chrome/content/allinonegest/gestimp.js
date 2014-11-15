@@ -1632,7 +1632,7 @@ function aioToggleBookmarksToolbar() {
     if (aioIsFx) {
       window.setToolbarVisibility(bar, bar.collapsed);
     } else {
-      bar.hidden = !bar.hidden;
+      goToggleToolbar('PersonalToolbar');
     }
   }
 }
