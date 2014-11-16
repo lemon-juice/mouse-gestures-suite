@@ -1586,8 +1586,8 @@ function aioScrollEnd() {
   window.removeEventListener("click", aioASClick, true);
 }
 
-function aioASClick(e) { // prevent Unix pastes
-  aioNukeEvent(e);
+function aioASClick(e) { // prevent default Unix pastes (middlemouse.contentLoadURL)
+  e.preventDefault();
 }
 
 function aioAutoScrollUp(e) {
