@@ -1227,7 +1227,9 @@
         not a problem but if a web page offers certain features when you right-
         or middle-click then these features will not work. Quite often the
         problematic pages are those containing scripts for tracking mouse
-        clicks.</li>
+        clicks. Technical note: this setting will prevent <em>mousedown</em>
+        and <em>mouseup</em> events for middle and right buttons from working
+        on the site (on Linux <em>contextmenu</em> events are also suppressed).</li>
       <li><strong><em>{opt.sitePrefD}</em></strong> - use this for turning off
         mouse gestures completely on certain pages. Even if mouse gestures are
         turned off in this way in a web page they will still work if you
