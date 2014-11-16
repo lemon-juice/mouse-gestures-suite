@@ -56,7 +56,6 @@ var aioGestButton, aioActionString, aioFuncString, aioWheelRocker;
 var aioGoUpInNewTab, aioNoHorizScroll;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
-var aio2Buttons;  // .... prefs
 var aioDisableClickHeat;
 var aioFxV18;
 var aioWindowType, aioIsFx = false;
@@ -399,7 +398,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	 [function(){aioShiftForTitle=aioPref.getBoolPref("shiftForTitle");}, function(){aioPref.setBoolPref("shiftForTitle",true);}, function(){return false;}],
 	 [function(){titleDelay=aioPref.getIntPref("titleDelay");}, function(){aioPref.setIntPref("titleDelay",2);}, function(){return titleDelay<0||titleDelay>9;}],
 	 [function(){titleDuration=aioPref.getIntPref("titleDuration");}, function(){aioPref.setIntPref("titleDuration",3);}, function(){return titleDuration<0||titleDuration>6;}],
-	 [function(){aio2Buttons=aioPref.getBoolPref("mouse2buttons");}, function(){aioPref.setBoolPref("mouse2buttons",false);}, function(){return false;}],
 	 [function(){aioScrollAlaAcrobat=aioPref.getBoolPref("dragAlaAcrobat");}, function(){aioPref.setBoolPref("dragAlaAcrobat",false);}, function(){return false;}],
 	 [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
 	 [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
@@ -693,12 +691,6 @@ function aioParseSiteList() {
 	  aioSitePref = aioSiteList[i][1];
 	}
   }
-}
-
-function aioTrigger(e, which) {
-  if (aio2Buttons) return which ? e.button == mgsuite.RMB && e.ctrlKey :
-        (aioGestButton == mgsuite.RMB) ? e.button == mgsuite.RMB && !e.ctrlKey : e.button == aioGestButton;
-  else return which ? e.button == mgsuite.MMB : e.button == aioGestButton;
 }
 
 function aioIsKeyOK(e) {
@@ -1002,7 +994,7 @@ function aioMouseDown(e) {
 	  }
     }
 	 
-    if (gesturesEnabled && aioTrigger(e, false)) {
+    if (gesturesEnabled && e.button == aioGestButton) {
       var preventDefaultAction = false;
       if (aioGestEnabled && aioIsKeyOK(e)) {
         aioSrcEvent = e;

@@ -560,7 +560,6 @@ function getPrefsForImportExport() {
     ['isActive', 'bool'],
     ['leftDefault', 'bool'],
     ['mouse', 'bool'],
-    ['mouse2buttons', 'bool'],
     ['mousebuttonpref', 'int'],
     ['nextsString', 'char'],
     ['noAltGest', 'bool'],
