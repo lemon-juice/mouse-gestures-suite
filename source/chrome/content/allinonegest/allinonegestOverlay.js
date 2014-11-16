@@ -1043,6 +1043,7 @@ function aioMouseDown(e) {
 		  aioLastEvtTime = new Date();
 		  aioLastX = e.screenX; aioLastY = e.screenY;
 		  window.addEventListener("mousemove", aioScrollMove, true);
+		  aioNukeEvent(e);
 		  
 		  switch (aioWhatAS) {
 			case 0: aioAutoScrollStart(e);
@@ -1586,8 +1587,8 @@ function aioScrollEnd() {
   window.removeEventListener("click", aioASClick, true);
 }
 
-function aioASClick(e) { // prevent default Unix pastes (middlemouse.contentLoadURL)
-  e.preventDefault();
+function aioASClick(e) { // prevent Unix pastes
+  aioNukeEvent(e);
 }
 
 function aioAutoScrollUp(e) {
@@ -1595,6 +1596,7 @@ function aioAutoScrollUp(e) {
       (!aioPanToAS || Math.abs(e.screenX - aioLastX) >= aioHalfMarker || Math.abs(e.screenY - aioLastY) >= aioHalfMarker))) {
 	if (aioIntervalID) window.clearInterval(aioIntervalID);
 	aioIntervalID = null;
+	aioNukeEvent(e);
 	
 	if (e.type == "mousedown") {
 	   aioRemoveMarker();
@@ -1930,6 +1932,7 @@ function aioGrabNDragMove(e) {
 }
 
 function aioGrabNDragMouseUp(e) {
+  aioNukeEvent(e);
   aioDownButton = mgsuite.NoB;
   window.removeEventListener("mouseup", aioGrabNDragMouseUp, true);
   window.removeEventListener("mousemove", aioScrollMove, true);
