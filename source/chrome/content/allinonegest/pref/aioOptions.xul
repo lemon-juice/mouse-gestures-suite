@@ -367,10 +367,10 @@
    
   <groupbox orient="horizontal">
     <caption label="&siteSpecific.label;"/>
-    <listbox rows="6" class="list" id="siteList" seltype="multiple" width="480" ondblclick="editRule();">
+    <listbox rows="6" class="list" id="siteList" seltype="multiple" width="450" ondblclick="editRule();">
       <listcols>
-        <listcol width="310"/>
-        <listcol width="170"/>
+        <listcol width="320"/>
+        <listcol width="130"/>
       </listcols>
       <listhead>
         <listheader label="URL"/>
