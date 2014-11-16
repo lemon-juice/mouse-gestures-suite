@@ -887,7 +887,9 @@ function aioPrioritizeGestures(e) {
 
 function aioMouseDown(e) {
   
-  if (aioGesturesEnabled) {
+  var gesturesEnabled = aioGesturesEnabled;
+  
+  if (gesturesEnabled) {
 	// detect gesture start on tab
 	aioGestureTab = null;
 	
@@ -949,19 +951,21 @@ function aioMouseDown(e) {
 		  aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
 		  aioStatusMessage(aioBlockActionStatusMsg, 1000);
 		}
-		return;
+		gesturesEnabled = false;
 	  }
 	}
 	
-	if (aioDisableClickHeat && aioWindowType == "browser") {
-	  aioDisableClickHeatEvents(e);
+	if (gesturesEnabled) {
+	  if (aioDisableClickHeat && aioWindowType == "browser") {
+		aioDisableClickHeatEvents(e);
+	  }
+	  
+	  aioShowContextMenu = false;
+	  aioBackRocking = false;
 	}
-	
-	aioShowContextMenu = false;
-	aioBackRocking = false;
   }
   
-  if (aioGesturesEnabled && e.button == aioOpp[aioDownButton] && aioRockEnabled) {
+  if (gesturesEnabled && e.button == aioOpp[aioDownButton] && aioRockEnabled) {
 	// rocker gestures
      if (e.button == mgsuite.RMB) {
         var func = 1;
@@ -987,7 +991,7 @@ function aioMouseDown(e) {
      }
   }
   else {
-	if (aioGesturesEnabled && e.button == mgsuite.RMB) {
+	if (gesturesEnabled && e.button == mgsuite.RMB) {
 	  // turn off gesture on active flash because right click event may be triggered
 	  // and the gesture may end up unfinished after choosing a context menu flash option
 	  var targetName = e.target.localName.toLowerCase();
@@ -998,7 +1002,7 @@ function aioMouseDown(e) {
 	  }
     }
 	 
-    if (aioGesturesEnabled && aioTrigger(e, false)) {
+    if (gesturesEnabled && aioTrigger(e, false)) {
       var preventDefaultAction = false;
       if (aioGestEnabled && aioIsKeyOK(e)) {
         aioSrcEvent = e;
@@ -1037,7 +1041,7 @@ function aioMouseDown(e) {
      }
      else {
 		// middle button scrolling
-        if (aioTrigger(e, true) && aioDownButton == mgsuite.NoB && aioScrollEnabled && aioIsAreaOK(e, true) &&
+        if (e.button == mgsuite.MMB && aioDownButton == mgsuite.NoB && aioScrollEnabled && aioIsAreaOK(e, true) &&
             (aioStartOnLinks  || !aioFindLink(e.target, false)) && !(aioPreferPaste && aioIsPastable(e))) {
 		  aioShowContextMenu = false;
 		  
@@ -1103,6 +1107,7 @@ function aioDisplayContextMenu(e) {
 
 function aioMouseUp(e) {
   if (!aioGesturesEnabled) {
+	aioDownButton = mgsuite.NoB;
 	return;
   }
   
@@ -1112,6 +1117,7 @@ function aioMouseUp(e) {
   
   if (aioSitePref == 'D' && !aioGestureTab) {
 	// disable gestures
+	aioDownButton = mgsuite.NoB;
 	return;
   }
   aioBlockActionStatusMsg = "";
