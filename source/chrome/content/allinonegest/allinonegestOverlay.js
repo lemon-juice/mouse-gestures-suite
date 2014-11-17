@@ -1647,8 +1647,8 @@ function aioFindNodeToScroll(initialNode) {
   
   var domWindowUtils = clientFrame.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
                            .getInterface(Components.interfaces.nsIDOMWindowUtils);
-  if (aioFxV18) zoom = domWindowUtils.fullZoom;
-else zoom = domWindowUtils.screenPixelsPerCSSPixel;
+  zoom = domWindowUtils.fullZoom;
+
   var insertBounds = retObj.insertionNode.getBoundingClientRect();
   retObj.docBoxX = Math.floor((clientFrame.mozInnerScreenX + insertBounds.left) * zoom);
   retObj.docBoxY = Math.floor((clientFrame.mozInnerScreenY + insertBounds.top) * zoom);
@@ -1669,8 +1669,11 @@ else zoom = domWindowUtils.screenPixelsPerCSSPixel;
 
 		  if ((currNode instanceof HTMLHtmlElement) ||
               (currNode instanceof HTMLBodyElement)) {
-	         if (clientFrame.scrollMaxX > 0) retObj.scrollType = clientFrame.scrollMaxY > 0 ? 0 : 2;			 
-             else retObj.scrollType =  clientFrame.scrollMaxY > 0 ? 1 : 3;
+	         if (clientFrame.scrollMaxX > 0) {
+			  retObj.scrollType = clientFrame.scrollMaxY > 0 ? (clientFrame.scrollbars.visible ? 0 : 3) : 2;			 
+			 } else {
+			  retObj.scrollType =  (clientFrame.scrollMaxY > 0 && clientFrame.scrollbars.visible) ? 1 : 3;
+			 }
           }
 		  else {
              var overflowx = currNode.ownerDocument.defaultView
@@ -1703,7 +1706,7 @@ else zoom = domWindowUtils.screenPixelsPerCSSPixel;
                 retObj.scrollType = scrollVert ? 1 : 3;
              }
 		  }
-          
+		  
           if (retObj.scrollType != 3) {
              retObj.nodeToScroll = currNode;
              retObj.isBody = (currNode instanceof HTMLHtmlElement) || (currNode instanceof HTMLBodyElement);
