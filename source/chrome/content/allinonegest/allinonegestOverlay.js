@@ -1665,8 +1665,12 @@ function aioFindNodeToScroll(initialNode) {
      do {
         try {
           currNode = nextNode;
-          if (!(currNode instanceof HTMLElement)) continue;
-
+          if (!(currNode instanceof HTMLElement)) {
+			// some non-html element, e.g. svg
+			nextNode = currNode.parentNode;
+			continue;
+		  }
+		  
 		  if ((currNode instanceof HTMLHtmlElement) ||
               (currNode instanceof HTMLBodyElement)) {
 	         if (clientFrame.scrollMaxX > 0) {
