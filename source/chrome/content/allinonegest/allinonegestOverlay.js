@@ -1551,7 +1551,7 @@ function aioAutoScrollKey(e) {
   aioNukeEvent(e);
   switch (e.keyCode) {
     case VK_DOWN :
-    case VK_UP   : if (aioScroll.scrollType < 2 && (aioScroll.isXML || aioScroll.isBody)) {
+    case VK_UP   : if (aioScroll.scrollType < 2) {
                       var inc = e.keyCode == VK_UP ? -20 : 20 ;
                       if (aioMarker) {
 						aioMarker.moveBy(0, inc);
@@ -1563,7 +1563,7 @@ function aioAutoScrollKey(e) {
                    }
                    break;
     case VK_LEFT :
-    case VK_RIGHT: if (!(aioScroll.scrollType & 1) && (aioScroll.isXML || aioScroll.isBody)) {
+    case VK_RIGHT: if (!(aioScroll.scrollType & 1)) {
                       inc = e.keyCode == VK_LEFT ? -20 : 20 ;
                       if (aioMarker) {
                         aioMarker.moveBy(inc, 0);
