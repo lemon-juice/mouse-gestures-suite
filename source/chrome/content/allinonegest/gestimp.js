@@ -904,13 +904,6 @@ function aioZoomReset() {
   }
 }
 
-function aioImageResize(s) {
-  aioOnImage.removeAttribute("width");
-  aioOnImage.removeAttribute("height");
-  var style = aioOnImage.getAttribute("style") || "";
-  aioOnImage.setAttribute("style", style + s);
-}
-
 function aioSetImgSize(aEnlarge, aMixed) {
   if (!aioOnImage) {
      if (!aMixed) return;
@@ -922,17 +915,39 @@ function aioSetImgSize(aEnlarge, aMixed) {
   var imgTab;
   
   if (!imgStr) {
-     var view = aioOnImage.ownerDocument.defaultView;
-     var w = parseInt(view.getComputedStyle(aioOnImage, "").getPropertyValue("width"));
-     var h = parseInt(view.getComputedStyle(aioOnImage, "").getPropertyValue("height"));
-     imgTab = [];
-     imgTab[0] = w; imgTab[1] = h; imgTab[2] = 1;
+    var view = aioOnImage.ownerDocument.defaultView;
+    // get actual img w & h
+    var w = parseInt(view.getComputedStyle(aioOnImage).getPropertyValue("width"));
+    var h = parseInt(view.getComputedStyle(aioOnImage).getPropertyValue("height"));
+    imgTab = [];
+    imgTab[0] = w; imgTab[1] = h; imgTab[2] = 1;
+    
+    aioOnImage.aioOldStyles = {
+      width: aioOnImage.style.getPropertyValue("width"),
+      height: aioOnImage.style.getPropertyValue("height"),
+      maxWidth: aioOnImage.style.getPropertyValue("max-width"),
+      maxHeight: aioOnImage.style.getPropertyValue("max-width"),
+      minWidth: aioOnImage.style.getPropertyValue("min-width"),
+      minHeight: aioOnImage.style.getPropertyValue("min-height"),
+    };
+    
+  } else {
+    imgTab = imgStr.split("|");
   }
-  else imgTab = imgStr.split("|");
+  
+  aioOnImage.style.setProperty("max-width","none", "important");
+  aioOnImage.style.setProperty("max-height","none", "important");
+  aioOnImage.style.setProperty("min-width","0", "important");
+  aioOnImage.style.setProperty("min-height","0", "important");
+  
   imgTab[2] *= aEnlarge ? 2 : 0.5;
   aioOnImage.setAttribute("aioImgSize", imgTab.join("|"));
   w = Math.round(imgTab[0] * imgTab[2]); h = Math.round(imgTab[1] * imgTab[2]);
-  if (w && h) aioImageResize("width:" + w + "px; height:" + h + "px;");
+  
+  if (w && h && w != imgTab[0] && h != imgTab[1]) {
+    aioOnImage.style.width = w + "px";
+    aioOnImage.style.height = h + "px";
+  }
   else aioResetImgSize(false);
 }
 
@@ -944,10 +959,22 @@ function aioResetImgSize(aMixed) {
   }
   var imgStr = aioOnImage.getAttribute("aioImgSize");
   if (!imgStr) return;
-  var imgTab = imgStr.split("|");
-  imgTab[2] = "1";
-  aioOnImage.setAttribute("aioImgSize", imgTab.join("|"));
-  aioImageResize("width:" + imgTab[0] + "px; height:" + imgTab[1] + "px;");
+  
+  aioOnImage.removeAttribute("aioImgSize");
+  
+  if (aioOnImage.aioOldStyles) {
+    // restore size
+    aioOnImage.style.setProperty("width", aioOnImage.aioOldStyles.width, "");
+    aioOnImage.style.setProperty("height", aioOnImage.aioOldStyles.height, "");
+    
+    // restore max/min styles
+    aioOnImage.style.setProperty("max-width", aioOnImage.aioOldStyles.maxWidth, "");
+    aioOnImage.style.setProperty("max-height", aioOnImage.aioOldStyles.maxHeight, "");
+    aioOnImage.style.setProperty("min-width", aioOnImage.aioOldStyles.minWidth, "");
+    aioOnImage.style.setProperty("min-height", aioOnImage.aioOldStyles.minHeight, "");
+    
+    delete aioOnImage.aioOldStyles;
+  }
 }
 
 function aioSaveImageAs() {
