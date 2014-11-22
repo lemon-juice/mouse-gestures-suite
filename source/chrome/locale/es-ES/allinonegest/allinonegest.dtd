@@ -3,6 +3,7 @@
 <!ENTITY about.provider2 "Futuro desarrollo por MK">
 <!ENTITY about.version "Versión">
 <!ENTITY aioAction.goUpAction "'Ir a la carpeta superior'/'Cargar página de inicio': Abrir en una nueva pestaña">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.label "Acciones de los gestos del ratón">
 <!ENTITY aioAction.neverwarn "'Cerrar todas las pestañas menos esta': No avisar">
 <!ENTITY aioAction.nextlink "Ir al enlace siguiente:">

@@ -85,6 +85,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn      "'다른 탭 모두 닫기': 경고하지 않습니다.">
 <!ENTITY aioAction.goUpAction     "'상위로 이동...' / '홈 페이지 불러오기': 새 탭으로 엽니다.">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev       "'링크 ... 따라가기': 찾을 문자열 ('|' 로 구분하십시오.)">
 <!ENTITY aioAction.nextlink       "다음 링크 따라가기:">
 <!ENTITY aioAction.prevlink       "이전 링크 따라가기:">

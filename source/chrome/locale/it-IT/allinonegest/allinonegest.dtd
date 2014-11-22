@@ -89,6 +89,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "'Chiudi le altre schede': Non mostrare avvertimento">
 <!ENTITY aioAction.goUpAction      "'Vai alla cartella superiore ...' / 'Carica pagina iniziale': Apri in una nuova scheda">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev        "'Raggiungi ... pagina': Parole da ricercare (separate da | )">
 <!ENTITY aioAction.nextlink        "'Raggiungi pagina successiva':">
 <!ENTITY aioAction.prevlink        "Raggiungi pagina precedente:">

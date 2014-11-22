@@ -85,6 +85,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn "'Закрыть все другие вкладки': Никогда не предупреждать">
 <!ENTITY aioAction.goUpAction "'Перейти в ... верхнего уровня'/'Загрузить начальную страницу': Открывать в новой вкладке">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev "'Следовать по ссылке...': Искомые слова (| разделитель)">
 <!ENTITY aioAction.nextlink "Следовать по ссылке next">
 <!ENTITY aioAction.prevlink "Следовать по ссылке prev">

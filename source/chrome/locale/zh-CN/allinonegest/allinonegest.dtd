@@ -85,6 +85,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "“关闭其它所有标签页”:不警告">
 <!ENTITY aioAction.goUpAction      "“返回上层...”/“载入主页”:在新标签页">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev        "“跟踪 ... 链接”:搜索字符串(用|分隔)">
 <!ENTITY aioAction.nextlink        "跟踪下一链接:">
 <!ENTITY aioAction.prevlink        "跟踪上一链接:">

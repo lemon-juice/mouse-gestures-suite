@@ -15,7 +15,7 @@ function init() {
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
-                     "goUpId", "disableClickHeatId"];
+                     "goUpId", "crispResizeId", "disableClickHeatId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
                      "scrollrateOptions"];
   var checkbox, radiogroup, i;
@@ -109,8 +109,8 @@ function doEnabling() {
                  ["scrollrate0", c9c, a1], ["scrollrate1", c9c, a1], ["scrollrate2", c9c, a1],
                  ["tabBar", c14, a1], ["panningId", c9a, a1], ["reverseId", c15, a1],
                  ["evenOnLinkId", c9b, a1], ["openlinksId", c1, a1], ["openLinkInNewId", c1, a1], ["grabHorizId", c9d, a1],
-                 ["grabModeId", c9d, a1], ["leftlabelId", c12, a1],
-                 ["goUpId", c1, a1], ["nextprevId", c1, a1], ["nextlinkId", c1, a1],
+                 ["grabModeId", c9d, a1], ["leftlabelId", c12, a1], ["goUpId", c1, a1],
+                 ["crispResizeId", c1, a1], ["nextprevId", c1, a1], ["nextlinkId", c1, a1],
                  ["prevlinkId", c1, a1], ["nextsStringId", c1, a1], ["prevsStringId", c1, a1]];
   var elem;
 
@@ -143,7 +143,7 @@ function savePrefs() {
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
-                     "goUpId", "disableClickHeatId"];
+                     "goUpId", "crispResizeId", "disableClickHeatId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
                      "scrollrateOptions"];
   var checkbox, radiogroup, i;

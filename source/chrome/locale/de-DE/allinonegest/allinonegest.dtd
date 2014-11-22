@@ -85,6 +85,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "'Alle anderen Tabs schließen': Niemals warnen">
 <!ENTITY aioAction.goUpAction      "'Eine URL-Ebene höher' / 'Startseite laden':  In neuem Tab öffnen">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev        "'Link ähnlich ... folgen': Suchbegriffe wie 'weiter' (| als Trenner)">
 <!ENTITY aioAction.nextlink        "Link ähnlich 'weiter' folgen:">
 <!ENTITY aioAction.prevlink        "Link ähnlich 'zurück' folgen:">

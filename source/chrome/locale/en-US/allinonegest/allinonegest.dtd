@@ -85,6 +85,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "'Close all other Tabs': Never warn">
 <!ENTITY aioAction.goUpAction      "'Go Up to parent ...' / 'Load Home Page': Open in new tab">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev        "'Follow ... Link': Strings to be searched for (| separated)">
 <!ENTITY aioAction.nextlink        "Follow Next Link:">
 <!ENTITY aioAction.prevlink        "Follow Previous Link:">

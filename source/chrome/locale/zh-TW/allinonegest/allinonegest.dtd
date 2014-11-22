@@ -89,6 +89,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "『關閉所有其他的分頁』：永不警告">
 <!ENTITY aioAction.goUpAction      "『回到上一層…』或『載入首頁』：開啟於新視窗內">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.bookmarkAction  "『開啟書籤』：開啟於目前分頁內">
 <!ENTITY aioAction.nextprev        "『尾隨…連結』：要搜尋的字串（以 '|' 來分隔）">
 <!ENTITY aioAction.nextlink        "尾隨下一個連結：">

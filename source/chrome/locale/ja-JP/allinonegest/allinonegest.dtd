@@ -85,6 +85,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn "'他のタブを閉じる': 警告せず閉じるようにする">
 <!ENTITY aioAction.goUpAction "'上位階層へ移動' / 'ホームページを表示': 新しいタブで開く">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev "'前後へのリンクを辿る': 該当すると見なす文字列 (「|」で区切って複数指定可)">
 <!ENTITY aioAction.nextlink "次へのリンク:">
 <!ENTITY aioAction.prevlink "前へのリンク:">

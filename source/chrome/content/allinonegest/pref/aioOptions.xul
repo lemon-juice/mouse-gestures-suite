@@ -278,6 +278,8 @@
            prefstring="allinonegest.openLinkInNew" label="&aioAction.openLinkInNew;" />
        <checkbox id="goUpId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.goUpInNewTab" label="&aioAction.goUpAction;" />
+       <checkbox id="crispResizeId" type="checkbox" pref="true" preftype="bool"
+           prefstring="allinonegest.crispResize" label="&aioAction.crispResize;" />
        <checkbox id="rockerModeId" type="checkbox" label="&aioAction.rockermode;" />
        <separator orient="horizontal" />
        <label id="nextprevId" value="&aioAction.nextprev;" />

@@ -929,8 +929,11 @@ function aioSetImgSize(aEnlarge, aMixed) {
       maxHeight: aioOnImage.style.getPropertyValue("max-width"),
       minWidth: aioOnImage.style.getPropertyValue("min-width"),
       minHeight: aioOnImage.style.getPropertyValue("min-height"),
-      imageRendering: aioOnImage.style.getPropertyValue("image-rendering"),
     };
+    
+    if (aioCrispResize) {
+      aioOnImage.aioOldStyles.imageRendering = aioOnImage.style.getPropertyValue("image-rendering")
+    }
     
   } else {
     imgTab = imgStr.split("|");
@@ -986,7 +989,7 @@ function aioResetImgSize(aMixed) {
     aioOnImage.style.setProperty("min-width", aioOnImage.aioOldStyles.minWidth, "");
     aioOnImage.style.setProperty("min-height", aioOnImage.aioOldStyles.minHeight, "");
     
-    if (aioCrispResize) {
+    if (typeof aioOnImage.aioOldStyles.imageRendering != 'undefined') {
       aioOnImage.style.setProperty("image-rendering", aioOnImage.aioOldStyles.imageRendering, "");
     }
     delete aioOnImage.aioOldStyles;

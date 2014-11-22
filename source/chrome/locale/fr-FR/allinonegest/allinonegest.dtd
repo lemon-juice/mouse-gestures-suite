@@ -85,6 +85,7 @@
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
 <!ENTITY aioAction.neverwarn       "'Fermer tous les autres onglets': Ne jamais avertir">
 <!ENTITY aioAction.goUpAction      "'Aller au répertoire parent ...' / 'Charger la page d'accueil': Ouvrir dans un nouvel onglet">
+<!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
 <!ENTITY aioAction.nextprev        "'Suivre le lien ...': Termes à chercher (séparés par |)">
 <!ENTITY aioAction.nextlink        "Suivre le lien Suivant:">
 <!ENTITY aioAction.prevlink        "Suivre le lien Précédent:">
