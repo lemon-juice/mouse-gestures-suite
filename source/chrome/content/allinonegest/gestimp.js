@@ -929,26 +929,39 @@ function aioSetImgSize(aEnlarge, aMixed) {
       maxHeight: aioOnImage.style.getPropertyValue("max-width"),
       minWidth: aioOnImage.style.getPropertyValue("min-width"),
       minHeight: aioOnImage.style.getPropertyValue("min-height"),
+      imageRendering: aioOnImage.style.getPropertyValue("image-rendering"),
     };
     
   } else {
     imgTab = imgStr.split("|");
   }
   
-  aioOnImage.style.setProperty("max-width","none", "important");
-  aioOnImage.style.setProperty("max-height","none", "important");
-  aioOnImage.style.setProperty("min-width","0", "important");
-  aioOnImage.style.setProperty("min-height","0", "important");
   
   imgTab[2] *= aEnlarge ? 2 : 0.5;
   aioOnImage.setAttribute("aioImgSize", imgTab.join("|"));
   w = Math.round(imgTab[0] * imgTab[2]); h = Math.round(imgTab[1] * imgTab[2]);
   
   if (w && h && w != imgTab[0] && h != imgTab[1]) {
+    aioOnImage.style.setProperty("max-width","none", "important");
+    aioOnImage.style.setProperty("max-height","none", "important");
+    aioOnImage.style.setProperty("min-width","0", "important");
+    aioOnImage.style.setProperty("min-height","0", "important");
     aioOnImage.style.width = w + "px";
     aioOnImage.style.height = h + "px";
+    
+    if (aioCrispResize) {
+      if (CSS.supports("image-rendering","-moz-crisp-edges")) {
+        aioOnImage.style.setProperty("image-rendering", "-moz-crisp-edges", "important");
+      } else if (CSS.supports("image-rendering","crisp-edges")) {
+        aioOnImage.style.setProperty("image-rendering", "crisp-edges", "important");
+      } else if (CSS.supports("image-rendering","optimize-contrast")) {
+        aioOnImage.style.setProperty("image-rendering", "optimize-contrast", "important");
+      }
+    }
   }
-  else aioResetImgSize(false);
+  else {
+    aioResetImgSize(false);
+  }
 }
 
 function aioResetImgSize(aMixed) {
@@ -973,6 +986,9 @@ function aioResetImgSize(aMixed) {
     aioOnImage.style.setProperty("min-width", aioOnImage.aioOldStyles.minWidth, "");
     aioOnImage.style.setProperty("min-height", aioOnImage.aioOldStyles.minHeight, "");
     
+    if (aioCrispResize) {
+      aioOnImage.style.setProperty("image-rendering", aioOnImage.aioOldStyles.imageRendering, "");
+    }
     delete aioOnImage.aioOldStyles;
   }
 }

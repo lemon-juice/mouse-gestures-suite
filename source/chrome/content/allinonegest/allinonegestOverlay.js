@@ -57,6 +57,7 @@ var aioGoUpInNewTab, aioNoHorizScroll;
 var aioRockerAction = [], aioRockMultiple = [];
 var aioTrustAutoSelect;
 var aioDisableClickHeat;
+var aioCrispResize;
 var aioFxV18;
 var aioWindowType, aioIsFx = false;
 var aioDefNextSearch, aioDefPrevSearch;
@@ -402,7 +403,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	 [function(){aioNoHorizScroll=aioPref.getBoolPref("noHorizScroll");}, function(){aioPref.setBoolPref("noHorizScroll",false);}, function(){return false;}],
 	 [function(){aioTrustAutoSelect=aioPref.getBoolPref("trustAutoSelect");}, function(){aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
 	 [function(){aioPanToAS=aioPref.getBoolPref("panning");}, function(){aioPref.setBoolPref("panning",false);}, function(){return false;}],
-	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}]
+	 [function(){aioDisableClickHeat=aioPref.getBoolPref("disableClickHeat");}, function(){aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}],
+	 [function(){aioCrispResize=aioPref.getBoolPref("crispResize");}, function(){aioPref.setBoolPref("crispResize",false);}, function(){return false;}]
   ];
 
   aioPrefObserverDisabled = true;

@@ -550,6 +550,7 @@ function getPrefsForImportExport() {
     ['autoscrollRate', 'int'],
     ['autoscrolling2', 'bool'],
     ['autoscrollpref', 'int'],
+    ['crispResize', 'bool'],
     ['disableClickHeat', 'bool'],
     ['dragAlaAcrobat', 'bool'],
     ['evenOnLink', 'bool'],
