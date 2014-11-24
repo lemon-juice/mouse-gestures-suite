@@ -688,9 +688,7 @@ function aioVScrollDocument(relativeScroll, aValue) {
 }
 
 function aioSelectionAsURL(reverseBg) {
-  var focusedWindow = document.commandDispatcher.focusedWindow;
-  var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
-  var url = winWrapper.getSelection().toString();
+  var url = mgsuiteUtil.getSelectedText();
   
   var urlToLoad = aioDetectUrl(url);
   
@@ -713,9 +711,10 @@ function aioSelectionAsURL(reverseBg) {
  * Search for selected text. If no text selected, open search page.
  */
 function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
+  var searchStr = mgsuiteUtil.getSelectedText();
+  
   if (aioIsFx && aioWindowType == 'browser') {
     var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
-    var searchStr = getBrowserSelection();
 
     if (searchStr) {
       BrowserSearch.loadSearchFromContext(searchStr);
@@ -729,10 +728,6 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
     
     return;
   }
-  
-  var focusedWindow = document.commandDispatcher.focusedWindow;
-  var winWrapper = new XPCNativeWrapper(focusedWindow, 'getSelection()');
-  var searchStr = winWrapper.getSelection().toString();
   
   try {
     // this will not work in Fx

@@ -2,7 +2,7 @@
  * allinonegest.js
  * For licence information, read licence.txt
  *
- * event handling and scrollwheel navigation for All-in-One Gestures
+ * event handling and scrollwheel navigation for Mouse Gestures Suite
  *
  */
 "use strict";
