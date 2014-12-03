@@ -1,6 +1,10 @@
-var mgsuiteDefaults = {};
+if (typeof mgsuite == 'undefined') {
+  var mgsuite = {};
+}
 
-Object.defineProperty(mgsuiteDefaults, 'gestureString', {
+mgsuite.default = {};
+
+Object.defineProperty(mgsuite.default, 'gestureString', {
   writable: false,
   value: 
   "L|R|UD|||||U|UDR||" + 
@@ -15,7 +19,7 @@ Object.defineProperty(mgsuiteDefaults, 'gestureString', {
   ""
 });
 
-Object.defineProperty(mgsuiteDefaults, 'functionString', {
+Object.defineProperty(mgsuite.default, 'functionString', {
   writable: false,
   value: 
   "0|1|2|3|4|71|76|9|54|59|" + 
@@ -30,7 +34,7 @@ Object.defineProperty(mgsuiteDefaults, 'functionString', {
   "87"
 });
 
-Object.defineProperty(mgsuiteDefaults, 'rockerString', {
+Object.defineProperty(mgsuite.default, 'rockerString', {
   writable: false,
   value: "0|1|38|37"
 });

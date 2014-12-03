@@ -430,9 +430,9 @@ mgsuite.overlay = {
 
     // read prefs or set Defaults
     var prefFuncs = [ // get pref value, set default value, check value range
-     [function(){mgsuite.overlay.aioActionString=mgsuite.overlay.aioPref.getCharPref("gestureString");}, function(){mgsuite.overlay.aioPref.setCharPref("gestureString",mgsuiteDefaults.gestureString);}, function(){return !mgsuite.overlay.aioActionString;}],
-     [function(){mgsuite.overlay.aioFuncString=mgsuite.overlay.aioPref.getCharPref("functionString");}, function(){mgsuite.overlay.aioPref.setCharPref("functionString",mgsuiteDefaults.functionString);}, function(){return !mgsuite.overlay.aioFuncString;}],
-       [function(){mgsuite.overlay.aioRockerString=mgsuite.overlay.aioPref.getCharPref("rockerString");}, function(){mgsuite.overlay.aioPref.setCharPref("rockerString",mgsuiteDefaults.rockerString);}, function(){return !mgsuite.overlay.aioRockerString;}],
+     [function(){mgsuite.overlay.aioActionString=mgsuite.overlay.aioPref.getCharPref("gestureString");}, function(){mgsuite.overlay.aioPref.setCharPref("gestureString",mgsuite.default.gestureString);}, function(){return !mgsuite.overlay.aioActionString;}],
+     [function(){mgsuite.overlay.aioFuncString=mgsuite.overlay.aioPref.getCharPref("functionString");}, function(){mgsuite.overlay.aioPref.setCharPref("functionString",mgsuite.default.functionString);}, function(){return !mgsuite.overlay.aioFuncString;}],
+       [function(){mgsuite.overlay.aioRockerString=mgsuite.overlay.aioPref.getCharPref("rockerString");}, function(){mgsuite.overlay.aioPref.setCharPref("rockerString",mgsuite.default.rockerString);}, function(){return !mgsuite.overlay.aioRockerString;}],
      [function(){mgsuite.overlay.aioGestButton=mgsuite.overlay.aioPref.getIntPref("mousebuttonpref");}, function(){mgsuite.overlay.aioPref.setIntPref("mousebuttonpref",mgsuite.const.RMB);}, function(){return mgsuite.overlay.aioGestButton<0||mgsuite.overlay.aioGestButton>2;}],
      [function(){mgsuite.overlay.aioGestEnabled=mgsuite.overlay.aioPref.getBoolPref("mouse");}, function(){mgsuite.overlay.aioPref.setBoolPref("mouse",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioTrailEnabled=mgsuite.overlay.aioPref.getBoolPref("gestureTrails");}, function(){mgsuite.overlay.aioPref.setBoolPref("gestureTrails",true);}, function(){return false;}],

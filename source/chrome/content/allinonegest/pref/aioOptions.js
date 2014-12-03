@@ -40,7 +40,7 @@ function init() {
   
   var gestureString = pref.getCharPref("allinonegest.gestureString");
   var functionString = pref.getCharPref("allinonegest.functionString");
-  var gestureStrings = sortGestureStrings(gestureString, functionString, mgsuiteDefaults.functionString);
+  var gestureStrings = sortGestureStrings(gestureString, functionString, mgsuite.default.functionString);
   populateTree(gestureStrings.gestureString, gestureStrings.functionString,
                pref.getCharPref("allinonegest.rockerString"));
   setScrollGesturesVisibility(document.getElementById("wheelScrollOptions").value == 0);
@@ -209,9 +209,9 @@ function restoreDefaultGestures() {
   
   var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
   
-  pref.setCharPref("allinonegest.gestureString", mgsuiteDefaults.gestureString);
-  pref.setCharPref("allinonegest.functionString", mgsuiteDefaults.functionString);
-  pref.setCharPref("allinonegest.rockerString", mgsuiteDefaults.rockerString);
+  pref.setCharPref("allinonegest.gestureString", mgsuite.default.gestureString);
+  pref.setCharPref("allinonegest.functionString", mgsuite.default.functionString);
+  pref.setCharPref("allinonegest.rockerString", mgsuite.default.rockerString);
   
   reopenPrefWindow();
 }
@@ -260,7 +260,7 @@ function openOptions() {
 }
 
 // Sort gesture and function strings according to order in
-// mgsuiteDefaults.functionString & mgsuiteDefaults.gestureString.
+// mgsuite.default.functionString & mgsuite.default.gestureString.
 // If an item does not exists (eg. new action not yet in prefs)
 // then add it with empty definition.
 function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
