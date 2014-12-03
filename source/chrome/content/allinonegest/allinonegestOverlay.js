@@ -818,9 +818,9 @@ mgsuite.overlay = {
     if (mgsuite.overlay.aioDelayTO) {
     clearTimeout(mgsuite.overlay.aioDelayTO);
     }
-    mgsuite.overlay.aioDelayTO = setTimeout(function() { mgsuiteTrails.indicateGestureTimeout() }, mgsuite.overlay.aioDelay);
+    mgsuite.overlay.aioDelayTO = setTimeout(function() { mgsuite.trail.indicateGestureTimeout() }, mgsuite.overlay.aioDelay);
 
-    mgsuiteTrails.drawTrail(e);
+    mgsuite.trail.drawTrail(e);
     var pente = absY <= 5 ? 100 : absX / absY; // 5 should be grid/tangent(60)
     if (pente < 0.58 || pente > 1.73) { //between 30° & 60°, wait
        if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
@@ -908,7 +908,7 @@ mgsuite.overlay = {
        mgsuite.overlay.aioOnLink.length = 0;
        mgsuite.overlay.aioOnImage = null;
     }
-    mgsuiteTrails.eraseTrail();
+    mgsuite.trail.eraseTrail();
     window.removeEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
   },
 
@@ -1072,7 +1072,7 @@ mgsuite.overlay = {
         mgsuite.overlay.aioGestInProgress = true;
         mgsuite.overlay.aioAddLink(e);  // Check if started over a link
         mgsuite.overlay.aioStrokes = []; mgsuite.overlay.aioLocaleGest = []; mgsuite.overlay.aioCurrGest = "";
-        if (mgsuite.overlay.aioTrailEnabled) mgsuiteTrails.startTrail(e);
+        if (mgsuite.overlay.aioTrailEnabled) mgsuite.trail.startTrail(e);
         window.addEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
             }
             else preventDefaultAction = e.button != mgsuite.const.LMB;
@@ -1203,7 +1203,7 @@ mgsuite.overlay = {
        var lastgesture = mgsuite.overlay.aioStrokes.join("");
 
        if (lastgesture) mgsuite.overlay.aioNukeEvent(e);
-       mgsuiteTrails.eraseTrail();
+       mgsuite.trail.eraseTrail();
 
        if (lastgesture) {
           window.addEventListener("click", mgsuite.overlay.aioGestClickHandler, true);

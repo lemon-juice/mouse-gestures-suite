@@ -3,7 +3,11 @@
  */
 "use strict";
 
-var mgsuiteTrails = {
+if (typeof mgsuite == 'undefined') {
+  var mgsuite = {};
+}
+
+mgsuite.trail = {
 
   startTrail: function(e) {
 	
