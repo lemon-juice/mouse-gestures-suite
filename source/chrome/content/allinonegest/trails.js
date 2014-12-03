@@ -175,7 +175,7 @@ var mgsuiteTrails = {
 		}
 		this.timeoutCtx.stroke();
 	  }
-	  aioStatusMessage("  [X]", null, true);
+	  mgsuite.imp.aioStatusMessage("  [X]", null, true);
 	
 	} catch(err) {}
   },

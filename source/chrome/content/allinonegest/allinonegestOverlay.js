@@ -554,8 +554,8 @@ mgsuite.overlay = {
         mgsuite.overlay.aioStatusBar = gBrowser.getStatusPanel();
       }
 
-      mgsuite.overlay.aioContent.tabContainer.addEventListener("TabSelect", aioTabFocus, true);
-      var activeId = "t" + aioUnique++;
+      mgsuite.overlay.aioContent.tabContainer.addEventListener("TabSelect", mgsuite.imp.aioTabFocus, true);
+      var activeId = "t" + mgsuite.imp.aioUnique++;
       if (mgsuite.overlay.aioContent.mTabContainer) {
         mgsuite.overlay.aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
         mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
@@ -647,7 +647,7 @@ mgsuite.overlay = {
     }
 
     if (mgsuite.overlay.aioGesturesEnabled) {
-    aioInitGestTable();
+    mgsuite.imp.aioInitGestTable();
 
     var rockerFuncs = mgsuite.overlay.aioRockerString.split("|");
     var rFunc;
@@ -658,12 +658,12 @@ mgsuite.overlay = {
       }
       else {
       rFunc = rockerFuncs[i] - 0;
-      if (rFunc < 0 || rFunc >= aioActionTable.length) {rockerFuncs[i] = "0"; rFunc = 0;}
-      mgsuite.overlay.aioRockerAction[i] = aioActionTable[rFunc][0];
-      mgsuite.overlay.aioRockMultiple[i] = aioActionTable[rFunc][2];
+      if (rFunc < 0 || rFunc >= mgsuite.imp.aioActionTable.length) {rockerFuncs[i] = "0"; rFunc = 0;}
+      mgsuite.overlay.aioRockerAction[i] = mgsuite.imp.aioActionTable[rFunc][0];
+      mgsuite.overlay.aioRockMultiple[i] = mgsuite.imp.aioActionTable[rFunc][2];
       }
     mgsuite.overlay.aioWheelBothWays = rockerFuncs[2].charAt(0) != "/" && rockerFuncs[3].charAt(0) != "/" && 
-       (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == aioActionTable[rockerFuncs[3] - 0][3]);
+       (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == mgsuite.imp.aioActionTable[rockerFuncs[3] - 0][3]);
     }
 
     mgsuite.overlay.aioTitleDelay = delayTable[titleDelay];
@@ -829,21 +829,21 @@ mgsuite.overlay = {
           mgsuite.overlay.aioStrokes.push(tempMove); mgsuite.overlay.aioLocaleGest.push(mgsuite.overlay.aioShortGest[tempMove]);
 
       var sequence = mgsuite.overlay.aioStrokes.join("");
-          var index = aioGestTable[sequence];
+          var index = mgsuite.imp.aioGestTable[sequence];
 
       if (index == null) {
-         index = aioGestTable["+" + sequence.substr(-2)];
+         index = mgsuite.imp.aioGestTable["+" + sequence.substr(-2)];
          if (index == null)
-          index = aioGestTable["+" + sequence.substr(-3)];
+          index = mgsuite.imp.aioGestTable["+" + sequence.substr(-3)];
       }
 
           if (index != null) {
-        mgsuite.overlay.aioCurrGest = aioActionTable[index][1];
+        mgsuite.overlay.aioCurrGest = mgsuite.imp.aioActionTable[index][1];
       } else {
         mgsuite.overlay.aioCurrGest = mgsuite.overlay.aioUnknownStr;
       }
        }
-       aioStatusMessage(mgsuite.overlay.aioGestStr + ": " + mgsuite.overlay.aioLocaleGest.join("") + " (" + mgsuite.overlay.aioCurrGest + ")", 0);
+       mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGestStr + ": " + mgsuite.overlay.aioLocaleGest.join("") + " (" + mgsuite.overlay.aioCurrGest + ")", 0);
     }
     mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
   },
@@ -937,7 +937,7 @@ mgsuite.overlay = {
     if (mgsuite.overlay.aioBlockActionStatusMsg.indexOf(prefStr) < 0) {
       mgsuite.overlay.aioBlockActionStatusMsg += "<" + prefStr + ">";
     }
-    aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
+    mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
     }
   },
 
@@ -1005,7 +1005,7 @@ mgsuite.overlay = {
       if (!mgsuite.overlay.aioGestureTab) {
         if (e.button != mgsuite.const.LMB || mgsuite.overlay.aioGestButton == mgsuite.const.LMB) {
           mgsuite.overlay.aioBlockActionStatusMsg += "<" + mgsuite.overlay.aioGetStr("opt.sitePrefD") + ">";
-          aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
+          mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
         }
         gesturesEnabled = false;
       }
@@ -1037,7 +1037,7 @@ mgsuite.overlay = {
           }
        }
        mgsuite.overlay.aioKillGestInProgress();
-       aioStatusMessage("", 0);
+       mgsuite.imp.aioStatusMessage("", 0);
        mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
        if (!mgsuite.overlay.aioRockMultiple[func] || (mgsuite.overlay.aioRockMultiple[func] == 2 && mgsuite.overlay.aioRockMode == 0)) mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
        else { // multiple ops allowed
@@ -1210,17 +1210,17 @@ mgsuite.overlay = {
       var shiftKey = e.shiftKey;
 
           if ((new Date() - mgsuite.overlay.aioLastEvtTime) < mgsuite.overlay.aioDelay) {
-             setTimeout(function(a){aioFireGesture(a, shiftKey);}, 0, lastgesture);
+             setTimeout(function(a){mgsuite.imp.aioFireGesture(a, shiftKey);}, 0, lastgesture);
              setTimeout(function(){mgsuite.overlay.aioGestClickEnd();}, 200);
              return;
           }
           else { // abort if user pauses at the end of gesture
-             aioStatusMessage(mgsuite.overlay.aioGetStr("g.aborted"), 2500);
+             mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.aborted"), 2500);
              setTimeout(function(){mgsuite.overlay.aioGestClickEnd();}, 200);
           }
        }
        else {
-          aioStatusMessage("", 0);
+          mgsuite.imp.aioStatusMessage("", 0);
           if (button == mgsuite.const.RMB) mgsuite.overlay.aioDisplayContextMenu(e);
        }
        mgsuite.overlay.aioKillGestInProgress();
@@ -1246,7 +1246,7 @@ mgsuite.overlay = {
     window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
     if (mgsuite.overlay.aioGestInProgress) {
        mgsuite.overlay.aioKillGestInProgress(mgsuite.overlay.aioWheelRocker);
-       aioStatusMessage("", 0);  //remove gesture indication
+       mgsuite.imp.aioStatusMessage("", 0);  //remove gesture indication
     }
 
     if (mgsuite.overlay.aioWheelRocker) {
@@ -2029,7 +2029,7 @@ mgsuite.overlay = {
     }
 
     mgsuite.overlay.aioBlockActionStatusMsg += "<" + mgsuite.overlay.aioGetStr("g.ClickHeatDisabled") + ">";
-    aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
+    mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
     }
   },
 

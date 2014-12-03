@@ -80,8 +80,8 @@ function aioInsertGesturesToTable() {
 function aioPropertyToGestureString(prop) {
   var gStr = "";
   
-  for (var i=0; i<aioActionTable.length; i++) {
-    if (aioActionTable[i][1] == prop) {
+  for (var i=0; i<mgsuite.imp.aioActionTable.length; i++) {
+    if (mgsuite.imp.aioActionTable[i][1] == prop) {
       gStr = getLocalizedShortGesture(mgsuite.gesturePrefs[i]);
       break;
     }
@@ -96,9 +96,9 @@ function aioPropertyToGestureString(prop) {
 function aioPropertyToWindowTypes(prop) {
   var winTypes, info = "";
   
-  for (var i=0; i<aioActionTable.length; i++) {
-    if (aioActionTable[i][1] == prop) {
-      winTypes = aioActionTable[i][4];
+  for (var i=0; i<mgsuite.imp.aioActionTable.length; i++) {
+    if (mgsuite.imp.aioActionTable[i][1] == prop) {
+      winTypes = mgsuite.imp.aioActionTable[i][4];
       
       if (winTypes === null) {
         winTypes = [
