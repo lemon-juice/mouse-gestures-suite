@@ -72,15 +72,15 @@ var aioSitePref;  // D for disabled gestures, P for gestures priority
 var aioPrevParsedURL;
 
 // global variables for rocker gesture
-const aioOpp = [mgsuite.const.RMB, mgsuite.const.NoB, mgsuite.const.LMB, mgsuite.const.NoB];
+mgsuite.const.aioOpp = [mgsuite.const.RMB, mgsuite.const.NoB, mgsuite.const.LMB, mgsuite.const.NoB];
 var aioDownButton;
 var aioBackRocking;
 var aioRockTimer = null;
 var aioRepet = [], aioWheelBothWays;
 
 // global variables for wheel navigation
-const aioBackURL = mgsuite.const.CHROME_DIR + "back.png";
-const aioNextURL = mgsuite.const.CHROME_DIR + "next.png";
+mgsuite.const.aioBackURL = mgsuite.const.CHROME_DIR + "back.png";
+mgsuite.const.aioNextURL = mgsuite.const.CHROME_DIR + "next.png";
 var aioTabPU, aioHistPU, aioTTPU = null;
 var aioTabCount, aioTabSrc, aioTabDest = -1;
 var aioCCW;
@@ -88,17 +88,18 @@ var aioTTTimer = null, aioTTShown = false;
 var aioTTNode;
 
 // global variables for autoscroll
-const aioMarkerSize = 28, aioHalfMarker = aioMarkerSize / 2;
-const aioMarkers = [mgsuite.const.CHROME_DIR + "autoscroll_all.png", mgsuite.const.CHROME_DIR + "autoscroll_v.png", mgsuite.const.CHROME_DIR + "autoscroll_h.png"];
-const aioMarkerIds = ["aioscrollerNSEW", "aioscrollerNS", "aioscrollerEW"];
-const aioDist =  [0, 20, 40, 60, 80, 100, 130, 180, 300, 5000];
-const aioRatio = [.0, .067, .083, .108, .145, .2, .3, .45, .65, .9];
-const aioScrollLoop = [1, 2, 4];
+mgsuite.const.aioMarkerSize = 28;
+mgsuite.const.aioHalfMarker = mgsuite.const.aioMarkerSize / 2;
+mgsuite.const.aioMarkers = [mgsuite.const.CHROME_DIR + "autoscroll_all.png", mgsuite.const.CHROME_DIR + "autoscroll_v.png", mgsuite.const.CHROME_DIR + "autoscroll_h.png"];
+mgsuite.const.aioMarkerIds = ["aioscrollerNSEW", "aioscrollerNS", "aioscrollerEW"];
+mgsuite.const.aioDist =  [0, 20, 40, 60, 80, 100, 130, 180, 300, 5000];
+mgsuite.const.aioRatio = [.0, .067, .083, .108, .145, .2, .3, .45, .65, .9];
+mgsuite.const.aioScrollLoop = [1, 2, 4];
 var aioSofar;
-const aioCursors = ["move", "n-resize", "e-resize"];
+mgsuite.const.aioCursors = ["move", "n-resize", "e-resize"];
 var aioScrollCount, aioScrollRate, aioScrollMax, aioASPeriod;
-const aioASBasicPeriod = 40;
-const aioSmoothPeriod = 20;
+mgsuite.const.aioASBasicPeriod = 40;
+mgsuite.const.aioSmoothPeriod = 20;
 var aioLastX, aioLastY;
 var aioDistX = [0, 0, 0, 0];
 var aioDistY = [0, 0, 0, 0];
@@ -238,8 +239,7 @@ function aioWindowUnload() {
   }
   
   function isLastBrowserWindow() {
-    const numberAfterLastWindowUnload = 0;
-    return getNumberOfOpenWindows("navigator:browser") == numberAfterLastWindowUnload;
+    return getNumberOfOpenWindows("navigator:browser") == 0;
   }
 
   function installQuitObserver() {
@@ -425,8 +425,6 @@ function aioInit() { // overlay has finished loading or a pref was changed
     aioPref.setComplexValue("sitesList", Components.interfaces.nsISupportsString, str);
   }
 
-  const unixRe = new RegExp("unix|linux|sun|freebsd", "i");
-  
   for (var i = 0; i < prefFuncs.length; ++i) {
     try {prefFuncs[i][0]();}
     catch(err) {prefFuncs[i][1](); prefFuncs[i][0]()}
@@ -475,6 +473,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
   else
      versionComparator = Components.classes["@mozilla.org/updates/version-checker;1"]
                           .getService(Components.interfaces.nsIVersionChecker);
+  
+  const unixRe = new RegExp("unix|linux|sun|freebsd", "i");
   
   if (aioFirstInit) {
 	aioIsWin = false; aioIsMac = false; aioIsNix = false;
@@ -583,8 +583,8 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	// init some autoscroll variables
 	aioSofar = [];
 	aioSofar[1] = 0;
-	for (var ii = 1; ii < aioDist.length - 1; ++ii) {
-	   aioSofar[ii+1] = aioSofar[ii] + (aioDist[ii] - aioDist[ii-1]) * aioRatio[ii];
+	for (var ii = 1; ii < mgsuite.const.aioDist.length - 1; ++ii) {
+	   aioSofar[ii+1] = aioSofar[ii] + (mgsuite.const.aioDist[ii] - mgsuite.const.aioDist[ii-1]) * mgsuite.const.aioRatio[ii];
 	}
   }
 
@@ -610,7 +610,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
   
   aioTitleDelay = delayTable[titleDelay];
   aioTitleDuration = durationTable[titleDuration];
-  aioScrollMax = aioScrollLoop[aioScrollRate]; aioASPeriod = aioASBasicPeriod / aioScrollMax;
+  aioScrollMax = mgsuite.const.aioScrollLoop[aioScrollRate]; aioASPeriod = mgsuite.const.aioASBasicPeriod / aioScrollMax;
 
   aioDownButton = mgsuite.const.NoB; aioBackRocking = false;
   if (aioShowTitletip && aioTTHover) aioRendering.addEventListener("mousemove", aioShowTitle, true);
@@ -963,7 +963,7 @@ function aioMouseDown(e) {
 	}
   }
   
-  if (gesturesEnabled && e.button == aioOpp[aioDownButton] && aioRockEnabled) {
+  if (gesturesEnabled && e.button == mgsuite.const.aioOpp[aioDownButton] && aioRockEnabled) {
 	// rocker gestures
      if (e.button == mgsuite.const.RMB) {
         var func = 1;
@@ -1289,8 +1289,8 @@ function _aioCreatePU(arg1, arg2, arg3) {
       popupElem.setAttribute("style", "max-width:40em;");
       popupElem.setAttribute("label", label);
       if (arg1) {
-         img = (i < this.initialItem) ? aioBackURL : (i == this.initialItem) ?
-                aioContent.mTabContainer.childNodes[aioContent.mTabContainer.selectedIndex].getAttribute("image") : aioNextURL;
+         img = (i < this.initialItem) ? mgsuite.const.aioBackURL : (i == this.initialItem) ?
+                aioContent.mTabContainer.childNodes[aioContent.mTabContainer.selectedIndex].getAttribute("image") : mgsuite.const.aioNextURL;
 	  } else {
 		
 		if (aioContent.mTabContainer.childNodes[i]) {
@@ -1511,9 +1511,9 @@ function aioAutoScrollStart(e) {
 
 function aioLogDist(aDist) {
   var absDist = Math.abs(aDist);
-  for (var i = 1; i < aioDist.length; ++i)
-     if (absDist < aioDist[i]) {
-        absDist = Math.round(aioSofar[i] + (absDist - aioDist[i-1]) * aioRatio[i]);
+  for (var i = 1; i < mgsuite.const.aioDist.length; ++i)
+     if (absDist < mgsuite.const.aioDist[i]) {
+        absDist = Math.round(aioSofar[i] + (absDist - mgsuite.const.aioDist[i-1]) * mgsuite.const.aioRatio[i]);
         break;
      }
   var tabDist = [0, 0, 0, 0];
@@ -1599,7 +1599,7 @@ function aioASClick(e) { // prevent Unix pastes
 
 function aioAutoScrollUp(e) {
   if (aioScrollFingerFree || ((new Date() - aioLastEvtTime) > aioDelay &&
-      (!aioPanToAS || Math.abs(e.screenX - aioLastX) >= aioHalfMarker || Math.abs(e.screenY - aioLastY) >= aioHalfMarker))) {
+      (!aioPanToAS || Math.abs(e.screenX - aioLastX) >= mgsuite.const.aioHalfMarker || Math.abs(e.screenY - aioLastY) >= mgsuite.const.aioHalfMarker))) {
 	if (aioIntervalID) window.clearInterval(aioIntervalID);
 	aioIntervalID = null;
 	aioNukeEvent(e);
@@ -1789,7 +1789,7 @@ function aioAddMarker(e) {
     el.style.height = aioScroll.docHeight + "px";
     el.style.zIndex = 10001;
     el.style.background = "transparent";
-    el.style.cursor = aioCursors[aioScroll.scrollType];
+    el.style.cursor = mgsuite.const.aioCursors[aioScroll.scrollType];
     aioScroll.insertionNode.appendChild(el);
     aioOverlay = el;
   } else {
@@ -1815,11 +1815,11 @@ function aioAddMarker(e) {
 		  break;
 	}
 	
-	aioMarkerX = e.screenX - window.mozInnerScreenX - aioHalfMarker;
-	aioMarkerY = e.screenY - window.mozInnerScreenY - aioHalfMarker;
+	aioMarkerX = e.screenX - window.mozInnerScreenX - mgsuite.const.aioHalfMarker;
+	aioMarkerY = e.screenY - window.mozInnerScreenY - mgsuite.const.aioHalfMarker;
 	
 	var canvas = document.createElementNS(mgsuite.const.xhtmlNS, "canvas");
-	canvas.id = aioMarkerIds[aioScroll.scrollType];
+	canvas.id = mgsuite.const.aioMarkerIds[aioScroll.scrollType];
 	canvas.style.position = "fixed";
 	canvas.width = window.outerWidth;
 	canvas.height = window.outerHeight;
@@ -1835,11 +1835,11 @@ function aioAddMarker(e) {
 	img.onload = function() {
 	  ctx.drawImage(img, aioMarkerX, aioMarkerY);
 	}
-	img.src = aioMarkers[aioScroll.scrollType];
+	img.src = mgsuite.const.aioMarkers[aioScroll.scrollType];
 	
 	aioMarker = canvas;
 	aioMarker.moveBy = function(shiftX, shiftY) {
-	  ctx.clearRect(aioMarkerX, aioMarkerY, aioMarkerSize, aioMarkerSize)
+	  ctx.clearRect(aioMarkerX, aioMarkerY, mgsuite.const.aioMarkerSize, mgsuite.const.aioMarkerSize)
 	  aioMarkerX += shiftX;
 	  aioMarkerY += shiftY;
 	  ctx.drawImage(img, aioMarkerX, aioMarkerY);
@@ -1890,7 +1890,7 @@ function aioWheelScroll(e) {
      else {
         aioSmooth = {node: scrollObj.nodeToScroll, totalToScroll: inc, smoothScrollBy: inc / 10,
                      scrolledSoFar: 0, scrollHz: scrollObj.scrollType == 2};
-        aioSmoothInterval = setInterval(function(){aioSmoothLoop();}, aioSmoothPeriod);
+        aioSmoothInterval = setInterval(function(){aioSmoothLoop();}, mgsuite.const.aioSmoothPeriod);
      }
   else
      if (scrollObj.scrollType != 2) scrollObj.nodeToScroll.scrollTop += inc;

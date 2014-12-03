@@ -11,7 +11,6 @@ var rv, gestureStarted, iframe;
 function init() {
   const httpProtocolHandler = Components.classes["@mozilla.org/network/protocol;1?name=http"]
                                .getService(Components.interfaces.nsIHttpProtocolHandler);
-  var geckoVersion = httpProtocolHandler.misc.match(/rv:([0-9.]+)/)[1];
 
   iframe = document.getElementById("gestDrawArea");
   var aioBundle = document.getElementById("allinonegestbundle");
