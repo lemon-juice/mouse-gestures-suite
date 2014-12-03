@@ -1,7 +1,7 @@
 "use strict";
 
 var mgsuite = mgsuite || {};
-mgsuite.const.CHROME_DIR = "chrome://allinonegest/content/";
+mgsuite.CHROME_DIR = "chrome://allinonegest/content/";
 
 
 function aioCreateStringBundle(propFile) {
@@ -16,9 +16,9 @@ function aioCreateStringBundle(propFile) {
 }
 
 function aioGetStr(str) {
-  if (mgsuite.const.bundle) {
+  if (mgsuite.bundle) {
     try {
-      return mgsuite.const.bundle.GetStringFromName(str);
+      return mgsuite.bundle.GetStringFromName(str);
     } catch (err) {
       return str;
     }
@@ -82,7 +82,7 @@ function aioPropertyToGestureString(prop) {
   
   for (var i=0; i<aioActionTable.length; i++) {
     if (aioActionTable[i][1] == prop) {
-      gStr = getLocalizedShortGesture(mgsuite.const.gesturePrefs[i]);
+      gStr = getLocalizedShortGesture(mgsuite.gesturePrefs[i]);
       break;
     }
   }
@@ -109,7 +109,7 @@ function aioPropertyToWindowTypes(prop) {
         ];
       }
       for (var i=0; i<winTypes.length; i++) {
-        info += '<span class="' + aioEscapeHTML(winTypes[i]) + '">' + aioEscapeHTML(mgsuite.const.allWinTypes[winTypes[i]]) + '</span> ';
+        info += '<span class="' + aioEscapeHTML(winTypes[i]) + '">' + aioEscapeHTML(mgsuite.allWinTypes[winTypes[i]]) + '</span> ';
       }
       return info;
     }
@@ -134,17 +134,17 @@ function getLocalizedShortGesture(prefGesture) {
   }
   var lStr = "";
   for (var i = 0; i < prefGesture.length; ++i)
-      if (mgsuite.const.shortGest[prefGesture.charAt(i)] == null) {
+      if (mgsuite.shortGest[prefGesture.charAt(i)] == null) {
          lStr += prefGesture.charAt(i);
       }
-      else lStr += mgsuite.const.shortGest[prefGesture.charAt(i)];
+      else lStr += mgsuite.shortGest[prefGesture.charAt(i)];
   return lStr;
 }
 
 
 
 window.addEventListener("DOMContentLoaded", function() {
-  mgsuite.const.bundle = aioCreateStringBundle("chrome://allinonegest/locale/allinonegest.properties");
+  mgsuite.bundle = aioCreateStringBundle("chrome://allinonegest/locale/allinonegest.properties");
 
   var aioPrefService = Components.classes["@mozilla.org/preferences-service;1"]
           .getService(Components.interfaces.nsIPrefService);
@@ -153,20 +153,20 @@ window.addEventListener("DOMContentLoaded", function() {
   var func = aioPrefService.getBranch("allinonegest.").getCharPref("functionString").split("|");
   
   // create key=>value object with gesture string
-  mgsuite.const.gesturePrefs = {};
+  mgsuite.gesturePrefs = {};
   
   for (var i=0; i<func.length; i++) {
-    mgsuite.const.gesturePrefs[func[i]] = gest[i] ? gest[i] : "";
+    mgsuite.gesturePrefs[func[i]] = gest[i] ? gest[i] : "";
   }
   
-  mgsuite.const.shortGest = {
+  mgsuite.shortGest = {
     R: aioGetStr("abbreviation.right"),
     L: aioGetStr("abbreviation.left"),
     U: aioGetStr("abbreviation.up"),
     D: aioGetStr("abbreviation.down"),
   };
   
-  mgsuite.const.allWinTypes = {
+  mgsuite.allWinTypes = {
     browser: aioGetStr("abbreviation.browser"),
     source: aioGetStr("abbreviation.source"),
     messenger: aioGetStr("abbreviation.messenger"),

@@ -11,7 +11,7 @@ var mgsuiteTrails = {
 	this.docY = window.mozInnerScreenY;
 	
 	// insert trail outside viewable document to avoid DOM delays on large documents
-	switch (aioWindowType) {
+	switch (mgsuite.overlay.aioWindowType) {
 	  case 'browser':
 		this.insertionNode = document.getElementById("content"); // tabbrowser
 		break;
@@ -30,7 +30,7 @@ var mgsuiteTrails = {
 	  return;
 	}
 	
-	this.halfTrailSize = Math.ceil(aioTrailSize / 2);
+	this.halfTrailSize = Math.ceil(mgsuite.overlay.aioTrailSize / 2);
 	
 	var x = e.screenX - this.docX;
 	var y = e.screenY - this.docY;
@@ -52,7 +52,7 @@ var mgsuiteTrails = {
 	  this.trailCont = cnv.canvas;
 	  this.ctx = cnv.ctx;
 	  
-	  if (!aioSmoothTrail) {
+	  if (!mgsuite.overlay.aioSmoothTrail) {
 		this.setCtxProperties(this.ctx, 1);
 	  }
 	}
@@ -66,7 +66,7 @@ var mgsuiteTrails = {
 	var y = e.screenY - this.docY;
 	this.trailPoints.push([x, y]);
 	
-	if (aioSmoothTrail) {
+	if (mgsuite.overlay.aioSmoothTrail) {
 	  // erasing all canvas and drawing all line again results in smooth line
 	  
 	  // we make canvas the size only as large as necessary, because full size canvas
@@ -121,7 +121,7 @@ var mgsuiteTrails = {
   
 	var ctx = canvas.getContext('2d');
 	
-	if (!aioSmoothTrail) {
+	if (!mgsuite.overlay.aioSmoothTrail) {
 	  ctx.beginPath();
 	  ctx.moveTo(this.trailPoints[0][0], this.trailPoints[0][1]);
 	}
@@ -133,10 +133,10 @@ var mgsuiteTrails = {
   },
   
   setCtxProperties: function(ctx, opacity) {
-	ctx.lineWidth = aioTrailSize;
+	ctx.lineWidth = mgsuite.overlay.aioTrailSize;
 	ctx.lineJoin = 'round';
 	ctx.lineCap = 'round';
-	ctx.strokeStyle = aioTrailColor;
+	ctx.strokeStyle = mgsuite.overlay.aioTrailColor;
 	ctx.globalAlpha = opacity;
   },
   

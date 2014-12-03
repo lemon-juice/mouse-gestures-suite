@@ -85,41 +85,41 @@ function aioGetTextForTitle(linkNode) { // from pageInfo.js; modified by M.B.
 }
 
 function aioShowTitle(e) {
-  if (aioDownButton != mgsuite.const.NoB || aioTTShown || (aioShiftForTitle && !e.shiftKey)) return;
-  var linkNode = aioFindLink(e.target, false);
+  if (mgsuite.overlay.aioDownButton != mgsuite.const.NoB || mgsuite.overlay.aioTTShown || (mgsuite.overlay.aioShiftForTitle && !e.shiftKey)) return;
+  var linkNode = mgsuite.overlay.aioFindLink(e.target, false);
   if (!linkNode) return;
   aioGetTextForTitle(linkNode); // prevent native title to popup
-  if (aioTTTimer) clearTimeout(aioTTTimer);
+  if (mgsuite.overlay.aioTTTimer) clearTimeout(mgsuite.overlay.aioTTTimer);
   linkNode.addEventListener("mouseout", aioEraseTitlePopup, true);
   window.addEventListener("mousedown", aioEraseTitlePopup, true);
   window.addEventListener("DOMMouseScroll", aioEraseTitlePopup, true);
-  aioTTNode = linkNode;
-  aioTTTimer = setTimeout(function(a, b){aioShowTitlePopup(a, b);},
-                          aioShiftForTitle ? 50 : aioTitleDelay, e.screenX, e.screenY);
+  mgsuite.overlay.aioTTNode = linkNode;
+  mgsuite.overlay.aioTTTimer = setTimeout(function(a, b){aioShowTitlePopup(a, b);},
+                          mgsuite.overlay.aioShiftForTitle ? 50 : mgsuite.overlay.aioTitleDelay, e.screenX, e.screenY);
 }
 
 function aioShowTitlePopup(X, Y) {
-  aioTTShown = true;
-  aioTTTimer = null;
-  aioTTPU = new aioPopUp(0, 0, 0, false, "tooltip", X, Y, aioHasNewWindowTarget(aioTTNode),
-                         null, aioLinkTTPopping, null);
-  aioTTPU.createPopup(aioGetTextForTitle(aioTTNode), aioGetHRef(aioTTNode), "");
-  aioTTTimer = setTimeout(function(){aioEraseTitlePopup(null);}, aioTitleDuration);
+  mgsuite.overlay.aioTTShown = true;
+  mgsuite.overlay.aioTTTimer = null;
+  mgsuite.overlay.aioTTPU = new mgsuite.overlay.aioPopUp(0, 0, 0, false, "tooltip", X, Y, aioHasNewWindowTarget(mgsuite.overlay.aioTTNode),
+                         null, mgsuite.overlay.aioLinkTTPopping, null);
+  mgsuite.overlay.aioTTPU.createPopup(aioGetTextForTitle(mgsuite.overlay.aioTTNode), mgsuite.overlay.aioGetHRef(mgsuite.overlay.aioTTNode), "");
+  mgsuite.overlay.aioTTTimer = setTimeout(function(){aioEraseTitlePopup(null);}, mgsuite.overlay.aioTitleDuration);
 }
 
 function aioEraseTitlePopup(e) {
-  if (aioTTTimer) {
-     clearTimeout(aioTTTimer);
-     aioTTTimer = null;
+  if (mgsuite.overlay.aioTTTimer) {
+     clearTimeout(mgsuite.overlay.aioTTTimer);
+     mgsuite.overlay.aioTTTimer = null;
   }
-  aioTTNode.removeEventListener("mouseout", aioEraseTitlePopup, true);
+  mgsuite.overlay.aioTTNode.removeEventListener("mouseout", aioEraseTitlePopup, true);
   window.removeEventListener("mousedown", aioEraseTitlePopup, true);
   window.removeEventListener("DOMMouseScroll", aioEraseTitlePopup, true);
-  if (aioTTShown) aioTTPU.closePopup(0);
-  aioTTPU = null; aioTTNode = null;
+  if (mgsuite.overlay.aioTTShown) mgsuite.overlay.aioTTPU.closePopup(0);
+  mgsuite.overlay.aioTTPU = null; mgsuite.overlay.aioTTNode = null;
   if (e && e.type == "mousedown") {
-     aioTTShown = true;
-     setTimeout(function(){aioTTShown = false;}, 2000);
+     mgsuite.overlay.aioTTShown = true;
+     setTimeout(function(){mgsuite.overlay.aioTTShown = false;}, 2000);
   }
-  else aioTTShown = false;
+  else mgsuite.overlay.aioTTShown = false;
 }

@@ -90,7 +90,7 @@ var aioActionTable = [
       [function(){aioSetImgSize(false,true);}, "g.reduceObject", 1, "72", ["browser", "source", "messenger"]], // 73
       [function(){aioResetImgSize(true);}, "g.resetSize", 1, "", ["browser", "source", "messenger"]], //74
       [function(){aioNullAction();}, "g.nullAction", 0, "", null], // 75
-      [function(){aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, "", ["browser"]], // 76
+      [function(){mgsuite.overlay.aioContent.reloadAllTabs();}, "g.reloadAllTabs", 0, "", ["browser"]], // 76
       [function(){aioNextPrevLink(true);}, "g.nextLink", 0, "", ["browser"]], // 77
       [function(){aioFastForward();}, "g.fastForward", 0, "", ["browser"]], // 78
       [function(shiftKey){aioSelectionAsSearchTerm(false, shiftKey);}, "g.searchSelection", 0, "", ["browser", "source", "messenger", "mailcompose"]], // 79
@@ -145,23 +145,23 @@ function aioStatusMessage(msg, timeToClear, append) {
   }
   
   if (append) {
-    msg = aioLastStatusMsg + msg;
+    msg = mgsuite.overlay.aioLastStatusMsg + msg;
   }
   
-  aioLastStatusMsg = msg;
+  mgsuite.overlay.aioLastStatusMsg = msg;
   
   var bar = document.getElementById("status-bar");
   var s4eBar = document.getElementById("status4evar-status-bar");
   var addonBar = document.getElementById("addon-bar");
   if ((bar && (bar.hidden || bar.getAttribute('moz-collapsed') == "true")) // SM
-      || (s4eBar && s4eBar.getAttribute('collapsed') == "true" && aioStatusBar.getAttribute('inactive') == "true") // Fx with S4E
-      || (aioStatusBar && aioStatusBar.nodeName == 'statuspanel' && aioStatusBar.getAttribute('inactive') == "true" && addonBar && addonBar.getAttribute('collapsed') == "true") // Pale Moon
+      || (s4eBar && s4eBar.getAttribute('collapsed') == "true" && mgsuite.overlay.aioStatusBar.getAttribute('inactive') == "true") // Fx with S4E
+      || (mgsuite.overlay.aioStatusBar && mgsuite.overlay.aioStatusBar.nodeName == 'statuspanel' && mgsuite.overlay.aioStatusBar.getAttribute('inactive') == "true" && addonBar && addonBar.getAttribute('collapsed') == "true") // Pale Moon
     ) {
     // create faux status bar if normal status bar is hidden
     aioShowInFauxStatusBar(msg);
   
-  } else if (aioStatusBar) {
-    aioStatusBar.label = msg;
+  } else if (mgsuite.overlay.aioStatusBar) {
+    mgsuite.overlay.aioStatusBar.label = msg;
   }
   
   if (timeToClear) {
@@ -186,7 +186,7 @@ function aioShowInFauxStatusBar(msg) {
     tooltip.style.bottom = '10px';
     tooltip.style.left = '10px';
     tooltip.style.pointerEvents = 'none';
-    aioContent.appendChild(tooltip);
+    mgsuite.overlay.aioContent.appendChild(tooltip);
   }
   
   tooltip.textContent = msg;
@@ -202,16 +202,16 @@ function aioClearFauxStatusBar() {
   if (tooltip) {
     tooltip.parentNode.removeChild(tooltip);
   }
-  aioLastStatusMsg = "";
+  mgsuite.overlay.aioLastStatusMsg = "";
 }
 
 function aioInitGestTable() {
   var i, func, len;
   len = aioActionTable.length;
-  if (aioFirstInit)
-     for (i = 0; i < len; ++i) aioActionTable[i][1] = aioGetStr(aioActionTable[i][1])
-  var gestTable = aioActionString.split("|");
-  var funcTable = aioFuncString.split("|");
+  if (mgsuite.overlay.aioFirstInit)
+     for (i = 0; i < len; ++i) aioActionTable[i][1] = mgsuite.overlay.aioGetStr(aioActionTable[i][1])
+  var gestTable = mgsuite.overlay.aioActionString.split("|");
+  var funcTable = mgsuite.overlay.aioFuncString.split("|");
   aioGestTable = [];
   for (i = 0; i < gestTable.length; ++i) {
     func = funcTable[i] - 0;
@@ -228,34 +228,34 @@ function aioFireGesture(aGesture, shiftKey) {
   }
   if (index == null) {
      index = aioGestTable["/" + aGesture];
-     if (index == null) aioStatusMessage(aioUnknownStr + ": " + aGesture, 2000);
-     else aioStatusMessage(aioGetStr("g.disabled") + ": " + aioActionTable[index][1], 2000);
+     if (index == null) aioStatusMessage(mgsuite.overlay.aioUnknownStr + ": " + aGesture, 2000);
+     else aioStatusMessage(mgsuite.overlay.aioGetStr("g.disabled") + ": " + aioActionTable[index][1], 2000);
   }
   else
      try {
        var allowedWinTypes = aioActionTable[index][4];
        
-       if (allowedWinTypes === null || allowedWinTypes.indexOf(aioWindowType) >=0) {
+       if (allowedWinTypes === null || allowedWinTypes.indexOf(mgsuite.overlay.aioWindowType) >=0) {
          aioStatusMessage(aioActionTable[index][1], 2000);
          aioActionTable[index][0](shiftKey);
        } else {
-         aioStatusMessage(aioActionTable[index][1] + " — " + aioGetStr("g.aborted"), 2000);
+         aioStatusMessage(aioActionTable[index][1] + " — " + mgsuite.overlay.aioGetStr("g.aborted"), 2000);
        }
      }
      catch(err) {}
-  aioKillGestInProgress();
-  aioDownButton = mgsuite.const.NoB;
+  mgsuite.overlay.aioKillGestInProgress();
+  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
 }
 
 
 /*  Gesture actions */
 
 function aioBackForward(back) {
-  if (aioWindowType == 'messenger') {
+  if (mgsuite.overlay.aioWindowType == 'messenger') {
     back ? goDoCommand('cmd_goBack') : goDoCommand('cmd_goForward');
   } else {
-    if (aioGestureTab) {
-      var history = aioGestureTab.linkedBrowser.contentWindow.history;
+    if (mgsuite.overlay.aioGestureTab) {
+      var history = mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.history;
       back ? history.back() : history.forward();
     } else {
       back ? BrowserBack() : BrowserForward();
@@ -266,10 +266,10 @@ function aioBackForward(back) {
 
 function aioPreviousSelectedTab() {
   var lTab;
-  if (aioTabFocusHistory.length < 2) return null;
-  var tabId = aioTabFocusHistory[aioTabFocusHistory.length - 2].focused;
-  for (var i = 0; i < aioContent.mTabs.length; ++i) {
-    lTab = aioContent.mTabContainer.childNodes[i];
+  if (mgsuite.overlay.aioTabFocusHistory.length < 2) return null;
+  var tabId = mgsuite.overlay.aioTabFocusHistory[mgsuite.overlay.aioTabFocusHistory.length - 2].focused;
+  for (var i = 0; i < mgsuite.overlay.aioContent.mTabs.length; ++i) {
+    lTab = mgsuite.overlay.aioContent.mTabContainer.childNodes[i];
     if (lTab.getAttribute("aioTabId") == tabId) return lTab;
   }
   return null;
@@ -278,14 +278,14 @@ function aioPreviousSelectedTab() {
 function aioGoToPreviousSelectedTab() {
   var lTab = aioPreviousSelectedTab();
   if (lTab) {
-     aioTabFocusHistory.pop();
-     aioContent.selectedTab = lTab;
+     mgsuite.overlay.aioTabFocusHistory.pop();
+     mgsuite.overlay.aioContent.selectedTab = lTab;
   }
 }
 
 
 function aioPrint() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
     case "source":
       PrintUtils.print();
@@ -299,9 +299,9 @@ function aioPrint() {
 }
 
 function aioPrintPreview() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      if (aioIsFx) {
+      if (mgsuite.overlay.aioIsFx) {
         PrintUtils.printPreview(PrintPreviewListener);
       } else {
         BrowserPrintPreview();
@@ -320,13 +320,13 @@ function aioPrintPreview() {
 }
 
 function aioReload(skipCache) {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      if (aioGestureTab) {
+      if (mgsuite.overlay.aioGestureTab) {
         if (skipCache) {
-          aioGestureTab.linkedBrowser.reloadWithFlags(Components.interfaces.nsIWebNavigation.LOAD_FLAGS_BYPASS_CACHE);
+          mgsuite.overlay.aioGestureTab.linkedBrowser.reloadWithFlags(Components.interfaces.nsIWebNavigation.LOAD_FLAGS_BYPASS_CACHE);
         } else {
-          aioGestureTab.linkedBrowser.reload();
+          mgsuite.overlay.aioGestureTab.linkedBrowser.reload();
         }
         
       } else {
@@ -345,14 +345,14 @@ function aioReload(skipCache) {
 }
 
 function aioReloadFrame() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      if (aioGestureTab) {
+      if (mgsuite.overlay.aioGestureTab) {
         aioReload(false);
         
       } else {
         // reload frame
-        aioSrcEvent.target.ownerDocument.location.reload();
+        mgsuite.overlay.aioSrcEvent.target.ownerDocument.location.reload();
       }
       break;
 
@@ -364,10 +364,10 @@ function aioReloadFrame() {
 }
 
 function aioStopLoading() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      if (aioGestureTab) {
-        aioGestureTab.linkedBrowser.stop();
+      if (mgsuite.overlay.aioGestureTab) {
+        mgsuite.overlay.aioGestureTab.linkedBrowser.stop();
       } else {
         BrowserStop();
       }
@@ -382,21 +382,21 @@ function aioStopLoading() {
 function aioFavoriteURL(suffix) {
   var shortcutURL = null;
   var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
-  var keyword = aioGetStr("g.keywordForGesture") + suffix;
+  var keyword = mgsuite.overlay.aioGetStr("g.keywordForGesture") + suffix;
   var shortcutURI = bmsvc.getURIForKeyword(keyword);
   if (shortcutURI) shortcutURL = shortcutURI.spec;
   if (!shortcutURL) {
-    alert(aioGetStr("g.keywordMissing") + " " + keyword);
+    alert(mgsuite.overlay.aioGetStr("g.keywordMissing") + " " + keyword);
     return;
   }
   
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
       loadURI(shortcutURL);
       break;
     
     default:
-      if (aioIsFx) {
+      if (mgsuite.overlay.aioIsFx) {
         openNewTabWith(shortcutURL);
       } else {
         openNewTabWindowOrExistingWith(kNewTab, shortcutURL, null, false);
@@ -406,14 +406,14 @@ function aioFavoriteURL(suffix) {
 
 function aioIncURL(inc) { // derived from MagPie by Ben Goodger
   var currSchema, newValue, newIndex, str, url; 
-  var currSpec = aioContent.selectedBrowser.webNavigation.currentURI.spec;
+  var currSpec = mgsuite.overlay.aioContent.selectedBrowser.webNavigation.currentURI.spec;
   for (var i in aioSchemas) {
      if (currSpec.substr(0, i.length) != i) continue;
      currSchema = aioSchemas[i];
      newValue = parseInt(currSpec.substring(currSchema.startIndex, currSchema.endIndex), 10);
      inc > 0 ? ++newValue : --newValue;
      if (newValue < 0) {
-        alert(aioGetStr("noDecrement"));
+        alert(mgsuite.overlay.aioGetStr("noDecrement"));
         return;
      }
      newIndex = newValue.toString();
@@ -422,11 +422,11 @@ function aioIncURL(inc) { // derived from MagPie by Ben Goodger
      str += newIndex;
      url = currSpec.substr(0, currSchema.startIndex) + str + currSpec.substr(currSchema.endIndex);
      aioSchemas[i].endIndex = currSchema.startIndex + str.length;
-     aioContent.selectedBrowser.loadURI(url);
+     mgsuite.overlay.aioContent.selectedBrowser.loadURI(url);
      return;
   }
 
-  if (aioTrustAutoSelect) {
+  if (mgsuite.overlay.aioTrustAutoSelect) {
      var RE = /\d+/g;
      var rtn, startIndex = -1, endIndex;
      while ((rtn = RE.exec(currSpec)) != null) {
@@ -440,7 +440,7 @@ function aioIncURL(inc) { // derived from MagPie by Ben Goodger
      return;
   }
 
-  aioClearRocker();
+  mgsuite.overlay.aioClearRocker();
   var rv = { };
   openDialog(mgsuite.const.CHROME_DIR + "aioSchemaBuilder.xul", "", "chrome,centerscreen,modal=yes", currSpec, rv);
   if ("key" in rv) {
@@ -461,22 +461,22 @@ function aioShowLocalizedGestures(doc) {
     }
     var lStr = ""; imageName = "";
     for (var i = 0; i < aStr.length; ++i)
-        if (aioShortGest[aStr.charAt(i)] == null) {
+        if (mgsuite.overlay.aioShortGest[aStr.charAt(i)] == null) {
            imageName = (aStr.charAt(i) == '+') ? "other" : "nomov";
            lStr += aStr.charAt(i);
         }
-        else lStr += aioShortGest[aStr.charAt(i)];
+        else lStr += mgsuite.overlay.aioShortGest[aStr.charAt(i)];
     if (!imageName)
        if (aStr.length < 5) imageName = aStr; else imageName = "other";
     return lStr;
   }
-  var locGest = aioGetStr("w.gesture").replace(/\'/g, "&#39;");
-  var locFunc = aioGetStr("w.function").replace(/\'/g, "&#39;");
-  var locMove = aioGetStr("w.move").replace(/\'/g, "&#39;");
+  var locGest = mgsuite.overlay.aioGetStr("w.gesture").replace(/\'/g, "&#39;");
+  var locFunc = mgsuite.overlay.aioGetStr("w.function").replace(/\'/g, "&#39;");
+  var locMove = mgsuite.overlay.aioGetStr("w.move").replace(/\'/g, "&#39;");
   const K1 = '<th width="100" class="thTop" nowrap="nowrap">&nbsp;' + locGest + '&nbsp;</th>';
   const imgURL = '<img src="chrome://allinonegest/content/gest-imgs/';
   var divCode = '<div class="buttons">';
-  divCode += '<button onclick="openOptions()">' + aioGetStr('g.aioOptions') + '</button>';
+  divCode += '<button onclick="openOptions()">' + mgsuite.overlay.aioGetStr('g.aioOptions') + '</button>';
   divCode += '<button onclick="openHelp(2)">Help</button>';
   divCode += '</div>';
   divCode += '<table width="100%" cellpadding="2" cellspacing="1" class="forumline">';
@@ -484,8 +484,8 @@ function aioShowLocalizedGestures(doc) {
   divCode += K1 + '<th width="50" class="thTop" nowrap="nowrap">&nbsp;' + locMove + '&nbsp;</th>';
   divCode += '<th class="thTop" height="30" nowrap="nowrap">&nbsp;' + locFunc + '&nbsp;</th>';
   divCode += K1 + '<th width="50" class="thCornerR" nowrap="nowrap">&nbsp;' + locMove + '&nbsp;</th></tr>';
-  var gestTable = aioActionString.split("|");
-  var funcTable = aioFuncString.split("|");
+  var gestTable = mgsuite.overlay.aioActionString.split("|");
+  var funcTable = mgsuite.overlay.aioFuncString.split("|");
   var func, actionName;
   var cols = [[], []], colNum = 0, c;
   var splitColAt = Math.ceil(gestTable.length / 2);
@@ -517,7 +517,7 @@ function aioShowLocalizedGestures(doc) {
   }
   
   divCode += '</table>';
-  var title = aioGetStr("w.gestTable").replace(/\'/g, "&#39;");
+  var title = mgsuite.overlay.aioGetStr("w.gestTable").replace(/\'/g, "&#39;");
   var str = "(function(){window.addEventListener('load',function(e){document.title='" + title +
        "';document.body.innerHTML='" + divCode + "';},false);})();"
   var script = doc.createElement("script");
@@ -531,7 +531,7 @@ function aiogestDOMLoaded(e) {
 }
 
 function aioGesturesPage() {
-  aioContent.addEventListener("DOMContentLoaded", aiogestDOMLoaded, false);
+  mgsuite.overlay.aioContent.addEventListener("DOMContentLoaded", aiogestDOMLoaded, false);
   if (!/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
     aioLinkInTab(aioKGestures, false, false);
   } else {
@@ -544,10 +544,10 @@ function aioCopyURLToClipBoard() {
   try {
     var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
     if (!str) return;
-    if (aioOnLink.length) {
-       for (var i = 0; i < aioOnLink.length; ++i) {
+    if (mgsuite.overlay.aioOnLink.length) {
+       for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
            if (lstr) lstr += "\r\n";
-           lstr += aioOnLink[i].href;
+           lstr += mgsuite.overlay.aioOnLink[i].href;
        }
        str.data = lstr;
     }
@@ -555,7 +555,7 @@ function aioCopyURLToClipBoard() {
     var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
     if (!trans) return;
 	// Since data from the web content are copied to the clipboard, the privacy context must be set.
-	var sourceWindow = aioSrcEvent.target.ownerDocument.defaultView;
+	var sourceWindow = mgsuite.overlay.aioSrcEvent.target.ownerDocument.defaultView;
     var privacyContext = sourceWindow.QueryInterface(Components.interfaces.nsIInterfaceRequestor).
                                   getInterface(Components.interfaces.nsIWebNavigation).
                                   QueryInterface(Components.interfaces.nsILoadContext);
@@ -583,7 +583,7 @@ function aioCopyClipBoardToURLBar() {
     trans.getTransferData("text/unicode", data, dataLen);
   }
   catch(err) {
-    alert(aioGetStr("g.clipboardEmpty"));
+    alert(mgsuite.overlay.aioGetStr("g.clipboardEmpty"));
   }
   if (data) {
      data = data.value.QueryInterface(Components.interfaces.nsISupportsString);
@@ -608,7 +608,7 @@ function _aioGetElemsByTagNameForAllFrames(frameDoc, tagName) {
 
 function aioNukeFlash() {
   var currFlash, height, width, top, next, span, text, view, disp, style;
-  var topDocument = aioSrcEvent.target.ownerDocument.defaultView.top.document;
+  var topDocument = mgsuite.overlay.aioSrcEvent.target.ownerDocument.defaultView.top.document;
   var embeds = _aioGetElemsByTagNameForAllFrames(topDocument, "embed");
   embeds = embeds.concat(_aioGetElemsByTagNameForAllFrames(topDocument, "object"));
   
@@ -632,7 +632,7 @@ function aioNukeFlash() {
        style = next.getAttribute("style") || "";
        next.setAttribute("style", style + "display:none;");
        span = document.createElementNS(mgsuite.const.xhtmlNS, "span");
-       text = document.createTextNode("[" + aioGetStr("g.clickToView") + "]");
+       text = document.createTextNode("[" + mgsuite.overlay.aioGetStr("g.clickToView") + "]");
        span.appendChild(text);
        top.insertBefore(span, next);
        span.setAttribute("style", "height:" + (height - 2) + "px;width:" + (width - 2) + "px;border:1px solid black;display:-moz-inline-box;");
@@ -652,7 +652,7 @@ function aioPlayFlash(e) {
 }
 
 function aioNukeAnything() {
-  var node = aioSrcEvent.target;
+  var node = mgsuite.overlay.aioSrcEvent.target;
   if (!node) return;
   var view = node.ownerDocument.defaultView;
   var disp = view.getComputedStyle(node, "").getPropertyValue("display");
@@ -673,7 +673,7 @@ function aioUndoNukeAnything() {
 }
 
 function aioVScrollDocument(relativeScroll, aValue) {
-  var scrollObj = aioFindNodeToScroll(aioSrcEvent.target);
+  var scrollObj = mgsuite.overlay.aioFindNodeToScroll(mgsuite.overlay.aioSrcEvent.target);
   if (scrollObj.scrollType >= 2) return;
   var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
   if (relativeScroll) {
@@ -713,7 +713,7 @@ function aioSelectionAsURL(reverseBg) {
 function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
   var searchStr = mgsuiteUtil.getSelectedText();
   
-  if (aioIsFx && aioWindowType == 'browser') {
+  if (mgsuite.overlay.aioIsFx && mgsuite.overlay.aioWindowType == 'browser') {
     var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
 
     if (searchStr) {
@@ -731,11 +731,11 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
   
   try {
     // this will not work in Fx
-    var openTabPref = aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
-    var loadInBgPref = aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
+    var openTabPref = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.search.opentabforcontextsearch");
+    var loadInBgPref = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
   } catch (err) {};
   
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
       var searchBar = BrowserSearch.searchBar;
       if (searchBar) searchBar.value = searchStr;
@@ -744,31 +744,31 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
 
       if (alwaysNewTab) {
         // always force opening in new tab
-        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
+        mgsuite.overlay.aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
         
         if (reverseBg) {
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
+          mgsuite.overlay.aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
         }
         
         BrowserSearch.loadSearch(searchStr, newWinOrTab);
         
-        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", openTabPref);
+        mgsuite.overlay.aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", openTabPref);
         
         if (reverseBg) {
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
+          mgsuite.overlay.aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
         }
         
       } else {
         // may open in tab or window depending on browser prefs
         if (openTabPref && reverseBg) {
           // we can easily control background opening in new tab but not in new window
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
+          mgsuite.overlay.aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", !loadInBgPref);
         }
         
         BrowserSearch.loadSearch(searchStr, newWinOrTab);
         
         if (openTabPref && reverseBg) {
-          aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
+          mgsuite.overlay.aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
         }
       }
       
@@ -786,19 +786,19 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
    
     case "messenger":
       // in messenger we always open search in foreground tab unless reversed by Shift
-      aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", reverseBg);
+      mgsuite.overlay.aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", reverseBg);
       
       if (alwaysNewTab) {
-        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
+        mgsuite.overlay.aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", true);
         MsgOpenSearch(searchStr);
-        aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", openTabPref);
+        mgsuite.overlay.aioPrefRoot.setBoolPref("browser.search.opentabforcontextsearch", openTabPref);
       
       } else {
         // may open in tab or window depending on browser prefs
         MsgOpenSearch(searchStr);
       }
       
-      aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
+      mgsuite.overlay.aioPrefRoot.setBoolPref("browser.tabs.loadInBackground", loadInBgPref);
       
       if (!openTabPref && reverseBg) {
         // open in background window - focus on current window
@@ -814,7 +814,7 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
     
     case "source":
     case "mailcompose":
-      if (aioIsFx) {
+      if (mgsuite.overlay.aioIsFx) {
         openLinkIn("about:blank", "tab", {inBackground: false});
         
         setTimeout(function() {
@@ -857,7 +857,7 @@ function aioSelectionAsSearchTerm(alwaysNewTab, reverseBg) {
 }
 
 function aioZoomEnlarge() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case 'source':
       ZoomManager.enlarge();
       break;
@@ -868,7 +868,7 @@ function aioZoomEnlarge() {
 }
 
 function aioZoomReduce() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case 'source':
       ZoomManager.reduce();
       break;
@@ -879,7 +879,7 @@ function aioZoomReduce() {
 }
 
 function aioZoomReset() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case 'source':
       ZoomManager.reset();
       break;
@@ -890,34 +890,34 @@ function aioZoomReset() {
 }
 
 function aioSetImgSize(aEnlarge, aMixed) {
-  if (!aioOnImage) {
+  if (!mgsuite.overlay.aioOnImage) {
      if (!aMixed) return;
      if (aEnlarge) aioZoomEnlarge();
      else aioZoomReduce();
      return;
   }
-  var imgStr = aioOnImage.getAttribute("aioImgSize");
+  var imgStr = mgsuite.overlay.aioOnImage.getAttribute("aioImgSize");
   var imgTab;
   
   if (!imgStr) {
-    var view = aioOnImage.ownerDocument.defaultView;
+    var view = mgsuite.overlay.aioOnImage.ownerDocument.defaultView;
     // get actual img w & h
-    var w = parseInt(view.getComputedStyle(aioOnImage).getPropertyValue("width"));
-    var h = parseInt(view.getComputedStyle(aioOnImage).getPropertyValue("height"));
+    var w = parseInt(view.getComputedStyle(mgsuite.overlay.aioOnImage).getPropertyValue("width"));
+    var h = parseInt(view.getComputedStyle(mgsuite.overlay.aioOnImage).getPropertyValue("height"));
     imgTab = [];
     imgTab[0] = w; imgTab[1] = h; imgTab[2] = 1;
     
-    aioOnImage.aioOldStyles = {
-      width: aioOnImage.style.getPropertyValue("width"),
-      height: aioOnImage.style.getPropertyValue("height"),
-      maxWidth: aioOnImage.style.getPropertyValue("max-width"),
-      maxHeight: aioOnImage.style.getPropertyValue("max-width"),
-      minWidth: aioOnImage.style.getPropertyValue("min-width"),
-      minHeight: aioOnImage.style.getPropertyValue("min-height"),
+    mgsuite.overlay.aioOnImage.aioOldStyles = {
+      width: mgsuite.overlay.aioOnImage.style.getPropertyValue("width"),
+      height: mgsuite.overlay.aioOnImage.style.getPropertyValue("height"),
+      maxWidth: mgsuite.overlay.aioOnImage.style.getPropertyValue("max-width"),
+      maxHeight: mgsuite.overlay.aioOnImage.style.getPropertyValue("max-width"),
+      minWidth: mgsuite.overlay.aioOnImage.style.getPropertyValue("min-width"),
+      minHeight: mgsuite.overlay.aioOnImage.style.getPropertyValue("min-height"),
     };
     
-    if (aioCrispResize) {
-      aioOnImage.aioOldStyles.imageRendering = aioOnImage.style.getPropertyValue("image-rendering")
+    if (mgsuite.overlay.aioCrispResize) {
+      mgsuite.overlay.aioOnImage.aioOldStyles.imageRendering = mgsuite.overlay.aioOnImage.style.getPropertyValue("image-rendering")
     }
     
   } else {
@@ -926,24 +926,24 @@ function aioSetImgSize(aEnlarge, aMixed) {
   
   
   imgTab[2] *= aEnlarge ? 2 : 0.5;
-  aioOnImage.setAttribute("aioImgSize", imgTab.join("|"));
+  mgsuite.overlay.aioOnImage.setAttribute("aioImgSize", imgTab.join("|"));
   w = Math.round(imgTab[0] * imgTab[2]); h = Math.round(imgTab[1] * imgTab[2]);
   
   if (w && h && w != imgTab[0] && h != imgTab[1]) {
-    aioOnImage.style.setProperty("max-width","none", "important");
-    aioOnImage.style.setProperty("max-height","none", "important");
-    aioOnImage.style.setProperty("min-width","0", "important");
-    aioOnImage.style.setProperty("min-height","0", "important");
-    aioOnImage.style.width = w + "px";
-    aioOnImage.style.height = h + "px";
+    mgsuite.overlay.aioOnImage.style.setProperty("max-width","none", "important");
+    mgsuite.overlay.aioOnImage.style.setProperty("max-height","none", "important");
+    mgsuite.overlay.aioOnImage.style.setProperty("min-width","0", "important");
+    mgsuite.overlay.aioOnImage.style.setProperty("min-height","0", "important");
+    mgsuite.overlay.aioOnImage.style.width = w + "px";
+    mgsuite.overlay.aioOnImage.style.height = h + "px";
     
-    if (aioCrispResize) {
+    if (mgsuite.overlay.aioCrispResize) {
       if (CSS.supports("image-rendering","-moz-crisp-edges")) {
-        aioOnImage.style.setProperty("image-rendering", "-moz-crisp-edges", "important");
+        mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", "-moz-crisp-edges", "important");
       } else if (CSS.supports("image-rendering","crisp-edges")) {
-        aioOnImage.style.setProperty("image-rendering", "crisp-edges", "important");
+        mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", "crisp-edges", "important");
       } else if (CSS.supports("image-rendering","optimize-contrast")) {
-        aioOnImage.style.setProperty("image-rendering", "optimize-contrast", "important");
+        mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", "optimize-contrast", "important");
       }
     }
   }
@@ -953,41 +953,41 @@ function aioSetImgSize(aEnlarge, aMixed) {
 }
 
 function aioResetImgSize(aMixed) {
-  if (!aioOnImage) {
+  if (!mgsuite.overlay.aioOnImage) {
      if (!aMixed) return;
      aioZoomReset();
      return;
   }
-  var imgStr = aioOnImage.getAttribute("aioImgSize");
+  var imgStr = mgsuite.overlay.aioOnImage.getAttribute("aioImgSize");
   if (!imgStr) return;
   
-  aioOnImage.removeAttribute("aioImgSize");
+  mgsuite.overlay.aioOnImage.removeAttribute("aioImgSize");
   
-  if (aioOnImage.aioOldStyles) {
+  if (mgsuite.overlay.aioOnImage.aioOldStyles) {
     // restore size
-    aioOnImage.style.setProperty("width", aioOnImage.aioOldStyles.width, "");
-    aioOnImage.style.setProperty("height", aioOnImage.aioOldStyles.height, "");
+    mgsuite.overlay.aioOnImage.style.setProperty("width", mgsuite.overlay.aioOnImage.aioOldStyles.width, "");
+    mgsuite.overlay.aioOnImage.style.setProperty("height", mgsuite.overlay.aioOnImage.aioOldStyles.height, "");
     
     // restore max/min styles
-    aioOnImage.style.setProperty("max-width", aioOnImage.aioOldStyles.maxWidth, "");
-    aioOnImage.style.setProperty("max-height", aioOnImage.aioOldStyles.maxHeight, "");
-    aioOnImage.style.setProperty("min-width", aioOnImage.aioOldStyles.minWidth, "");
-    aioOnImage.style.setProperty("min-height", aioOnImage.aioOldStyles.minHeight, "");
+    mgsuite.overlay.aioOnImage.style.setProperty("max-width", mgsuite.overlay.aioOnImage.aioOldStyles.maxWidth, "");
+    mgsuite.overlay.aioOnImage.style.setProperty("max-height", mgsuite.overlay.aioOnImage.aioOldStyles.maxHeight, "");
+    mgsuite.overlay.aioOnImage.style.setProperty("min-width", mgsuite.overlay.aioOnImage.aioOldStyles.minWidth, "");
+    mgsuite.overlay.aioOnImage.style.setProperty("min-height", mgsuite.overlay.aioOnImage.aioOldStyles.minHeight, "");
     
-    if (typeof aioOnImage.aioOldStyles.imageRendering != 'undefined') {
-      aioOnImage.style.setProperty("image-rendering", aioOnImage.aioOldStyles.imageRendering, "");
+    if (typeof mgsuite.overlay.aioOnImage.aioOldStyles.imageRendering != 'undefined') {
+      mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", mgsuite.overlay.aioOnImage.aioOldStyles.imageRendering, "");
     }
-    delete aioOnImage.aioOldStyles;
+    delete mgsuite.overlay.aioOnImage.aioOldStyles;
   }
 }
 
 function aioSaveImageAs() {
-  if (!aioOnImage) return;
-  if (aioFxV18) saveImageURL(aioOnImage.src, null, "SaveImageTitle", false, false,
-                         aioOnImage.ownerDocument.documentURIObject, aioOnImage.ownerDocument);
+  if (!mgsuite.overlay.aioOnImage) return;
+  if (mgsuite.overlay.aioFxV18) saveImageURL(mgsuite.overlay.aioOnImage.src, null, "SaveImageTitle", false, false,
+                         mgsuite.overlay.aioOnImage.ownerDocument.documentURIObject, mgsuite.overlay.aioOnImage.ownerDocument);
   else 
-     saveImageURL(aioOnImage.src, null, "SaveImageTitle", false,
-       false, aioOnImage.ownerDocument.documentURIObject);
+     saveImageURL(mgsuite.overlay.aioOnImage.src, null, "SaveImageTitle", false,
+       false, mgsuite.overlay.aioOnImage.ownerDocument.documentURIObject);
 
 }
 
@@ -996,13 +996,13 @@ function aioCloseCurrTab(lastTabClosesWindow) {
     return;
   }
   
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      if (aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) {
-        if (aioGestureTab) {
-          aioContent.removeTab(aioGestureTab);
+      if (mgsuite.overlay.aioContent.mTabContainer.childNodes.length > 1 || !lastTabClosesWindow) {
+        if (mgsuite.overlay.aioGestureTab) {
+          mgsuite.overlay.aioContent.removeTab(mgsuite.overlay.aioGestureTab);
         } else {
-          aioContent.removeCurrentTab();
+          mgsuite.overlay.aioContent.removeCurrentTab();
         }
       } else if (typeof(BrowserCloseWindow) == "function") {
         BrowserCloseWindow();
@@ -1043,9 +1043,9 @@ function aioUndoCloseTab() {
 }
 
 function aioGotoLastTab() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      aioContent.selectedTab = aioContent.mTabContainer.childNodes[aioContent.mTabContainer.childNodes.length - 1];
+      mgsuite.overlay.aioContent.selectedTab = mgsuite.overlay.aioContent.mTabContainer.childNodes[mgsuite.overlay.aioContent.mTabContainer.childNodes.length - 1];
       break;
     
     case "messenger":
@@ -1059,8 +1059,8 @@ function aioGotoLastTab() {
 }
 
 function aioRemoveAllTabsBut() {
-  if (aioWindowType == 'browser') {
-    gBrowser.removeAllTabsBut(aioGestureTab ? aioGestureTab : aioContent.mCurrentTab);
+  if (mgsuite.overlay.aioWindowType == 'browser') {
+    gBrowser.removeAllTabsBut(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : mgsuite.overlay.aioContent.mCurrentTab);
   }
 }
 
@@ -1077,7 +1077,7 @@ function _aioIsRTL() {
 }
 
 function aioCloseRightTabs() {
-  var tab = aioGestureTab ? aioGestureTab : aioContent.mCurrentTab;
+  var tab = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : mgsuite.overlay.aioContent.mCurrentTab;
   
   if (typeof gBrowser.removeTabsToTheEndFrom == 'function') {
     gBrowser.removeTabsToTheEndFrom(tab); // Fx
@@ -1114,7 +1114,7 @@ function _aioCloseTabsAfter(tab) {
 
 function aioGetReferrer() {
   try {
-    var refURL = aioSrcEvent.target.ownerDocument.location.href;
+    var refURL = mgsuite.overlay.aioSrcEvent.target.ownerDocument.location.href;
     var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                     .getService(Components.interfaces.nsIIOService);
     if (refURL) return ioService.newURI(refURL, null, null);
@@ -1134,15 +1134,15 @@ function aioGetReferrer() {
 function aioLinkInTab(url, usePref, bg, reverseBg) {
   url = aioSanitizeUrl(url);
   
-  if (aioWindowType == "browser") {
-    var tab = aioContent.addTab(url, aioGetReferrer());
-    var loadInBg = (usePref && (aioPrefRoot.getBoolPref("browser.tabs.loadInBackground") != bg)) || (!usePref && bg);
+  if (mgsuite.overlay.aioWindowType == "browser") {
+    var tab = mgsuite.overlay.aioContent.addTab(url, aioGetReferrer());
+    var loadInBg = (usePref && (mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.loadInBackground") != bg)) || (!usePref && bg);
     
     if (reverseBg) {
       loadInBg = !loadInBg;
     }
     
-    if (!loadInBg) aioContent.selectedTab = tab;
+    if (!loadInBg) mgsuite.overlay.aioContent.selectedTab = tab;
     return tab;
   
   } else {
@@ -1150,7 +1150,7 @@ function aioLinkInTab(url, usePref, bg, reverseBg) {
       bg = !bg;
     }
     
-    if (aioIsFx) {
+    if (mgsuite.overlay.aioIsFx) {
       openNewTabWith(url);
     } else {
       openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg);
@@ -1167,9 +1167,9 @@ function aioSanitizeUrl(url) {
 }
 
 function aioDupTab(reverseBg) {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      var url = aioGestureTab ? aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
+      var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
       aioLinkInTab(url, true, false, reverseBg);
       break;
     
@@ -1181,42 +1181,42 @@ function aioDupTab(reverseBg) {
 }
 
 function aioOpenInNewTab(bg) {
-  if (aioOpenLinkInNew && aioOnLink.length) {
-     aioLinkInTab(aioOnLink[0].href, false, bg);
+  if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.overlay.aioOnLink.length) {
+     aioLinkInTab(mgsuite.overlay.aioOnLink[0].href, false, bg);
   }
   else {
-    if (aioWindowType == "browser") {
-      if (aioGestureTab) {
+    if (mgsuite.overlay.aioWindowType == "browser") {
+      if (mgsuite.overlay.aioGestureTab) {
         // open new tab next to selected tab
-        var selectedTabPos = aioContent.getTabIndex ? aioContent.getTabIndex(aioGestureTab) : aioGestureTab._tPos;
+        var selectedTabPos = mgsuite.overlay.aioContent.getTabIndex ? mgsuite.overlay.aioContent.getTabIndex(mgsuite.overlay.aioGestureTab) : mgsuite.overlay.aioGestureTab._tPos;
       }
       
       if (!bg) {
-        if (aioIsRocker && !aioGestureTab && aioSrcEvent) {
+        if (mgsuite.overlay.aioIsRocker && !mgsuite.overlay.aioGestureTab && mgsuite.overlay.aioSrcEvent) {
           // prevent selection from staying in unfinished state
-          _aioSendMouseUpEvent(aioSrcEvent);
+          _aioSendMouseUpEvent(mgsuite.overlay.aioSrcEvent);
         }
 
         BrowserOpenTab();
-        if (aioGestureTab) {
-          aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
+        if (mgsuite.overlay.aioGestureTab) {
+          mgsuite.overlay.aioContent.moveTabTo(mgsuite.overlay.aioContent.mCurrentTab, selectedTabPos + 1);
         
-          if (aioIsRocker && aioSrcEvent && aioSrcEvent.button == aioLMB) {
+          if (mgsuite.overlay.aioIsRocker && mgsuite.overlay.aioSrcEvent && mgsuite.overlay.aioSrcEvent.button == aioLMB) {
             setTimeout(function() {
-              aioContent.mTabContainer.selectedIndex = selectedTabPos + 1;
+              mgsuite.overlay.aioContent.mTabContainer.selectedIndex = selectedTabPos + 1;
             }, 100);
           }
         }
         
       } else {
         var newTab = aioLinkInTab("about:blank", false, true);
-        if (aioGestureTab) {
-          aioContent.moveTabTo(newTab, selectedTabPos + 1);
+        if (mgsuite.overlay.aioGestureTab) {
+          mgsuite.overlay.aioContent.moveTabTo(newTab, selectedTabPos + 1);
         }
       }
     
     } else {
-      if (aioIsFx) {
+      if (mgsuite.overlay.aioIsFx) {
         openNewTabWith("about:blank");
       } else {
         openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, !!bg);
@@ -1226,27 +1226,27 @@ function aioOpenInNewTab(bg) {
 }
 
 function aioLinksInTabs() {
-  if (aioWindowType == "browser") {
-    for (var i = 0; i < aioOnLink.length; ++i) {
-      aioContent.addTab(aioSanitizeUrl(aioOnLink[i].href), aioGetReferrer());
+  if (mgsuite.overlay.aioWindowType == "browser") {
+    for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
+      mgsuite.overlay.aioContent.addTab(aioSanitizeUrl(mgsuite.overlay.aioOnLink[i].href), aioGetReferrer());
     }
   
   } else {
-    if (aioOnLink.length > 0) {
-      if (aioIsFx) {
-        openNewTabWith(aioSanitizeUrl(aioOnLink[0].href));
+    if (mgsuite.overlay.aioOnLink.length > 0) {
+      if (mgsuite.overlay.aioIsFx) {
+        openNewTabWith(aioSanitizeUrl(mgsuite.overlay.aioOnLink[0].href));
       } else {
-        openNewTabWindowOrExistingWith(kNewTab, aioSanitizeUrl(aioOnLink[0].href), null, false);
+        openNewTabWindowOrExistingWith(kNewTab, aioSanitizeUrl(mgsuite.overlay.aioOnLink[0].href), null, false);
       }
       
       var links = [];
-      for (var i = 1; i < aioOnLink.length; ++i) {
-        links.push(aioSanitizeUrl(aioOnLink[i].href));
+      for (var i = 1; i < mgsuite.overlay.aioOnLink.length; ++i) {
+        links.push(aioSanitizeUrl(mgsuite.overlay.aioOnLink[i].href));
       }
       
       setTimeout(function() {
         for (var i = 0; i < links.length; ++i) {
-          if (aioIsFx) {
+          if (mgsuite.overlay.aioIsFx) {
             openNewTabWith(links[i]);
           } else {
             openNewTabWindowOrExistingWith(kNewTab, links[i], null, false);
@@ -1259,15 +1259,15 @@ function aioLinksInTabs() {
 
 function aioLinksInFiles() {
   var hRefLC, dontAskBefore;
-  try {dontAskBefore = aioPrefRoot.getBoolPref("browser.download.useDownloadDir");}
+  try {dontAskBefore = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.download.useDownloadDir");}
   catch(err) {dontAskBefore = false;}
-  for (var i = 0; i < aioOnLink.length; ++i) {
-    hRefLC = aioOnLink[i].href.toLowerCase();
+  for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
+    hRefLC = mgsuite.overlay.aioOnLink[i].href.toLowerCase();
     if (hRefLC.substr(0, 7) != "mailto:" && hRefLC.substr(0, 11) != "javascript:" &&
         hRefLC.substr(0, 5) != "news:" && hRefLC.substr(0, 6) != "snews:")
-       if (aioFxV18) saveURL(aioOnLink[i].href, aioGetTextForTitle(aioOnLink[i].node), null, true, dontAskBefore,
-	                      aioOnLink[i].node.ownerDocument.documentURIObject, aioOnLink[i].node.ownerDocument);
-	   else saveURL(aioOnLink[i].href, aioGetTextForTitle(aioOnLink[i].node), null, true, dontAskBefore);
+       if (mgsuite.overlay.aioFxV18) saveURL(mgsuite.overlay.aioOnLink[i].href, aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore,
+	                      mgsuite.overlay.aioOnLink[i].node.ownerDocument.documentURIObject, mgsuite.overlay.aioOnLink[i].node.ownerDocument);
+	   else saveURL(mgsuite.overlay.aioOnLink[i].href, aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore);
 
   }
 }
@@ -1275,7 +1275,7 @@ function aioLinksInFiles() {
 function aioNewWindow(url, flag, noSanitize) {
   if (!noSanitize) url = aioSanitizeUrl(url);
   
-  var chromeURL = aioIsFx ? "chrome://browser/content/" : "chrome://navigator/content/";
+  var chromeURL = mgsuite.overlay.aioIsFx ? "chrome://browser/content/" : "chrome://navigator/content/";
   
   if (window.content && window.content.document) {
      var charsetArg = "charset=" + window.content.document.characterSet;
@@ -1285,13 +1285,13 @@ function aioNewWindow(url, flag, noSanitize) {
 }
 
 function aioLinksInWindows() {
-  if (!aioOnLink.length) return;
-  if (aioSingleNewWindow) {
-    var win = aioNewWindow(aioOnLink[0].href, "");
+  if (!mgsuite.overlay.aioOnLink.length) return;
+  if (mgsuite.overlay.aioSingleNewWindow) {
+    var win = aioNewWindow(mgsuite.overlay.aioOnLink[0].href, "");
     
     var gestureLinks = [];
-    for (var i = 1; i < aioOnLink.length; ++i) {
-      gestureLinks.push(aioOnLink[i].href);
+    for (var i = 1; i < mgsuite.overlay.aioOnLink.length; ++i) {
+      gestureLinks.push(mgsuite.overlay.aioOnLink[i].href);
     }
     
     win.addEventListener("load", function () {
@@ -1303,8 +1303,8 @@ function aioLinksInWindows() {
     }, true);
   }
   else
-     for (var i = 0; i < aioOnLink.length; ++i) {
-        aioNewWindow(aioSanitizeUrl(aioOnLink[i].href), "");
+     for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
+        aioNewWindow(aioSanitizeUrl(mgsuite.overlay.aioOnLink[i].href), "");
      }
 }
 
@@ -1324,15 +1324,15 @@ function aioSetToNormalZ(aWindow) {
  * @param {boolean} [priv] indicates opening private window
  */
 function aioOpenNewWindow(url, background, noSanitize, priv) {
-  var flags = (background && aioIsWin) ? ",alwaysLowered" : "";
+  var flags = (background && mgsuite.overlay.aioIsWin) ? ",alwaysLowered" : "";
   
   if (priv) {
     flags += ",private";
   }
   
   if (url === null) {
-    if (aioOpenLinkInNew && aioOnLink.length) {
-       url = aioOnLink[0].href;
+    if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.overlay.aioOnLink.length) {
+       url = mgsuite.overlay.aioOnLink[0].href;
     }
     else {
        url = "";
@@ -1346,7 +1346,7 @@ function aioOpenNewWindow(url, background, noSanitize, priv) {
   var win = aioNewWindow(url, flags, noSanitize);
   
   if (background) {
-    if (aioIsWin) {
+    if (mgsuite.overlay.aioIsWin) {
       setTimeout(function(a){aioSetToNormalZ(a);}, 500, win);
     } else {
       win.addEventListener('load', function() {
@@ -1371,10 +1371,10 @@ function aioOpenNewWindow(url, background, noSanitize, priv) {
 }
 
 function aioDupWindow(background) {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
     case "source":
-      var url = aioGestureTab ? aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
+      var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
       
       aioOpenNewWindow(url, background, true);
       break;
@@ -1390,7 +1390,7 @@ function aioCloseWindow() {
     return;
   }
   
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "mailcompose":
       goDoCommand('cmd_close');
       break;
@@ -1405,10 +1405,10 @@ function aioCloseWindow() {
 
 // open link in new window and double stack
 function aioDoubleWin() {
-  var link = aioOnLink.length ? aioOnLink[0].href : "about:blank";
+  var link = mgsuite.overlay.aioOnLink.length ? mgsuite.overlay.aioOnLink[0].href : "about:blank";
   window.moveTo(screen.availLeft, screen.availTop);
   
-  if (aioIsWin) {
+  if (mgsuite.overlay.aioIsWin) {
     // only on Win screen.availWidth & screen.availHeight are correct
     var win = aioNewWindow(link, "");
     window.resizeTo(screen.availWidth / 2, screen.availHeight);
@@ -1441,14 +1441,14 @@ function aioNextPrevLink(next) { // submitted by Christian Kruse
   }
   var re = [];
   var relStr = next ? "next" : "prev" ;
-  var doc = aioSrcEvent.target.ownerDocument;
+  var doc = mgsuite.overlay.aioSrcEvent.target.ownerDocument;
   var links = doc.getElementsByTagName("link");
   var imgElems;
   for (var i = 0; i < links.length; ++i)
     if (links[i].getAttribute("rel") && links[i].getAttribute("rel").toLowerCase() == relStr)
        if (links[i].href) {loadURI(links[i].href); return;}
-  if (!aioNextsString) return;
-  var nextArray = next ? aioNextsString.split("|") : aioPrevsString.split("|");
+  if (!mgsuite.overlay.aioNextsString) return;
+  var nextArray = next ? mgsuite.overlay.aioNextsString.split("|") : mgsuite.overlay.aioPrevsString.split("|");
   for (var j = 0; j < nextArray.length; ++j)
      re[j] = new RegExp(nextArray[j], "i");
   links = doc.links;
@@ -1507,12 +1507,12 @@ function aioFastForward() {
 }
 
 function aioHomePage() {
-  if (aioIsFx) {
+  if (mgsuite.overlay.aioIsFx) {
     
-    switch (aioWindowType) {
+    switch (mgsuite.overlay.aioWindowType) {
       case "browser":
         var url = gHomeButton.getHomePage();
-        if (aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
+        if (mgsuite.overlay.aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
           aioLinkInTab(url, false, false);
         } else {
           loadURI(url);
@@ -1533,10 +1533,10 @@ function aioHomePage() {
     
   } else {
     // SM
-    switch (aioWindowType) {
+    switch (mgsuite.overlay.aioWindowType) {
       case "browser":
         var homePage = getHomePage();
-        var where = (aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) ? 'tab' : 'current';
+        var where = (mgsuite.overlay.aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) ? 'tab' : 'current';
         openUILinkArrayIn(homePage, where);
         
         break;
@@ -1585,7 +1585,7 @@ function aioUpDir() { // from Stephen Clavering's GoUp
   }
   var url = getUp(window.content.document.location.href);
   if (!url) return;
-  if (aioGoUpInNewTab) aioLinkInTab(url, false, false);
+  if (mgsuite.overlay.aioGoUpInNewTab) aioLinkInTab(url, false, false);
   else loadURI(url);
 }
 
@@ -1600,7 +1600,7 @@ function aioRestMaxWin() {
  }
 
 function aioFullScreen() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case 'browser':
       BrowserFullScreen();
       break;
@@ -1622,13 +1622,13 @@ function aioDebugProps(obj) {
 }
 
 function aioPageInfo() {
-  BrowserPageInfo(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : null);
+  BrowserPageInfo(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : null);
 }
 
 function aioFrameInfo() {
-  var targetDoc = aioSrcEvent.target.ownerDocument;
+  var targetDoc = mgsuite.overlay.aioSrcEvent.target.ownerDocument;
   if (targetDoc.defaultView.frameElement) BrowserPageInfo(targetDoc); // it's a frame
-  else BrowserPageInfo(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : null);
+  else BrowserPageInfo(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : null);
 }
 
 function aioShowHideStatusBar() {
@@ -1660,7 +1660,7 @@ function aioShowHideStatusBar() {
 function aioToggleBookmarksToolbar() {
   var bar = document.getElementById("PersonalToolbar");
   if (bar) {
-    if (aioIsFx) {
+    if (mgsuite.overlay.aioIsFx) {
       window.setToolbarVisibility(bar, bar.collapsed);
     } else {
       goToggleToolbar('PersonalToolbar');
@@ -1669,14 +1669,14 @@ function aioToggleBookmarksToolbar() {
 }
 
 function aioViewSource(frame) {
-  if (aioWindowType == "messenger") {
+  if (mgsuite.overlay.aioWindowType == "messenger") {
     goDoCommand("cmd_viewPageSource");
     
   } else {
     if (frame) {
-      BrowserViewSourceOfDocument(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : aioSrcEvent.target.ownerDocument);
+      BrowserViewSourceOfDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : mgsuite.overlay.aioSrcEvent.target.ownerDocument);
     } else {
-      BrowserViewSourceOfDocument(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
+      BrowserViewSourceOfDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
     }
   }
 }
@@ -1691,21 +1691,21 @@ function aioViewCookies() {
       cookieStr += cookie.host + ": " + cookie.name + "=" + cookie.value + "\n";
     }
     
-    alert(aioGetStr("cookies") + "\n\n" + cookieStr);
+    alert(mgsuite.overlay.aioGetStr("cookies") + "\n\n" + cookieStr);
   
   } else {
-    alert(aioGetStr("noCookies"));
+    alert(mgsuite.overlay.aioGetStr("noCookies"));
   }
 }
 
 function aioDeleteCookies() {
   var cookies = _aioGetDomainCookies(window.content.document);
   if (!cookies.length) {
-    alert(aioGetStr("noCookies"));
+    alert(mgsuite.overlay.aioGetStr("noCookies"));
     return;
   }
   
-  var confMsg = aioGetStr("deleteCookies").replace("%", cookies.length);
+  var confMsg = mgsuite.overlay.aioGetStr("deleteCookies").replace("%", cookies.length);
   
   if (!confirm(confMsg)) {
     return;
@@ -1717,7 +1717,7 @@ function aioDeleteCookies() {
     Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager2).remove(cookie.host, cookie.name, cookie.path, false);
   }
   
-  aioStatusMessage(aioGetStr("cookiesDeleted"), 4000);
+  aioStatusMessage(mgsuite.overlay.aioGetStr("cookiesDeleted"), 4000);
 }
 
 // Get all cookies in domain of given document
@@ -1777,7 +1777,7 @@ function aioMetaInfo() {
   var metas, metastr, mymeta;
   metas = window.content.document.getElementsByTagName("meta");
   if (metas.length) {
-    metastr = aioGetStr("meta") + "\n\n";
+    metastr = mgsuite.overlay.aioGetStr("meta") + "\n\n";
     for (var i = 0; i < metas.length; ++i) {
       mymeta = metas.item(i);
       metastr += "<META ";
@@ -1789,7 +1789,7 @@ function aioMetaInfo() {
     }
     alert(metastr);
   }
-  else alert(aioGetStr("noMeta"));
+  else alert(mgsuite.overlay.aioGetStr("noMeta"));
 }
 
 function aioActionOnPage(caseNb) { // code by Ben Basson aka Cusser
@@ -1798,7 +1798,7 @@ function aioActionOnPage(caseNb) { // code by Ben Basson aka Cusser
     case 0: service = "http://validator.w3.org/check?uri=";
             serviceDomain = "validator.w3.org";
             break;
-    case 1: service = aioGetStr("g.translateURL");
+    case 1: service = mgsuite.overlay.aioGetStr("g.translateURL");
             serviceDomain = "translate.google.com";
   }
   var targetURI = getWebNavigation().currentURI.spec; 
@@ -1811,7 +1811,7 @@ function aioOpenAioOptions() {
 }
 
 function aioOpenBookmarksManager() {
-  if (aioIsFx) {
+  if (mgsuite.overlay.aioIsFx) {
     PlacesCommandHook.showPlacesOrganizer('AllBookmarks');
   } else {
     toOpenWindowByType("bookmarks:manager",
@@ -1820,7 +1820,7 @@ function aioOpenBookmarksManager() {
 }
 
 function aioOpenDownloadManager() {
-  if (aioIsFx) {
+  if (mgsuite.overlay.aioIsFx) {
     BrowserDownloadsUI();
   } else {
     toOpenWindowByType("Download:Manager",
@@ -1830,17 +1830,17 @@ function aioOpenDownloadManager() {
 }
 
 function aioImageInWindow() {
-   if (aioOnImage) aioNewWindow(aioOnImage.src);
+   if (mgsuite.overlay.aioOnImage) aioNewWindow(mgsuite.overlay.aioOnImage.src);
 }
 
 function aioImageInTab() {
-   if (aioOnImage) aioLinkInTab(aioOnImage.src, false, false);
+   if (mgsuite.overlay.aioOnImage) aioLinkInTab(mgsuite.overlay.aioOnImage.src, false, false);
 }
 
 function aioSwitchTab(advanceBy) {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      aioContent.mTabContainer.advanceSelectedTab(advanceBy, true);
+      mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(advanceBy, true);
       break;
     
     case "messenger":
@@ -1862,32 +1862,32 @@ function aioSwitchTab(advanceBy) {
 }
 
 function aioOpenBlankTab() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      if (aioGestureTab) {
+      if (mgsuite.overlay.aioGestureTab) {
         // open new tab next to selected tab
-        var selectedTabPos = aioContent.getTabIndex ? aioContent.getTabIndex(aioGestureTab) : aioGestureTab._tPos;
+        var selectedTabPos = mgsuite.overlay.aioContent.getTabIndex ? mgsuite.overlay.aioContent.getTabIndex(mgsuite.overlay.aioGestureTab) : mgsuite.overlay.aioGestureTab._tPos;
       }
       
-      if (aioIsRocker && !aioGestureTab && aioSrcEvent) {
+      if (mgsuite.overlay.aioIsRocker && !mgsuite.overlay.aioGestureTab && mgsuite.overlay.aioSrcEvent) {
         // prevent selection from staying in unfinished state
-        _aioSendMouseUpEvent(aioSrcEvent);
+        _aioSendMouseUpEvent(mgsuite.overlay.aioSrcEvent);
       }
 
       BrowserOpenTab();
-      if (aioGestureTab) {
-        aioContent.moveTabTo(aioContent.mCurrentTab, selectedTabPos + 1);
+      if (mgsuite.overlay.aioGestureTab) {
+        mgsuite.overlay.aioContent.moveTabTo(mgsuite.overlay.aioContent.mCurrentTab, selectedTabPos + 1);
         
-        if (aioIsRocker && aioSrcEvent && aioSrcEvent.button == aioLMB) {
+        if (mgsuite.overlay.aioIsRocker && mgsuite.overlay.aioSrcEvent && mgsuite.overlay.aioSrcEvent.button == aioLMB) {
           setTimeout(function() {
-            aioContent.mTabContainer.selectedIndex = selectedTabPos + 1;
+            mgsuite.overlay.aioContent.mTabContainer.selectedIndex = selectedTabPos + 1;
           }, 100);
         }
       }
       break;
     
     default:
-      if (aioIsFx) {
+      if (mgsuite.overlay.aioIsFx) {
         openNewTabWith("about:blank");
       } else {
         openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
@@ -1896,10 +1896,10 @@ function aioOpenBlankTab() {
 }
 
 function aioSavePageAs() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
     case "source":
-      saveDocument(aioGestureTab ? aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
+      saveDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
       break;
     
     case "messenger":
@@ -1913,7 +1913,7 @@ function aioDetachTab() {
   var tabLength = gBrowser.tabContainer.childNodes.length;
   if (tabLength <= 1) return;
 
-  _aioDetachTab(aioGestureTab ? aioGestureTab : gBrowser.selectedTab);
+  _aioDetachTab(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.selectedTab);
 }
 
 // detach next tab and double stack windows
@@ -1921,8 +1921,8 @@ function aioDetachTabAndDoubleStack() {
   var tabLength = gBrowser.tabContainer.childNodes.length;
   if (tabLength <= 1) return;
   
-  if (aioGestureTab) {
-    aioContent.selectedTab = aioGestureTab;
+  if (mgsuite.overlay.aioGestureTab) {
+    mgsuite.overlay.aioContent.selectedTab = mgsuite.overlay.aioGestureTab;
   }
   var curTabIndex = gBrowser.tabContainer.selectedIndex;
   var tabToDetach;
@@ -2154,7 +2154,7 @@ function aioDoubleStackWindows() {
 
 function _aioDoubleStack2Windows(win1, win2) {
   function positionWindows(availHeight) {
-    var shift = aioIsWin ? 0 : 5; // prevent overlapping on linux
+    var shift = mgsuite.overlay.aioIsWin ? 0 : 5; // prevent overlapping on linux
     win1.resizeTo(screen.availWidth / 2 - shift, availHeight);
     win2.resizeTo(screen.availWidth / 2 - shift, availHeight);
     
@@ -2164,7 +2164,7 @@ function _aioDoubleStack2Windows(win1, win2) {
     }, 100);
   }
   
-  if (aioIsWin) {
+  if (mgsuite.overlay.aioIsWin) {
     positionWindows(screen.availHeight);
     
   } else {
@@ -2204,9 +2204,9 @@ function aioClosePrintPreview() {
 }
 
 function aioToggleSidebar() {
-  switch (aioWindowType) {
+  switch (mgsuite.overlay.aioWindowType) {
     case "browser":
-      if (aioIsFx) {
+      if (mgsuite.overlay.aioIsFx) {
         toggleSidebar('viewBookmarksSidebar');
       } else {
         SidebarShowHide();
@@ -2220,30 +2220,30 @@ function aioToggleSidebar() {
 }
 
 function aioTabFocus(e) {
-  var activeTab = aioContent.mTabContainer.childNodes[aioContent.mTabContainer.selectedIndex];
+  var activeTab = mgsuite.overlay.aioContent.mTabContainer.childNodes[mgsuite.overlay.aioContent.mTabContainer.selectedIndex];
   var activeId = activeTab.getAttribute("aioTabId");
   
   if (activeId) {
-     if (aioTabFocusHistory[aioTabFocusHistory.length - 1].focused == activeId) {
+     if (mgsuite.overlay.aioTabFocusHistory[mgsuite.overlay.aioTabFocusHistory.length - 1].focused == activeId) {
       return; // already at top
     
      } else {
-        for (var i = 0; i < aioTabFocusHistory.length; ++i) //search for a duplicated entry
-          if (aioTabFocusHistory[i].focused == activeId) {
-             aioTabFocusHistory.splice(i, 1); // Found: delete it
+        for (var i = 0; i < mgsuite.overlay.aioTabFocusHistory.length; ++i) //search for a duplicated entry
+          if (mgsuite.overlay.aioTabFocusHistory[i].focused == activeId) {
+             mgsuite.overlay.aioTabFocusHistory.splice(i, 1); // Found: delete it
           }
-        aioTabFocusHistory.push({focused: activeId});
+        mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
      }
      
   } else { // tab's never been visited
      activeId = "t" + aioUnique++;
      activeTab.setAttribute("aioTabId", activeId);
-     aioTabFocusHistory.push({focused: activeId});
+     mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
   }
 }
 
 function aioOpenConsole() {
-  if (aioIsFx) {
+  if (mgsuite.overlay.aioIsFx) {
     if (gDevToolsBrowser) {
       gDevToolsBrowser.toggleToolboxCommand(gBrowser);
     }
