@@ -7,7 +7,11 @@
  */
 "use strict";
 
-var mgsuite = {
+if (typeof mgsuite == 'undefined') {
+  var mgsuite = {};
+}
+
+mgsuite.const = {
   // 'Constants'
   LMB: 0,
   MMB: 1,
@@ -68,15 +72,15 @@ var aioSitePref;  // D for disabled gestures, P for gestures priority
 var aioPrevParsedURL;
 
 // global variables for rocker gesture
-const aioOpp = [mgsuite.RMB, mgsuite.NoB, mgsuite.LMB, mgsuite.NoB];
+const aioOpp = [mgsuite.const.RMB, mgsuite.const.NoB, mgsuite.const.LMB, mgsuite.const.NoB];
 var aioDownButton;
 var aioBackRocking;
 var aioRockTimer = null;
 var aioRepet = [], aioWheelBothWays;
 
 // global variables for wheel navigation
-const aioBackURL = mgsuite.CHROME_DIR + "back.png";
-const aioNextURL = mgsuite.CHROME_DIR + "next.png";
+const aioBackURL = mgsuite.const.CHROME_DIR + "back.png";
+const aioNextURL = mgsuite.const.CHROME_DIR + "next.png";
 var aioTabPU, aioHistPU, aioTTPU = null;
 var aioTabCount, aioTabSrc, aioTabDest = -1;
 var aioCCW;
@@ -85,7 +89,7 @@ var aioTTNode;
 
 // global variables for autoscroll
 const aioMarkerSize = 28, aioHalfMarker = aioMarkerSize / 2;
-const aioMarkers = [mgsuite.CHROME_DIR + "autoscroll_all.png", mgsuite.CHROME_DIR + "autoscroll_v.png", mgsuite.CHROME_DIR + "autoscroll_h.png"];
+const aioMarkers = [mgsuite.const.CHROME_DIR + "autoscroll_all.png", mgsuite.const.CHROME_DIR + "autoscroll_v.png", mgsuite.const.CHROME_DIR + "autoscroll_h.png"];
 const aioMarkerIds = ["aioscrollerNSEW", "aioscrollerNS", "aioscrollerEW"];
 const aioDist =  [0, 20, 40, 60, 80, 100, 130, 180, 300, 5000];
 const aioRatio = [.0, .067, .083, .108, .145, .2, .3, .45, .65, .9];
@@ -150,12 +154,12 @@ const aioShutdownListener = {
 };
 const aioUninstallListener = {
   onUninstalling: function(addon) {
-    if (addon.id == mgsuite.GUID) {
+    if (addon.id == mgsuite.const.GUID) {
 	   aioBeingUninstalled = true;
 	}
   },
   onOperationCancelled: function(addon) {
-    if (addon.id == mgsuite.GUID) {
+    if (addon.id == mgsuite.const.GUID) {
 	   aioBeingUninstalled = false;
 	}
   }
@@ -310,7 +314,7 @@ function aioGetStr(str) {
 }
 
 function aioGetLocalizedStrings() {
-  aioBundle = aioCreateStringBundle(mgsuite.LOCALE_PROPERTIES);
+  aioBundle = aioCreateStringBundle(mgsuite.const.LOCALE_PROPERTIES);
   aioShortGest["R"] = aioGetStr("abbreviation.right");
   aioShortGest["L"] = aioGetStr("abbreviation.left");
   aioShortGest["U"] = aioGetStr("abbreviation.up");
@@ -370,7 +374,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
 	 [function(){aioActionString=aioPref.getCharPref("gestureString");}, function(){aioPref.setCharPref("gestureString",mgsuiteDefaults.gestureString);}, function(){return !aioActionString;}],
 	 [function(){aioFuncString=aioPref.getCharPref("functionString");}, function(){aioPref.setCharPref("functionString",mgsuiteDefaults.functionString);}, function(){return !aioFuncString;}],
      [function(){aioRockerString=aioPref.getCharPref("rockerString");}, function(){aioPref.setCharPref("rockerString",mgsuiteDefaults.rockerString);}, function(){return !aioRockerString;}],
-	 [function(){aioGestButton=aioPref.getIntPref("mousebuttonpref");}, function(){aioPref.setIntPref("mousebuttonpref",mgsuite.RMB);}, function(){return aioGestButton<0||aioGestButton>2;}],
+	 [function(){aioGestButton=aioPref.getIntPref("mousebuttonpref");}, function(){aioPref.setIntPref("mousebuttonpref",mgsuite.const.RMB);}, function(){return aioGestButton<0||aioGestButton>2;}],
 	 [function(){aioGestEnabled=aioPref.getBoolPref("mouse");}, function(){aioPref.setBoolPref("mouse",true);}, function(){return false;}],
 	 [function(){aioTrailEnabled=aioPref.getBoolPref("gestureTrails");}, function(){aioPref.setBoolPref("gestureTrails",true);}, function(){return false;}],
 	 [function(){aioTrailColor=aioPref.getCharPref("trailColor");}, function(){aioPref.setCharPref("trailColor","#009900");}, function(){return false;}],
@@ -608,7 +612,7 @@ function aioInit() { // overlay has finished loading or a pref was changed
   aioTitleDuration = durationTable[titleDuration];
   aioScrollMax = aioScrollLoop[aioScrollRate]; aioASPeriod = aioASBasicPeriod / aioScrollMax;
 
-  aioDownButton = mgsuite.NoB; aioBackRocking = false;
+  aioDownButton = mgsuite.const.NoB; aioBackRocking = false;
   if (aioShowTitletip && aioTTHover) aioRendering.addEventListener("mousemove", aioShowTitle, true);
   else aioRendering.removeEventListener("mousemove", aioShowTitle, true);
   
@@ -787,8 +791,8 @@ function aioGestMove(e) {
 }
 
 function aioGetHRef(node) {
-  if (node.hasAttributeNS(mgsuite.xlinkNS, "href"))
-     return makeURLAbsolute(node.baseURI, node.getAttributeNS(mgsuite.xlinkNS, "href"));
+  if (node.hasAttributeNS(mgsuite.const.xlinkNS, "href"))
+     return makeURLAbsolute(node.baseURI, node.getAttributeNS(mgsuite.const.xlinkNS, "href"));
   return node.href;
 }
 
@@ -809,12 +813,12 @@ function aioFindLink(domNode, gesturing) { // Loop up the DOM looking for a link
   try {
     do {
       currNode = nextNode;
-      if (currNode.namespaceURI == mgsuite.xhtmlNS) nodeNameLC = currNode.localName;
+      if (currNode.namespaceURI == mgsuite.const.xhtmlNS) nodeNameLC = currNode.localName;
       else nodeNameLC = currNode.nodeName.toLowerCase();
 
       if (nodeNameLC == "img" && !aioOnImage && gesturing) aioOnImage = currNode;
       else {
-         if (nodeNameLC == "a"  || nodeNameLC == "area" || currNode.hasAttributeNS(mgsuite.xlinkNS, "href"))
+         if (nodeNameLC == "a"  || nodeNameLC == "area" || currNode.hasAttributeNS(mgsuite.const.xlinkNS, "href"))
             if (nodeNameLC == "a" && !currNode.hasAttribute("href")) return null;
             else return currNode;
       }
@@ -831,7 +835,7 @@ function aioIsAreaOK(e, isAutoScroll) {
   try { var xtag = e.originalTarget.localName.toLowerCase(); } catch (err) {}
 
   return xtag != "slider" && xtag != "thumb" && xtag != "scrollbarbutton" &&
-   (((tag != "input" || aioGestButton == mgsuite.RMB) && (tag != "textarea" || aioGestButton == mgsuite.RMB)
+   (((tag != "input" || aioGestButton == mgsuite.const.RMB) && (tag != "textarea" || aioGestButton == mgsuite.const.RMB)
    && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox" && tag != "menu") || isAutoScroll);
 }
 
@@ -852,7 +856,7 @@ function aioKillGestInProgress(clearMode) {
 
 function aioClearRocker() {
   aioRockTimer = null;
-  aioDownButton = mgsuite.NoB;
+  aioDownButton = mgsuite.const.NoB;
 }
 
 function aioPerformRockerFunction(index) {
@@ -864,9 +868,9 @@ function aioPerformRockerFunction(index) {
 
 function aioPrioritizeGestures(e) {
   if (aioSitePref == 'P' && (
-	  (e.button == mgsuite.RMB && ((aioGestEnabled && aioGestButton == mgsuite.RMB) || aioRockEnabled || aioWheelEnabled))
-	  || (e.button == mgsuite.MMB && ((aioGestEnabled && aioGestButton == mgsuite.MMB) || aioWheelEnabled || aioScrollEnabled))
-	  || (aioRockEnabled && e.button == mgsuite.LMB && aioDownButton == mgsuite.RMB)
+	  (e.button == mgsuite.const.RMB && ((aioGestEnabled && aioGestButton == mgsuite.const.RMB) || aioRockEnabled || aioWheelEnabled))
+	  || (e.button == mgsuite.const.MMB && ((aioGestEnabled && aioGestButton == mgsuite.const.MMB) || aioWheelEnabled || aioScrollEnabled))
+	  || (aioRockEnabled && e.button == mgsuite.const.LMB && aioDownButton == mgsuite.const.RMB)
 	  )
 	) {
 	e.stopPropagation();
@@ -941,7 +945,7 @@ function aioMouseDown(e) {
 	  aioShowContextMenu = true;
 	  
 	  if (!aioGestureTab) {
-		if (e.button != mgsuite.LMB || aioGestButton == mgsuite.LMB) {
+		if (e.button != mgsuite.const.LMB || aioGestButton == mgsuite.const.LMB) {
 		  aioBlockActionStatusMsg += "<" + aioGetStr("opt.sitePrefD") + ">";
 		  aioStatusMessage(aioBlockActionStatusMsg, 1000);
 		}
@@ -961,7 +965,7 @@ function aioMouseDown(e) {
   
   if (gesturesEnabled && e.button == aioOpp[aioDownButton] && aioRockEnabled) {
 	// rocker gestures
-     if (e.button == mgsuite.RMB) {
+     if (e.button == mgsuite.const.RMB) {
         var func = 1;
         aioSrcEvent = e;
         setTimeout(function(){aioPerformRockerFunction(1);}, 0);
@@ -977,7 +981,7 @@ function aioMouseDown(e) {
      aioKillGestInProgress();
 	 aioStatusMessage("", 0);
      aioContent.removeEventListener("DOMMouseScroll", aioWheelNav, true);
-     if (!aioRockMultiple[func] || (aioRockMultiple[func] == 2 && aioRockMode == 0)) aioDownButton = mgsuite.NoB;
+     if (!aioRockMultiple[func] || (aioRockMultiple[func] == 2 && aioRockMode == 0)) aioDownButton = mgsuite.const.NoB;
      else { // multiple ops allowed
         if (aioRockTimer) {clearTimeout(aioRockTimer); aioRockTimer = null;}
         if (aioRockMultiple[func] == 2) aioRockTimer = setTimeout(function(){aioClearRocker();}, 3000);
@@ -985,7 +989,7 @@ function aioMouseDown(e) {
      }
   }
   else {
-	if (gesturesEnabled && e.button == mgsuite.RMB) {
+	if (gesturesEnabled && e.button == mgsuite.const.RMB) {
 	  // turn off gesture on active flash because right click event may be triggered
 	  // and the gesture may end up unfinished after choosing a context menu flash option
 	  var targetName = e.target.localName.toLowerCase();
@@ -1002,10 +1006,10 @@ function aioMouseDown(e) {
         aioSrcEvent = e;
         targetName  = e.target.nodeName.toLowerCase();
 		 
-        if ((aioIsAreaOK(e, false) || e.button != mgsuite.LMB) && targetName != 'toolbarbutton'
+        if ((aioIsAreaOK(e, false) || e.button != mgsuite.const.LMB) && targetName != 'toolbarbutton'
             && !aioGestInProgress) {
              
-			preventDefaultAction = e.button != mgsuite.LMB || !aioLeftDefault ||
+			preventDefaultAction = e.button != mgsuite.const.LMB || !aioLeftDefault ||
 						 targetName == "html" || targetName == "body" || e.target.ownerDocument == aioContent.ownerDocument;
 			aioGestInProgress = true;
 			aioAddLink(e);  // Check if started over a link
@@ -1013,11 +1017,11 @@ function aioMouseDown(e) {
 			if (aioTrailEnabled) mgsuiteTrails.startTrail(e);
 			window.addEventListener("mousemove", aioGestMove, true);
           }
-          else preventDefaultAction = e.button != mgsuite.LMB;
+          else preventDefaultAction = e.button != mgsuite.const.LMB;
       }
        // it can be the start of a wheelscroll gesture as well
        if (aioWheelEnabled && (aioWindowType == "browser" || aioWindowType == "messenger" || aioWindowType == "source")) {
-          preventDefaultAction = preventDefaultAction || e.button != mgsuite.LMB;
+          preventDefaultAction = preventDefaultAction || e.button != mgsuite.const.LMB;
           aioTabCount = (aioWindowType == "browser") ? aioContent.mPanelContainer.childNodes.length : 0;
           if (aioWheelRocker) {
              if (!aioGestInProgress) {
@@ -1030,12 +1034,12 @@ function aioMouseDown(e) {
              aioContent.addEventListener("DOMMouseScroll", aioWheelNav, true);
        }
 	   
-       if (preventDefaultAction && e.button == mgsuite.LMB) aioNukeEvent(e);
+       if (preventDefaultAction && e.button == mgsuite.const.LMB) aioNukeEvent(e);
        aioOldX = e.screenX; aioOldY = e.screenY;
      }
      else {
 		// middle button scrolling
-        if (e.button == mgsuite.MMB && aioDownButton == mgsuite.NoB && aioScrollEnabled && aioIsAreaOK(e, true) &&
+        if (e.button == mgsuite.const.MMB && aioDownButton == mgsuite.const.NoB && aioScrollEnabled && aioIsAreaOK(e, true) &&
             (aioStartOnLinks  || !aioFindLink(e.target, false)) && !(aioPreferPaste && aioIsPastable(e))) {
 		  aioShowContextMenu = false;
 		  
@@ -1067,7 +1071,7 @@ function aioRockClickEnd() { // click event is not always fired
 }
 
 function aioRockClickHandler(e) {
-  if (e.button != mgsuite.LMB) return;
+  if (e.button != mgsuite.const.LMB) return;
   aioNukeEvent(e);
   window.removeEventListener("click", aioRockClickHandler, true);
 }
@@ -1102,7 +1106,7 @@ function aioDisplayContextMenu(e) {
 
 function aioMouseUp(e) {
   if (!aioGesturesEnabled) {
-	aioDownButton = mgsuite.NoB;
+	aioDownButton = mgsuite.const.NoB;
 	return;
   }
   
@@ -1112,14 +1116,14 @@ function aioMouseUp(e) {
   
   if (aioSitePref == 'D' && !aioGestureTab) {
 	// disable gestures
-	aioDownButton = mgsuite.NoB;
+	aioDownButton = mgsuite.const.NoB;
 	return;
   }
   aioBlockActionStatusMsg = "";
   
-  if (aioIsMac && e.button == mgsuite.LMB && e.ctrlKey) var button = mgsuite.RMB;
+  if (aioIsMac && e.button == mgsuite.const.LMB && e.ctrlKey) var button = mgsuite.const.RMB;
   else button = e.button;
-  if (aioBackRocking && button == mgsuite.LMB) {
+  if (aioBackRocking && button == mgsuite.const.LMB) {
      aioBackRocking = false;
      aioSrcEvent = e;
      window.addEventListener("click", aioRockClickHandler, true);
@@ -1128,9 +1132,9 @@ function aioMouseUp(e) {
      return;
   }
   if (button == aioDownButton) {
-     aioDownButton = mgsuite.NoB;
+     aioDownButton = mgsuite.const.NoB;
      aioContent.removeEventListener("DOMMouseScroll", aioWheelNav, true);
-     if (button == mgsuite.RMB && !aioGestInProgress && !aioRockTimer) aioDisplayContextMenu(e);
+     if (button == mgsuite.const.RMB && !aioGestInProgress && !aioRockTimer) aioDisplayContextMenu(e);
      else {
         if (aioRockTimer) clearTimeout(aioRockTimer);
         aioRockTimer = null;
@@ -1159,15 +1163,15 @@ function aioMouseUp(e) {
      }
      else {
         aioStatusMessage("", 0);
-        if (button == mgsuite.RMB) aioDisplayContextMenu(e);
+        if (button == mgsuite.const.RMB) aioDisplayContextMenu(e);
      }
      aioKillGestInProgress();
-     aioDownButton = mgsuite.NoB;
+     aioDownButton = mgsuite.const.NoB;
   }
 }
 
 function aioDragGesture(e) {
-  aioDownButton = mgsuite.NoB;
+  aioDownButton = mgsuite.const.NoB;
   aioContent.removeEventListener("DOMMouseScroll", aioWheelNav, true);
   if (aioGestInProgress) aioKillGestInProgress();
 }
@@ -1176,7 +1180,7 @@ function aioDragGesture(e) {
    Original code by Joe4711. Rewritten by Marc Boullet  */
 function aioWheelNav(e) {
   aioNukeEvent(e);
-  aioDownButton = mgsuite.NoB;
+  aioDownButton = mgsuite.const.NoB;
   aioCCW = e.detail < 0;
 
   aioRendering.removeEventListener("mousedown", aioMouseDown, true);
@@ -1261,15 +1265,15 @@ function _aioCreatePU(arg1, arg2, arg3) {
   var popupElem, label, img;
   if (this.closeFunc) window.addEventListener("mouseup", this.closeFunc, true);
   if (this.popupType == "popup") {
-     this.scrollerNode = document.createElementNS(mgsuite.xulNS, "panel");
+     this.scrollerNode = document.createElementNS(mgsuite.const.xulNS, "panel");
      this.scrollerNode.id = "aioWheelPopup";
      this.scrollerNode.setAttribute("noautohide", "true");
   }
-  else this.scrollerNode = document.createElementNS(mgsuite.xulNS, this.popupType);
+  else this.scrollerNode = document.createElementNS(mgsuite.const.xulNS, this.popupType);
   this.scrollerNode.setAttribute("ignorekeys", "true");
   if (this.popupType == "popup") {
     for (var i = this.popupStart; i < this.popupStart + this.popupLength; ++i) {
-      popupElem = document.createElementNS(mgsuite.xulNS, "menuitem");
+      popupElem = document.createElementNS(mgsuite.const.xulNS, "menuitem");
       if (arg1) {
          label = getWebNavigation().sessionHistory.getEntryAtIndex(i, false).title;
       }
@@ -1302,19 +1306,19 @@ function _aioCreatePU(arg1, arg2, arg3) {
   else {
     this.scrollerNode.setAttribute("orient", "vertical");
     if (arg1) {
-       popupElem = document.createElementNS(mgsuite.xulNS, "description");
+       popupElem = document.createElementNS(mgsuite.const.xulNS, "description");
        popupElem.setAttribute("style", "font-family:sans-serif;font-weight:bold;font-size:16px;" +
                        (this.reverseScroll ? "color:red;" : ""));
        this.scrollerNode.appendChild(popupElem);
        popupElem.appendChild(document.createTextNode(arg1));
     }
     if (arg3) {
-       popupElem = document.createElementNS(mgsuite.xulNS, "description");
+       popupElem = document.createElementNS(mgsuite.const.xulNS, "description");
        popupElem.setAttribute("style", "font-family:sans-serif;font-size:12px");
        this.scrollerNode.appendChild(popupElem);
        popupElem.appendChild(document.createTextNode(arg3));
     }
-    popupElem = document.createElementNS(mgsuite.xulNS, "description");
+    popupElem = document.createElementNS(mgsuite.const.xulNS, "description");
     popupElem.setAttribute("style", "font-family:sans-serif;font-size:12px");
     this.scrollerNode.appendChild(popupElem);
     if (arg2.length > 69) arg2 = arg2.substr(0, 33) + "..." + arg2.substr(-33);
@@ -1605,7 +1609,7 @@ function aioAutoScrollUp(e) {
 	   window.removeEventListener("mousemove", aioScrollMove, true);
 	}
     else {
-	  aioDownButton = mgsuite.NoB;
+	  aioDownButton = mgsuite.const.NoB;
 	  window.removeEventListener("mouseup", aioAutoScrollUp, true);
 	  window.removeEventListener("mousedown", aioAutoScrollUp, true);
 	  window.removeEventListener("mousemove", aioScrollMove, true);
@@ -1777,7 +1781,7 @@ function aioAddMarker(e) {
 
   if (aioSpecialCursor && !aioNoScrollMarker && !aioScroll.XMLPrettyPrint) {
     // overlay
-    var el = aioScroll.targetDoc.createElementNS(mgsuite.xhtmlNS, "aioOverlay");
+    var el = aioScroll.targetDoc.createElementNS(mgsuite.const.xhtmlNS, "aioOverlay");
     el.style.position = "fixed";
     el.style.left = "0px";
     el.style.top = "0px";
@@ -1814,7 +1818,7 @@ function aioAddMarker(e) {
 	aioMarkerX = e.screenX - window.mozInnerScreenX - aioHalfMarker;
 	aioMarkerY = e.screenY - window.mozInnerScreenY - aioHalfMarker;
 	
-	var canvas = document.createElementNS(mgsuite.xhtmlNS, "canvas");
+	var canvas = document.createElementNS(mgsuite.const.xhtmlNS, "canvas");
 	canvas.id = aioMarkerIds[aioScroll.scrollType];
 	canvas.style.position = "fixed";
 	canvas.width = window.outerWidth;
@@ -1942,7 +1946,7 @@ function aioGrabNDragMove(e) {
 
 function aioGrabNDragMouseUp(e) {
   aioNukeEvent(e);
-  aioDownButton = mgsuite.NoB;
+  aioDownButton = mgsuite.const.NoB;
   window.removeEventListener("mouseup", aioGrabNDragMouseUp, true);
   window.removeEventListener("mousemove", aioScrollMove, true);
   window.addEventListener("mouseup", aioMouseUp, true);

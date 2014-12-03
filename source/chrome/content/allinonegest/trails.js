@@ -108,7 +108,7 @@ var mgsuiteTrails = {
   },
   
   makeTrailCanvas: function() {
-	var canvas = document.createElementNS(mgsuite.xhtmlNS, "canvas");
+	var canvas = document.createElementNS(mgsuite.const.xhtmlNS, "canvas");
 	canvas.style.position = "fixed";
 	canvas.width = window.outerWidth;
 	canvas.height = window.outerHeight;

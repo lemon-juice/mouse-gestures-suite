@@ -132,7 +132,7 @@ var aioUndoHide = [];
 var aioUnique = 0;
 var aioOrigBlurTab;
 var aioStatusMessageTO;
-const aioKGestures = mgsuite.CHROME_DIR + "show-gestures.html";
+const aioKGestures = mgsuite.const.CHROME_DIR + "show-gestures.html";
 
 function aioStatusMessage(msg, timeToClear, append) {
   if (aioStatusMessageTO) {
@@ -178,7 +178,7 @@ function aioShowInFauxStatusBar(msg) {
   var tooltip = document.getElementById('aioFauxStatusBar');
   
   if (!tooltip) {
-    tooltip = document.createElementNS(mgsuite.xulNS, 'tooltip');
+    tooltip = document.createElementNS(mgsuite.const.xulNS, 'tooltip');
     tooltip.id = "aioFauxStatusBar";
     tooltip.setAttribute("noautohide", "true");
     tooltip.setAttribute("orient", "vertical");
@@ -244,7 +244,7 @@ function aioFireGesture(aGesture, shiftKey) {
      }
      catch(err) {}
   aioKillGestInProgress();
-  aioDownButton = mgsuite.NoB;
+  aioDownButton = mgsuite.const.NoB;
 }
 
 
@@ -442,7 +442,7 @@ function aioIncURL(inc) { // derived from MagPie by Ben Goodger
 
   aioClearRocker();
   var rv = { };
-  openDialog(mgsuite.CHROME_DIR + "aioSchemaBuilder.xul", "", "chrome,centerscreen,modal=yes", currSpec, rv);
+  openDialog(mgsuite.const.CHROME_DIR + "aioSchemaBuilder.xul", "", "chrome,centerscreen,modal=yes", currSpec, rv);
   if ("key" in rv) {
      aioSchemas[rv.key] = {startIndex: rv.startIndex, endIndex: rv.endIndex, selectedLength: rv.endIndex - rv.startIndex};
      aioIncURL(inc);
@@ -631,7 +631,7 @@ function aioNukeFlash() {
     if (height && width) {
        style = next.getAttribute("style") || "";
        next.setAttribute("style", style + "display:none;");
-       span = document.createElementNS(mgsuite.xhtmlNS, "span");
+       span = document.createElementNS(mgsuite.const.xhtmlNS, "span");
        text = document.createTextNode("[" + aioGetStr("g.clickToView") + "]");
        span.appendChild(text);
        top.insertBefore(span, next);
@@ -1807,7 +1807,7 @@ function aioActionOnPage(caseNb) { // code by Ben Basson aka Cusser
 }
 
 function aioOpenAioOptions() {
-  window.openDialog(mgsuite.CHROME_DIR + "pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
+  window.openDialog(mgsuite.const.CHROME_DIR + "pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
 }
 
 function aioOpenBookmarksManager() {

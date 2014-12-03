@@ -95,7 +95,7 @@ var mgsuiteUtil = {
     var str = "";
     var req = new XMLHttpRequest();
     try {
-      req.open("GET", mgsuite.CHROME_DIR + "tlds.txt", false);
+      req.open("GET", mgsuite.const.CHROME_DIR + "tlds.txt", false);
       req.send();
       str = req.responseText.trim();
       
