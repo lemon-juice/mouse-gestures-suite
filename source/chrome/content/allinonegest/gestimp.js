@@ -1272,9 +1272,9 @@ mgsuite.imp = {
       hRefLC = mgsuite.overlay.aioOnLink[i].href.toLowerCase();
       if (hRefLC.substr(0, 7) != "mailto:" && hRefLC.substr(0, 11) != "javascript:" &&
           hRefLC.substr(0, 5) != "news:" && hRefLC.substr(0, 6) != "snews:")
-         if (mgsuite.overlay.aioFxV18) saveURL(mgsuite.overlay.aioOnLink[i].href, aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore,
+         if (mgsuite.overlay.aioFxV18) saveURL(mgsuite.overlay.aioOnLink[i].href, mgsuite.tooltip.aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore,
                             mgsuite.overlay.aioOnLink[i].node.ownerDocument.documentURIObject, mgsuite.overlay.aioOnLink[i].node.ownerDocument);
-         else saveURL(mgsuite.overlay.aioOnLink[i].href, aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore);
+         else saveURL(mgsuite.overlay.aioOnLink[i].href, mgsuite.tooltip.aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore);
   
     }
   },

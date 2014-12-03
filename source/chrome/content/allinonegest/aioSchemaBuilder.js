@@ -1,3 +1,6 @@
+/*
+ * Dialog window for incrementing/decrementing numbers in URL
+ */
 var gOKButton = null;
 var gURLField = null;
 

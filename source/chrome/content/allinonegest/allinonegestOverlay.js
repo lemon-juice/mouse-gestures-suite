@@ -671,8 +671,8 @@ mgsuite.overlay = {
     mgsuite.overlay.aioScrollMax = mgsuite.const.aioScrollLoop[mgsuite.overlay.aioScrollRate]; mgsuite.overlay.aioASPeriod = mgsuite.const.aioASBasicPeriod / mgsuite.overlay.aioScrollMax;
 
     mgsuite.overlay.aioDownButton = mgsuite.const.NoB; mgsuite.overlay.aioBackRocking = false;
-    if (mgsuite.overlay.aioShowTitletip && mgsuite.overlay.aioTTHover) mgsuite.overlay.aioRendering.addEventListener("mousemove", aioShowTitle, true);
-    else mgsuite.overlay.aioRendering.removeEventListener("mousemove", aioShowTitle, true);
+    if (mgsuite.overlay.aioShowTitletip && mgsuite.overlay.aioTTHover) mgsuite.overlay.aioRendering.addEventListener("mousemove", mgsuite.tooltip.aioShowTitle, true);
+    else mgsuite.overlay.aioRendering.removeEventListener("mousemove", mgsuite.tooltip.aioShowTitle, true);
 
     mgsuite.overlay.aioRendering.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelScroll, false);
 
@@ -1501,10 +1501,10 @@ mgsuite.overlay = {
   },
 
   aioLinkTooltip: function(e) {
-    mgsuite.overlay.aioTTPU = new mgsuite.overlay.aioPopUp(0, 0, 0, false, "tooltip", mgsuite.overlay.aioOldX, mgsuite.overlay.aioOldY, aioHasNewWindowTarget(mgsuite.overlay.aioTTNode),
+    mgsuite.overlay.aioTTPU = new mgsuite.overlay.aioPopUp(0, 0, 0, false, "tooltip", mgsuite.overlay.aioOldX, mgsuite.overlay.aioOldY, mgsuite.tooltip.aioHasNewWindowTarget(mgsuite.overlay.aioTTNode),
                            mgsuite.overlay.aioLinkTTEnd, mgsuite.overlay.aioLinkTTPopping, mgsuite.overlay.aioLinkTTNuke);
 
-    mgsuite.overlay.aioTTPU.createPopup(aioGetTextForTitle(mgsuite.overlay.aioTTNode), mgsuite.overlay.aioGetHRef(mgsuite.overlay.aioTTNode), "");
+    mgsuite.overlay.aioTTPU.createPopup(mgsuite.tooltip.aioGetTextForTitle(mgsuite.overlay.aioTTNode), mgsuite.overlay.aioGetHRef(mgsuite.overlay.aioTTNode), "");
   },
 
   aioLinkTTPopping: function(e) {
