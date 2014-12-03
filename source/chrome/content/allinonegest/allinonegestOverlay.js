@@ -12,52 +12,6 @@ if (typeof mgsuite == 'undefined') {
 }
 
 
-// Preferences observers
-const aioPrefListener = {
-  domain: "allinonegest.",
-  observe: function(subject, topic, prefName) {// when AiO pref was changed, reinit
-    if (topic != "nsPref:changed" || mgsuite.overlay.aioPrefObserverDisabled) return;
-	
-	// run mgsuite.overlay.aioInit() delayed and only once if the observer is fired multiple times
-	// in a short period
-	if (mgsuite.overlay.aioPrefObserverTimeout) {
-	  clearTimeout(mgsuite.overlay.aioPrefObserverTimeout);
-	}
-	
-	mgsuite.overlay.aioPrefObserverTimeout = setTimeout(function() {
-	  //dump("Observer runs mgsuite.overlay.aioInit()\n");
-	  mgsuite.overlay.aioInit();
-	}, 300);
-  }
-};
-const aioStdPrefListener = {
-  domain1: "general.",
-  domain2: "mousewheel.withnokey.",
-  domain3: "middlemouse.",
-  observe: function(subject, topic, prefName) {
-    if (topic != "nsPref:changed") return;
-    mgsuite.overlay.aioStdPrefChanged();
-  }
-};
-const aioShutdownListener = {
-  observe: function(subject, topic, data) {
-    if (topic != "quit-application") return;
-    if (mgsuite.overlay.aioBeingUninstalled) mgsuite.overlay.aioUninstallCleanUp();
-  }
-};
-const aioUninstallListener = {
-  onUninstalling: function(addon) {
-    if (addon.id == mgsuite.const.GUID) {
-	   mgsuite.overlay.aioBeingUninstalled = true;
-	}
-  },
-  onOperationCancelled: function(addon) {
-    if (addon.id == mgsuite.const.GUID) {
-	   mgsuite.overlay.aioBeingUninstalled = false;
-	}
-  }
-};
-
 mgsuite.overlay = {
   
   // variables for mouse gestures
@@ -198,7 +152,7 @@ mgsuite.overlay = {
   aioPref: null,
   aioPbi: null,
 
-  // used to prevent infinite loop when aioStdPrefListener called itself on changing pref
+  // used to prevent infinite loop when mgsuite.overlay.aioStdPrefListener called itself on changing pref
   aioIgnoreStdPrefListener: false,
 
   
@@ -230,13 +184,13 @@ mgsuite.overlay = {
     mgsuite.overlay.aioPrefRoot = aioPrefService.getBranch(null); // prefs: root node
     mgsuite.overlay.aioPref = aioPrefService.getBranch("allinonegest."); // prefs: AiO node
     mgsuite.overlay.aioPbi = mgsuite.overlay.aioPrefRoot.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
-    mgsuite.overlay.aioPbi.addObserver(aioStdPrefListener.domain1, aioStdPrefListener, false); //set Pref observer on "general"
-    mgsuite.overlay.aioPbi.addObserver(aioStdPrefListener.domain2, aioStdPrefListener, false); // and mousewheel
-    mgsuite.overlay.aioPbi.addObserver(aioStdPrefListener.domain3, aioStdPrefListener, false); // and middlemouse
+    mgsuite.overlay.aioPbi.addObserver(mgsuite.overlay.aioStdPrefListener.domain1, mgsuite.overlay.aioStdPrefListener, false); //set Pref observer on "general"
+    mgsuite.overlay.aioPbi.addObserver(mgsuite.overlay.aioStdPrefListener.domain2, mgsuite.overlay.aioStdPrefListener, false); // and mousewheel
+    mgsuite.overlay.aioPbi.addObserver(mgsuite.overlay.aioStdPrefListener.domain3, mgsuite.overlay.aioStdPrefListener, false); // and middlemouse
 
     try {
       Components.utils.import("resource://gre/modules/AddonManager.jsm");
-      AddonManager.addAddonListener(aioUninstallListener);
+      AddonManager.addAddonListener(mgsuite.overlay.aioUninstallListener);
     }
     catch (err) {}
 
@@ -260,9 +214,58 @@ mgsuite.overlay = {
     catch (err) {}
 
     // Now that isActive and savedAutoScroll have been set, we can add the observer on AioG prefs
-    mgsuite.overlay.aioPbi.addObserver(aioPrefListener.domain, aioPrefListener, false); //set Pref observer on "allinonegest"
+    mgsuite.overlay.aioPbi.addObserver(mgsuite.overlay.aioPrefListener.domain, mgsuite.overlay.aioPrefListener, false); //set Pref observer on "allinonegest"
 
     mgsuite.overlay.aioInit();
+  },
+  
+  // Preferences observers
+  aioPrefListener: {
+    domain: "allinonegest.",
+    observe: function(subject, topic, prefName) { // when AiO pref was changed, reinit
+      if (topic != "nsPref:changed" || mgsuite.overlay.aioPrefObserverDisabled) return;
+
+      // run mgsuite.overlay.aioInit() delayed and only once if the observer is fired multiple times
+      // in a short period
+      if (mgsuite.overlay.aioPrefObserverTimeout) {
+        clearTimeout(mgsuite.overlay.aioPrefObserverTimeout);
+      }
+
+      mgsuite.overlay.aioPrefObserverTimeout = setTimeout(function() {
+        //dump("Observer runs mgsuite.overlay.aioInit()\n");
+        mgsuite.overlay.aioInit();
+      }, 300);
+    }
+  },
+  
+  aioStdPrefListener: {
+    domain1: "general.",
+    domain2: "mousewheel.withnokey.",
+    domain3: "middlemouse.",
+    observe: function(subject, topic, prefName) {
+      if (topic != "nsPref:changed") return;
+      mgsuite.overlay.aioStdPrefChanged();
+    }
+  },
+  
+  aioShutdownListener: {
+    observe: function(subject, topic, data) {
+      if (topic != "quit-application") return;
+      if (mgsuite.overlay.aioBeingUninstalled) mgsuite.overlay.aioUninstallCleanUp();
+    }
+  },
+  
+  aioUninstallListener: {
+    onUninstalling: function(addon) {
+      if (addon.id == mgsuite.const.GUID) {
+        mgsuite.overlay.aioBeingUninstalled = true;
+      }
+    },
+    onOperationCancelled: function(addon) {
+      if (addon.id == mgsuite.const.GUID) {
+        mgsuite.overlay.aioBeingUninstalled = false;
+      }
+    }
   },
 
   aioWindowUnload: function() {
@@ -270,13 +273,13 @@ mgsuite.overlay = {
     function freeObservers() {
       // Don't leak the observers when a window closes
       try {
-        mgsuite.overlay.aioPbi.removeObserver(aioPrefListener.domain, aioPrefListener);
-        mgsuite.overlay.aioPbi.removeObserver(aioStdPrefListener.domain1, aioStdPrefListener);
-        mgsuite.overlay.aioPbi.removeObserver(aioStdPrefListener.domain2, aioStdPrefListener);
-        mgsuite.overlay.aioPbi.removeObserver(aioStdPrefListener.domain3, aioStdPrefListener);
+        mgsuite.overlay.aioPbi.removeObserver(mgsuite.overlay.aioPrefListener.domain, mgsuite.overlay.aioPrefListener);
+        mgsuite.overlay.aioPbi.removeObserver(mgsuite.overlay.aioStdPrefListener.domain1, mgsuite.overlay.aioStdPrefListener);
+        mgsuite.overlay.aioPbi.removeObserver(mgsuite.overlay.aioStdPrefListener.domain2, mgsuite.overlay.aioStdPrefListener);
+        mgsuite.overlay.aioPbi.removeObserver(mgsuite.overlay.aioStdPrefListener.domain3, mgsuite.overlay.aioStdPrefListener);
 
         Components.utils.import("resource://gre/modules/AddonManager.jsm");
-        AddonManager.removeAddonListener(aioUninstallListener);
+        AddonManager.removeAddonListener(mgsuite.overlay.aioUninstallListener);
       }
       catch(err) {}
     }
@@ -302,7 +305,7 @@ mgsuite.overlay = {
       try {
         var observerService = Components.classes["@mozilla.org/observer-service;1"]
                               .getService(Components.interfaces.nsIObserverService);
-        observerService.addObserver(aioShutdownListener, "quit-application", false);
+        observerService.addObserver(mgsuite.overlay.aioShutdownListener, "quit-application", false);
       }
     catch (err) {}
     }
