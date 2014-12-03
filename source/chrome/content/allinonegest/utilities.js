@@ -4,7 +4,11 @@
  */
 "use strict";
 
-var mgsuiteUtil = {
+if (typeof mgsuite == 'undefined') {
+  var mgsuite = {};
+}
+
+mgsuite.util = {
   getSelectedText: function() {
     let [element, focusedWindow] = BrowserUtils.getFocusSync(document);
     var selection = focusedWindow.getSelection().toString();

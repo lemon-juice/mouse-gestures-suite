@@ -695,9 +695,9 @@ mgsuite.imp = {
   },
   
   aioSelectionAsURL: function(reverseBg) {
-    var url = mgsuiteUtil.getSelectedText();
+    var url = mgsuite.util.getSelectedText();
     
-    var urlToLoad = mgsuiteUtil.detectUrl(url);
+    var urlToLoad = mgsuite.util.detectUrl(url);
     
     if (!urlToLoad) {
       // invalid address, do web search instead
@@ -718,7 +718,7 @@ mgsuite.imp = {
    * Search for selected text. If no text selected, open search page.
    */
   aioSelectionAsSearchTerm: function(alwaysNewTab, reverseBg) {
-    var searchStr = mgsuiteUtil.getSelectedText();
+    var searchStr = mgsuite.util.getSelectedText();
     
     if (mgsuite.overlay.aioIsFx && mgsuite.overlay.aioWindowType == 'browser') {
       var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
