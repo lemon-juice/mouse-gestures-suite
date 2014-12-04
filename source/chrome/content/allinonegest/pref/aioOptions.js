@@ -336,15 +336,15 @@ function exportSettings() {
       
       switch (type) {
         case 'bool':
-          val = mgsuite.overlay.aioPref.getBoolPref(name) ? 'true' : 'false';
+          val = aioPref.getBoolPref(name) ? 'true' : 'false';
           break;
         
         case 'int':
-          val = mgsuite.overlay.aioPref.getIntPref(name);
+          val = aioPref.getIntPref(name);
           break;
         
         case 'char':
-          val = mgsuite.overlay.aioPref.getComplexValue(name, Components.interfaces.nsISupportsString).data;
+          val = aioPref.getComplexValue(name, Components.interfaces.nsISupportsString).data;
           break;
         
         default:
@@ -485,7 +485,7 @@ function importSettings() {
                 }
                 
                 if (saveVal !== null) {
-                  mgsuite.overlay.aioPref.setBoolPref(name, saveVal);
+                  aioPref.setBoolPref(name, saveVal);
                   countSet++;
                 }
                 break;
@@ -494,7 +494,7 @@ function importSettings() {
                 saveVal = parseInt(val, 10);
                 
                 if (!isNaN(saveVal)) {
-                  mgsuite.overlay.aioPref.setIntPref(name, saveVal);
+                  aioPref.setIntPref(name, saveVal);
                   countSet++;
                 }
                 break;
@@ -502,7 +502,7 @@ function importSettings() {
               case 'char':
                 var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
                 str.data = val.substr(0, 50000);
-                mgsuite.overlay.aioPref.setComplexValue(name, Components.interfaces.nsISupportsString, str);
+                aioPref.setComplexValue(name, Components.interfaces.nsISupportsString, str);
                 
                 countSet++;
                 break;
@@ -536,7 +536,7 @@ function restoreDefaultSettings() {
   
   for (var i=0; i<prefs.length; i++) {
     name = prefs[i][0];
-    mgsuite.overlay.aioPref.clearUserPref(name);
+    aioPref.clearUserPref(name);
   }
   
   reopenPrefWindow();

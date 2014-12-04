@@ -28,7 +28,7 @@ function startGesture(e) {
   if (e.button != rv.mousebutton) return;
   gestureStarted = true;
   iframe.addEventListener("mousemove", gestMove, true);
-  mgsuite.overlay.aioOldX = e.screenX; aioOldY = e.screenY;
+  aioOldX = e.screenX; aioOldY = e.screenY;
   var targetDoc = e.target.ownerDocument;
   var insertionNode = targetDoc.documentElement;
   var insertBounds = insertionNode.getBoundingClientRect();
@@ -49,10 +49,10 @@ function startGesture(e) {
 }
 
 function gestMove(e) {
-  var x_dir = e.screenX - mgsuite.overlay.aioOldX; var absX = Math.abs(x_dir);
+  var x_dir = e.screenX - aioOldX; var absX = Math.abs(x_dir);
   var y_dir = e.screenY - aioOldY; var absY = Math.abs(y_dir);
   var tempMove;
-  if (absX < mgsuite.overlay.aioGrid && absY < mgsuite.overlay.aioGrid) return;
+  if (absX < aioGrid && absY < aioGrid) return;
   drawTrail(e);
   var pente = absY <= 5 ? 100 : absX / absY;
   if (pente < 0.58 || pente > 1.73) {
@@ -62,7 +62,7 @@ function gestMove(e) {
         aioStrokes.push(tempMove); aioLocaleGest.push(aioShortGest[tempMove]);
      }
   }
-  mgsuite.overlay.aioOldX = e.screenX; aioOldY = e.screenY;
+  aioOldX = e.screenX; aioOldY = e.screenY;
 }
 
 function endGesture() {
