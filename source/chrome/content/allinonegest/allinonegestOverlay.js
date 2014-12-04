@@ -823,34 +823,35 @@ mgsuite.overlay = {
     mgsuite.trail.drawTrail(e);
     var pente = absY <= 5 ? 100 : absX / absY; // 5 should be grid/tangent(60)
     if (pente < 0.58 || pente > 1.73) { //between 30° & 60°, wait
-       if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
+      if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
        else tempMove = x_dir > 0 ? "R" : "L";
-       if (!mgsuite.overlay.aioStrokes.length || mgsuite.overlay.aioStrokes[mgsuite.overlay.aioStrokes.length-1] != tempMove) {
-          mgsuite.overlay.aioStrokes.push(tempMove); mgsuite.overlay.aioLocaleGest.push(mgsuite.overlay.aioShortGest[tempMove]);
+	   
+      if (!mgsuite.overlay.aioStrokes.length || mgsuite.overlay.aioStrokes[mgsuite.overlay.aioStrokes.length-1] != tempMove) {
+        mgsuite.overlay.aioStrokes.push(tempMove); mgsuite.overlay.aioLocaleGest.push(mgsuite.overlay.aioShortGest[tempMove]);
 
-      var sequence = mgsuite.overlay.aioStrokes.join("");
-          var index = mgsuite.imp.aioGestTable[sequence];
-
-      if (index == null) {
-         index = mgsuite.imp.aioGestTable["+" + sequence.substr(-2)];
-         if (index == null)
-          index = mgsuite.imp.aioGestTable["+" + sequence.substr(-3)];
+		var sequence = mgsuite.overlay.aioStrokes.join("");
+			var index = mgsuite.imp.aioGestTable[sequence];
+  
+		if (index == null) {
+		  index = mgsuite.imp.aioGestTable["+" + sequence.substr(-2)];
+		  if (index == null)
+			index = mgsuite.imp.aioGestTable["+" + sequence.substr(-3)];
+		}
+  
+		if (index != null) {
+		  mgsuite.overlay.aioCurrGest = mgsuite.imp.aioActionTable[index][1];
+		} else {
+		  mgsuite.overlay.aioCurrGest = mgsuite.overlay.aioUnknownStr;
+		}
       }
-
-          if (index != null) {
-        mgsuite.overlay.aioCurrGest = mgsuite.imp.aioActionTable[index][1];
-      } else {
-        mgsuite.overlay.aioCurrGest = mgsuite.overlay.aioUnknownStr;
-      }
-       }
-       mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGestStr + ": " + mgsuite.overlay.aioLocaleGest.join("") + " (" + mgsuite.overlay.aioCurrGest + ")", 0);
+      mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGestStr + ": " + mgsuite.overlay.aioLocaleGest.join("") + " (" + mgsuite.overlay.aioCurrGest + ")", 0);
     }
     mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
   },
 
   aioGetHRef: function(node) {
     if (node.hasAttributeNS(mgsuite.const.xlinkNS, "href"))
-       return makeURLAbsolute(node.baseURI, node.getAttributeNS(mgsuite.const.xlinkNS, "href"));
+      return makeURLAbsolute(node.baseURI, node.getAttributeNS(mgsuite.const.xlinkNS, "href"));
     return node.href;
   },
 
@@ -860,7 +861,7 @@ mgsuite.overlay = {
     var linkObj = {node: linkNode, href: mgsuite.overlay.aioGetHRef(linkNode)};
     // check if duplicated
     for (var i = mgsuite.overlay.aioOnLink.length - 1; i >= 0; --i)
-       if (mgsuite.overlay.aioOnLink[i].href == linkObj.href) return;
+      if (mgsuite.overlay.aioOnLink[i].href == linkObj.href) return;
     mgsuite.overlay.aioOnLink.push(linkObj);
   },
 
@@ -876,8 +877,8 @@ mgsuite.overlay = {
 
         if (nodeNameLC == "img" && !mgsuite.overlay.aioOnImage && gesturing) mgsuite.overlay.aioOnImage = currNode;
         else {
-           if (nodeNameLC == "a"  || nodeNameLC == "area" || currNode.hasAttributeNS(mgsuite.const.xlinkNS, "href"))
-              if (nodeNameLC == "a" && !currNode.hasAttribute("href")) return null;
+          if (nodeNameLC == "a"  || nodeNameLC == "area" || currNode.hasAttributeNS(mgsuite.const.xlinkNS, "href"))
+            if (nodeNameLC == "a" && !currNode.hasAttribute("href")) return null;
               else return currNode;
         }
         nextNode = currNode.parentNode;
@@ -905,8 +906,8 @@ mgsuite.overlay = {
   aioKillGestInProgress: function(clearMode) {
     mgsuite.overlay.aioGestInProgress = false;
     if (!clearMode) {
-       mgsuite.overlay.aioOnLink.length = 0;
-       mgsuite.overlay.aioOnImage = null;
+      mgsuite.overlay.aioOnLink.length = 0;
+      mgsuite.overlay.aioOnImage = null;
     }
     mgsuite.trail.eraseTrail();
     window.removeEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
@@ -946,80 +947,80 @@ mgsuite.overlay = {
     var gesturesEnabled = mgsuite.overlay.aioGesturesEnabled;
 
     if (gesturesEnabled) {
-    // detect gesture start on tab
-    mgsuite.overlay.aioGestureTab = null;
-
-    if (mgsuite.overlay.aioWindowType == "browser") {
-      var tg = e.originalTarget;
-      if (tg.nodeName == 'xul:tab' ||
-        (tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
-      // tab in SM
-      mgsuite.overlay.aioGestureTab = e.originalTarget;
-
-      } else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
-      // tab in Fx
-      var tab = tg.parentNode.parentNode.parentNode;
-
-      if (tab.nodeName == 'tab') {
-        mgsuite.overlay.aioGestureTab = tab;
-      }
-      }
-    }
-
-
-    mgsuite.overlay.aioBlockActionStatusMsg = "";
-
-    if (mgsuite.overlay.aioSitePref == 'P') {
-      // prioritize gestures - these listeners on document will prevent mouse clicks
-      // from reaching it
-      var addPrioritizeEvents = function(elem) {
-        elem.addEventListener("mousedown", mgsuite.overlay.aioPrioritizeGestures, true);
-        elem.addEventListener("mouseup", mgsuite.overlay.aioPrioritizeGestures, true);
-
-        if (!mgsuite.overlay.aioIsWin) {
-          elem.addEventListener("contextmenu", mgsuite.overlay.aioPrioritizeGestures, true);
-        }
-      }
-
-      addPrioritizeEvents(window.content.document);
-
-      var frames = window.content.frames;
-      var framesB, i, j, len, lenB;
-
-      for (i=0, len=frames.length; i<len; i++) {
-        addPrioritizeEvents(frames[i]);
-
-        framesB = frames[i].frames;
-
-        for (j=0, lenB=framesB.length; j<lenB; j++) {
-          addPrioritizeEvents(framesB[j]);
-        }
-      }
-
-    } else if (mgsuite.overlay.aioSitePref == 'D' && !mgsuite.overlay.aioGestureTab) {
-      // disable gestures
-
-      // sometimes context menu can get disabled in Windows in D mode
-      mgsuite.overlay.aioShowContextMenu = true;
-
-      if (!mgsuite.overlay.aioGestureTab) {
-        if (e.button != mgsuite.const.LMB || mgsuite.overlay.aioGestButton == mgsuite.const.LMB) {
-          mgsuite.overlay.aioBlockActionStatusMsg += "<" + mgsuite.overlay.aioGetStr("opt.sitePrefD") + ">";
-          mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
-        }
-        gesturesEnabled = false;
-      }
-    }
-
-    if (gesturesEnabled) {
-      if (mgsuite.overlay.aioDisableClickHeat && mgsuite.overlay.aioWindowType == "browser") {
-        mgsuite.overlay.aioDisableClickHeatEvents(e);
-      }
-
-      mgsuite.overlay.aioShowContextMenu = false;
-      mgsuite.overlay.aioBackRocking = false;
-    }
-    }
+	  // detect gesture start on tab
+	  mgsuite.overlay.aioGestureTab = null;
+  
+	  if (mgsuite.overlay.aioWindowType == "browser") {
+		var tg = e.originalTarget;
+		if (tg.nodeName == 'xul:tab' ||
+		  (tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
+		  // tab in SM
+		  mgsuite.overlay.aioGestureTab = e.originalTarget;
+  
+		} else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
+		  // tab in Fx
+		  var tab = tg.parentNode.parentNode.parentNode;
+	
+		  if (tab.nodeName == 'tab') {
+			mgsuite.overlay.aioGestureTab = tab;
+		  }
+		}
+	  }
+  
+  
+	  mgsuite.overlay.aioBlockActionStatusMsg = "";
+  
+	  if (mgsuite.overlay.aioSitePref == 'P') {
+		// prioritize gestures - these listeners on document will prevent mouse clicks
+		// from reaching it
+		var addPrioritizeEvents = function(elem) {
+		  elem.addEventListener("mousedown", mgsuite.overlay.aioPrioritizeGestures, true);
+		  elem.addEventListener("mouseup", mgsuite.overlay.aioPrioritizeGestures, true);
+  
+		  if (!mgsuite.overlay.aioIsWin) {
+			elem.addEventListener("contextmenu", mgsuite.overlay.aioPrioritizeGestures, true);
+		  }
+		}
+  
+		addPrioritizeEvents(window.content.document);
+  
+		var frames = window.content.frames;
+		var framesB, i, j, len, lenB;
+  
+		for (i=0, len=frames.length; i<len; i++) {
+		  addPrioritizeEvents(frames[i]);
+  
+		  framesB = frames[i].frames;
+  
+		  for (j=0, lenB=framesB.length; j<lenB; j++) {
+			addPrioritizeEvents(framesB[j]);
+		  }
+		}
+  
+	  } else if (mgsuite.overlay.aioSitePref == 'D' && !mgsuite.overlay.aioGestureTab) {
+		// disable gestures
+  
+		// sometimes context menu can get disabled in Windows in D mode
+		mgsuite.overlay.aioShowContextMenu = true;
+  
+		if (!mgsuite.overlay.aioGestureTab) {
+		  if (e.button != mgsuite.const.LMB || mgsuite.overlay.aioGestButton == mgsuite.const.LMB) {
+			mgsuite.overlay.aioBlockActionStatusMsg += "<" + mgsuite.overlay.aioGetStr("opt.sitePrefD") + ">";
+			mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioBlockActionStatusMsg, 1000);
+		  }
+		  gesturesEnabled = false;
+		}
+	  }
+  
+	  if (gesturesEnabled) {
+		if (mgsuite.overlay.aioDisableClickHeat && mgsuite.overlay.aioWindowType == "browser") {
+		  mgsuite.overlay.aioDisableClickHeatEvents(e);
+		}
+  
+		mgsuite.overlay.aioShowContextMenu = false;
+		mgsuite.overlay.aioBackRocking = false;
+	  }
+	}
 
     if (gesturesEnabled && e.button == mgsuite.const.aioOpp[mgsuite.overlay.aioDownButton] && mgsuite.overlay.aioRockEnabled) {
     // rocker gestures
@@ -1032,8 +1033,8 @@ mgsuite.overlay = {
           func = 0;
           if (mgsuite.overlay.aioFindLink(e.target, false)) mgsuite.overlay.aioBackRocking = true;
           else {
-             mgsuite.overlay.aioSrcEvent = e;
-             mgsuite.overlay.aioPerformRockerFunction(0);
+            mgsuite.overlay.aioSrcEvent = e;
+            mgsuite.overlay.aioPerformRockerFunction(0);
           }
        }
        mgsuite.overlay.aioKillGestInProgress();
@@ -1047,16 +1048,16 @@ mgsuite.overlay = {
        }
     }
     else {
-    if (gesturesEnabled && e.button == mgsuite.const.RMB) {
-      // turn off gesture on active flash because right click event may be triggered
-      // and the gesture may end up unfinished after choosing a context menu flash option
-      var targetName = e.target.localName.toLowerCase();
-      if ((targetName == "object" || targetName == "embed")
-      && e.target.actualType == "application/x-shockwave-flash"
-      && e.target.activated) {
-        return;
-      }
-      }
+	  if (gesturesEnabled && e.button == mgsuite.const.RMB) {
+		// turn off gesture on active flash because right click event may be triggered
+		// and the gesture may end up unfinished after choosing a context menu flash option
+		var targetName = e.target.localName.toLowerCase();
+		if ((targetName == "object" || targetName == "embed")
+		   && e.target.actualType == "application/x-shockwave-flash"
+			&& e.target.activated) {
+		  return;
+		}
+	  }
 
       if (gesturesEnabled && e.button == mgsuite.overlay.aioGestButton) {
         var preventDefaultAction = false;
@@ -1067,60 +1068,62 @@ mgsuite.overlay = {
           if ((mgsuite.overlay.aioIsAreaOK(e, false) || e.button != mgsuite.const.LMB) && targetName != 'toolbarbutton'
               && !mgsuite.overlay.aioGestInProgress) {
 
-        preventDefaultAction = e.button != mgsuite.const.LMB || !mgsuite.overlay.aioLeftDefault ||
-               targetName == "html" || targetName == "body" || e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument;
-        mgsuite.overlay.aioGestInProgress = true;
-        mgsuite.overlay.aioAddLink(e);  // Check if started over a link
-        mgsuite.overlay.aioStrokes = []; mgsuite.overlay.aioLocaleGest = []; mgsuite.overlay.aioCurrGest = "";
-        if (mgsuite.overlay.aioTrailEnabled) mgsuite.trail.startTrail(e);
-        window.addEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
+			  preventDefaultAction = e.button != mgsuite.const.LMB || !mgsuite.overlay.aioLeftDefault ||
+					 targetName == "html" || targetName == "body" || e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument;
+			  mgsuite.overlay.aioGestInProgress = true;
+			  mgsuite.overlay.aioAddLink(e);  // Check if started over a link
+			  mgsuite.overlay.aioStrokes = []; mgsuite.overlay.aioLocaleGest = []; mgsuite.overlay.aioCurrGest = "";
+			  if (mgsuite.overlay.aioTrailEnabled) mgsuite.trail.startTrail(e);
+			  window.addEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
             }
-            else preventDefaultAction = e.button != mgsuite.const.LMB;
+          else preventDefaultAction = e.button != mgsuite.const.LMB;
         }
+		
          // it can be the start of a wheelscroll gesture as well
-         if (mgsuite.overlay.aioWheelEnabled && (mgsuite.overlay.aioWindowType == "browser" || mgsuite.overlay.aioWindowType == "messenger" || mgsuite.overlay.aioWindowType == "source")) {
-            preventDefaultAction = preventDefaultAction || e.button != mgsuite.const.LMB;
-            mgsuite.overlay.aioTabCount = (mgsuite.overlay.aioWindowType == "browser") ? mgsuite.overlay.aioContent.mPanelContainer.childNodes.length : 0;
-            if (mgsuite.overlay.aioWheelRocker) {
-               if (!mgsuite.overlay.aioGestInProgress) {
-                  mgsuite.overlay.aioSrcEvent = e;
-                  mgsuite.overlay.aioAddLink(e);
-               }
-            }
-            else mgsuite.overlay.aioTTNode = mgsuite.overlay.aioFindLink(e.target, false);
-            if (mgsuite.overlay.aioWheelRocker || mgsuite.overlay.aioTabCount >= 1 || mgsuite.overlay.aioTTNode)
-               mgsuite.overlay.aioContent.addEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
-         }
-
-         if (preventDefaultAction && e.button == mgsuite.const.LMB) mgsuite.overlay.aioNukeEvent(e);
-         mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
-       }
-       else {
-      // middle button scrolling
-          if (e.button == mgsuite.const.MMB && mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK(e, true) &&
-              (mgsuite.overlay.aioStartOnLinks  || !mgsuite.overlay.aioFindLink(e.target, false)) && !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(e))) {
-        mgsuite.overlay.aioShowContextMenu = false;
-
-        window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
-        mgsuite.overlay.aioRendering.removeEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
-        window.addEventListener("click", mgsuite.overlay.aioASClick, true);
-        mgsuite.overlay.aioLastEvtTime = new Date();
-        mgsuite.overlay.aioLastX = e.screenX; mgsuite.overlay.aioLastY = e.screenY;
-        window.addEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
-        mgsuite.overlay.aioNukeEvent(e);
-
-        switch (mgsuite.overlay.aioWhatAS) {
-        case 0: mgsuite.overlay.aioAutoScrollStart(e);
-            break;
-        case 2: mgsuite.overlay.aioRendering.addEventListener("mouseup", mgsuite.overlay.aioStartAS, true);
-            mgsuite.overlay.aioGrabTarget = e.target;
-            mgsuite.overlay.aioScrollMode = 1;
-            break;
-        case 3: mgsuite.overlay.aioGrabNDrag(e.target);
+        if (mgsuite.overlay.aioWheelEnabled && (mgsuite.overlay.aioWindowType == "browser" || mgsuite.overlay.aioWindowType == "messenger" || mgsuite.overlay.aioWindowType == "source")) {
+		  preventDefaultAction = preventDefaultAction || e.button != mgsuite.const.LMB;
+		  mgsuite.overlay.aioTabCount = (mgsuite.overlay.aioWindowType == "browser") ? mgsuite.overlay.aioContent.mPanelContainer.childNodes.length : 0;
+		  if (mgsuite.overlay.aioWheelRocker) {
+			if (!mgsuite.overlay.aioGestInProgress) {
+			  mgsuite.overlay.aioSrcEvent = e;
+			  mgsuite.overlay.aioAddLink(e);
+			}
+		  }
+		  else mgsuite.overlay.aioTTNode = mgsuite.overlay.aioFindLink(e.target, false);
+		  
+		  if (mgsuite.overlay.aioWheelRocker || mgsuite.overlay.aioTabCount >= 1 || mgsuite.overlay.aioTTNode)
+			mgsuite.overlay.aioContent.addEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
         }
-          }
-       }
-       mgsuite.overlay.aioDownButton = e.button;
+
+        if (preventDefaultAction && e.button == mgsuite.const.LMB) mgsuite.overlay.aioNukeEvent(e);
+          mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
+      }
+       else {
+        // middle button scrolling
+        if (e.button == mgsuite.const.MMB && mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK(e, true) &&
+              (mgsuite.overlay.aioStartOnLinks  || !mgsuite.overlay.aioFindLink(e.target, false)) && !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(e))) {
+		  mgsuite.overlay.aioShowContextMenu = false;
+  
+		  window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
+		  mgsuite.overlay.aioRendering.removeEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
+		  window.addEventListener("click", mgsuite.overlay.aioASClick, true);
+		  mgsuite.overlay.aioLastEvtTime = new Date();
+		  mgsuite.overlay.aioLastX = e.screenX; mgsuite.overlay.aioLastY = e.screenY;
+		  window.addEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
+		  mgsuite.overlay.aioNukeEvent(e);
+  
+		  switch (mgsuite.overlay.aioWhatAS) {
+			case 0: mgsuite.overlay.aioAutoScrollStart(e);
+				break;
+			case 2: mgsuite.overlay.aioRendering.addEventListener("mouseup", mgsuite.overlay.aioStartAS, true);
+				mgsuite.overlay.aioGrabTarget = e.target;
+				mgsuite.overlay.aioScrollMode = 1;
+				break;
+			case 3: mgsuite.overlay.aioGrabNDrag(e.target);
+		  }
+        }
+      }
+      mgsuite.overlay.aioDownButton = e.button;
     }
   },
 
@@ -1164,8 +1167,8 @@ mgsuite.overlay = {
 
   aioMouseUp: function(e) {
     if (!mgsuite.overlay.aioGesturesEnabled) {
-    mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-    return;
+	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+	  return;
     }
 
     if (mgsuite.overlay.aioDelayTO) {
@@ -1173,58 +1176,60 @@ mgsuite.overlay = {
     }
 
     if (mgsuite.overlay.aioSitePref == 'D' && !mgsuite.overlay.aioGestureTab) {
-    // disable gestures
-    mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-    return;
+	  // disable gestures
+	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+	  mgsuite.overlay.aioKillGestInProgress();
+	  return;
     }
     mgsuite.overlay.aioBlockActionStatusMsg = "";
 
     if (mgsuite.overlay.aioIsMac && e.button == mgsuite.const.LMB && e.ctrlKey) var button = mgsuite.const.RMB;
     else button = e.button;
+	
     if (mgsuite.overlay.aioBackRocking && button == mgsuite.const.LMB) {
-       mgsuite.overlay.aioBackRocking = false;
-       mgsuite.overlay.aioSrcEvent = e;
-       window.addEventListener("click", mgsuite.overlay.aioRockClickHandler, true);
-       setTimeout(function(){mgsuite.overlay.aioPerformRockerFunction(0);}, 0);
-       setTimeout(function(){mgsuite.overlay.aioRockClickEnd();}, 200);
-       return;
+	  mgsuite.overlay.aioBackRocking = false;
+	  mgsuite.overlay.aioSrcEvent = e;
+	  window.addEventListener("click", mgsuite.overlay.aioRockClickHandler, true);
+	  setTimeout(function(){mgsuite.overlay.aioPerformRockerFunction(0);}, 0);
+	  setTimeout(function(){mgsuite.overlay.aioRockClickEnd();}, 200);
+	  return;
     }
     if (button == mgsuite.overlay.aioDownButton) {
-       mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-       mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
-       if (button == mgsuite.const.RMB && !mgsuite.overlay.aioGestInProgress && !mgsuite.overlay.aioRockTimer) mgsuite.overlay.aioDisplayContextMenu(e);
-       else {
-          if (mgsuite.overlay.aioRockTimer) clearTimeout(mgsuite.overlay.aioRockTimer);
-          mgsuite.overlay.aioRockTimer = null;
-       }
+	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+	  mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+	  if (button == mgsuite.const.RMB && !mgsuite.overlay.aioGestInProgress && !mgsuite.overlay.aioRockTimer) mgsuite.overlay.aioDisplayContextMenu(e);
+	  else {
+		if (mgsuite.overlay.aioRockTimer) clearTimeout(mgsuite.overlay.aioRockTimer);
+		mgsuite.overlay.aioRockTimer = null;
+	  }
     }
 
     if (mgsuite.overlay.aioGestInProgress) {
-       var lastgesture = mgsuite.overlay.aioStrokes.join("");
+      var lastgesture = mgsuite.overlay.aioStrokes.join("");
 
-       if (lastgesture) mgsuite.overlay.aioNukeEvent(e);
-       mgsuite.trail.eraseTrail();
+      if (lastgesture) mgsuite.overlay.aioNukeEvent(e);
+      mgsuite.trail.eraseTrail();
 
-       if (lastgesture) {
-          window.addEventListener("click", mgsuite.overlay.aioGestClickHandler, true);
-      var shiftKey = e.shiftKey;
+      if (lastgesture) {
+        window.addEventListener("click", mgsuite.overlay.aioGestClickHandler, true);
+		var shiftKey = e.shiftKey;
 
-          if ((new Date() - mgsuite.overlay.aioLastEvtTime) < mgsuite.overlay.aioDelay) {
-             setTimeout(function(a){mgsuite.imp.aioFireGesture(a, shiftKey);}, 0, lastgesture);
-             setTimeout(function(){mgsuite.overlay.aioGestClickEnd();}, 200);
-             return;
-          }
-          else { // abort if user pauses at the end of gesture
-             mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.aborted"), 2500);
-             setTimeout(function(){mgsuite.overlay.aioGestClickEnd();}, 200);
-          }
-       }
+		if ((new Date() - mgsuite.overlay.aioLastEvtTime) < mgsuite.overlay.aioDelay) {
+		  setTimeout(function(a){mgsuite.imp.aioFireGesture(a, shiftKey);}, 0, lastgesture);
+		  setTimeout(function(){mgsuite.overlay.aioGestClickEnd();}, 200);
+		  return;
+		}
+		else { // abort if user pauses at the end of gesture
+		  mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.aborted"), 2500);
+		  setTimeout(function(){mgsuite.overlay.aioGestClickEnd();}, 200);
+		}
+      }
        else {
           mgsuite.imp.aioStatusMessage("", 0);
           if (button == mgsuite.const.RMB) mgsuite.overlay.aioDisplayContextMenu(e);
-       }
-       mgsuite.overlay.aioKillGestInProgress();
-       mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+      }
+      mgsuite.overlay.aioKillGestInProgress();
+      mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
     }
   },
 
@@ -1658,25 +1663,25 @@ mgsuite.overlay = {
   aioAutoScrollUp: function(e) {
     if (mgsuite.overlay.aioScrollFingerFree || ((new Date() - mgsuite.overlay.aioLastEvtTime) > mgsuite.overlay.aioDelay &&
         (!mgsuite.overlay.aioPanToAS || Math.abs(e.screenX - mgsuite.overlay.aioLastX) >= mgsuite.const.aioHalfMarker || Math.abs(e.screenY - mgsuite.overlay.aioLastY) >= mgsuite.const.aioHalfMarker))) {
-    if (mgsuite.overlay.aioIntervalID) window.clearInterval(mgsuite.overlay.aioIntervalID);
-    mgsuite.overlay.aioIntervalID = null;
-    mgsuite.overlay.aioNukeEvent(e);
-
-    if (e.type == "mousedown") {
-       mgsuite.overlay.aioRemoveMarker();
-       window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
-    }
+	  if (mgsuite.overlay.aioIntervalID) window.clearInterval(mgsuite.overlay.aioIntervalID);
+	  mgsuite.overlay.aioIntervalID = null;
+	  mgsuite.overlay.aioNukeEvent(e);
+  
+	  if (e.type == "mousedown") {
+		 mgsuite.overlay.aioRemoveMarker();
+		 window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
+	  }
       else {
-      mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-      window.removeEventListener("mouseup", mgsuite.overlay.aioAutoScrollUp, true);
-      window.removeEventListener("mousedown", mgsuite.overlay.aioAutoScrollUp, true);
-      window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
-      window.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
-      mgsuite.overlay.aioAcceptASKeys = false;
-      window.addEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
-      mgsuite.overlay.aioRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
-      mgsuite.overlay.aioRemoveMarker();
-      setTimeout(function(){mgsuite.overlay.aioScrollEnd();}, 200);
+		mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+		window.removeEventListener("mouseup", mgsuite.overlay.aioAutoScrollUp, true);
+		window.removeEventListener("mousedown", mgsuite.overlay.aioAutoScrollUp, true);
+		window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
+		window.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
+		mgsuite.overlay.aioAcceptASKeys = false;
+		window.addEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
+		mgsuite.overlay.aioRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
+		mgsuite.overlay.aioRemoveMarker();
+		setTimeout(function(){mgsuite.overlay.aioScrollEnd();}, 200);
       }
     }
     else mgsuite.overlay.aioScrollFingerFree = true;
@@ -1719,97 +1724,99 @@ mgsuite.overlay = {
 
     retObj.targetDoc = targetDoc; retObj.clientFrame = clientFrame;
     if (docEl && docEl.nodeName.toLowerCase() == "html") { // walk the tree up looking for something to scroll
-       if (clientFrame.frameElement) retObj.isFrame = true; else retObj.isFrame = false;
-       var bodies = docEl.getElementsByTagName("body");
-       if (!bodies || !bodies.length) return retObj;
-       var bodyEl = bodies[0];
-       if (initialNode == docEl) nextNode = bodyEl;
-       else if (initialNode.nodeName.toLowerCase() == "select") nextNode = initialNode.parentNode;
-            else nextNode = initialNode;
-       do {
-          try {
-            currNode = nextNode;
-            if (!(currNode instanceof HTMLElement)) {
-        // some non-html element, e.g. svg
-        nextNode = currNode.parentNode;
-        continue;
-        }
+	  if (clientFrame.frameElement) retObj.isFrame = true; else retObj.isFrame = false;
+	  var bodies = docEl.getElementsByTagName("body");
+	  if (!bodies || !bodies.length) return retObj;
+	  var bodyEl = bodies[0];
+	  if (initialNode == docEl) nextNode = bodyEl;
+	  else if (initialNode.nodeName.toLowerCase() == "select") nextNode = initialNode.parentNode;
+		   else nextNode = initialNode;
+	  
+	  do {
+		try {
+		  currNode = nextNode;
+		  if (!(currNode instanceof HTMLElement)) {
+			// some non-html element, e.g. svg
+			nextNode = currNode.parentNode;
+			continue;
+		  }
 
-        if ((currNode instanceof HTMLHtmlElement) ||
+		  if ((currNode instanceof HTMLHtmlElement) ||
                 (currNode instanceof HTMLBodyElement)) {
-             if (clientFrame.scrollMaxX > 0) {
-          retObj.scrollType = clientFrame.scrollMaxY > 0 ? (clientFrame.scrollbars.visible ? 0 : 3) : 2;			 
-         } else {
-          retObj.scrollType =  (clientFrame.scrollMaxY > 0 && clientFrame.scrollbars.visible) ? 1 : 3;
-         }
-            }
-        else {
-               var overflowx = currNode.ownerDocument.defaultView
-                                   .getComputedStyle(currNode, '')
-                                       .getPropertyValue('overflow-x');
-               var overflowy = currNode.ownerDocument.defaultView
-                                       .getComputedStyle(currNode, '')
-                                       .getPropertyValue('overflow-y');
-
-        // Bug 212763 - overflow: visible on textarea isn't applied 
-         if (currNode instanceof HTMLTextAreaElement) {
-             if (overflowx == "visible") overflowx = "scroll";
-           if (overflowy == "visible") overflowy = "scroll";
-         }
-
-               var scrollVert = currNode.clientHeight > 0 &&
-                                currNode.scrollHeight > currNode.clientHeight &&
-                                (currNode instanceof HTMLSelectElement ||
-                  scrollingAllowed.indexOf(overflowy) >= 0);
-
-               // do not allow horizontal scrolling for select elements, it leads
-               // to visual artifacts and is not the expected behavior anyway
-               if (!(currNode instanceof HTMLSelectElement) &&
-                    currNode.clientWidth > 0 &&
-                    currNode.scrollWidth > currNode.clientWidth &&
-                    scrollingAllowed.indexOf(overflowx) >= 0) {
-                  retObj.scrollType = scrollVert ? 0 : 2;
-               }
-               else {
-                  retObj.scrollType = scrollVert ? 1 : 3;
-               }
-        }
-
-            if (retObj.scrollType != 3) {
-               retObj.nodeToScroll = currNode;
-               retObj.isBody = (currNode instanceof HTMLHtmlElement) || (currNode instanceof HTMLBodyElement);
-         if (retObj.isBody) {
-                  retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
-                  retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
-                  realWidth = clientFrame.innerWidth;
-                  realHeight = clientFrame.innerHeight;
-                  retObj.realHeight = realHeight;
-                  realWidth *= zoom; realHeight *= zoom;
-                  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
-                  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
-                  retObj.ratioX = retObj.docWidth / realWidth;
-                  retObj.ratioY = retObj.docHeight / realHeight;
-         }
-         else {
-                  retObj.docWidth = docEl.scrollWidth; retObj.docHeight = docEl.scrollHeight;
-                  realWidth = currNode.clientWidth + getStyle(currNode, "border-left-width") + getStyle(currNode, "border-right-width");
-                  realHeight = currNode.clientHeight + getStyle(currNode, "border-top-width") + getStyle(currNode, "border-bottom-width");
-                  retObj.realHeight = realHeight;
-                  realWidth *= zoom; realHeight *= zoom;
-                  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
-                  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
-                  retObj.ratioX = currNode.scrollWidth / realWidth;
-                  retObj.ratioY = currNode.scrollHeight / realHeight;
-         }
-               return retObj;
-            }
-            nextNode = currNode.parentNode;
+            if (clientFrame.scrollMaxX > 0) {
+			  retObj.scrollType = clientFrame.scrollMaxY > 0 ? (clientFrame.scrollbars.visible ? 0 : 3) : 2;			 
+			} else {
+			  retObj.scrollType =  (clientFrame.scrollMaxY > 0 && clientFrame.scrollbars.visible) ? 1 : 3;
+			}
           }
-          catch(err) {return retObj;}
-       } while (nextNode && currNode != docEl);
+		  else {
+			var overflowx = currNode.ownerDocument.defaultView
+								.getComputedStyle(currNode, '')
+								.getPropertyValue('overflow-x');
+			var overflowy = currNode.ownerDocument.defaultView
+								.getComputedStyle(currNode, '')
+								.getPropertyValue('overflow-y');
 
-     // if we're in a frame, check embedding frame/window
-       if (retObj.isFrame) return mgsuite.overlay.aioFindNodeToScroll(clientFrame.frameElement.ownerDocument.documentElement);
+			// Bug 212763 - overflow: visible on textarea isn't applied 
+			if (currNode instanceof HTMLTextAreaElement) {
+			  if (overflowx == "visible") overflowx = "scroll";
+			  if (overflowy == "visible") overflowy = "scroll";
+			}
+  
+			var scrollVert = currNode.clientHeight > 0 &&
+							 currNode.scrollHeight > currNode.clientHeight &&
+							 (currNode instanceof HTMLSelectElement ||
+							 scrollingAllowed.indexOf(overflowy) >= 0);
+  
+			// do not allow horizontal scrolling for select elements, it leads
+			// to visual artifacts and is not the expected behavior anyway
+			if (!(currNode instanceof HTMLSelectElement) &&
+				 currNode.clientWidth > 0 &&
+				 currNode.scrollWidth > currNode.clientWidth &&
+				 scrollingAllowed.indexOf(overflowx) >= 0) {
+			  retObj.scrollType = scrollVert ? 0 : 2;
+			}
+			else {
+			  retObj.scrollType = scrollVert ? 1 : 3;
+			}
+		  }
+
+		  if (retObj.scrollType != 3) {
+			retObj.nodeToScroll = currNode;
+			retObj.isBody = (currNode instanceof HTMLHtmlElement) || (currNode instanceof HTMLBodyElement);
+				
+			if (retObj.isBody) {
+			  retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
+			  retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
+			  realWidth = clientFrame.innerWidth;
+			  realHeight = clientFrame.innerHeight;
+			  retObj.realHeight = realHeight;
+			  realWidth *= zoom; realHeight *= zoom;
+			  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
+			  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
+			  retObj.ratioX = retObj.docWidth / realWidth;
+			  retObj.ratioY = retObj.docHeight / realHeight;
+			}
+			else {
+			  retObj.docWidth = docEl.scrollWidth; retObj.docHeight = docEl.scrollHeight;
+			  realWidth = currNode.clientWidth + getStyle(currNode, "border-left-width") + getStyle(currNode, "border-right-width");
+			  realHeight = currNode.clientHeight + getStyle(currNode, "border-top-width") + getStyle(currNode, "border-bottom-width");
+			  retObj.realHeight = realHeight;
+			  realWidth *= zoom; realHeight *= zoom;
+			  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
+			  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
+			  retObj.ratioX = currNode.scrollWidth / realWidth;
+			  retObj.ratioY = currNode.scrollHeight / realHeight;
+			}
+			return retObj;
+		  }
+		  nextNode = currNode.parentNode;
+		}
+	  catch(err) {return retObj;}
+	} while (nextNode && currNode != docEl);
+
+    // if we're in a frame, check embedding frame/window
+    if (retObj.isFrame) return mgsuite.overlay.aioFindNodeToScroll(clientFrame.frameElement.ownerDocument.documentElement);
     }
     else { // XML document; do our best
       retObj.nodeToScroll = initialNode;
@@ -1852,7 +1859,7 @@ mgsuite.overlay = {
       mgsuite.overlay.aioScroll.insertionNode.appendChild(el);
       mgsuite.overlay.aioOverlay = el;
     } else {
-    mgsuite.overlay.aioOverlay = null;
+	  mgsuite.overlay.aioOverlay = null;
     }
 
     // marker
