@@ -41,7 +41,6 @@ mgsuite.overlay = {
   aioLocaleGest: [],
   aioShortGest: [],
   aioLastEvtTime: null, // time of last gesture stroke
-  aioOnLink: [], // array of objects representing the links traversed during gesture
   aioOnImage: null, // contains an image DOM node
   aioSrcEvent: null, // event which started the active gesture
   aioIsRocker: false,
@@ -548,7 +547,6 @@ mgsuite.overlay = {
 	  window.messageManager.addMessageListener("MouseGesturesSuite:CollectLinks", mgsuite.util.CollectLinksListener);
 	  //window.messageManager.addMessageListener("MouseGesturesSuite:returnWithCallback", mgsuite.util.returnWithCallback);
 	  window.messageManager.addMessageListener("MouseGesturesSuite:test", mgsuite.util.testListener);
-
 	  
 	  switch (mgsuite.overlay.aioWindowType) {
 		case 'browser':
@@ -598,27 +596,27 @@ mgsuite.overlay = {
 		gBrowser.tabContainer.addEventListener("TabSelect", mgsuite.overlay.aioParseSiteList, false);
   
 		window.addEventListener("activate", function() {
-		// we need delay because mgsuite.overlay.aioInit() is run with delay after pref change
-		setTimeout(mgsuite.overlay.aioParseSiteList, 600);
+		  // we need delay because mgsuite.overlay.aioInit() is run with delay after pref change
+		  setTimeout(mgsuite.overlay.aioParseSiteList, 600);
 		});
 		break;
   
 		case 'messenger':
-		mgsuite.overlay.aioContent = document.getElementById("messagepane");
-		mgsuite.overlay.aioRendering = document.getElementById("messagepane");
-		mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
+		  mgsuite.overlay.aioContent = document.getElementById("messagepane");
+		  mgsuite.overlay.aioRendering = document.getElementById("messagepane");
+		  mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
 		break;
   
 		case 'mailcompose':
-		mgsuite.overlay.aioContent = document.getElementById("appcontent");
-		mgsuite.overlay.aioRendering = document.getElementById("content-frame");
-		mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
+		  mgsuite.overlay.aioContent = document.getElementById("appcontent");
+		  mgsuite.overlay.aioRendering = document.getElementById("content-frame");
+		  mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
 		break;
   
 		case 'source':
-		mgsuite.overlay.aioContent = document.getElementById("appcontent");
-		mgsuite.overlay.aioRendering = document.getElementById("content");
-		mgsuite.overlay.aioStatusBar = document.getElementById("statusbar-line-col");
+		  mgsuite.overlay.aioContent = document.getElementById("appcontent");
+		  mgsuite.overlay.aioRendering = document.getElementById("content");
+		  mgsuite.overlay.aioStatusBar = document.getElementById("statusbar-line-col");
 		break;
 	  }
 
@@ -676,7 +674,9 @@ mgsuite.overlay = {
     mgsuite.overlay.aioTitleDuration = durationTable[titleDuration];
     mgsuite.overlay.aioScrollMax = mgsuite.const.aioScrollLoop[mgsuite.overlay.aioScrollRate]; mgsuite.overlay.aioASPeriod = mgsuite.const.aioASBasicPeriod / mgsuite.overlay.aioScrollMax;
 
-    mgsuite.overlay.aioDownButton = mgsuite.const.NoB; mgsuite.overlay.aioBackRocking = false;
+    mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+	mgsuite.overlay.aioBackRocking = false;
+	
     if (mgsuite.overlay.aioShowTitletip && mgsuite.overlay.aioTTHover) mgsuite.overlay.aioRendering.addEventListener("mousemove", mgsuite.tooltip.aioShowTitle, true);
     else mgsuite.overlay.aioRendering.removeEventListener("mousemove", mgsuite.tooltip.aioShowTitle, true);
 
@@ -1014,33 +1014,37 @@ mgsuite.overlay = {
   
 		mgsuite.overlay.aioShowContextMenu = false;
 		mgsuite.overlay.aioBackRocking = false;
+		
+		gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
 	  }
 	}
 
     if (gesturesEnabled && e.button == mgsuite.const.aioOpp[mgsuite.overlay.aioDownButton] && mgsuite.overlay.aioRockEnabled) {
-    // rocker gestures
-       if (e.button == mgsuite.const.RMB) {
-          var func = 1;
-          mgsuite.overlay.aioSrcEvent = e;
-          setTimeout(function(){mgsuite.overlay.aioPerformRockerFunction(1);}, 0);
-       }
+	  // rocker gestures
+	  var func;
+	  
+      if (e.button == mgsuite.const.RMB) {
+        func = 1;
+        mgsuite.overlay.aioSrcEvent = e;
+        setTimeout(function(){mgsuite.overlay.aioPerformRockerFunction(1);}, 0);
+      }
        else {
-          func = 0;
-          if (mgsuite.overlay.aioFindLink(e.target, false)) mgsuite.overlay.aioBackRocking = true;
-          else {
-            mgsuite.overlay.aioSrcEvent = e;
-            mgsuite.overlay.aioPerformRockerFunction(0);
-          }
-       }
-       mgsuite.overlay.aioKillGestInProgress();
-       mgsuite.imp.aioStatusMessage("", 0);
-       mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
-       if (!mgsuite.overlay.aioRockMultiple[func] || (mgsuite.overlay.aioRockMultiple[func] == 2 && mgsuite.overlay.aioRockMode == 0)) mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+		func = 0;
+		mgsuite.overlay.aioSrcEvent = e;
+		mgsuite.overlay.aioPerformRockerFunction(0);
+      }
+	  
+	  mgsuite.overlay.blockMouseEventsForRocker();
+	  
+	  mgsuite.overlay.aioKillGestInProgress();
+	  mgsuite.imp.aioStatusMessage("", 0);
+	  mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+	  if (!mgsuite.overlay.aioRockMultiple[func] || (mgsuite.overlay.aioRockMultiple[func] == 2 && mgsuite.overlay.aioRockMode == 0)) mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
        else { // multiple ops allowed
-          if (mgsuite.overlay.aioRockTimer) {clearTimeout(mgsuite.overlay.aioRockTimer); mgsuite.overlay.aioRockTimer = null;}
-          if (mgsuite.overlay.aioRockMultiple[func] == 2) mgsuite.overlay.aioRockTimer = setTimeout(function(){mgsuite.overlay.aioClearRocker();}, 3000);
-          else mgsuite.overlay.aioRockTimer = setTimeout(function(){mgsuite.overlay.aioClearRocker();}, 10000000);
-       }
+		if (mgsuite.overlay.aioRockTimer) {clearTimeout(mgsuite.overlay.aioRockTimer); mgsuite.overlay.aioRockTimer = null;}
+		if (mgsuite.overlay.aioRockMultiple[func] == 2) mgsuite.overlay.aioRockTimer = setTimeout(function(){mgsuite.overlay.aioClearRocker();}, 3000);
+		else mgsuite.overlay.aioRockTimer = setTimeout(function(){mgsuite.overlay.aioClearRocker();}, 10000000);
+      }
     }
     else {
 	  if (gesturesEnabled && e.button == mgsuite.const.RMB) {
@@ -1056,8 +1060,6 @@ mgsuite.overlay = {
 
       if (gesturesEnabled && e.button == mgsuite.overlay.aioGestButton) {
 		// start mouse gesture
-	    gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
-
         var preventDefaultAction = false;
         if (mgsuite.overlay.aioGestEnabled && mgsuite.overlay.aioIsKeyOK(e)) {
           mgsuite.overlay.aioSrcEvent = e;
@@ -1122,15 +1124,26 @@ mgsuite.overlay = {
       mgsuite.overlay.aioDownButton = e.button;
     }
   },
-
-  aioRockClickEnd: function() { // click event is not always fired
-    window.removeEventListener("click", mgsuite.overlay.aioRockClickHandler, true);
+  
+  /* We need to block mouse clicks when doing rocker gestures so that links are not
+   * activated */
+  blockMouseEventsForRocker: function() {
+	  window.addEventListener("click", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
+	  window.addEventListener("mousedown", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
+	  window.addEventListener("mouseup", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
   },
 
-  aioRockClickHandler: function(e) {
-    if (e.button != mgsuite.const.LMB) return;
+  unBlockMouseEventsForRocker: function() {
+	setTimeout(function() {
+	  window.removeEventListener("click", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
+	  window.removeEventListener("mousedown", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
+	  window.removeEventListener("mouseup", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
+	}, 200);
+  },
+
+  rockerBlockMouseEventsHandler: function(e) {
     mgsuite.overlay.aioNukeEvent(e);
-    window.removeEventListener("click", mgsuite.overlay.aioRockClickHandler, true);
+    mgsuite.overlay.unBlockMouseEventsForRocker();
   },
 
   aioGestClickEnd: function() { // click event is not always fired
@@ -1163,6 +1176,8 @@ mgsuite.overlay = {
 
   aioMouseUp: function(e) {
 	gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+	
+	mgsuite.overlay.unBlockMouseEventsForRocker();
 
     if (!mgsuite.overlay.aioGesturesEnabled) {
 	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
@@ -1183,15 +1198,7 @@ mgsuite.overlay = {
 
     if (mgsuite.overlay.aioIsMac && e.button == mgsuite.const.LMB && e.ctrlKey) var button = mgsuite.const.RMB;
     else button = e.button;
-	
-    if (mgsuite.overlay.aioBackRocking && button == mgsuite.const.LMB) {
-	  mgsuite.overlay.aioBackRocking = false;
-	  mgsuite.overlay.aioSrcEvent = e;
-	  window.addEventListener("click", mgsuite.overlay.aioRockClickHandler, true);
-	  setTimeout(function(){mgsuite.overlay.aioPerformRockerFunction(0);}, 0);
-	  setTimeout(function(){mgsuite.overlay.aioRockClickEnd();}, 200);
-	  return;
-    }
+
     if (button == mgsuite.overlay.aioDownButton) {
 	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
 	  mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);

@@ -574,7 +574,7 @@ function mouseDownInTree(e) {
      return;
   }
   
-  if (c.value.id == 'infoColId') {
+  if (c.value && c.value.id == 'infoColId') {
     showPopupInfo(r.value, e);
   }
   
@@ -605,7 +605,7 @@ function dblClickInTree(e) {
   var r = {}, c = {}, type = {};
   treeBox.getCellAt(e.clientX, e.clientY, r, c, type);
   
-  if (c.value.id == 'gestTextId' || c.value.id == 'functionId') {
+  if (c.value && (c.value.id == 'gestTextId' || c.value.id == 'functionId')) {
     // run default action only if its button is not disabled
     if (document.getElementById('editId').getAttribute('disabled') != 'true') {
       editCurrentRow(false);

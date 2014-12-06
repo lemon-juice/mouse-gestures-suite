@@ -25,7 +25,7 @@ var mgsuiteFr = {
     
     if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl) {
       // send link url or image
-      sendAsyncMessage("MouseGesturesSuite:CollectLinks", elemInfo.bgImgUrl, {link: elemInfo.link, img: elemInfo.img});
+      sendAsyncMessage("MouseGesturesSuite:CollectLinks", {bgImgUrl: elemInfo.bgImgUrl, eventType: e.type}, {link: elemInfo.link, img: elemInfo.img});
     }
   },
   
