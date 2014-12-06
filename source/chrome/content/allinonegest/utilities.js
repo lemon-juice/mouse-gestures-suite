@@ -49,11 +49,17 @@ mgsuite.util = {
     mgsuite.util.collectedImgUrl = null;
   },
   
-  //returnWithCallback: function(msg) {
-  //  var param = msg.data.param;
-  //  var callback = msg.data.callback;
-  //  window[callback](param);
-  //},
+  returnWithCallback: function(msg) {
+    var param = msg.data.param;
+    var param2 = msg.objects.param; // optional
+    
+    if (param2) {
+      param = param2;
+    }
+    
+    var callback = msg.data.callback;
+    mgsuite.imp[callback](param);
+  },
   
   testListener: function(msg) {
     dump("testListener: " + JSON.stringify(msg.data) + "\n");

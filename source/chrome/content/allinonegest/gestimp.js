@@ -262,8 +262,9 @@ mgsuite.imp = {
       back ? goDoCommand('cmd_goBack') : goDoCommand('cmd_goForward');
     } else {
       if (mgsuite.overlay.aioGestureTab) {
-        var history = mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.history;
+        var history = mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindowAsCPOW.history;
         back ? history.back() : history.forward();
+        
       } else {
         back ? BrowserBack() : BrowserForward();
       }
@@ -1634,13 +1635,13 @@ mgsuite.imp = {
   },
   
   aioPageInfo: function() {
-    BrowserPageInfo(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : null);
+    BrowserPageInfo(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindowAsCPOW.document : null);
   },
   
   aioFrameInfo: function() {
     var targetDoc = mgsuite.overlay.aioSrcEvent.target.ownerDocument;
     if (targetDoc.defaultView.frameElement) BrowserPageInfo(targetDoc); // it's a frame
-    else BrowserPageInfo(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : null);
+    else BrowserPageInfo(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindowAsCPOW.document : null);
   },
   
   aioShowHideStatusBar: function() {
@@ -1686,9 +1687,9 @@ mgsuite.imp = {
       
     } else {
       if (frame) {
-        BrowserViewSourceOfDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : mgsuite.overlay.aioSrcEvent.target.ownerDocument);
+        BrowserViewSourceOfDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindowAsCPOW.document : mgsuite.overlay.aioSrcEvent.target.ownerDocument);
       } else {
-        BrowserViewSourceOfDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
+        BrowserViewSourceOfDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindowAsCPOW.document : gBrowser.selectedBrowser.contentWindowAsCPOW);
       }
     }
   },

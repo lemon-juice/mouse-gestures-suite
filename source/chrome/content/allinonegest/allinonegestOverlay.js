@@ -545,7 +545,7 @@ mgsuite.overlay = {
 
 	  window.messageManager.loadFrameScript(mgsuite.const.CHROME_DIR + "frame-script.js", true);
 	  window.messageManager.addMessageListener("MouseGesturesSuite:CollectLinks", mgsuite.util.CollectLinksListener);
-	  //window.messageManager.addMessageListener("MouseGesturesSuite:returnWithCallback", mgsuite.util.returnWithCallback);
+	  window.messageManager.addMessageListener("MouseGesturesSuite:returnWithCallback", mgsuite.util.returnWithCallback);
 	  window.messageManager.addMessageListener("MouseGesturesSuite:test", mgsuite.util.testListener);
 	  
 	  switch (mgsuite.overlay.aioWindowType) {
@@ -1033,6 +1033,7 @@ mgsuite.overlay = {
 		mgsuite.overlay.aioSrcEvent = e;
 		mgsuite.overlay.aioPerformRockerFunction(0);
       }
+	  dump("rocker:" + func + "\n");
 	  
 	  mgsuite.overlay.blockMouseEventsForRocker();
 	  

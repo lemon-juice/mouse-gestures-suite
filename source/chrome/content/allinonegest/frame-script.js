@@ -3,6 +3,7 @@ var mgsuiteFr = {
   init: function() {
     addMessageListener("MouseGesturesSuite:startMouseMove", this);
     addMessageListener("MouseGesturesSuite:endMouseMove", this);
+    addMessageListener("MouseGesturesSuite:getContentWindow", this);
     addEventListener("mousedown", this);
   },
   
@@ -11,6 +12,7 @@ var mgsuiteFr = {
     switch (aMsg.name) {
       case "MouseGesturesSuite:startMouseMove": this.startMouseMove(); break;
       case "MouseGesturesSuite:endMouseMove": this.endMouseMove(); break;
+      case "MouseGesturesSuite:getContentWindow": this.getContentWindow(aMsg); break;
     }
   },
   
@@ -90,10 +92,9 @@ var mgsuiteFr = {
   },
   
   
-  //getTopLocation: function(msg) {
-  //  var url = content.top.location.href;
-  //  sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {param: url, callback: msg.data});
-  //}
+  getContentWindow: function(msg) {
+    sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: msg.data}, {param: content});
+  }
 }
 
 mgsuiteFr.init();
