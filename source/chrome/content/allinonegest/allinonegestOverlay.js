@@ -536,114 +536,120 @@ mgsuite.overlay = {
     const unixRe = new RegExp("unix|linux|sun|freebsd", "i");
 
     if (mgsuite.overlay.aioFirstInit) {
-    mgsuite.overlay.aioIsWin = false; mgsuite.overlay.aioIsMac = false; mgsuite.overlay.aioIsNix = false;
-    if (platform.indexOf('win') != -1) mgsuite.overlay.aioIsWin = true;
-    else
-       if (platform.indexOf('mac') != -1) mgsuite.overlay.aioIsMac = true;
-       else mgsuite.overlay.aioIsNix = platform.search(unixRe) != -1;
+	  mgsuite.overlay.aioIsWin = false; mgsuite.overlay.aioIsMac = false; mgsuite.overlay.aioIsNix = false;
+	  if (platform.indexOf('win') != -1) mgsuite.overlay.aioIsWin = true;
+	  else
+		if (platform.indexOf('mac') != -1) mgsuite.overlay.aioIsMac = true;
+		else mgsuite.overlay.aioIsNix = platform.search(unixRe) != -1;
 
       mgsuite.overlay.aioFxV18 = versionComparator.compare(geckoVersion, "18.0") >= 0;
 
-    switch (mgsuite.overlay.aioWindowType) {
-      case 'browser':
-      mgsuite.overlay.aioContent = document.getElementById("content");
-      mgsuite.overlay.aioRendering = mgsuite.overlay.aioContent;
-      mgsuite.overlay.aioTabRendering = document.getElementById("TabsToolbar"); // Fx
-      mgsuite.overlay.aioStatusBar = document.getElementById("statusbar-display");
-      if (!mgsuite.overlay.aioStatusBar) {
-        mgsuite.overlay.aioStatusBar = gBrowser.getStatusPanel();
-      }
+	  window.messageManager.loadFrameScript(mgsuite.const.CHROME_DIR + "frame-script.js", true);
+	  window.messageManager.addMessageListener("MouseGesturesSuite:CollectLinks", mgsuite.util.CollectLinksListener);
+	  //window.messageManager.addMessageListener("MouseGesturesSuite:returnWithCallback", mgsuite.util.returnWithCallback);
+	  window.messageManager.addMessageListener("MouseGesturesSuite:test", mgsuite.util.testListener);
 
-      mgsuite.overlay.aioContent.tabContainer.addEventListener("TabSelect", mgsuite.imp.aioTabFocus, true);
-      var activeId = "t" + mgsuite.imp.aioUnique++;
-      if (mgsuite.overlay.aioContent.mTabContainer) {
-        mgsuite.overlay.aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
-        mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
-      }
+	  
+	  switch (mgsuite.overlay.aioWindowType) {
+		case 'browser':
+		mgsuite.overlay.aioContent = document.getElementById("content");
+		mgsuite.overlay.aioRendering = mgsuite.overlay.aioContent;
+		mgsuite.overlay.aioTabRendering = document.getElementById("TabsToolbar"); // Fx
+		mgsuite.overlay.aioStatusBar = document.getElementById("statusbar-display");
+		if (!mgsuite.overlay.aioStatusBar) {
+		  mgsuite.overlay.aioStatusBar = gBrowser.getStatusPanel();
+		}
+  
+		mgsuite.overlay.aioContent.tabContainer.addEventListener("TabSelect", mgsuite.imp.aioTabFocus, true);
+		var activeId = "t" + mgsuite.imp.aioUnique++;
+		if (mgsuite.overlay.aioContent.mTabContainer) {
+		  mgsuite.overlay.aioContent.mTabContainer.childNodes[0].setAttribute('aioTabId', activeId);
+		  mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
+		}
+  
+		// listener for url changes
+		var urlListener =
+		{
+		  QueryInterface: function(aIID)
+		  {
+		    if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
+			  aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
+			  aIID.equals(Components.interfaces.nsISupports))
+			  return this;
+		    throw Components.results.NS_NOINTERFACE;
+		  },
+		  onLocationChange: function(aProgress, aRequest, aURI, aFlags)
+		  {
+		    if (!(aFlags & Components.interfaces.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
+			  // don't run this when only URL hash changed or tab switched;
+			  // Fx and SM 2.29.1 and later run it even on tab switching.
+			  mgsuite.overlay.aioParseSiteList();
+		    }
+		  },
+		  onStateChange: function() {},
+		  onProgressChange: function() {},
+		  onStatusChange: function() {},
+		  onSecurityChange: function() {},
+		  onLinkIconAvailable: function() {}
+		};
+  
+		gBrowser.addProgressListener(urlListener);
+  
+		gBrowser.tabContainer.addEventListener("TabSelect", mgsuite.overlay.aioParseSiteList, false);
+  
+		window.addEventListener("activate", function() {
+		// we need delay because mgsuite.overlay.aioInit() is run with delay after pref change
+		setTimeout(mgsuite.overlay.aioParseSiteList, 600);
+		});
+		break;
+  
+		case 'messenger':
+		mgsuite.overlay.aioContent = document.getElementById("messagepane");
+		mgsuite.overlay.aioRendering = document.getElementById("messagepane");
+		mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
+		break;
+  
+		case 'mailcompose':
+		mgsuite.overlay.aioContent = document.getElementById("appcontent");
+		mgsuite.overlay.aioRendering = document.getElementById("content-frame");
+		mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
+		break;
+  
+		case 'source':
+		mgsuite.overlay.aioContent = document.getElementById("appcontent");
+		mgsuite.overlay.aioRendering = document.getElementById("content");
+		mgsuite.overlay.aioStatusBar = document.getElementById("statusbar-line-col");
+		break;
+	  }
 
-      // listener for url changes
-      var urlListener =
-      {
-      QueryInterface: function(aIID)
-      {
-       if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
-         aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
-         aIID.equals(Components.interfaces.nsISupports))
-        return this;
-       throw Components.results.NS_NOINTERFACE;
-      },
-      onLocationChange: function(aProgress, aRequest, aURI, aFlags)
-      {
-       if (!(aFlags & Components.interfaces.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
-         // don't run this when only URL hash changed or tab switched;
-         // Fx and SM 2.29.1 and later run it even on tab switching.
-         mgsuite.overlay.aioParseSiteList();
-       }
-      },
-      onStateChange: function() {},
-      onProgressChange: function() {},
-      onStatusChange: function() {},
-      onSecurityChange: function() {},
-      onLinkIconAvailable: function() {}
-      };
 
-      gBrowser.addProgressListener(urlListener);
-
-      gBrowser.tabContainer.addEventListener("TabSelect", mgsuite.overlay.aioParseSiteList, false);
-
-      window.addEventListener("activate", function() {
-      // we need delay because mgsuite.overlay.aioInit() is run with delay after pref change
-      setTimeout(mgsuite.overlay.aioParseSiteList, 600);
-      });
-      break;
-
-      case 'messenger':
-      mgsuite.overlay.aioContent = document.getElementById("messagepane");
-      mgsuite.overlay.aioRendering = document.getElementById("messagepane");
-      mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
-      break;
-
-      case 'mailcompose':
-      mgsuite.overlay.aioContent = document.getElementById("appcontent");
-      mgsuite.overlay.aioRendering = document.getElementById("content-frame");
-      mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
-      break;
-
-      case 'source':
-      mgsuite.overlay.aioContent = document.getElementById("appcontent");
-      mgsuite.overlay.aioRendering = document.getElementById("content");
-      mgsuite.overlay.aioStatusBar = document.getElementById("statusbar-line-col");
-      break;
-    }
-
-
-    mgsuite.overlay.aioMainWin = document.getElementById("main-window");
-
-    mgsuite.overlay.aioRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
-    if (mgsuite.overlay.aioTabRendering) {
-      mgsuite.overlay.aioTabRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
-    }
-
-    document.documentElement.addEventListener("popupshowing", mgsuite.overlay.aioContextMenuEnabler, true);
-
-    window.addEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
-
-    if (!mgsuite.overlay.aioIsWin) {
-      window.addEventListener("mouseup", function(e) {
-        mgsuite.overlay.aioShowContextMenu = true;
-      }, true);
-    }
-
-    window.addEventListener("draggesture", mgsuite.overlay.aioDragGesture, true);
-    window.addEventListener("unload", mgsuite.overlay.aioWindowUnload, false);
-    window.addEventListener("keypress", mgsuite.overlay.aioKeyPressed, true);
-
-    // init some autoscroll variables
-    mgsuite.overlay.aioSofar = [];
-    mgsuite.overlay.aioSofar[1] = 0;
-    for (var ii = 1; ii < mgsuite.const.aioDist.length - 1; ++ii) {
-       mgsuite.overlay.aioSofar[ii+1] = mgsuite.overlay.aioSofar[ii] + (mgsuite.const.aioDist[ii] - mgsuite.const.aioDist[ii-1]) * mgsuite.const.aioRatio[ii];
-    }
+	  mgsuite.overlay.aioMainWin = document.getElementById("main-window");
+  
+	  mgsuite.overlay.aioRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
+	  if (mgsuite.overlay.aioTabRendering) {
+		mgsuite.overlay.aioTabRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
+	  }
+  
+	  document.documentElement.addEventListener("popupshowing", mgsuite.overlay.aioContextMenuEnabler, true);
+  
+	  window.addEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
+  
+	  if (!mgsuite.overlay.aioIsWin) {
+		window.addEventListener("mouseup", function(e) {
+		  mgsuite.overlay.aioShowContextMenu = true;
+		}, true);
+	  }
+  
+	  window.addEventListener("draggesture", mgsuite.overlay.aioDragGesture, true);
+	  window.addEventListener("unload", mgsuite.overlay.aioWindowUnload, false);
+	  window.addEventListener("keypress", mgsuite.overlay.aioKeyPressed, true);
+  
+	  // init some autoscroll variables
+	  mgsuite.overlay.aioSofar = [];
+	  mgsuite.overlay.aioSofar[1] = 0;
+	  for (var ii = 1; ii < mgsuite.const.aioDist.length - 1; ++ii) {
+		 mgsuite.overlay.aioSofar[ii+1] = mgsuite.overlay.aioSofar[ii] + (mgsuite.const.aioDist[ii] - mgsuite.const.aioDist[ii-1]) * mgsuite.const.aioRatio[ii];
+	  }
     }
 
     if (mgsuite.overlay.aioGesturesEnabled) {
@@ -698,7 +704,7 @@ mgsuite.overlay = {
    * special treatment (prioritize gestures or disable gestures)
    */
   aioParseSiteList: function() {
-    var url = window.content.top.location.href;
+    var url = gBrowser.selectedBrowser.currentURI.spec;
 
     if (url === mgsuite.overlay.aioPrevParsedURL) {
     return;
@@ -945,6 +951,7 @@ mgsuite.overlay = {
   aioMouseDown: function(e) {
 
     var gesturesEnabled = mgsuite.overlay.aioGesturesEnabled;
+	mgsuite.util.clearCollectedItems();
 
     if (gesturesEnabled) {
 	  // detect gesture start on tab
@@ -1060,6 +1067,9 @@ mgsuite.overlay = {
 	  }
 
       if (gesturesEnabled && e.button == mgsuite.overlay.aioGestButton) {
+		// start mouse gesture
+	    gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
+
         var preventDefaultAction = false;
         if (mgsuite.overlay.aioGestEnabled && mgsuite.overlay.aioIsKeyOK(e)) {
           mgsuite.overlay.aioSrcEvent = e;
@@ -1166,13 +1176,15 @@ mgsuite.overlay = {
   },
 
   aioMouseUp: function(e) {
+	gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+
     if (!mgsuite.overlay.aioGesturesEnabled) {
 	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
 	  return;
     }
 
     if (mgsuite.overlay.aioDelayTO) {
-    clearTimeout(mgsuite.overlay.aioDelayTO);
+	  clearTimeout(mgsuite.overlay.aioDelayTO);
     }
 
     if (mgsuite.overlay.aioSitePref == 'D' && !mgsuite.overlay.aioGestureTab) {

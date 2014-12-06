@@ -9,6 +9,47 @@ if (typeof mgsuite == 'undefined') {
 }
 
 mgsuite.util = {
+  collectedLinks: [],
+  collectedImg: null,
+  collectedImgUrl: null,
+  
+  // collect elements (links, images) under performed gesture
+  CollectLinksListener: function(msg) {
+    //dump("CollectLinksListener: " + JSON.stringify(msg.data) + "\n");
+    var url = msg.data;
+    
+    if (url && mgsuite.util.collectedLinks.lastIndexOf(url) < 0) {
+      // link url
+      mgsuite.util.collectedLinks.push(url);
+    }
+    
+    if (msg.objects.img && !mgsuite.util.collectedImg) {
+      // image found under gesture
+      mgsuite.util.collectedImg = msg.objects.img;
+      mgsuite.util.collectedImgUrl = msg.objects.img.src;
+      
+    } else if (msg.objects.bgImgUrl && !mgsuite.util.collectedImgUrl) {
+      // bg image found under gesture
+      mgsuite.util.collectedImgUrl = msg.objects.bgImgUrl;
+    }
+  },
+  
+  clearCollectedItems: function() {
+    mgsuite.util.collectedLinks = [];
+    mgsuite.util.collectedImg = null;
+    mgsuite.util.collectedImgUrl = null;
+  },
+  
+  //returnWithCallback: function(msg) {
+  //  var param = msg.data.param;
+  //  var callback = msg.data.callback;
+  //  window[callback](param);
+  //},
+  
+  testListener: function(msg) {
+    dump("testListener: " + JSON.stringify(msg.data) + "\n");
+  },
+  
   getSelectedText: function() {
     let [element, focusedWindow] = BrowserUtils.getFocusSync(document);
     var selection = focusedWindow.getSelection().toString();

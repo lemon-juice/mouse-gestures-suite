@@ -897,34 +897,36 @@ mgsuite.imp = {
   },
   
   aioSetImgSize: function(aEnlarge, aMixed) {
-    if (!mgsuite.overlay.aioOnImage) {
-       if (!aMixed) return;
-       if (aEnlarge) mgsuite.imp.aioZoomEnlarge();
-       else mgsuite.imp.aioZoomReduce();
-       return;
+    var img = mgsuite.util.collectedImg;
+  
+    if (!img) {
+      if (!aMixed) return;
+      if (aEnlarge) mgsuite.imp.aioZoomEnlarge();
+        else mgsuite.imp.aioZoomReduce();
+      return;
     }
-    var imgStr = mgsuite.overlay.aioOnImage.getAttribute("aioImgSize");
+    var imgStr = img.getAttribute("aioImgSize");
     var imgTab;
     
     if (!imgStr) {
-      var view = mgsuite.overlay.aioOnImage.ownerDocument.defaultView;
+      var view = img.ownerDocument.defaultView;
       // get actual img w & h
-      var w = parseInt(view.getComputedStyle(mgsuite.overlay.aioOnImage).getPropertyValue("width"));
-      var h = parseInt(view.getComputedStyle(mgsuite.overlay.aioOnImage).getPropertyValue("height"));
+      var w = parseInt(view.getComputedStyle(img).getPropertyValue("width"));
+      var h = parseInt(view.getComputedStyle(img).getPropertyValue("height"));
       imgTab = [];
       imgTab[0] = w; imgTab[1] = h; imgTab[2] = 1;
       
-      mgsuite.overlay.aioOnImage.aioOldStyles = {
-        width: mgsuite.overlay.aioOnImage.style.getPropertyValue("width"),
-        height: mgsuite.overlay.aioOnImage.style.getPropertyValue("height"),
-        maxWidth: mgsuite.overlay.aioOnImage.style.getPropertyValue("max-width"),
-        maxHeight: mgsuite.overlay.aioOnImage.style.getPropertyValue("max-width"),
-        minWidth: mgsuite.overlay.aioOnImage.style.getPropertyValue("min-width"),
-        minHeight: mgsuite.overlay.aioOnImage.style.getPropertyValue("min-height"),
+      img.aioOldStyles = {
+        width: img.style.getPropertyValue("width"),
+        height: img.style.getPropertyValue("height"),
+        maxWidth: img.style.getPropertyValue("max-width"),
+        maxHeight: img.style.getPropertyValue("max-width"),
+        minWidth: img.style.getPropertyValue("min-width"),
+        minHeight: img.style.getPropertyValue("min-height"),
       };
       
       if (mgsuite.overlay.aioCrispResize) {
-        mgsuite.overlay.aioOnImage.aioOldStyles.imageRendering = mgsuite.overlay.aioOnImage.style.getPropertyValue("image-rendering")
+        img.aioOldStyles.imageRendering = img.style.getPropertyValue("image-rendering")
       }
       
     } else {
@@ -933,24 +935,24 @@ mgsuite.imp = {
     
     
     imgTab[2] *= aEnlarge ? 2 : 0.5;
-    mgsuite.overlay.aioOnImage.setAttribute("aioImgSize", imgTab.join("|"));
+    img.setAttribute("aioImgSize", imgTab.join("|"));
     w = Math.round(imgTab[0] * imgTab[2]); h = Math.round(imgTab[1] * imgTab[2]);
     
     if (w && h && w != imgTab[0] && h != imgTab[1]) {
-      mgsuite.overlay.aioOnImage.style.setProperty("max-width","none", "important");
-      mgsuite.overlay.aioOnImage.style.setProperty("max-height","none", "important");
-      mgsuite.overlay.aioOnImage.style.setProperty("min-width","0", "important");
-      mgsuite.overlay.aioOnImage.style.setProperty("min-height","0", "important");
-      mgsuite.overlay.aioOnImage.style.width = w + "px";
-      mgsuite.overlay.aioOnImage.style.height = h + "px";
+      img.style.setProperty("max-width","none", "important");
+      img.style.setProperty("max-height","none", "important");
+      img.style.setProperty("min-width","0", "important");
+      img.style.setProperty("min-height","0", "important");
+      img.style.width = w + "px";
+      img.style.height = h + "px";
       
       if (mgsuite.overlay.aioCrispResize) {
         if (CSS.supports("image-rendering","-moz-crisp-edges")) {
-          mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", "-moz-crisp-edges", "important");
+          img.style.setProperty("image-rendering", "-moz-crisp-edges", "important");
         } else if (CSS.supports("image-rendering","crisp-edges")) {
-          mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", "crisp-edges", "important");
+          img.style.setProperty("image-rendering", "crisp-edges", "important");
         } else if (CSS.supports("image-rendering","optimize-contrast")) {
-          mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", "optimize-contrast", "important");
+          img.style.setProperty("image-rendering", "optimize-contrast", "important");
         }
       }
     }
@@ -960,41 +962,44 @@ mgsuite.imp = {
   },
   
   aioResetImgSize: function(aMixed) {
-    if (!mgsuite.overlay.aioOnImage) {
+    var img = mgsuite.util.collectedImg;
+    
+    if (!img) {
        if (!aMixed) return;
        mgsuite.imp.aioZoomReset();
        return;
     }
-    var imgStr = mgsuite.overlay.aioOnImage.getAttribute("aioImgSize");
+    var imgStr = img.getAttribute("aioImgSize");
     if (!imgStr) return;
     
-    mgsuite.overlay.aioOnImage.removeAttribute("aioImgSize");
+    img.removeAttribute("aioImgSize");
     
-    if (mgsuite.overlay.aioOnImage.aioOldStyles) {
+    if (img.aioOldStyles) {
       // restore size
-      mgsuite.overlay.aioOnImage.style.setProperty("width", mgsuite.overlay.aioOnImage.aioOldStyles.width, "");
-      mgsuite.overlay.aioOnImage.style.setProperty("height", mgsuite.overlay.aioOnImage.aioOldStyles.height, "");
+      img.style.setProperty("width", img.aioOldStyles.width, "");
+      img.style.setProperty("height", img.aioOldStyles.height, "");
       
       // restore max/min styles
-      mgsuite.overlay.aioOnImage.style.setProperty("max-width", mgsuite.overlay.aioOnImage.aioOldStyles.maxWidth, "");
-      mgsuite.overlay.aioOnImage.style.setProperty("max-height", mgsuite.overlay.aioOnImage.aioOldStyles.maxHeight, "");
-      mgsuite.overlay.aioOnImage.style.setProperty("min-width", mgsuite.overlay.aioOnImage.aioOldStyles.minWidth, "");
-      mgsuite.overlay.aioOnImage.style.setProperty("min-height", mgsuite.overlay.aioOnImage.aioOldStyles.minHeight, "");
+      img.style.setProperty("max-width", img.aioOldStyles.maxWidth, "");
+      img.style.setProperty("max-height", img.aioOldStyles.maxHeight, "");
+      img.style.setProperty("min-width", img.aioOldStyles.minWidth, "");
+      img.style.setProperty("min-height", img.aioOldStyles.minHeight, "");
       
-      if (typeof mgsuite.overlay.aioOnImage.aioOldStyles.imageRendering != 'undefined') {
-        mgsuite.overlay.aioOnImage.style.setProperty("image-rendering", mgsuite.overlay.aioOnImage.aioOldStyles.imageRendering, "");
+      if (typeof img.aioOldStyles.imageRendering != 'undefined') {
+        img.style.setProperty("image-rendering", img.aioOldStyles.imageRendering, "");
       }
-      delete mgsuite.overlay.aioOnImage.aioOldStyles;
+      delete img.aioOldStyles;
     }
   },
   
   aioSaveImageAs: function() {
-    if (!mgsuite.overlay.aioOnImage) return;
-    if (mgsuite.overlay.aioFxV18) saveImageURL(mgsuite.overlay.aioOnImage.src, null, "SaveImageTitle", false, false,
-                           mgsuite.overlay.aioOnImage.ownerDocument.documentURIObject, mgsuite.overlay.aioOnImage.ownerDocument);
+    var img = mgsuite.util.collectedImg;
+    if (!img) return;
+    
+    if (mgsuite.overlay.aioFxV18) saveImageURL(img.src, null, "SaveImageTitle", false, false, img.ownerDocument.documentURIObject, img.ownerDocument);
     else 
-       saveImageURL(mgsuite.overlay.aioOnImage.src, null, "SaveImageTitle", false,
-         false, mgsuite.overlay.aioOnImage.ownerDocument.documentURIObject);
+       saveImageURL(img.src, null, "SaveImageTitle", false,
+         false, img.ownerDocument.documentURIObject);
   
   },
   
@@ -1188,8 +1193,8 @@ mgsuite.imp = {
   },
   
   aioOpenInNewTab: function(bg) {
-    if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.overlay.aioOnLink.length) {
-       mgsuite.imp.aioLinkInTab(mgsuite.overlay.aioOnLink[0].href, false, bg);
+    if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.util.collectedLinks.length) {
+      mgsuite.imp.aioLinkInTab(mgsuite.util.collectedLinks[0], false, bg);
     }
     else {
       if (mgsuite.overlay.aioWindowType == "browser") {
@@ -1234,21 +1239,21 @@ mgsuite.imp = {
   
   aioLinksInTabs: function() {
     if (mgsuite.overlay.aioWindowType == "browser") {
-      for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
-        mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.overlay.aioOnLink[i].href), mgsuite.imp.aioGetReferrer());
+      for (var i = 0; i < mgsuite.util.collectedLinks.length; ++i) {
+        mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[i]), mgsuite.imp.aioGetReferrer());
       }
     
     } else {
-      if (mgsuite.overlay.aioOnLink.length > 0) {
+      if (mgsuite.util.collectedLinks.length > 0) {
         if (mgsuite.overlay.aioIsFx) {
-          openNewTabWith(mgsuite.imp.aioSanitizeUrl(mgsuite.overlay.aioOnLink[0].href));
+          openNewTabWith(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[0]));
         } else {
-          openNewTabWindowOrExistingWith(kNewTab, mgsuite.imp.aioSanitizeUrl(mgsuite.overlay.aioOnLink[0].href), null, false);
+          openNewTabWindowOrExistingWith(kNewTab, mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[0]), null, false);
         }
         
         var links = [];
-        for (var i = 1; i < mgsuite.overlay.aioOnLink.length; ++i) {
-          links.push(mgsuite.imp.aioSanitizeUrl(mgsuite.overlay.aioOnLink[i].href));
+        for (var i = 1; i < mgsuite.util.collectedLinks.length; ++i) {
+          links.push(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[i]));
         }
         
         setTimeout(function() {
@@ -1837,11 +1842,11 @@ mgsuite.imp = {
   },
   
   aioImageInWindow: function() {
-     if (mgsuite.overlay.aioOnImage) mgsuite.imp.aioNewWindow(mgsuite.overlay.aioOnImage.src);
+     if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioNewWindow(mgsuite.util.collectedImgUrl);
   },
   
   aioImageInTab: function() {
-     if (mgsuite.overlay.aioOnImage) mgsuite.imp.aioLinkInTab(mgsuite.overlay.aioOnImage.src, false, false);
+     if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioLinkInTab(mgsuite.util.collectedImgUrl, false, false);
   },
   
   aioSwitchTab: function(advanceBy) {
