@@ -23,29 +23,30 @@ var mgsuiteFr = {
     // send link info found under gesture to mouse gesture script
     var elemInfo = this.getElementInfo(e);
     
-    if (elemInfo.href || elemInfo.img || elemInfo.bgImgUrl) {
+    if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl) {
       // send link url or image
-      sendAsyncMessage("MouseGesturesSuite:CollectLinks", elemInfo.href, {img: elemInfo.img, bgImgUrl: elemInfo.bgImgUrl});
+      sendAsyncMessage("MouseGesturesSuite:CollectLinks", elemInfo.bgImgUrl, {link: elemInfo.link, img: elemInfo.img});
     }
   },
   
   
   getElementInfo: function(e) {
     var elem = e.target;
-    var href, img, bgImgUrl;
+    var link, img, bgImgUrl;
     
     while (elem) {
       if (elem.nodeType == 1) { // ELEMENT_NODE
         // Link?
-        if (!href &&
+        if (!link &&
             ((elem instanceof content.HTMLAnchorElement && elem.href) ||
             (elem instanceof content.HTMLAreaElement && elem.href) ||
              elem.getAttributeNS("http://www.w3.org/1999/xlink", "type") == "simple")) {
 
           // elem is link
-          href = elem.href;
-          if (!href) {
-            href = this.link.getAttributeNS("http://www.w3.org/1999/xlink", "href");
+          link = {node: elem, url: elem.href};
+          
+          if (!elem.href) {
+            link.url = makeURLAbsolute(elem.baseURI, elem.getAttributeNS("http://www.w3.org/1999/xlink", "href"));
           }
           
         } else if (!img &&
@@ -62,7 +63,7 @@ var mgsuiteFr = {
       elem = elem.parentNode;
     }
     
-    return {href: href, img: img, bgImgUrl: bgImgUrl};
+    return {link: link, img: img, bgImgUrl: bgImgUrl};
   },
   
   // Returns a "url"-type computed style attribute value, with the url() stripped.

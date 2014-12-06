@@ -551,10 +551,10 @@ mgsuite.imp = {
     try {
       var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
       if (!str) return;
-      if (mgsuite.overlay.aioOnLink.length) {
-         for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
+      if (mgsuite.util.collectedLinksUrls.length) {
+         for (var i = 0; i < mgsuite.util.collectedLinksUrls.length; ++i) {
              if (lstr) lstr += "\r\n";
-             lstr += mgsuite.overlay.aioOnLink[i].href;
+             lstr += mgsuite.util.collectedLinksUrls[i];
          }
          str.data = lstr;
       }
@@ -1193,8 +1193,8 @@ mgsuite.imp = {
   },
   
   aioOpenInNewTab: function(bg) {
-    if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.util.collectedLinks.length) {
-      mgsuite.imp.aioLinkInTab(mgsuite.util.collectedLinks[0], false, bg);
+    if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.util.collectedLinksUrls.length) {
+      mgsuite.imp.aioLinkInTab(mgsuite.util.collectedLinksUrls[0], false, bg);
     }
     else {
       if (mgsuite.overlay.aioWindowType == "browser") {
@@ -1239,21 +1239,21 @@ mgsuite.imp = {
   
   aioLinksInTabs: function() {
     if (mgsuite.overlay.aioWindowType == "browser") {
-      for (var i = 0; i < mgsuite.util.collectedLinks.length; ++i) {
-        mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[i]), mgsuite.imp.aioGetReferrer());
+      for (var i = 0; i < mgsuite.util.collectedLinksUrls.length; ++i) {
+        mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), mgsuite.imp.aioGetReferrer());
       }
     
     } else {
-      if (mgsuite.util.collectedLinks.length > 0) {
+      if (mgsuite.util.collectedLinksUrls.length > 0) {
         if (mgsuite.overlay.aioIsFx) {
-          openNewTabWith(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[0]));
+          openNewTabWith(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[0]));
         } else {
-          openNewTabWindowOrExistingWith(kNewTab, mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[0]), null, false);
+          openNewTabWindowOrExistingWith(kNewTab, mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[0]), null, false);
         }
         
         var links = [];
-        for (var i = 1; i < mgsuite.util.collectedLinks.length; ++i) {
-          links.push(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinks[i]));
+        for (var i = 1; i < mgsuite.util.collectedLinksUrls.length; ++i) {
+          links.push(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]));
         }
         
         setTimeout(function() {
@@ -1273,13 +1273,13 @@ mgsuite.imp = {
     var hRefLC, dontAskBefore;
     try {dontAskBefore = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.download.useDownloadDir");}
     catch(err) {dontAskBefore = false;}
-    for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
-      hRefLC = mgsuite.overlay.aioOnLink[i].href.toLowerCase();
+    for (var i = 0; i < mgsuite.util.collectedLinks.length; ++i) {
+      hRefLC = mgsuite.util.collectedLinksUrls[i].toLowerCase();
       if (hRefLC.substr(0, 7) != "mailto:" && hRefLC.substr(0, 11) != "javascript:" &&
           hRefLC.substr(0, 5) != "news:" && hRefLC.substr(0, 6) != "snews:")
-         if (mgsuite.overlay.aioFxV18) saveURL(mgsuite.overlay.aioOnLink[i].href, mgsuite.tooltip.aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore,
-                            mgsuite.overlay.aioOnLink[i].node.ownerDocument.documentURIObject, mgsuite.overlay.aioOnLink[i].node.ownerDocument);
-         else saveURL(mgsuite.overlay.aioOnLink[i].href, mgsuite.tooltip.aioGetTextForTitle(mgsuite.overlay.aioOnLink[i].node), null, true, dontAskBefore);
+          if (mgsuite.overlay.aioFxV18) saveURL(mgsuite.util.collectedLinksUrls[i], mgsuite.tooltip.aioGetTextForTitle(mgsuite.util.collectedLinks[i]), null, true, dontAskBefore, mgsuite.util.collectedLinks[i].ownerDocument.documentURIObject, mgsuite.util.collectedLinks[i].ownerDocument);
+         
+          else saveURL(mgsuite.util.collectedLinksUrls[i], mgsuite.tooltip.aioGetTextForTitle(mgsuite.util.collectedLinks[i]), null, true, dontAskBefore);
   
     }
   },
@@ -1297,13 +1297,13 @@ mgsuite.imp = {
   },
   
   aioLinksInWindows: function() {
-    if (!mgsuite.overlay.aioOnLink.length) return;
+    if (!mgsuite.util.collectedLinksUrls.length) return;
     if (mgsuite.overlay.aioSingleNewWindow) {
-      var win = mgsuite.imp.aioNewWindow(mgsuite.overlay.aioOnLink[0].href, "");
+      var win = mgsuite.imp.aioNewWindow(mgsuite.util.collectedLinksUrls[0], "");
       
       var gestureLinks = [];
-      for (var i = 1; i < mgsuite.overlay.aioOnLink.length; ++i) {
-        gestureLinks.push(mgsuite.overlay.aioOnLink[i].href);
+      for (var i = 1; i < mgsuite.util.collectedLinksUrls.length; ++i) {
+        gestureLinks.push(mgsuite.util.collectedLinksUrls[i]);
       }
       
       win.addEventListener("load", function () {
@@ -1315,8 +1315,8 @@ mgsuite.imp = {
       }, true);
     }
     else
-       for (var i = 0; i < mgsuite.overlay.aioOnLink.length; ++i) {
-          mgsuite.imp.aioNewWindow(mgsuite.imp.aioSanitizeUrl(mgsuite.overlay.aioOnLink[i].href), "");
+       for (var i = 0; i < mgsuite.util.collectedLinksUrls.length; ++i) {
+          mgsuite.imp.aioNewWindow(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), "");
        }
   },
   
@@ -1343,8 +1343,8 @@ mgsuite.imp = {
     }
     
     if (url === null) {
-      if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.overlay.aioOnLink.length) {
-         url = mgsuite.overlay.aioOnLink[0].href;
+      if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.util.collectedLinksUrls.length) {
+         url = mgsuite.util.collectedLinksUrls[0];
       }
       else {
          url = "";
@@ -1417,7 +1417,7 @@ mgsuite.imp = {
   
   // open link in new window and double stack
   aioDoubleWin: function() {
-    var link = mgsuite.overlay.aioOnLink.length ? mgsuite.overlay.aioOnLink[0].href : "about:blank";
+    var link = mgsuite.util.collectedLinksUrls.length ? mgsuite.util.collectedLinksUrls[0] : "about:blank";
     window.moveTo(screen.availLeft, screen.availTop);
     
     if (mgsuite.overlay.aioIsWin) {

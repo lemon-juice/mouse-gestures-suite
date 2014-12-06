@@ -10,17 +10,25 @@ if (typeof mgsuite == 'undefined') {
 
 mgsuite.util = {
   collectedLinks: [],
+  collectedLinksUrls: [],
   collectedImg: null,
   collectedImgUrl: null,
   
   // collect elements (links, images) under performed gesture
   CollectLinksListener: function(msg) {
     //dump("CollectLinksListener: " + JSON.stringify(msg.data) + "\n");
-    var url = msg.data;
+    var bgImgUrl = msg.data;
+    var link, linkUrl;
     
-    if (url && mgsuite.util.collectedLinks.lastIndexOf(url) < 0) {
-      // link url
-      mgsuite.util.collectedLinks.push(url);
+    if (msg.objects.link) {
+      link = msg.objects.link.node;
+      linkUrl = msg.objects.link.url;
+    }
+    
+    if (linkUrl && mgsuite.util.collectedLinksUrls.lastIndexOf(linkUrl) < 0) {
+      // collect link
+      mgsuite.util.collectedLinksUrls.push(linkUrl);
+      mgsuite.util.collectedLinks.push(link);
     }
     
     if (msg.objects.img && !mgsuite.util.collectedImg) {
@@ -28,14 +36,15 @@ mgsuite.util = {
       mgsuite.util.collectedImg = msg.objects.img;
       mgsuite.util.collectedImgUrl = msg.objects.img.src;
       
-    } else if (msg.objects.bgImgUrl && !mgsuite.util.collectedImgUrl) {
+    } else if (bgImgUrl && !mgsuite.util.collectedImgUrl) {
       // bg image found under gesture
-      mgsuite.util.collectedImgUrl = msg.objects.bgImgUrl;
+      mgsuite.util.collectedImgUrl = bgImgUrl;
     }
   },
   
   clearCollectedItems: function() {
     mgsuite.util.collectedLinks = [];
+    mgsuite.util.collectedLinksUrls = [];
     mgsuite.util.collectedImg = null;
     mgsuite.util.collectedImgUrl = null;
   },

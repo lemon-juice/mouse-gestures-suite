@@ -912,8 +912,7 @@ mgsuite.overlay = {
   aioKillGestInProgress: function(clearMode) {
     mgsuite.overlay.aioGestInProgress = false;
     if (!clearMode) {
-      mgsuite.overlay.aioOnLink.length = 0;
-      mgsuite.overlay.aioOnImage = null;
+      mgsuite.util.clearCollectedItems();
     }
     mgsuite.trail.eraseTrail();
     window.removeEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
@@ -1292,8 +1291,7 @@ mgsuite.overlay = {
 
   aioWheelRockEnd: function() {
     mgsuite.overlay.aioRestoreListeners();
-    mgsuite.overlay.aioOnLink.length = 0;
-    mgsuite.overlay.aioOnImage = null;
+    mgsuite.util.clearCollectedItems();
   },
 
   aioWheelRockUp: function(e) {
