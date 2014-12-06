@@ -816,7 +816,6 @@ mgsuite.overlay = {
     var y_dir = e.screenY - mgsuite.overlay.aioOldY; var absY = Math.abs(y_dir);
     var tempMove;
 
-    mgsuite.overlay.aioAddLink(e);
     //only add if movement enough to make a gesture
     if (absX < mgsuite.overlay.aioGrid && absY < mgsuite.overlay.aioGrid) return;
     mgsuite.overlay.aioLastEvtTime = new Date(); // e.timeStamp is broken on Linux
@@ -859,16 +858,6 @@ mgsuite.overlay = {
     if (node.hasAttributeNS(mgsuite.const.xlinkNS, "href"))
       return makeURLAbsolute(node.baseURI, node.getAttributeNS(mgsuite.const.xlinkNS, "href"));
     return node.href;
-  },
-
-  aioAddLink: function(e) { // Add traversed link to mgsuite.overlay.aioOnLink
-    var linkNode = mgsuite.overlay.aioFindLink(e.originalTarget, true);
-    if (!linkNode) return;
-    var linkObj = {node: linkNode, href: mgsuite.overlay.aioGetHRef(linkNode)};
-    // check if duplicated
-    for (var i = mgsuite.overlay.aioOnLink.length - 1; i >= 0; --i)
-      if (mgsuite.overlay.aioOnLink[i].href == linkObj.href) return;
-    mgsuite.overlay.aioOnLink.push(linkObj);
   },
 
   aioFindLink: function(domNode, gesturing) { // Loop up the DOM looking for a link. Returns the node
@@ -1080,7 +1069,6 @@ mgsuite.overlay = {
 			  preventDefaultAction = e.button != mgsuite.const.LMB || !mgsuite.overlay.aioLeftDefault ||
 					 targetName == "html" || targetName == "body" || e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument;
 			  mgsuite.overlay.aioGestInProgress = true;
-			  mgsuite.overlay.aioAddLink(e);  // Check if started over a link
 			  mgsuite.overlay.aioStrokes = []; mgsuite.overlay.aioLocaleGest = []; mgsuite.overlay.aioCurrGest = "";
 			  if (mgsuite.overlay.aioTrailEnabled) mgsuite.trail.startTrail(e);
 			  window.addEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
@@ -1095,7 +1083,6 @@ mgsuite.overlay = {
 		  if (mgsuite.overlay.aioWheelRocker) {
 			if (!mgsuite.overlay.aioGestInProgress) {
 			  mgsuite.overlay.aioSrcEvent = e;
-			  mgsuite.overlay.aioAddLink(e);
 			}
 		  }
 		  else mgsuite.overlay.aioTTNode = mgsuite.overlay.aioFindLink(e.target, false);
