@@ -1016,7 +1016,12 @@ mgsuite.overlay = {
 		mgsuite.overlay.aioShowContextMenu = false;
 		mgsuite.overlay.aioBackRocking = false;
 		
-		gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
+		if (mgsuite.overlay.aioWindowType == 'browser') {
+		  gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
+		} else {
+		  window.messageManager.broadcastAsyncMessage("MouseGesturesSuite:startMouseMove");
+		}
+		
 	  }
 	}
 
@@ -1177,7 +1182,13 @@ mgsuite.overlay = {
   },
 
   aioMouseUp: function(e) {
-	gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+	//gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+	
+	if (mgsuite.overlay.aioWindowType == 'browser') {
+	  gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+	} else {
+	  window.messageManager.broadcastAsyncMessage("MouseGesturesSuite:endMouseMove");
+	}
 	
 	mgsuite.overlay.unBlockMouseEventsForRocker();
 
