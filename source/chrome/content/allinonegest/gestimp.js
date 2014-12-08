@@ -561,8 +561,10 @@ mgsuite.imp = {
       else str.data = gBrowser.selectedBrowser.currentURI.spec;
       var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
       if (!trans) return;
+      
       // Since data from the web content are copied to the clipboard, the privacy context must be set.
       var sourceWindow = mgsuite.overlay.aioSrcEvent.target.ownerDocument.defaultView;
+      
       var privacyContext = sourceWindow.QueryInterface(Components.interfaces.nsIInterfaceRequestor).
                                     getInterface(Components.interfaces.nsIWebNavigation).
                                     QueryInterface(Components.interfaces.nsILoadContext);
@@ -721,7 +723,7 @@ mgsuite.imp = {
     var searchStr = mgsuite.util.getSelectedText();
     
     if (mgsuite.overlay.aioIsFx && mgsuite.overlay.aioWindowType == 'browser') {
-      var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
+      var newWinOrTab = !/^about:(blank|newtab|home)/.test(gBrowser.selectedBrowser.currentURI.spec);
   
       if (searchStr) {
         BrowserSearch.loadSearchFromContext(searchStr);
@@ -747,7 +749,7 @@ mgsuite.imp = {
         var searchBar = BrowserSearch.searchBar;
         if (searchBar) searchBar.value = searchStr;
         
-        var newWinOrTab = !/^about:(blank|newtab|home)/.test(window.content.document.location.href);
+        var newWinOrTab = !/^about:(blank|newtab|home)/.test(gBrowser.selectedBrowser.currentURI.spec);
   
         if (alwaysNewTab) {
           // always force opening in new tab
@@ -1181,7 +1183,7 @@ mgsuite.imp = {
   aioDupTab: function(reverseBg) {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
-        var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
+        var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.currentURI.spec : gBrowser.selectedBrowser.currentURI.spec;
         mgsuite.imp.aioLinkInTab(url, true, false, reverseBg);
         break;
       
@@ -1289,9 +1291,9 @@ mgsuite.imp = {
     
     var chromeURL = mgsuite.overlay.aioIsFx ? "chrome://browser/content/" : "chrome://navigator/content/";
     
-    if (window.content && window.content.document) {
-       var charsetArg = "charset=" + window.content.document.characterSet;
-       return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
+    if (gBrowser.selectedBrowser.contentDocumentAsCPOW) {
+      var charsetArg = "charset=" + gBrowser.selectedBrowser.contentDocumentAsCPOW.characterSet;
+      return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
     }
     return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url);
   },
@@ -1386,7 +1388,7 @@ mgsuite.imp = {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
       case "source":
-        var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentDocument.location.href : window.content.document.location.href;
+        var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.currentURI.spec : gBrowser.selectedBrowser.currentURI.spec;
         
         mgsuite.imp.aioOpenNewWindow(url, background, true);
         break;
@@ -1524,7 +1526,7 @@ mgsuite.imp = {
       switch (mgsuite.overlay.aioWindowType) {
         case "browser":
           var url = gHomeButton.getHomePage();
-          if (mgsuite.overlay.aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
+          if (mgsuite.overlay.aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(gBrowser.selectedBrowser.currentURI.spec)) {
             mgsuite.imp.aioLinkInTab(url, false, false);
           } else {
             loadURI(url);
@@ -1548,7 +1550,7 @@ mgsuite.imp = {
       switch (mgsuite.overlay.aioWindowType) {
         case "browser":
           var homePage = getHomePage();
-          var where = (mgsuite.overlay.aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(window.content.document.location.href)) ? 'tab' : 'current';
+          var where = (mgsuite.overlay.aioGoUpInNewTab && !/^about:(blank|newtab|home)/.test(gBrowser.selectedBrowser.currentURI.spec)) ? 'tab' : 'current';
           openUILinkArrayIn(homePage, where);
           
           break;
@@ -1595,7 +1597,7 @@ mgsuite.imp = {
       // nothing found
       return "";
     }
-    var url = getUp(window.content.document.location.href);
+    var url = getUp(gBrowser.selectedBrowser.currentURI.spec);
     if (!url) return;
     if (mgsuite.overlay.aioGoUpInNewTab) mgsuite.imp.aioLinkInTab(url, false, false);
     else loadURI(url);
@@ -1695,7 +1697,7 @@ mgsuite.imp = {
   
   aioViewCookies: function() {
     var cookieStr = "";
-    var cookies = mgsuite.imp._aioGetDomainCookies(window.content.document);
+    var cookies = mgsuite.imp._aioGetDomainCookies(gBrowser.selectedBrowser.contentDocumentAsCPOW);
     
     if (cookies.length) {
       for (var i=0; i<cookies.length; i++) {
@@ -1711,7 +1713,7 @@ mgsuite.imp = {
   },
   
   aioDeleteCookies: function() {
-    var cookies = mgsuite.imp._aioGetDomainCookies(window.content.document);
+    var cookies = mgsuite.imp._aioGetDomainCookies(gBrowser.selectedBrowser.contentDocumentAsCPOW);
     if (!cookies.length) {
       alert(mgsuite.overlay.aioGetStr("noCookies"));
       return;
@@ -1787,7 +1789,7 @@ mgsuite.imp = {
   
   aioMetaInfo: function() {
     var metas, metastr, mymeta;
-    metas = window.content.document.getElementsByTagName("meta");
+    metas = gBrowser.selectedBrowser.contentDocumentAsCPOW.getElementsByTagName("meta");
     if (metas.length) {
       metastr = mgsuite.overlay.aioGetStr("meta") + "\n\n";
       for (var i = 0; i < metas.length; ++i) {
@@ -1911,7 +1913,7 @@ mgsuite.imp = {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
       case "source":
-        saveDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentWindow.document : window.content.document);
+        saveDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentDocumentAsCPOW : gBrowser.selectedBrowser.contentDocumentAsCPOW);
         break;
       
       case "messenger":
@@ -2009,10 +2011,13 @@ mgsuite.imp = {
     var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
     var clonedData = new Array();
     clonedData[0] = mgsuite.imp._aioCopyTabHistory(browser.webNavigation.sessionHistory);
-    clonedData[1] = browser.contentWindow.scrollX;
-    clonedData[2] = browser.contentWindow.scrollY;
-    clonedData[3] = browser.markupDocumentViewer.textZoom;
-    clonedData[4] = browser.markupDocumentViewer.fullZoom;
+    clonedData[1] = browser.contentWindowAsCPOW.scrollX;
+    clonedData[2] = browser.contentWindowAsCPOW.scrollY;
+    //dump("browser.markupDocumentViewer!\n");
+    //dump("browser.markupDocumentViewer=" + browser.markupDocumentViewer + "\n");
+    //dump("browser.markupDocumentViewer.textZoom=" + browser.markupDocumentViewer.textZoom + "\n");
+    //clonedData[3] = browser.markupDocumentViewer.textZoom;
+    //clonedData[4] = browser.markupDocumentViewer.fullZoom;
   
     return clonedData;
   },
@@ -2040,8 +2045,8 @@ mgsuite.imp = {
     }
   
     function setScrollPosition(attempts) {
-      browser.contentWindow.scrollTo(aClonedData[1], aClonedData[2]);
-      if (attempts && (browser.contentWindow.scrollX != aClonedData[1] || browser.contentWindow.scrollY != aClonedData[2]))
+      browser.contentWindowAsCPOW.scrollTo(aClonedData[1], aClonedData[2]);
+      if (attempts && (browser.contentWindowAsCPOW.scrollX != aClonedData[1] || browser.contentWindowAsCPOW.scrollY != aClonedData[2]))
         setTimeout(setScrollPosition, 10, --attempts);
     }
   
@@ -2050,8 +2055,8 @@ mgsuite.imp = {
   
     mgsuite.imp._aioCloneTabHistory(browser.webNavigation, aClonedData[0]);
     setScrollPosition(15);
-    setTextZoom(15);
-    setFullZoom(15);
+    //setTextZoom(15);
+    //setFullZoom(15);
   
     return true;
   },
