@@ -164,6 +164,161 @@ mgsuite.util = {
     var tlds = str.toLowerCase().split(/\s+/);
     
     return (tlds.indexOf(tld) >= 0) ? input : false;
-  }
+  },
+  
+  
+  /**
+   * Get an object that is a serialized representation of a History entry.
+   *
+   * @param shEntry
+   *        nsISHEntry instance
+   * @param isPinned
+   *        The tab is pinned and should be treated differently for privacy.
+   * @return object
+   */
+  serializeEntry: function (shEntry, isPinned) {
+    let entry = { url: shEntry.URI.spec };
+
+    // Save some bytes and don't include the title property
+    // if that's identical to the current entry's URL.
+    if (shEntry.title && shEntry.title != entry.url) {
+      entry.title = shEntry.title;
+    }
+    if (shEntry.isSubFrame) {
+      entry.subframe = true;
+    }
+
+    let cacheKey = shEntry.cacheKey;
+    if (cacheKey && cacheKey instanceof Ci.nsISupportsPRUint32 &&
+        cacheKey.data != 0) {
+      // XXXbz would be better to have cache keys implement
+      // nsISerializable or something.
+      entry.cacheKey = cacheKey.data;
+    }
+    entry.ID = shEntry.ID;
+    entry.docshellID = shEntry.docshellID;
+
+    // We will include the property only if it's truthy to save a couple of
+    // bytes when the resulting object is stringified and saved to disk.
+    if (shEntry.referrerURI) {
+      entry.referrer = shEntry.referrerURI.spec;
+      entry.referrerPolicy = shEntry.referrerPolicy;
+    }
+
+    if (shEntry.srcdocData)
+      entry.srcdocData = shEntry.srcdocData;
+
+    if (shEntry.isSrcdocEntry)
+      entry.isSrcdocEntry = shEntry.isSrcdocEntry;
+
+    if (shEntry.baseURI)
+      entry.baseURI = shEntry.baseURI.spec;
+
+    if (shEntry.contentType)
+      entry.contentType = shEntry.contentType;
+
+    let x = {}, y = {};
+    shEntry.getScrollPosition(x, y);
+    if (x.value != 0 || y.value != 0)
+      entry.scroll = x.value + "," + y.value;
+
+    // Collect owner data for the current history entry.
+    try {
+      let owner = this.serializeOwner(shEntry);
+      if (owner) {
+        entry.owner_b64 = owner;
+      }
+    } catch (ex) {
+      // Not catching anything specific here, just possible errors
+      // from writeCompoundObject() and the like.
+      debug("Failed serializing owner data: " + ex);
+    }
+
+    entry.docIdentifier = shEntry.BFCacheEntry.ID;
+
+    if (shEntry.stateData != null) {
+      entry.structuredCloneState = shEntry.stateData.getDataAsBase64();
+      entry.structuredCloneVersion = shEntry.stateData.formatVersion;
+    }
+
+    if (!(shEntry instanceof Ci.nsISHContainer)) {
+      return entry;
+    }
+
+    if (shEntry.childCount > 0) {
+      let children = [];
+      for (let i = 0; i < shEntry.childCount; i++) {
+        let child = shEntry.GetChildAt(i);
+
+        if (child && !this.isDynamic(child)) {
+          // Don't try to restore framesets containing wyciwyg URLs.
+          // (cf. bug 424689 and bug 450595)
+          if (child.URI.schemeIs("wyciwyg")) {
+            children.length = 0;
+            break;
+          }
+
+          children.push(this.serializeEntry(child, isPinned));
+        }
+      }
+
+      if (children.length) {
+        entry.children = children;
+      }
+    }
+
+    return entry;
+  },
+  
+  /**
+   * Serialize owner data contained in the given session history entry.
+   *
+   * @param shEntry
+   *        The session history entry.
+   * @return The base64 encoded owner data.
+   */
+  serializeOwner: function (shEntry) {
+    if (!shEntry.owner) {
+      return null;
+    }
+    
+    const Cc = Components.classes;
+    const Ci = Components.interfaces;
+
+    let binaryStream = Cc["@mozilla.org/binaryoutputstream;1"].
+                       createInstance(Ci.nsIObjectOutputStream);
+    let pipe = Cc["@mozilla.org/pipe;1"].createInstance(Ci.nsIPipe);
+    pipe.init(false, false, 0, 0xffffffff, null);
+    binaryStream.setOutputStream(pipe.outputStream);
+    binaryStream.writeCompoundObject(shEntry.owner, Ci.nsISupports, true);
+    binaryStream.close();
+
+    // Now we want to read the data from the pipe's input end and encode it.
+    let scriptableStream = Cc["@mozilla.org/binaryinputstream;1"].
+                           createInstance(Ci.nsIBinaryInputStream);
+    scriptableStream.setInputStream(pipe.inputStream);
+    let ownerBytes =
+      scriptableStream.readByteArray(scriptableStream.available());
+
+    // We can stop doing base64 encoding once our serialization into JSON
+    // is guaranteed to handle all chars in strings, including embedded
+    // nulls.
+    return btoa(String.fromCharCode.apply(null, ownerBytes));
+  },
+  
+  /**
+   * Determines whether a given session history entry has been added dynamically.
+   *
+   * @param shEntry
+   *        The session history entry.
+   * @return bool
+   */
+  isDynamic: function (shEntry) {
+    // shEntry.isDynamicallyAdded() is true for dynamically added
+    // <iframe> and <frameset>, but also for <html> (the root of the
+    // document) so we use shEntry.parent to ensure that we're not looking
+    // at the root of the document
+    return shEntry.parent && shEntry.isDynamicallyAdded();
+  },
 
 }

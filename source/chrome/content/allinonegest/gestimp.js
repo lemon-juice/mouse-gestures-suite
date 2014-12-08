@@ -1926,11 +1926,7 @@ mgsuite.imp = {
   aioDetachTab: function() {
     var tabLength = gBrowser.tabContainer.childNodes.length;
     if (tabLength <= 1) return;
-    
-    //var tab = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.tabContainer.childNodes[gBrowser.tabContainer.selectedIndex];
-    //dump("tab=" + tab + "\n");
-    //var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
-  
+ 
     mgsuite.imp._aioDetachTab(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.selectedTab);
   },
   
@@ -1956,7 +1952,7 @@ mgsuite.imp = {
     
     window.fullScreen = false;
     
-    var newWin =mgsuite.imp._aioDetachTab(tabToDetach);
+    var newWin = mgsuite.imp._aioDetachTab(tabToDetach);
     
     setTimeout(function() {
       mgsuite.imp._aioDoubleStack2Windows(window, newWin);
@@ -1969,199 +1965,55 @@ mgsuite.imp = {
   _aioDetachTab: function(tabToDetach) {
     var tabLength = gBrowser.tabContainer.childNodes.length;
     if (tabLength <= 1) return null;
-    
-  
-    //mgsuite.imp.aioClonedData = mgsuite.imp._aioGetClonedData(tabToDetach);
-    //var browser = gBrowser.getBrowserForTab(tabToDetach);
-    //gBrowser.removeTab(tabToDetach);
+
+    var history = mgsuite.imp.getTabHistory(tabToDetach);
+    gBrowser.removeTab(tabToDetach);
     
     var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
     
-    // Wait until session history is available in the new window
     openedWindow.addEventListener('load', function() {
-          //mgsuite.imp._aioWaitForSessionHistory(10, openedWindow);
           setTimeout(function() {
             var browser = openedWindow.gBrowser.selectedBrowser;
-            dump("br=" + browser.nodeName + "\n");
-            browser.messageManager.sendAsyncMessage("MouseGesturesSuite:test");
-          }, 500);
+            browser.messageManager.sendAsyncMessage("MouseGesturesSuite:insertHistory", history);
+          }, 100);
         }, false);
     
     return openedWindow;
   },
   
-  _aioWaitForSessionHistory: function(attempts, openedWindow) {
-    // Test if sessionHistory exists yet
-    var webNav = openedWindow.getBrowser().webNavigation;
-    try {
-      webNav.sessionHistory;
-    }
-  
-    // webNav.sessionHistory is not yet available, try again later
-    catch (err) {
-      if (attempts)
-        window.setTimeout(mgsuite.imp._aioWaitForSessionHistory, 100, --attempts, openedWindow);
-      return;
-    }
-    if ((webNav.sessionHistory == null) && attempts) {
-      window.setTimeout(mgsuite.imp._aioWaitForSessionHistory, 100, --attempts, openedWindow);
-      return;
-    }
-  
-    mgsuite.imp._aioSetClonedData(openedWindow.getBrowser().selectedTab, mgsuite.imp.aioClonedData);
-  },
-  
-  /* getClonedData
-   * get the data from the tab which is to be cloned.
+  /*
+   * Get history data from the tab which is to be detached.
    *
-   * @param aTab:       tabbrowser tab which should be cloned.
-   * returns object containing the data which should be cloned.
+   * @param aTab: tabbrowser tab which should be cloned.
+   * returns object containing the data which should be cloned, history entries are serialized.
    */
-  _aioGetClonedData: function(aTab)
+  getTabHistory: function(aTab)
   {
     var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
-    var clonedData = new Array();
-    clonedData[0] = mgsuite.imp._aioCopyTabHistory(browser.webNavigation.sessionHistory);
-    clonedData[1] = browser.contentWindowAsCPOW.scrollX;
-    clonedData[2] = browser.contentWindowAsCPOW.scrollY;
-    //dump("browser.markupDocumentViewer!\n");
-    //dump("browser.markupDocumentViewer=" + browser.markupDocumentViewer + "\n");
-    //dump("browser.markupDocumentViewer.textZoom=" + browser.markupDocumentViewer.textZoom + "\n");
-    //clonedData[3] = browser.markupDocumentViewer.textZoom;
-    //clonedData[4] = browser.markupDocumentViewer.fullZoom;
-  
+    var clonedData = {};
+    clonedData.entries = mgsuite.imp.getHistoryEntries(browser.webNavigation.sessionHistory);
+    clonedData.index = browser.webNavigation.sessionHistory.index;
+    var win = browser.contentWindowAsCPOW ? browser.contentWindowAsCPOW : browser.contentWindow;
+    clonedData.scrollX = win.scrollX;
+    clonedData.scrollY = win.scrollY;
     return clonedData;
   },
   
-  /* setClonedData
-   * sets the data cloned from the original tab into a new tab.
-   * @param aTab:        the new tab the data has to be set to.
-   * @param aClonedData: object containing the data.
-   *
-   * returns  boolean to indicate successfullness
-   */
-  _aioSetClonedData: function(aTab, aClonedData)
-  {
-    var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
-    function setTextZoom(attempts) {
-      browser.markupDocumentViewer.textZoom = aClonedData[3];
-      if (attempts && browser.markupDocumentViewer.textZoom != aClonedData[3])
-        setTimeout(setTextZoom, 10, --attempts)
-    }
-  
-    function setFullZoom(attempts) {
-      browser.markupDocumentViewer.fullZoom = aClonedData[4];
-      if (attempts && browser.markupDocumentViewer.fullZoom != aClonedData[4])
-        setTimeout(setFullZoom, 10, --attempts)
-    }
-  
-    function setScrollPosition(attempts) {
-      browser.contentWindowAsCPOW.scrollTo(aClonedData[1], aClonedData[2]);
-      if (attempts && (browser.contentWindowAsCPOW.scrollX != aClonedData[1] || browser.contentWindowAsCPOW.scrollY != aClonedData[2]))
-        setTimeout(setScrollPosition, 10, --attempts);
-    }
-  
-    if (aClonedData[0].length == 0)
-      return false;
-  
-    setTimeout(function() {
-      var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
-      dump("br=" + browser.nodeName + "\n");
-      mgsuite.imp._aioCloneTabHistory(browser.webNavigation, aClonedData[0]);
-    }, 500);
-    //setScrollPosition(15);
-    //setTextZoom(15);
-    //setFullZoom(15);
-  
-    return true;
-  },
-  
-  // Clone an array of history entries into a browsers webNavigation.sessionHistory
-  // Argument1 webNav: The webNavigation object of a newly created browser.
-  // Argument2 originalHistory: an array containing history entries from the original browser
-  _aioCloneTabHistory: function(webNav, originalHistory)
-  {
-    var newHistory = webNav.sessionHistory;
-    //var newHistory = browser.sessionHistory;
-  
-    newHistory.QueryInterface(Components.interfaces.nsISHistoryInternal);
-  
-    // delete history entries if they are present
-    if (newHistory.count > 0)
-      newHistory.PurgeHistory(newHistory.count);
-  
-    for (var i = 0; i < originalHistory.length; i++) {
-      var entry = originalHistory[i].QueryInterface(Components.interfaces.nsISHEntry);
-      var newEntry = mgsuite.imp._aioCloneHistoryEntry(entry);
-      //dump(newEntry + "\n");
-      if (newEntry) {
-        //newHistory.addEntry(newEntry, true);
-        
-        const Cc = Components.classes;
-        const Ci = Components.interfaces;
-        var shEntry = Cc["@mozilla.org/browser/session-history-entry;1"].createInstance(Ci.nsISHEntry);
-        shEntry.setURI(Services.io.newURI("http://www.seamonkey-project.org/", null, null));
-        shEntry.setTitle("SeaMonkey Title!");
-        shEntry.contentType = "text/html";
-        shEntry.loadType = Ci.nsIDocShellLoadInfo.loadHistory;
-        //shEntry.referrerURI = { clone: function() { } };
-        dump("add:" + shEntry + "\n");
-        newHistory.addEntry(shEntry, true);
-        dump("added\n");
-      }
-    }
-  
-    // Go to current history location
-    webNav.gotoIndex(originalHistory.length - 1);
-    //if (originalHistory.index < originalHistory.length) {
-    //  gotoHistoryIndex(10);
-    //}
-    //
-    //function gotoHistoryIndex(attempts) {
-    //  try {
-    //    webNav.gotoIndex(originalHistory.index);
-    //  }
-    //  catch(e) {
-    //    // do some math to increase the timeout
-    //    // each time we try to update the history index
-    //    if (attempts)
-    //      setTimeout(gotoHistoryIndex, (11 - attempts) * (15 - attempts), --attempts);
-    //  }
-    //}
-  },
-  
-  _aioCloneHistoryEntry: function(aEntry) {
-    if (!aEntry)
-      return null;
-    aEntry = aEntry.QueryInterface(Components.interfaces.nsISHContainer);
-    var newEntry = aEntry.clone();
-    newEntry = newEntry.QueryInterface(Components.interfaces.nsISHContainer);
-    newEntry.loadType = Math.floor(aEntry.loadType);
-    if (aEntry.childCount) {
-      for (var j = 0; j < aEntry.childCount; j++) {
-          var childEntry = mgsuite.imp._aioCloneHistoryEntry(aEntry.GetChildAt(j));
-          if (childEntry)
-            newEntry.AddChild(childEntry, j);
-      }
-    }
-    return newEntry;
-  },
-  
-  // copy a sessionHistory and put it into an array
+  // Get serialized essionHistory entries in an array
   // Argument1 originalHistory: webNavigation.sessionHistory browser history to be copied
   // returns: an array containing a copy of the history
-  _aioCopyTabHistory: function(originalHistory)
+  getHistoryEntries: function(originalHistory)
   {
     var range = {start: 0, index: originalHistory.index, length: originalHistory.count};
   
-    var copiedHistory = new Array();
+    var entries = [];
+    
     for (var i = range.start; i < range.length; i++) {
-      copiedHistory.push(originalHistory.getEntryAtIndex(i, false));
-      dump("his:" + originalHistory.getEntryAtIndex(i, false) + "\n");
+      var entry = originalHistory.getEntryAtIndex(i, false);
+      entries.push(mgsuite.util.serializeEntry(entry));
     }
-    copiedHistory.index = range.index;
   
-    return copiedHistory;
+    return entries;
   },
   
   
