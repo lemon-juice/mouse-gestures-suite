@@ -128,20 +128,27 @@ var mgsuiteFr = {
     //}
     //copiedHistory.index = range.index;
     
-    var sHistory = Components.classes["@mozilla.org/browser/shistory;1"]
-               .createInstance(Components.interfaces.nsISHistory);
+    //var sHistory = Components.classes["@mozilla.org/browser/shistory;1"]
+    //           .createInstance(Components.interfaces.nsISHistory);
     
-    const Cc = Components.classes, Ci = Components.interfaces;
+    
+    const Cc = Components.classes;
+    const Ci = Components.interfaces;
+    docShell.QueryInterface(Components.interfaces.nsIWebNavigation);
+    
+    var sHistory = docShell.sessionHistory;
+    sHistory.QueryInterface(Components.interfaces.nsISHistoryInternal);
+    
     var shEntry = Cc["@mozilla.org/browser/session-history-entry;1"].createInstance(Ci.nsISHEntry);
     shEntry.setURI(Services.io.newURI("http://www.seamonkey-project.org/", null, null));
     shEntry.setTitle("SeaMonkey Title!");
     shEntry.contentType = "text/html";
     shEntry.loadType = Ci.nsIDocShellLoadInfo.loadHistory;
-    //shEntry.referrerURI = { clone: function() { } };
-    //sHistory.addEntry(shEntry, true);
+    sHistory.addEntry(shEntry, true);
+    
+    docShell.gotoIndex(0);
 
-
-    sendAsyncMessage("MouseGesturesSuite:test", sHistory);
+    sendAsyncMessage("MouseGesturesSuite:test", typeof docShell.sessionHistory);
   }
 }
 

@@ -1929,8 +1929,7 @@ mgsuite.imp = {
     
     //var tab = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.tabContainer.childNodes[gBrowser.tabContainer.selectedIndex];
     //dump("tab=" + tab + "\n");
-    //var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no', tab);
-
+    //var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
   
     mgsuite.imp._aioDetachTab(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.selectedTab);
   },
@@ -1972,7 +1971,7 @@ mgsuite.imp = {
     if (tabLength <= 1) return null;
     
   
-    mgsuite.imp.aioClonedData = mgsuite.imp._aioGetClonedData(tabToDetach);
+    //mgsuite.imp.aioClonedData = mgsuite.imp._aioGetClonedData(tabToDetach);
     //var browser = gBrowser.getBrowserForTab(tabToDetach);
     //gBrowser.removeTab(tabToDetach);
     
@@ -1980,7 +1979,12 @@ mgsuite.imp = {
     
     // Wait until session history is available in the new window
     openedWindow.addEventListener('load', function() {
-          mgsuite.imp._aioWaitForSessionHistory(10, openedWindow);
+          //mgsuite.imp._aioWaitForSessionHistory(10, openedWindow);
+          setTimeout(function() {
+            var browser = openedWindow.gBrowser.selectedBrowser;
+            dump("br=" + browser.nodeName + "\n");
+            browser.messageManager.sendAsyncMessage("MouseGesturesSuite:test");
+          }, 500);
         }, false);
     
     return openedWindow;
@@ -2078,6 +2082,7 @@ mgsuite.imp = {
   _aioCloneTabHistory: function(webNav, originalHistory)
   {
     var newHistory = webNav.sessionHistory;
+    //var newHistory = browser.sessionHistory;
   
     newHistory.QueryInterface(Components.interfaces.nsISHistoryInternal);
   
@@ -2102,24 +2107,27 @@ mgsuite.imp = {
         //shEntry.referrerURI = { clone: function() { } };
         dump("add:" + shEntry + "\n");
         newHistory.addEntry(shEntry, true);
+        dump("added\n");
       }
     }
   
     // Go to current history location
-    if (originalHistory.index < originalHistory.length)
-      gotoHistoryIndex(10);
-  
-    function gotoHistoryIndex(attempts) {
-      try {
-        webNav.gotoIndex(originalHistory.index);
-      }
-      catch(e) {
-        // do some math to increase the timeout
-        // each time we try to update the history index
-        if (attempts)
-          setTimeout(gotoHistoryIndex, (11 - attempts) * (15 - attempts), --attempts);
-      }
-    }
+    webNav.gotoIndex(originalHistory.length - 1);
+    //if (originalHistory.index < originalHistory.length) {
+    //  gotoHistoryIndex(10);
+    //}
+    //
+    //function gotoHistoryIndex(attempts) {
+    //  try {
+    //    webNav.gotoIndex(originalHistory.index);
+    //  }
+    //  catch(e) {
+    //    // do some math to increase the timeout
+    //    // each time we try to update the history index
+    //    if (attempts)
+    //      setTimeout(gotoHistoryIndex, (11 - attempts) * (15 - attempts), --attempts);
+    //  }
+    //}
   },
   
   _aioCloneHistoryEntry: function(aEntry) {
