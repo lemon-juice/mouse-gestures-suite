@@ -1926,6 +1926,11 @@ mgsuite.imp = {
   aioDetachTab: function() {
     var tabLength = gBrowser.tabContainer.childNodes.length;
     if (tabLength <= 1) return;
+    
+    //var tab = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.tabContainer.childNodes[gBrowser.tabContainer.selectedIndex];
+    //dump("tab=" + tab + "\n");
+    //var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no', tab);
+
   
     mgsuite.imp._aioDetachTab(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.selectedTab);
   },
@@ -1959,20 +1964,22 @@ mgsuite.imp = {
     }, 500);
   },
   
+  
   // detach given tab to new window
   // returns opened window object
   _aioDetachTab: function(tabToDetach) {
     var tabLength = gBrowser.tabContainer.childNodes.length;
     if (tabLength <= 1) return null;
+    
   
     mgsuite.imp.aioClonedData = mgsuite.imp._aioGetClonedData(tabToDetach);
-    gBrowser.removeTab(tabToDetach);
+    //var browser = gBrowser.getBrowserForTab(tabToDetach);
+    //gBrowser.removeTab(tabToDetach);
     
     var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
-  
+    
     // Wait until session history is available in the new window
-    openedWindow.addEventListener('load',
-        function() {
+    openedWindow.addEventListener('load', function() {
           mgsuite.imp._aioWaitForSessionHistory(10, openedWindow);
         }, false);
     
@@ -2053,8 +2060,12 @@ mgsuite.imp = {
     if (aClonedData[0].length == 0)
       return false;
   
-    mgsuite.imp._aioCloneTabHistory(browser.webNavigation, aClonedData[0]);
-    setScrollPosition(15);
+    setTimeout(function() {
+      var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
+      dump("br=" + browser.nodeName + "\n");
+      mgsuite.imp._aioCloneTabHistory(browser.webNavigation, aClonedData[0]);
+    }, 500);
+    //setScrollPosition(15);
     //setTextZoom(15);
     //setFullZoom(15);
   
@@ -2077,8 +2088,21 @@ mgsuite.imp = {
     for (var i = 0; i < originalHistory.length; i++) {
       var entry = originalHistory[i].QueryInterface(Components.interfaces.nsISHEntry);
       var newEntry = mgsuite.imp._aioCloneHistoryEntry(entry);
-      if (newEntry)
-        newHistory.addEntry(newEntry, true);
+      //dump(newEntry + "\n");
+      if (newEntry) {
+        //newHistory.addEntry(newEntry, true);
+        
+        const Cc = Components.classes;
+        const Ci = Components.interfaces;
+        var shEntry = Cc["@mozilla.org/browser/session-history-entry;1"].createInstance(Ci.nsISHEntry);
+        shEntry.setURI(Services.io.newURI("http://www.seamonkey-project.org/", null, null));
+        shEntry.setTitle("SeaMonkey Title!");
+        shEntry.contentType = "text/html";
+        shEntry.loadType = Ci.nsIDocShellLoadInfo.loadHistory;
+        //shEntry.referrerURI = { clone: function() { } };
+        dump("add:" + shEntry + "\n");
+        newHistory.addEntry(shEntry, true);
+      }
     }
   
     // Go to current history location
@@ -2125,6 +2149,7 @@ mgsuite.imp = {
     var copiedHistory = new Array();
     for (var i = range.start; i < range.length; i++) {
       copiedHistory.push(originalHistory.getEntryAtIndex(i, false));
+      dump("his:" + originalHistory.getEntryAtIndex(i, false) + "\n");
     }
     copiedHistory.index = range.index;
   

@@ -4,7 +4,7 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:startMouseMove", this);
     addMessageListener("MouseGesturesSuite:endMouseMove", this);
     addMessageListener("MouseGesturesSuite:getContentWindow", this);
-    //addMessageListener("MouseGesturesSuite:test", this);
+    addMessageListener("MouseGesturesSuite:test", this);
     addMessageListener("MouseGesturesSuite:displayGesturesList", this);
     addEventListener("mousedown", this);
   },
@@ -16,6 +16,7 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:endMouseMove": this.endMouseMove(); break;
       case "MouseGesturesSuite:getContentWindow": this.getContentWindow(aMsg); break;
       case "MouseGesturesSuite:displayGesturesList": this.displayGesturesList(aMsg); break;
+      case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
   
@@ -115,6 +116,33 @@ var mgsuiteFr = {
     removeEventListener("DOMContentLoaded", mgsuiteFr.displayGesturesList2, false);
     mgsuiteFr.recentMsgData = null;
   },
+  
+  
+  test: function(msg) {
+    //var range = {start: 0, index: SessionHistory.index, length: SessionHistory.count};
+    //
+    //var copiedHistory = new Array();
+    //for (var i = range.start; i < range.length; i++) {
+    //  copiedHistory.push(SessionHistory.getEntryAtIndex(i, false));
+    //  //dump("his:" + SessionHistory.getEntryAtIndex(i, false) + "\n");
+    //}
+    //copiedHistory.index = range.index;
+    
+    var sHistory = Components.classes["@mozilla.org/browser/shistory;1"]
+               .createInstance(Components.interfaces.nsISHistory);
+    
+    const Cc = Components.classes, Ci = Components.interfaces;
+    var shEntry = Cc["@mozilla.org/browser/session-history-entry;1"].createInstance(Ci.nsISHEntry);
+    shEntry.setURI(Services.io.newURI("http://www.seamonkey-project.org/", null, null));
+    shEntry.setTitle("SeaMonkey Title!");
+    shEntry.contentType = "text/html";
+    shEntry.loadType = Ci.nsIDocShellLoadInfo.loadHistory;
+    //shEntry.referrerURI = { clone: function() { } };
+    //sHistory.addEntry(shEntry, true);
+
+
+    sendAsyncMessage("MouseGesturesSuite:test", sHistory);
+  }
 }
 
 mgsuiteFr.init();
