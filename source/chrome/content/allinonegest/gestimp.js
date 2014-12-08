@@ -457,11 +457,24 @@ mgsuite.imp = {
     }
   },
   
-  aioShowLocalizedGestures: function(doc) {
+  // help page that lists all gestures
+  aioGesturesPage: function() {
+    var tab, browser;
+    
+    if (!/^about:(blank|newtab|home)/.test(gBrowser.selectedBrowser.currentURI.spec)) {
+      tab = mgsuite.imp.aioLinkInTab(mgsuite.imp.showGesturesUrl, false, false);
+      browser = gBrowser.getBrowserForTab(tab);
+    } else {
+      loadURI(mgsuite.imp.showGesturesUrl);
+      browser = gBrowser.selectedBrowser;
+    }
+    
+    // create html content
     var imageName;
     const K2 = '<td class="row1" valign="middle" height="30"><span class="forumlink">';
     const K3 = '</span></td><td class="row2" valign="middle"><span class="forumlink">'
     const K4 = '</span></td><td class="row3" valign="middle" align="center">';
+    
     function localized(aStr) {
       if (!aStr) {
          imageName = "nomov";
@@ -478,13 +491,15 @@ mgsuite.imp = {
          if (aStr.length < 5) imageName = aStr; else imageName = "other";
       return lStr;
     }
+    
     var locGest = mgsuite.overlay.aioGetStr("w.gesture").replace(/\'/g, "&#39;");
     var locFunc = mgsuite.overlay.aioGetStr("w.function").replace(/\'/g, "&#39;");
     var locMove = mgsuite.overlay.aioGetStr("w.move").replace(/\'/g, "&#39;");
     const K1 = '<th width="100" class="thTop" nowrap="nowrap">&nbsp;' + locGest + '&nbsp;</th>';
     const imgURL = '<img src="chrome://allinonegest/content/gest-imgs/';
+    
     var divCode = '<div class="buttons">';
-    divCode += '<button onclick="openOptions()">' + mgsuite.overlay.aioGetStr('g.aioOptions') + '</button>';
+    //divCode += '<button onclick="openOptions()">' + mgsuite.overlay.aioGetStr('g.aioOptions') + '</button>';
     divCode += '<button onclick="openHelp(2)">Help</button>';
     divCode += '</div>';
     divCode += '<table width="100%" cellpadding="2" cellspacing="1" class="forumline">';
@@ -525,26 +540,10 @@ mgsuite.imp = {
     }
     
     divCode += '</table>';
+    
     var title = mgsuite.overlay.aioGetStr("w.gestTable").replace(/\'/g, "&#39;");
-    var str = "(function(){window.addEventListener('load',function(e){document.title='" + title +
-         "';document.body.innerHTML='" + divCode + "';},false);})();"
-    var script = doc.createElement("script");
-    script.appendChild(doc.createTextNode(str));
-    doc.body.appendChild(script);
-  },
-  
-  aiogestDOMLoaded: function(e) {  
-    var doc = e.originalTarget.defaultView.document;
-    if (doc.location.href == mgsuite.imp.showGesturesUrl) mgsuite.imp.aioShowLocalizedGestures(doc);
-  },
-  
-  aioGesturesPage: function() {
-    mgsuite.overlay.aioContent.addEventListener("DOMContentLoaded", mgsuite.imp.aiogestDOMLoaded, false);
-    if (!/^about:(blank|newtab|home)/.test(window.content.document.location.href)) {
-      mgsuite.imp.aioLinkInTab(mgsuite.imp.showGesturesUrl, false, false);
-    } else {
-      loadURI(mgsuite.imp.showGesturesUrl);
-    }
+    
+    browser.messageManager.sendAsyncMessage("MouseGesturesSuite:displayGesturesList", {title: title, content: divCode});
   },
   
   aioCopyURLToClipBoard: function() {
@@ -559,7 +558,7 @@ mgsuite.imp = {
          }
          str.data = lstr;
       }
-      else str.data = window.content.document.location.href;
+      else str.data = gBrowser.selectedBrowser.currentURI.spec;
       var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
       if (!trans) return;
       // Since data from the web content are copied to the clipboard, the privacy context must be set.

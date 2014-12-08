@@ -4,6 +4,8 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:startMouseMove", this);
     addMessageListener("MouseGesturesSuite:endMouseMove", this);
     addMessageListener("MouseGesturesSuite:getContentWindow", this);
+    //addMessageListener("MouseGesturesSuite:test", this);
+    addMessageListener("MouseGesturesSuite:displayGesturesList", this);
     addEventListener("mousedown", this);
   },
   
@@ -13,6 +15,7 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:startMouseMove": this.startMouseMove(); break;
       case "MouseGesturesSuite:endMouseMove": this.endMouseMove(); break;
       case "MouseGesturesSuite:getContentWindow": this.getContentWindow(aMsg); break;
+      case "MouseGesturesSuite:displayGesturesList": this.displayGesturesList(aMsg); break;
     }
   },
   
@@ -90,11 +93,28 @@ var mgsuiteFr = {
     removeEventListener("mousemove", this);
     this.collectElementsData = false;
   },
-  
-  
+   
   getContentWindow: function(msg) {
     sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: msg.data}, {param: content});
-  }
+  },
+  
+  displayGesturesList: function(msg) {
+    mgsuiteFr.recentMsgData = msg.data;
+    addEventListener("DOMContentLoaded", mgsuiteFr.displayGesturesList2, false);
+  },
+  
+  displayGesturesList2: function(e) {
+    var doc = content.document;
+    
+    var str = "(function(){window.addEventListener('load',function(e){document.title='" + mgsuiteFr.recentMsgData.title +
+       "';document.body.innerHTML='" + mgsuiteFr.recentMsgData.content + "';},false);})();"
+    var script = doc.createElement("script");
+    script.appendChild(doc.createTextNode(str));
+    doc.body.appendChild(script);
+    
+    removeEventListener("DOMContentLoaded", mgsuiteFr.displayGesturesList2, false);
+    mgsuiteFr.recentMsgData = null;
+  },
 }
 
 mgsuiteFr.init();

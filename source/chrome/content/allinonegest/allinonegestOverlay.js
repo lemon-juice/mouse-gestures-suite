@@ -546,7 +546,8 @@ mgsuite.overlay = {
 	  window.messageManager.loadFrameScript(mgsuite.const.CHROME_DIR + "frame-script.js", true);
 	  window.messageManager.addMessageListener("MouseGesturesSuite:CollectLinks", mgsuite.util.CollectLinksListener);
 	  window.messageManager.addMessageListener("MouseGesturesSuite:returnWithCallback", mgsuite.util.returnWithCallback);
-	  window.messageManager.addMessageListener("MouseGesturesSuite:test", mgsuite.util.testListener);
+	  window.messageManager.addMessageListener("MouseGesturesSuite:displayGesturesList", mgsuite.util.returnWithCallback);
+	  window.messageManager.addMessageListener("MouseGesturesSuite:test", mgsuite.util.returnWithCallback);
 	  
 	  switch (mgsuite.overlay.aioWindowType) {
 		case 'browser':
