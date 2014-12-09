@@ -1,4 +1,7 @@
+"use strict";
+
 var mgsuiteFr = {
+  collectElementsData: false,
   
   init: function() {
     addMessageListener("MouseGesturesSuite:startMouseMove", this);
@@ -7,7 +10,8 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:insertHistory", this);
     addMessageListener("MouseGesturesSuite:test", this);
     addMessageListener("MouseGesturesSuite:displayGesturesList", this);
-    addEventListener("mousedown", this);
+    addMessageListener("MouseGesturesSuite:scrollElement", this);
+    addEventListener("mousedown", mgsuiteFr, true);
   },
   
   /* Receiving message from addMessageListener */
@@ -18,15 +22,22 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:getContentWindow": this.getContentWindow(aMsg); break;
       case "MouseGesturesSuite:displayGesturesList": this.displayGesturesList(aMsg); break;
       case "MouseGesturesSuite:insertHistory": this.insertHistory(aMsg); break;
+      case "MouseGesturesSuite:scrollElement": this.scrollElement(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
   
   /* Handle mouse event */
   handleEvent: function(e) {
-    if (!this.collectElementsData) {
+    if (e.type == 'mousedown') {
+      e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
+    }
+    
+    if (!this.collectElementsData && e.type != 'mousedown') {
       return;
     }
+    
+    //sendAsyncMessage("MouseGesturesSuite:test", 'mouse:' + e.type);
     
     // send link info found under gesture to mouse gesture script
     var elemInfo = this.getElementInfo(e);
@@ -46,8 +57,8 @@ var mgsuiteFr = {
       if (elem.nodeType == 1) { // ELEMENT_NODE
         // Link?
         if (!link &&
-            ((elem instanceof content.HTMLAnchorElement && elem.href) ||
-            (elem instanceof content.HTMLAreaElement && elem.href) ||
+            ((elem instanceof content.content.HTMLAnchorElement && elem.href) ||
+            (elem instanceof content.content.HTMLAreaElement && elem.href) ||
              elem.getAttributeNS("http://www.w3.org/1999/xlink", "type") == "simple")) {
 
           // elem is link
@@ -95,6 +106,7 @@ var mgsuiteFr = {
   endMouseMove: function() {
     removeEventListener("mousemove", this);
     this.collectElementsData = false;
+    //sendAsyncMessage("MouseGesturesSuite:test", 'endMouseMove');
   },
    
   getContentWindow: function(msg) {
@@ -287,6 +299,217 @@ var mgsuiteFr = {
     }
 
     return shEntry;
+  },
+  
+  
+  
+  findNodeToScroll: function(initialNode) {
+
+    function getStyle(elem, aProp) {
+      var p = elem.ownerDocument.defaultView.getComputedStyle(elem, "").getPropertyValue(aProp);
+      var val = parseFloat(p);
+      if (!isNaN(val)) return Math.ceil(val);
+      if (p == "thin") return 1;
+      if (p == "medium") return 3;
+      if (p == "thick") return 5;
+      return 0;
+    }
+    
+    function isUnformattedXML(aDoc) {
+      return /\/[\w+]*xml/.test(aDoc.contentType) && aDoc.styleSheets && aDoc.styleSheets.length && aDoc.styleSheets[0].href &&
+            aDoc.styleSheets[0].href.substr(-31) == "/content/xml/XMLPrettyPrint.css";
+    }
+
+    const scrollingAllowed = ['scroll', 'auto'];
+    const defaultScrollBarSize = 16;
+    const twiceScrollBarSize = defaultScrollBarSize * 2;
+    
+    var retObj = {
+      scrollType: 3,
+      isXML: false,
+      nodeToScroll: null,
+      dX: 0,
+      dY: 0,
+      docWidth: 0,
+      docHeight: 0,
+      clientFrame: null,
+      isBody: false,
+      isFrame: false,
+      targetDoc: null,
+      insertionNode: null,
+      docBoxX: 0,
+      docBoxY: 0,
+      realHeight: 0,
+      ratioX: -1,
+      ratioY: -1,
+      XMLPrettyPrint: false,
+      cursorChangeable: false
+    };
+    
+    var realWidth, realHeight, nextNode, currNode;
+    var targetDoc = initialNode.ownerDocument;
+    var docEl = targetDoc.documentElement;
+    var clientFrame = targetDoc.defaultView;
+    retObj.insertionNode = (docEl) ? docEl : targetDoc;
+    retObj.XMLPrettyPrint = isUnformattedXML(targetDoc);
+    
+    //var zoom = 1;
+
+    var domWindowUtils = clientFrame.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils);
+    var zoom = domWindowUtils.fullZoom;
+
+    var insertBounds = retObj.insertionNode.getBoundingClientRect();
+    retObj.docBoxX = Math.floor((clientFrame.mozInnerScreenX + insertBounds.left) * zoom);
+    retObj.docBoxY = Math.floor((clientFrame.mozInnerScreenY + insertBounds.top) * zoom);
+
+    retObj.targetDoc = targetDoc;
+    retObj.clientFrame = clientFrame;
+    
+    if (docEl && docEl.nodeName.toLowerCase() == "html") { // walk the tree up looking for something to scroll
+	  if (clientFrame.frameElement) {
+        retObj.isFrame = true;
+      } else {
+        retObj.isFrame = false;
+      }
+      
+	  var bodies = docEl.getElementsByTagName("body");
+	  if (!bodies || !bodies.length) return retObj;
+      
+	  var bodyEl = bodies[0];
+	  if (initialNode == docEl) nextNode = bodyEl;
+	  else if (initialNode.nodeName.toLowerCase() == "select") nextNode = initialNode.parentNode;
+		   else nextNode = initialNode;
+	  
+	  do {
+		try {
+		  currNode = nextNode;
+		  if (!(currNode instanceof content.HTMLElement)) {
+			// some non-html element, e.g. svg
+			nextNode = currNode.parentNode;
+			continue;
+		  }
+
+		  if ((currNode instanceof content.HTMLHtmlElement) ||
+                (currNode instanceof content.HTMLBodyElement)) {
+            if (clientFrame.scrollMaxX > 0) {
+			  retObj.scrollType = clientFrame.scrollMaxY > 0 ? (clientFrame.scrollbars.visible ? 0 : 3) : 2;			 
+			} else {
+			  retObj.scrollType =  (clientFrame.scrollMaxY > 0 && clientFrame.scrollbars.visible) ? 1 : 3;
+			}
+          }
+		  else {
+			var overflowx = currNode.ownerDocument.defaultView
+								.getComputedStyle(currNode, '')
+								.getPropertyValue('overflow-x');
+			var overflowy = currNode.ownerDocument.defaultView
+								.getComputedStyle(currNode, '')
+								.getPropertyValue('overflow-y');
+
+			// Bug 212763 - overflow: visible on textarea isn't applied 
+			if (currNode instanceof content.HTMLTextAreaElement) {
+			  if (overflowx == "visible") overflowx = "scroll";
+			  if (overflowy == "visible") overflowy = "scroll";
+			}
+  
+			var scrollVert = currNode.clientHeight > 0 &&
+							 currNode.scrollHeight > currNode.clientHeight &&
+							 (currNode instanceof content.HTMLSelectElement ||
+							 scrollingAllowed.indexOf(overflowy) >= 0);
+  
+			// do not allow horizontal scrolling for select elements, it leads
+			// to visual artifacts and is not the expected behavior anyway
+			if (!(currNode instanceof content.HTMLSelectElement) &&
+				 currNode.clientWidth > 0 &&
+				 currNode.scrollWidth > currNode.clientWidth &&
+				 scrollingAllowed.indexOf(overflowx) >= 0) {
+			  retObj.scrollType = scrollVert ? 0 : 2;
+			}
+			else {
+			  retObj.scrollType = scrollVert ? 1 : 3;
+			}
+		  }
+
+		  if (retObj.scrollType != 3) {
+			retObj.nodeToScroll = currNode;
+			retObj.isBody = (currNode instanceof content.HTMLHtmlElement) || (currNode instanceof content.HTMLBodyElement);
+				
+			if (retObj.isBody) {
+			  retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
+			  retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
+			  realWidth = clientFrame.innerWidth;
+			  realHeight = clientFrame.innerHeight;
+			  retObj.realHeight = realHeight;
+			  realWidth *= zoom; realHeight *= zoom;
+			  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
+			  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
+			  retObj.ratioX = retObj.docWidth / realWidth;
+			  retObj.ratioY = retObj.docHeight / realHeight;
+			}
+			else {
+			  retObj.docWidth = docEl.scrollWidth; retObj.docHeight = docEl.scrollHeight;
+			  realWidth = currNode.clientWidth + getStyle(currNode, "border-left-width") + getStyle(currNode, "border-right-width");
+			  realHeight = currNode.clientHeight + getStyle(currNode, "border-top-width") + getStyle(currNode, "border-bottom-width");
+			  retObj.realHeight = realHeight;
+			  realWidth *= zoom; realHeight *= zoom;
+			  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
+			  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
+			  retObj.ratioX = currNode.scrollWidth / realWidth;
+			  retObj.ratioY = currNode.scrollHeight / realHeight;
+			}
+			return retObj;
+		  }
+		  nextNode = currNode.parentNode;
+		}
+	  catch(err) {return retObj;}
+	} while (nextNode && currNode != docEl);
+
+    // if we're in a frame, check embedding frame/window
+    if (retObj.isFrame) return this.findNodeToScroll(clientFrame.frameElement.ownerDocument.documentElement);
+    }
+    else { // XML document; do our best
+      retObj.nodeToScroll = initialNode;
+      retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
+      retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
+      realWidth = clientFrame.innerWidth;
+      realHeight = clientFrame.innerHeight;
+      retObj.realHeight = realHeight;
+      realWidth *= zoom; realHeight *= zoom;
+      if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
+      if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
+      retObj.ratioX = retObj.docWidth / realWidth;
+      retObj.ratioY = retObj.docHeight / realHeight;
+      retObj.scrollType = 3 - (((clientFrame.scrollMaxY > 0) - 0) << 1) - ((clientFrame.scrollMaxX > 0) - 0);
+
+      retObj.isXML = true;
+    }
+    return retObj;
+  },
+  
+  /**
+   * Scroll element or document vertically
+   */
+  scrollElement: function(msg) {
+    var value = msg.data.value;
+    var node = content.document.mgsuiteMouseDownElement;
+    
+    if (!node) {
+      return;
+    }
+    
+    var scrollObj = this.findNodeToScroll(node);
+    if (scrollObj.scrollType >= 2) return;
+    
+    var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
+    
+    if (msg.data.relative) {
+       var val = Math.round(scrollObj.realHeight * 0.9 * value)
+       if (!val) val = value;
+       if (useScrollToBy) scrollObj.clientFrame.scrollBy(0, val);
+       else scrollObj.nodeToScroll.scrollTop += val;
+    }     
+    else
+       if (useScrollToBy) scrollObj.clientFrame.scrollTo(scrollObj.clientFrame.pageXOffset, value);
+       else scrollObj.nodeToScroll.scrollTop = value;
   },
 }
 

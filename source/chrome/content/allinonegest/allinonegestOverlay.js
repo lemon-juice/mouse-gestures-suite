@@ -700,6 +700,15 @@ mgsuite.overlay = {
 
     mgsuite.overlay.aioFirstInit = false;
   },
+  
+  /* Send asyncMessage to frame script - from tab or window depending on window type */
+  sendAsyncMessage: function(msgName, data) {
+	if (mgsuite.overlay.aioWindowType == 'browser') {
+	  gBrowser.selectedBrowser.messageManager.sendAsyncMessage(msgName, data);
+	} else {
+	  window.messageManager.broadcastAsyncMessage(msgName, data);
+	}
+  },
 
   /* Parse site list preferences and determine if current page should be given
    * special treatment (prioritize gestures or disable gestures)
@@ -1015,13 +1024,7 @@ mgsuite.overlay = {
   
 		mgsuite.overlay.aioShowContextMenu = false;
 		mgsuite.overlay.aioBackRocking = false;
-		
-		if (mgsuite.overlay.aioWindowType == 'browser') {
-		  gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
-		} else {
-		  window.messageManager.broadcastAsyncMessage("MouseGesturesSuite:startMouseMove");
-		}
-		
+		mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
 	  }
 	}
 
@@ -1182,14 +1185,7 @@ mgsuite.overlay = {
   },
 
   aioMouseUp: function(e) {
-	//gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
-	
-	if (mgsuite.overlay.aioWindowType == 'browser') {
-	  gBrowser.selectedBrowser.messageManager.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
-	} else {
-	  window.messageManager.broadcastAsyncMessage("MouseGesturesSuite:endMouseMove");
-	}
-	
+	mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
 	mgsuite.overlay.unBlockMouseEventsForRocker();
 
     if (!mgsuite.overlay.aioGesturesEnabled) {
@@ -1448,6 +1444,7 @@ mgsuite.overlay = {
   aioRestoreListeners: function() {
     mgsuite.overlay.aioRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
     window.addEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
+	mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
   },
 
   aioTabWheelNav: function() {

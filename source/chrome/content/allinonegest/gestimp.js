@@ -682,18 +682,7 @@ mgsuite.imp = {
   },
   
   aioVScrollDocument: function(relativeScroll, aValue) {
-    var scrollObj = mgsuite.overlay.aioFindNodeToScroll(mgsuite.overlay.aioSrcEvent.target);
-    if (scrollObj.scrollType >= 2) return;
-    var useScrollToBy = scrollObj.isXML || scrollObj.isBody;
-    if (relativeScroll) {
-       var val = Math.round(scrollObj.realHeight * 0.9 * aValue)
-       if (!val) val = aValue;
-       if (useScrollToBy) scrollObj.clientFrame.scrollBy(0, val);
-       else scrollObj.nodeToScroll.scrollTop += val;
-    }     
-    else
-       if (useScrollToBy) scrollObj.clientFrame.scrollTo(scrollObj.clientFrame.pageXOffset, aValue);
-       else scrollObj.nodeToScroll.scrollTop = aValue;
+    mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:scrollElement", {relative: relativeScroll, value: aValue});
   },
   
   aioSelectionAsURL: function(reverseBg) {
