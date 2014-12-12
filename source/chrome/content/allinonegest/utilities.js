@@ -57,8 +57,23 @@ mgsuite.util = {
       param = param2;
     }
     
-    var callback = msg.data.callback;
-    mgsuite.imp[callback](param);
+    var callSegm = msg.data.callback.split('.');
+    //dump("param=" + param + "\n");
+    //dump("param.nodeToScroll=" + param.nodeToScroll + "\n");
+    
+    switch (callSegm[0]) {
+      case 'imp':
+        mgsuite.imp[callSegm[1]].apply(null, param);
+        break;
+      
+      case 'overlay':
+        mgsuite.overlay[callSegm[1]].apply(null, param);
+        break;
+      
+      default:
+        dump("unknown callback object wrapper: " + callSegm[0] + "\n");
+    }
+    
   },
   
   testListener: function(msg) {

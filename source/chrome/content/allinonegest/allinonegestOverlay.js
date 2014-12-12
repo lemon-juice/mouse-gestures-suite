@@ -894,6 +894,7 @@ mgsuite.overlay = {
   },
 
   aioIsAreaOK: function(e, isAutoScroll) {
+	return true;
     if (isAutoScroll && e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument) return false;      
     var tag = e.target.nodeName.toLowerCase();
     try { var xtag = e.originalTarget.localName.toLowerCase(); } catch (err) {}
@@ -903,8 +904,8 @@ mgsuite.overlay = {
      && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox" && tag != "menu") || isAutoScroll);
   },
 
-  aioIsPastable: function(e) {
-    var tag = e.target.nodeName.toLowerCase();
+  aioIsPastable: function(targetNode) {
+    var tag = targetNode.nodeName.toLowerCase();
     return tag == "input" || tag == "textarea" || tag == "textbox";
   },
 
@@ -1105,34 +1106,59 @@ mgsuite.overlay = {
 
         if (preventDefaultAction && e.button == mgsuite.const.LMB) mgsuite.overlay.aioNukeEvent(e);
           mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
-      }
-       else {
-        // middle button scrolling
-        if (e.button == mgsuite.const.MMB && mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK(e, true) &&
-              (mgsuite.overlay.aioStartOnLinks  || !mgsuite.overlay.aioFindLink(e.target, false)) && !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(e))) {
-		  mgsuite.overlay.aioShowContextMenu = false;
-  
-		  window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
-		  mgsuite.overlay.aioRendering.removeEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
-		  window.addEventListener("click", mgsuite.overlay.aioASClick, true);
-		  mgsuite.overlay.aioLastEvtTime = new Date();
-		  mgsuite.overlay.aioLastX = e.screenX; mgsuite.overlay.aioLastY = e.screenY;
-		  window.addEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
-		  mgsuite.overlay.aioNukeEvent(e);
-  
-		  switch (mgsuite.overlay.aioWhatAS) {
-			case 0: mgsuite.overlay.aioAutoScrollStart(e);
-				break;
-			case 2: mgsuite.overlay.aioRendering.addEventListener("mouseup", mgsuite.overlay.aioStartAS, true);
-				mgsuite.overlay.aioGrabTarget = e.target;
-				mgsuite.overlay.aioScrollMode = 1;
-				break;
-			case 3: mgsuite.overlay.aioGrabNDrag(e.target);
-		  }
-        }
-      }
-      mgsuite.overlay.aioDownButton = e.button;
+		
+		mgsuite.overlay.aioDownButton = e.button;
+		
+      } else {
+		
+		if (e.button == mgsuite.const.MMB && mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK(e, true)
+		  //&& (mgsuite.overlay.aioStartOnLinks || !mgsuite.overlay.aioFindLink(e.target, false)) &&
+		  && !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(e))
+		  ) {
+	  
+		  // middle button scrolling
+		  dump("middle button scrolling" + "\n");
+		  mgsuite.overlay.aioLastX = e.screenX;
+		  mgsuite.overlay.aioLastY = e.screenY;
+		  //mgsuite.overlay.aioNukeEvent(e);
+		}  
+	  }
     }
+  },
+  
+  /* This is invoked by middle mousedown from frame script */
+  middleButtonDown: function(nodeToScroll, mouseTarget) {
+	mgsuite.overlay.aioScroll = nodeToScroll;
+	mgsuite.overlay.middleButtonTarget = mouseTarget;
+	
+	if (mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK('e', true) &&
+		  //(mgsuite.overlay.aioStartOnLinks || !mgsuite.overlay.aioFindLink(e.target, false)) &&
+		  !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(mouseTarget))) {
+	  
+	  // middle button scrolling
+	  dump("MBScroll started:" + "\n");
+	  mgsuite.overlay.aioShowContextMenu = false;
+
+	  window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
+	  mgsuite.overlay.aioRendering.removeEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
+	  window.addEventListener("click", mgsuite.overlay.aioASClick, true);
+	  mgsuite.overlay.aioLastEvtTime = new Date();
+	  window.addEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
+	  
+	  dump("aioWhatAS=" + mgsuite.overlay.aioWhatAS + "\n");
+
+	  switch (mgsuite.overlay.aioWhatAS) {
+		case 0: mgsuite.overlay.aioAutoScrollStart();
+			break;
+		case 2: mgsuite.overlay.aioRendering.addEventListener("mouseup", mgsuite.overlay.aioStartAS, true);
+			mgsuite.overlay.aioGrabTarget = mouseTarget;
+			mgsuite.overlay.aioScrollMode = 1;
+			break;
+		case 3: mgsuite.overlay.aioGrabNDrag(mouseTarget);
+	  }
+	}
+	
+	mgsuite.overlay.aioDownButton = mgsuite.const.MMB;
   },
   
   /* We need to block mouse clicks when doing rocker gestures so that links are not
@@ -1568,7 +1594,7 @@ mgsuite.overlay = {
     if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
   },
 
-  aioAutoScrollStart: function(e) {
+  aioAutoScrollStart: function() {
     window.addEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
     window.addEventListener("mouseup", mgsuite.overlay.aioAutoScrollUp, true);
     window.addEventListener("mousedown", mgsuite.overlay.aioAutoScrollUp, true);
@@ -1576,14 +1602,23 @@ mgsuite.overlay = {
     mgsuite.overlay.aioDistX = [0, 0, 0, 0]; mgsuite.overlay.aioDistY = [0, 0, 0, 0]; mgsuite.overlay.aioScrollCount = 0;
     mgsuite.overlay.aioScrollMode = 0;
     mgsuite.overlay.aioScrollFingerFree = false;
+	
+	mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:getNodeToScroll", "overlay.autoScrollStart2");
+	
+	var result = mgsuite.overlay.aioAddMarker();
+	dump("marker:" + result + "\n");
 
-    switch (mgsuite.overlay.aioAddMarker(e)) {
+    switch (result) {
       case 0: mgsuite.overlay.aioIntervalID = setInterval(function(){mgsuite.overlay.aioScrollElem();}, mgsuite.overlay.aioASPeriod);
               break;
       case 1: mgsuite.overlay.aioIntervalID = setInterval(function(){mgsuite.overlay.aioScrollWindow();}, mgsuite.overlay.aioASPeriod);
               break;
       case 2: ;
     }
+  },
+  
+  autoScrollStart2: function(msg) {
+	dump("autoScrollStart2: " + JSON.stringify(msg) + "\n");
   },
 
   aioLogDist: function(aDist) {
@@ -1852,8 +1887,7 @@ mgsuite.overlay = {
   },
 
   /* Display autoscroll marker */
-  aioAddMarker: function(e) {
-    mgsuite.overlay.aioScroll = mgsuite.overlay.aioFindNodeToScroll(e.target);
+  aioAddMarker: function() {
     if (mgsuite.overlay.aioScroll.scrollType == 3) { // nothing to scroll
        mgsuite.overlay.aioScrollFingerFree = true; // exit on next mouse up
        return 2;
@@ -1895,8 +1929,8 @@ mgsuite.overlay = {
         break;
     }
 
-    mgsuite.overlay.aioMarkerX = e.screenX - window.mozInnerScreenX - mgsuite.const.aioHalfMarker;
-    mgsuite.overlay.aioMarkerY = e.screenY - window.mozInnerScreenY - mgsuite.const.aioHalfMarker;
+    mgsuite.overlay.aioMarkerX = mgsuite.overlay.aioLastX - window.mozInnerScreenX - mgsuite.const.aioHalfMarker;
+    mgsuite.overlay.aioMarkerY = mgsuite.overlay.aioLastY - window.mozInnerScreenY - mgsuite.const.aioHalfMarker;
 
     var canvas = document.createElementNS(mgsuite.const.xhtmlNS, "canvas");
     canvas.id = mgsuite.const.aioMarkerIds[mgsuite.overlay.aioScroll.scrollType];

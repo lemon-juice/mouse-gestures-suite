@@ -4,6 +4,10 @@ var mgsuiteFr = {
   collectElementsData: false,
   
   init: function() {
+    var prefService = Components.classes["@mozilla.org/preferences-service;1"]
+                         .getService(Components.interfaces.nsIPrefService);
+    this.prefBranch = prefService.getBranch("allinonegest.");
+
     addMessageListener("MouseGesturesSuite:startMouseMove", this);
     addMessageListener("MouseGesturesSuite:endMouseMove", this);
     addMessageListener("MouseGesturesSuite:getContentWindow", this);
@@ -11,7 +15,8 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:test", this);
     addMessageListener("MouseGesturesSuite:displayGesturesList", this);
     addMessageListener("MouseGesturesSuite:scrollElement", this);
-    addEventListener("mousedown", mgsuiteFr, true);
+    addMessageListener("MouseGesturesSuite:getNodeToScroll", this);
+    addEventListener("mousedown", this, true);
   },
   
   /* Receiving message from addMessageListener */
@@ -23,6 +28,7 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:displayGesturesList": this.displayGesturesList(aMsg); break;
       case "MouseGesturesSuite:insertHistory": this.insertHistory(aMsg); break;
       case "MouseGesturesSuite:scrollElement": this.scrollElement(aMsg); break;
+      //case "MouseGesturesSuite:getNodeToScroll": this.getNodeToScroll(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -31,6 +37,12 @@ var mgsuiteFr = {
   handleEvent: function(e) {
     if (e.type == 'mousedown') {
       e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
+      
+      if (e.button == 1) {
+        // possible start of middle button scrolling
+        var nodeToScroll = this.findNodeToScroll(e.target);
+        sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.middleButtonDown'}, {param: [nodeToScroll, e.target]});
+      }
     }
     
     if (!this.collectElementsData && e.type != 'mousedown') {
@@ -110,7 +122,7 @@ var mgsuiteFr = {
   },
    
   getContentWindow: function(msg) {
-    sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: msg.data}, {param: content});
+    sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: msg.data}, {param: [content]});
   },
   
   displayGesturesList: function(msg) {
@@ -511,6 +523,10 @@ var mgsuiteFr = {
        if (useScrollToBy) scrollObj.clientFrame.scrollTo(scrollObj.clientFrame.pageXOffset, value);
        else scrollObj.nodeToScroll.scrollTop = value;
   },
+  
+  //getNodeToScroll: function(msg) {
+  //  sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: msg.data}, {param: typeof this.nodeToScroll});
+  //}
 }
 
 mgsuiteFr.init();
