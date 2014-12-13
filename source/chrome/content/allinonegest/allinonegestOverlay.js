@@ -783,22 +783,23 @@ mgsuite.overlay = {
   },
 
   aioContextMenuEnabler: function(e) {
-    //dump("\ntarget: " + e.target.nodeName + "; id=" + e.target.id + "\n");
+    //dump("aioContextMenuEnabler: " + mgsuite.overlay.aioShowContextMenu + "; target: " + e.target.nodeName + "; id=" + e.target.id + "\n");
     //dump("ctx: " + e.originalTarget.nodeName + "; id=" + e.originalTarget.id + "\n");
     if (!mgsuite.overlay.aioShowContextMenu && (e.originalTarget.nodeName == "menupopup" || e.originalTarget.nodeName == "xul:menupopup")) {
 
-    var id = e.originalTarget.id ? e.originalTarget.id : null;
-
-    if (id == "contentAreaContextMenu"
-      || (id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
-      || id == "viewSourceContextMenu"
-      || id == "addonitem-popup"
-      || (mgsuite.overlay.aioIsFx && id == "toolbar-context-menu") // Fx
-      || id == "tabContextMenu" // Fx
-      || e.originalTarget.getAttribute('anonid') == "tabContextMenu" // SM
-      ) {
-      e.preventDefault(); e.stopPropagation();
-    }
+	  var id = e.originalTarget.id ? e.originalTarget.id : null;
+  
+	  if (id == "contentAreaContextMenu"
+		|| (id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
+		|| id == "viewSourceContextMenu"
+		|| id == "addonitem-popup"
+		|| (mgsuite.overlay.aioIsFx && id == "toolbar-context-menu") // Fx
+		|| id == "tabContextMenu" // Fx
+		|| e.originalTarget.getAttribute('anonid') == "tabContextMenu" // SM
+	  ) {
+		
+		e.preventDefault(); e.stopPropagation();
+	  }
     }
   },
 
@@ -948,6 +949,11 @@ mgsuite.overlay = {
   },
 
   aioMouseDown: function(e) {
+	
+	if (mgsuite.overlay.ignoreNextMouseDown) {
+	  mgsuite.overlay.ignoreNextMouseDown = false;
+	  return;
+	}
 
     var gesturesEnabled = mgsuite.overlay.aioGesturesEnabled;
 	mgsuite.util.clearCollectedItems();
@@ -1111,32 +1117,54 @@ mgsuite.overlay = {
 		
       } else {
 		
-		if (e.button == mgsuite.const.MMB && mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK(e, true)
-		  //&& (mgsuite.overlay.aioStartOnLinks || !mgsuite.overlay.aioFindLink(e.target, false)) &&
-		  && !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(e))
-		  ) {
-	  
-		  // middle button scrolling
-		  dump("middle button scrolling" + "\n");
+		if (e.button == mgsuite.const.MMB) {
 		  mgsuite.overlay.aioLastX = e.screenX;
 		  mgsuite.overlay.aioLastY = e.screenY;
-		  //mgsuite.overlay.aioNukeEvent(e);
-		}  
+		}
+		
+		mgsuite.overlay.prevDownButton = mgsuite.overlay.aioDownButton;
+		mgsuite.overlay.aioDownButton = e.button;
+		//return;
+	  
+		//if (e.button == mgsuite.const.MMB && mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK(e, true)
+		//  //&& (mgsuite.overlay.aioStartOnLinks || !mgsuite.overlay.aioFindLink(e.target, false)) &&
+		//  && !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(e))
+		//  ) {
+		// 
+		//  // middle button scrolling
+		dump("middle button scrolling" + "\n");
+		//  //mgsuite.overlay.aioNukeEvent(e);
+		//  
+		////  setTimeout(function() {
+		////	mgsuite.overlay.sendMiddleButton(e.clientX, e.clientY);
+		////  }, 1000);
+		//}
 	  }
     }
   },
+  
+//  sendMiddleButton: function(x, y) {
+//	mgsuite.overlay.ignoreNextMouseDown = true;
+//    var mods = 0;
+//
+//    var dwu = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+//              .getInterface(Components.interfaces.nsIDOMWindowUtils);
+//
+//    dwu.sendMouseEvent("mousedown", x, y, 1, 1, mods);
+//  },
   
   /* This is invoked by middle mousedown from frame script */
   middleButtonDown: function(nodeToScroll, mouseTarget) {
 	mgsuite.overlay.aioScroll = nodeToScroll;
 	mgsuite.overlay.middleButtonTarget = mouseTarget;
 	
-	if (mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK('e', true) &&
-		  //(mgsuite.overlay.aioStartOnLinks || !mgsuite.overlay.aioFindLink(e.target, false)) &&
+	dump("middleButtonDown inited from frame" + "\n");
+	
+	if (mgsuite.overlay.prevDownButton == mgsuite.const.NoB &&
 		  !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(mouseTarget))) {
 	  
 	  // middle button scrolling
-	  dump("MBScroll started:" + "\n");
+	  dump("middleButtonDown started" + "\n");
 	  mgsuite.overlay.aioShowContextMenu = false;
 
 	  window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
@@ -1159,6 +1187,7 @@ mgsuite.overlay = {
 	}
 	
 	mgsuite.overlay.aioDownButton = mgsuite.const.MMB;
+	mgsuite.overlay.prevDownButton = mgsuite.const.MMB;
   },
   
   /* We need to block mouse clicks when doing rocker gestures so that links are not

@@ -17,6 +17,7 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:scrollElement", this);
     addMessageListener("MouseGesturesSuite:getNodeToScroll", this);
     addEventListener("mousedown", this, true);
+    addEventListener("click", this, true);
   },
   
   /* Receiving message from addMessageListener */
@@ -35,13 +36,34 @@ var mgsuiteFr = {
   
   /* Handle mouse event */
   handleEvent: function(e) {
-    if (e.type == 'mousedown') {
-      e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
+    var elemInfo;
+    
+    if (e.button == 1 && (e.type == 'click' || e.type == 'mousedown')) {
+      elemInfo = this.getElementInfo(e);
       
-      if (e.button == 1) {
+      var scrollEnabled = this.prefBranch.getBoolPref("autoscrolling2") && this.prefBranch.getIntPref("autoscrollpref") != 1;
+      var evenOnLink = this.prefBranch.getBoolPref("evenOnLink");
+      
+      if (e.type == 'click' && scrollEnabled
+          && evenOnLink && elemInfo.link) {
+        // block click from reaching page
+        e.stopPropagation();
+        e.preventDefault();
+        //sendAsyncMessage("MouseGesturesSuite:test", 'blocked:' + e.type);
+      }
+      
+      if (e.type == 'mousedown') {
+        e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
+        
         // possible start of middle button scrolling
         var nodeToScroll = this.findNodeToScroll(e.target);
-        sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.middleButtonDown'}, {param: [nodeToScroll, e.target]});
+        
+        if (nodeToScroll && scrollEnabled
+          && this.prefBranch.getIntPref("mousebuttonpref") != 1
+          && (evenOnLink || !elemInfo.link)
+        ) {
+          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.middleButtonDown'}, {param: [nodeToScroll, e.target]});
+        }
       }
     }
     
@@ -52,7 +74,9 @@ var mgsuiteFr = {
     //sendAsyncMessage("MouseGesturesSuite:test", 'mouse:' + e.type);
     
     // send link info found under gesture to mouse gesture script
-    var elemInfo = this.getElementInfo(e);
+    if (!elemInfo) {
+      elemInfo = this.getElementInfo(e);
+    }
     
     if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl) {
       // send link url or image
@@ -95,6 +119,14 @@ var mgsuiteFr = {
     }
     
     return {link: link, img: img, bgImgUrl: bgImgUrl};
+  },
+  
+  isAreaOKForLeftButtonGesture: function(node) {
+    var tag = node.nodeName.toLowerCase();
+
+    return 
+     (tag != "input" && tag != "textarea"
+     && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox" && tag != "menu");
   },
   
   // Returns a "url"-type computed style attribute value, with the url() stripped.
