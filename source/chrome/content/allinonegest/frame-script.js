@@ -69,17 +69,22 @@ var mgsuiteFr = {
     
     //sendAsyncMessage("MouseGesturesSuite:test", e.type);
     
-    if (e.type == 'mousedown' && e.button == 0 && this.prefBranch.getIntPref("mousebuttonpref") == 0) {
-      var ok = this.isAreaOKForLeftButtonGesture(e.target);
+    
+    if (e.type == 'mousedown') {
+      var isKeyOK = !(e.altKey && this.prefBranch.getBoolPref("noAltGest"));
       
-      if (ok) {
-        e.preventDefault();
-        e.stopPropagation();
-        sendAsyncMessage("MouseGesturesSuite:test", 'blocked default');
+      if (isKeyOK && e.button == 0 && this.prefBranch.getIntPref("mousebuttonpref") == 0) {
+        var ok = this.isAreaOKForLeftButtonGesture(e.target);
         
-      } else {
-        sendAsyncMessage("MouseGesturesSuite:test", 'kill gesture');
-        sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
+        if (ok) {
+          e.preventDefault();
+          e.stopPropagation();
+          sendAsyncMessage("MouseGesturesSuite:test", 'blocked default');
+          
+        } else {
+          sendAsyncMessage("MouseGesturesSuite:test", 'kill gesture');
+          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
+        }
       }
     }
     
@@ -109,8 +114,8 @@ var mgsuiteFr = {
       if (elem.nodeType == 1) { // ELEMENT_NODE
         // Link?
         if (!link &&
-            ((elem instanceof content.content.HTMLAnchorElement && elem.href) ||
-            (elem instanceof content.content.HTMLAreaElement && elem.href) ||
+            ((elem instanceof content.HTMLAnchorElement && elem.href) ||
+            (elem instanceof content.HTMLAreaElement && elem.href) ||
              elem.getAttributeNS("http://www.w3.org/1999/xlink", "type") == "simple")) {
 
           // elem is link
