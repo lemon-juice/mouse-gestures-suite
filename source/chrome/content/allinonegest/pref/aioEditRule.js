@@ -126,7 +126,7 @@ function openSiteListHelp() {
 
 function insertRecentUrl(exactUrl) {
   var win = window.opener.opener;
-  var url = win.content.document.location.href;
+  var url = win.gBrowser.selectedBrowser.contentWindowAsCPOW.location.href;
   
   if (url.indexOf('about:') == 0 || url.indexOf('chrome://allinonegest/') == 0) {
     url = getLastUrlFromHistory();
