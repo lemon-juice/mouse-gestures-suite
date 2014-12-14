@@ -1089,8 +1089,6 @@ mgsuite.overlay = {
 
       if (gesturesEnabled && e.button == mgsuite.overlay.aioGestButton) {
 		// start mouse gesture
-        var preventDefaultAction = false;
-		
         if (mgsuite.overlay.aioGestEnabled && mgsuite.overlay.aioIsKeyOK(e)) {
           mgsuite.overlay.aioSrcEvent = e;
           targetName  = e.target.nodeName.toLowerCase();
@@ -1098,22 +1096,15 @@ mgsuite.overlay = {
           if (targetName != 'toolbarbutton'
               && !mgsuite.overlay.aioGestInProgress) {
 
-			  preventDefaultAction = e.button != mgsuite.const.LMB;
-			    // || !mgsuite.overlay.aioLeftDefault;
-				// || e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument;
-					 
-			  mgsuite.overlay.aioGestInProgress = true;
-			  mgsuite.overlay.aioStrokes = [];
-			  mgsuite.overlay.aioLocaleGest = [];
-			  mgsuite.overlay.aioCurrGest = "";
-			  
-			  if (mgsuite.overlay.aioTrailEnabled) {
-				mgsuite.trail.startTrail(e);
-			  }
-			  window.addEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
-            }
-          else {
-			preventDefaultAction = e.button != mgsuite.const.LMB;
+			mgsuite.overlay.aioGestInProgress = true;
+			mgsuite.overlay.aioStrokes = [];
+			mgsuite.overlay.aioLocaleGest = [];
+			mgsuite.overlay.aioCurrGest = "";
+			
+			if (mgsuite.overlay.aioTrailEnabled) {
+			  mgsuite.trail.startTrail(e);
+			}
+			window.addEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
 		  }
         }
 		
@@ -1135,13 +1126,6 @@ mgsuite.overlay = {
         mgsuite.overlay.aioOldX = e.screenX;
 		mgsuite.overlay.aioOldY = e.screenY;
 
-        if (preventDefaultAction) {
-		  mgsuite.overlay.aioNukeEvent(e);
-		}
-		
-		mgsuite.overlay.lastClientX = e.clientX;
-		mgsuite.overlay.lastClientY = e.clientY;
-		
 		mgsuite.overlay.aioDownButton = e.button;
 		
       } else {
