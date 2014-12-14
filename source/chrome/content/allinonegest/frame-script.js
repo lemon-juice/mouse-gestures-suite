@@ -15,7 +15,6 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:test", this);
     addMessageListener("MouseGesturesSuite:displayGesturesList", this);
     addMessageListener("MouseGesturesSuite:scrollElement", this);
-    addMessageListener("MouseGesturesSuite:getNodeToScroll", this);
     addEventListener("mousedown", this, true);
     addEventListener("click", this, true);
   },
@@ -29,7 +28,6 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:displayGesturesList": this.displayGesturesList(aMsg); break;
       case "MouseGesturesSuite:insertHistory": this.insertHistory(aMsg); break;
       case "MouseGesturesSuite:scrollElement": this.scrollElement(aMsg); break;
-      //case "MouseGesturesSuite:getNodeToScroll": this.getNodeToScroll(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -52,8 +50,6 @@ var mgsuiteFr = {
       }
       
       if (e.type == 'mousedown') {
-        e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
-        
         // possible start of middle button scrolling
         var nodeToScroll = this.findNodeToScroll(e.target);
         
@@ -71,6 +67,7 @@ var mgsuiteFr = {
     
     
     if (e.type == 'mousedown') {
+      e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
       var isKeyOK = !(e.altKey && this.prefBranch.getBoolPref("noAltGest"));
       
       if (isKeyOK && e.button == 0 && this.prefBranch.getIntPref("mousebuttonpref") == 0) {
@@ -79,10 +76,10 @@ var mgsuiteFr = {
         if (ok) {
           e.preventDefault();
           e.stopPropagation();
-          sendAsyncMessage("MouseGesturesSuite:test", 'blocked default');
+          //sendAsyncMessage("MouseGesturesSuite:test", 'blocked default');
           
         } else {
-          sendAsyncMessage("MouseGesturesSuite:test", 'kill gesture');
+          //sendAsyncMessage("MouseGesturesSuite:test", 'kill gesture');
           sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
         }
       }
@@ -578,10 +575,7 @@ var mgsuiteFr = {
        if (useScrollToBy) scrollObj.clientFrame.scrollTo(scrollObj.clientFrame.pageXOffset, value);
        else scrollObj.nodeToScroll.scrollTop = value;
   },
-  
-  //getNodeToScroll: function(msg) {
-  //  sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: msg.data}, {param: typeof this.nodeToScroll});
-  //}
+
 }
 
 mgsuiteFr.init();

@@ -964,8 +964,6 @@ mgsuite.overlay = {
 	  return;
 	}
 	
-	mgsuite.mouseDownNuked = false;
-
     var gesturesEnabled = mgsuite.overlay.aioGesturesEnabled;
 	mgsuite.util.clearCollectedItems();
 
@@ -1063,7 +1061,7 @@ mgsuite.overlay = {
 		mgsuite.overlay.aioSrcEvent = e;
 		mgsuite.overlay.aioPerformRockerFunction(0);
       }
-	  dump("rocker:" + func + "\n");
+	  //dump("rocker:" + func + "\n");
 	  
 	  mgsuite.overlay.blockMouseEventsForRocker();
 	  
@@ -1097,7 +1095,6 @@ mgsuite.overlay = {
           mgsuite.overlay.aioSrcEvent = e;
           targetName  = e.target.nodeName.toLowerCase();
 
-          //if ((mgsuite.overlay.aioIsAreaOK(e, false) || e.button != mgsuite.const.LMB) && targetName != 'toolbarbutton'
           if (targetName != 'toolbarbutton'
               && !mgsuite.overlay.aioGestInProgress) {
 
@@ -1123,8 +1120,6 @@ mgsuite.overlay = {
          // it can be the start of a wheelscroll gesture as well
         if (mgsuite.overlay.aioWheelEnabled && (mgsuite.overlay.aioWindowType == "browser" || mgsuite.overlay.aioWindowType == "messenger" || mgsuite.overlay.aioWindowType == "source")) {
 		  
-		  preventDefaultAction = preventDefaultAction || e.button != mgsuite.const.LMB;
-		  
 		  mgsuite.overlay.aioTabCount = (mgsuite.overlay.aioWindowType == "browser") ? mgsuite.overlay.aioContent.mPanelContainer.childNodes.length : 0;
 		  if (mgsuite.overlay.aioWheelRocker) {
 			if (!mgsuite.overlay.aioGestInProgress) {
@@ -1140,13 +1135,9 @@ mgsuite.overlay = {
         mgsuite.overlay.aioOldX = e.screenX;
 		mgsuite.overlay.aioOldY = e.screenY;
 
-        if (preventDefaultAction && e.button == mgsuite.const.LMB) {
+        if (preventDefaultAction) {
 		  mgsuite.overlay.aioNukeEvent(e);
-		  mgsuite.mouseDownNuked = true;
-		} else {
-		  mgsuite.mouseDownNuked = false;
 		}
-		dump("mouseDownNuked:" + mgsuite.mouseDownNuked + "\n");
 		
 		mgsuite.overlay.lastClientX = e.clientX;
 		mgsuite.overlay.lastClientY = e.clientY;
@@ -1162,40 +1153,8 @@ mgsuite.overlay = {
 		
 		mgsuite.overlay.prevDownButton = mgsuite.overlay.aioDownButton;
 		mgsuite.overlay.aioDownButton = e.button;
-		//return;
-	  
-		//if (e.button == mgsuite.const.MMB && mgsuite.overlay.aioDownButton == mgsuite.const.NoB && mgsuite.overlay.aioScrollEnabled && mgsuite.overlay.aioIsAreaOK(e, true)
-		//  //&& (mgsuite.overlay.aioStartOnLinks || !mgsuite.overlay.aioFindLink(e.target, false)) &&
-		//  && !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(e))
-		//  ) {
-		// 
-		//  // middle button scrolling
-		dump("middle button scrolling" + "\n");
-		//  //mgsuite.overlay.aioNukeEvent(e);
-		//  
-		////  setTimeout(function() {
-		////	mgsuite.overlay.sendMiddleButton(e.clientX, e.clientY);
-		////  }, 1000);
-		//}
 	  }
     }
-  },
-  
-  performDefaultMouseDown: function() {
-	if (!mgsuite.mouseDownNuked) {
-	  return;
-	}
-	dump("performDefaultMouseDown\n");
-	
-	mgsuite.overlay.ignoreNextMouseDown = true;
-	mgsuite.overlay.aioKillGestInProgress();
-	
-    var mods = 0;
-
-    var dwu = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-              .getInterface(Components.interfaces.nsIDOMWindowUtils);
-
-    dwu.sendMouseEvent("mousedown", mgsuite.overlay.lastClientX, mgsuite.overlay.lastClientY, 0, 1, mods);
   },
   
   /* This is invoked by middle mousedown from frame script */
@@ -1203,13 +1162,10 @@ mgsuite.overlay = {
 	mgsuite.overlay.aioScroll = nodeToScroll;
 	mgsuite.overlay.middleButtonTarget = mouseTarget;
 	
-	dump("middleButtonDown inited from frame" + "\n");
-	
 	if (mgsuite.overlay.prevDownButton == mgsuite.const.NoB &&
 		  !(mgsuite.overlay.aioPreferPaste && mgsuite.overlay.aioIsPastable(mouseTarget))) {
 	  
 	  // middle button scrolling
-	  dump("middleButtonDown started" + "\n");
 	  mgsuite.overlay.aioShowContextMenu = false;
 
 	  window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
@@ -1218,8 +1174,6 @@ mgsuite.overlay = {
 	  mgsuite.overlay.aioLastEvtTime = new Date();
 	  window.addEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
 	  
-	  dump("aioWhatAS=" + mgsuite.overlay.aioWhatAS + "\n");
-
 	  switch (mgsuite.overlay.aioWhatAS) {
 		case 0: mgsuite.overlay.aioAutoScrollStart();
 			break;
@@ -1678,10 +1632,7 @@ mgsuite.overlay = {
     mgsuite.overlay.aioScrollMode = 0;
     mgsuite.overlay.aioScrollFingerFree = false;
 	
-	mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:getNodeToScroll", "overlay.autoScrollStart2");
-	
 	var result = mgsuite.overlay.aioAddMarker();
-	dump("marker:" + result + "\n");
 
     switch (result) {
       case 0: mgsuite.overlay.aioIntervalID = setInterval(function(){mgsuite.overlay.aioScrollElem();}, mgsuite.overlay.aioASPeriod);
@@ -1692,10 +1643,6 @@ mgsuite.overlay = {
     }
   },
   
-  autoScrollStart2: function(msg) {
-	dump("autoScrollStart2: " + JSON.stringify(msg) + "\n");
-  },
-
   aioLogDist: function(aDist) {
     var absDist = Math.abs(aDist);
     for (var i = 1; i < mgsuite.const.aioDist.length; ++i)
