@@ -695,7 +695,7 @@ mgsuite.overlay = {
            document.getElementById("navigator-toolbox").removeEventListener("DOMMouseScroll", mgsuite.overlay.aioSwitchTabs, true);
       }
 
-    mgsuite.overlay.aioPrevParsedURL = null;
+	  mgsuite.overlay.aioPrevParsedURL = null;
     }
 
     mgsuite.overlay.aioFirstInit = false;
@@ -823,6 +823,13 @@ mgsuite.overlay = {
   },
 
   aioGestMove: function(e) {
+	if (e.buttons == 0 && mgsuite.overlay.buttonsPropSupported) {
+	  // in some unusual circumstances mouseup may not fire so we end gesture if
+	  // mouse is moved with no button pressed
+	  mgsuite.overlay.aioKillGestInProgress();
+	  return;
+	}
+	
     var x_dir = e.screenX - mgsuite.overlay.aioOldX;
 	var absX = Math.abs(x_dir);
     var y_dir = e.screenY - mgsuite.overlay.aioOldY;
@@ -1036,6 +1043,9 @@ mgsuite.overlay = {
 		mgsuite.overlay.aioShowContextMenu = false;
 		mgsuite.overlay.aioBackRocking = false;
 		mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:startMouseMove");
+		
+		// event.buttons may not be supported on all platforms (like supposedly OS X) so here we need test it
+		mgsuite.overlay.buttonsPropSupported = (e.buttons != 0);
 	  }
 	}
 

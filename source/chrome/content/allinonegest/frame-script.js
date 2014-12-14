@@ -67,7 +67,7 @@ var mgsuiteFr = {
       
     }
     
-    //sendAsyncMessage("MouseGesturesSuite:test", e.type);
+    //sendAsyncMessage("MouseGesturesSuite:test", e.which);
     
     
     if (e.type == 'mousedown') {
