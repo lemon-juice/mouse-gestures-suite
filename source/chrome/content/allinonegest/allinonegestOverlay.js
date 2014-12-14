@@ -639,7 +639,7 @@ mgsuite.overlay = {
 		}, true);
 	  }
   
-	  window.addEventListener("draggesture", mgsuite.overlay.aioDragGesture, true);
+	  //window.addEventListener("dragstart", mgsuite.overlay.aioDragGesture, true);
 	  window.addEventListener("unload", mgsuite.overlay.aioWindowUnload, false);
 	  window.addEventListener("keypress", mgsuite.overlay.aioKeyPressed, true);
   
@@ -823,8 +823,10 @@ mgsuite.overlay = {
   },
 
   aioGestMove: function(e) {
-    var x_dir = e.screenX - mgsuite.overlay.aioOldX; var absX = Math.abs(x_dir);
-    var y_dir = e.screenY - mgsuite.overlay.aioOldY; var absY = Math.abs(y_dir);
+    var x_dir = e.screenX - mgsuite.overlay.aioOldX;
+	var absX = Math.abs(x_dir);
+    var y_dir = e.screenY - mgsuite.overlay.aioOldY;
+	var absY = Math.abs(y_dir);
     var tempMove;
 
     //only add if movement enough to make a gesture
@@ -832,7 +834,7 @@ mgsuite.overlay = {
     mgsuite.overlay.aioLastEvtTime = new Date(); // e.timeStamp is broken on Linux
 
     if (mgsuite.overlay.aioDelayTO) {
-    clearTimeout(mgsuite.overlay.aioDelayTO);
+	  clearTimeout(mgsuite.overlay.aioDelayTO);
     }
     mgsuite.overlay.aioDelayTO = setTimeout(function() { mgsuite.trail.indicateGestureTimeout() }, mgsuite.overlay.aioDelay);
 
@@ -954,6 +956,8 @@ mgsuite.overlay = {
 	  mgsuite.overlay.ignoreNextMouseDown = false;
 	  return;
 	}
+	
+	mgsuite.mouseDownNuked = false;
 
     var gesturesEnabled = mgsuite.overlay.aioGesturesEnabled;
 	mgsuite.util.clearCollectedItems();
@@ -1078,26 +1082,39 @@ mgsuite.overlay = {
       if (gesturesEnabled && e.button == mgsuite.overlay.aioGestButton) {
 		// start mouse gesture
         var preventDefaultAction = false;
+		
         if (mgsuite.overlay.aioGestEnabled && mgsuite.overlay.aioIsKeyOK(e)) {
           mgsuite.overlay.aioSrcEvent = e;
           targetName  = e.target.nodeName.toLowerCase();
 
-          if ((mgsuite.overlay.aioIsAreaOK(e, false) || e.button != mgsuite.const.LMB) && targetName != 'toolbarbutton'
+          //if ((mgsuite.overlay.aioIsAreaOK(e, false) || e.button != mgsuite.const.LMB) && targetName != 'toolbarbutton'
+          if (targetName != 'toolbarbutton'
               && !mgsuite.overlay.aioGestInProgress) {
 
-			  preventDefaultAction = e.button != mgsuite.const.LMB || !mgsuite.overlay.aioLeftDefault ||
-					 targetName == "html" || targetName == "body" || e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument;
+			  preventDefaultAction = e.button != mgsuite.const.LMB;
+			    // || !mgsuite.overlay.aioLeftDefault;
+				// || e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument;
+					 
 			  mgsuite.overlay.aioGestInProgress = true;
-			  mgsuite.overlay.aioStrokes = []; mgsuite.overlay.aioLocaleGest = []; mgsuite.overlay.aioCurrGest = "";
-			  if (mgsuite.overlay.aioTrailEnabled) mgsuite.trail.startTrail(e);
+			  mgsuite.overlay.aioStrokes = [];
+			  mgsuite.overlay.aioLocaleGest = [];
+			  mgsuite.overlay.aioCurrGest = "";
+			  
+			  if (mgsuite.overlay.aioTrailEnabled) {
+				mgsuite.trail.startTrail(e);
+			  }
 			  window.addEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
             }
-          else preventDefaultAction = e.button != mgsuite.const.LMB;
+          else {
+			preventDefaultAction = e.button != mgsuite.const.LMB;
+		  }
         }
 		
          // it can be the start of a wheelscroll gesture as well
         if (mgsuite.overlay.aioWheelEnabled && (mgsuite.overlay.aioWindowType == "browser" || mgsuite.overlay.aioWindowType == "messenger" || mgsuite.overlay.aioWindowType == "source")) {
+		  
 		  preventDefaultAction = preventDefaultAction || e.button != mgsuite.const.LMB;
+		  
 		  mgsuite.overlay.aioTabCount = (mgsuite.overlay.aioWindowType == "browser") ? mgsuite.overlay.aioContent.mPanelContainer.childNodes.length : 0;
 		  if (mgsuite.overlay.aioWheelRocker) {
 			if (!mgsuite.overlay.aioGestInProgress) {
@@ -1109,9 +1126,20 @@ mgsuite.overlay = {
 		  if (mgsuite.overlay.aioWheelRocker || mgsuite.overlay.aioTabCount >= 1 || mgsuite.overlay.aioTTNode)
 			mgsuite.overlay.aioContent.addEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
         }
+		
+        mgsuite.overlay.aioOldX = e.screenX;
+		mgsuite.overlay.aioOldY = e.screenY;
 
-        if (preventDefaultAction && e.button == mgsuite.const.LMB) mgsuite.overlay.aioNukeEvent(e);
-          mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
+        if (preventDefaultAction && e.button == mgsuite.const.LMB) {
+		  mgsuite.overlay.aioNukeEvent(e);
+		  mgsuite.mouseDownNuked = true;
+		} else {
+		  mgsuite.mouseDownNuked = false;
+		}
+		dump("mouseDownNuked:" + mgsuite.mouseDownNuked + "\n");
+		
+		mgsuite.overlay.lastClientX = e.clientX;
+		mgsuite.overlay.lastClientY = e.clientY;
 		
 		mgsuite.overlay.aioDownButton = e.button;
 		
@@ -1143,15 +1171,22 @@ mgsuite.overlay = {
     }
   },
   
-//  sendMiddleButton: function(x, y) {
-//	mgsuite.overlay.ignoreNextMouseDown = true;
-//    var mods = 0;
-//
-//    var dwu = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-//              .getInterface(Components.interfaces.nsIDOMWindowUtils);
-//
-//    dwu.sendMouseEvent("mousedown", x, y, 1, 1, mods);
-//  },
+  performDefaultMouseDown: function() {
+	if (!mgsuite.mouseDownNuked) {
+	  return;
+	}
+	dump("performDefaultMouseDown\n");
+	
+	mgsuite.overlay.ignoreNextMouseDown = true;
+	mgsuite.overlay.aioKillGestInProgress();
+	
+    var mods = 0;
+
+    var dwu = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+              .getInterface(Components.interfaces.nsIDOMWindowUtils);
+
+    dwu.sendMouseEvent("mousedown", mgsuite.overlay.lastClientX, mgsuite.overlay.lastClientY, 0, 1, mods);
+  },
   
   /* This is invoked by middle mousedown from frame script */
   middleButtonDown: function(nodeToScroll, mouseTarget) {
@@ -1302,11 +1337,12 @@ mgsuite.overlay = {
     }
   },
 
-  aioDragGesture: function(e) {
-    mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-    mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
-    if (mgsuite.overlay.aioGestInProgress) mgsuite.overlay.aioKillGestInProgress();
-  },
+//  aioDragGesture: function(e) {
+//    mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+//    mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+//	dump("aioDragGesture:" + mgsuite.overlay.aioGestInProgress + "\n");
+//    if (mgsuite.overlay.aioGestInProgress) mgsuite.overlay.aioKillGestInProgress();
+//  },
 
   /* Scroll Wheel gestures
      Original code by Joe4711. Rewritten by Marc Boullet  */

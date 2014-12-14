@@ -49,7 +49,6 @@ var mgsuiteFr = {
         // block click from reaching page
         e.stopPropagation();
         e.preventDefault();
-        //sendAsyncMessage("MouseGesturesSuite:test", 'blocked:' + e.type);
       }
       
       if (e.type == 'mousedown') {
@@ -64,6 +63,23 @@ var mgsuiteFr = {
         ) {
           sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.middleButtonDown'}, {param: [nodeToScroll, e.target]});
         }
+      }
+      
+    }
+    
+    //sendAsyncMessage("MouseGesturesSuite:test", e.type);
+    
+    if (e.type == 'mousedown' && e.button == 0 && this.prefBranch.getIntPref("mousebuttonpref") == 0) {
+      var ok = this.isAreaOKForLeftButtonGesture(e.target);
+      
+      if (ok) {
+        e.preventDefault();
+        e.stopPropagation();
+        sendAsyncMessage("MouseGesturesSuite:test", 'blocked default');
+        
+      } else {
+        sendAsyncMessage("MouseGesturesSuite:test", 'kill gesture');
+        sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
       }
     }
     
@@ -123,10 +139,12 @@ var mgsuiteFr = {
   
   isAreaOKForLeftButtonGesture: function(node) {
     var tag = node.nodeName.toLowerCase();
-
-    return 
+  
+    var ok = 
      (tag != "input" && tag != "textarea"
      && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox" && tag != "menu");
+     
+    return ok;
   },
   
   // Returns a "url"-type computed style attribute value, with the url() stripped.
