@@ -699,6 +699,7 @@ mgsuite.overlay = {
     }
 
     mgsuite.overlay.aioFirstInit = false;
+	mgsuite.overlay.rockerButtonsPressed = 0;
   },
   
   /* Send asyncMessage to frame script - from tab or window depending on window type */
@@ -931,6 +932,7 @@ mgsuite.overlay = {
   aioClearRocker: function() {
     mgsuite.overlay.aioRockTimer = null;
     mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+	mgsuite.overlay.rockerButtonsPressed = 0;
   },
 
   aioPerformRockerFunction: function(index) {
@@ -1002,10 +1004,11 @@ mgsuite.overlay = {
 			elem.addEventListener("contextmenu", mgsuite.overlay.aioPrioritizeGestures, true);
 		  }
 		}
+		
+		let contentWin = gBrowser.selectedBrowser.contentWindowAsCPOW;
+		addPrioritizeEvents(contentWin.document);
   
-		addPrioritizeEvents(window.content.document);
-  
-		var frames = window.content.frames;
+		var frames = contentWin.frames;
 		var framesB, i, j, len, lenB;
   
 		for (i=0, len=frames.length; i<len; i++) {
@@ -1064,6 +1067,7 @@ mgsuite.overlay = {
 	  //dump("rocker:" + func + "\n");
 	  
 	  mgsuite.overlay.blockMouseEventsForRocker();
+	  mgsuite.overlay.rockerButtonsPressed = 2;
 	  
 	  mgsuite.overlay.aioKillGestInProgress();
 	  mgsuite.imp.aioStatusMessage("", 0);
@@ -1186,7 +1190,7 @@ mgsuite.overlay = {
 	  window.removeEventListener("click", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
 	  window.removeEventListener("mousedown", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
 	  window.removeEventListener("mouseup", mgsuite.overlay.rockerBlockMouseEventsHandler, true);
-	}, 200);
+	}, 1);
   },
 
   rockerBlockMouseEventsHandler: function(e) {
@@ -1230,6 +1234,16 @@ mgsuite.overlay = {
 	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
 	  return;
     }
+	
+	if (mgsuite.overlay.rockerButtonsPressed > 0) {
+	  if (mgsuite.overlay.rockerButtonsPressed == 1 && window.gBrowser) {
+		mgsuite.overlay.aioNukeEvent(e);
+		var sel = gBrowser.selectedBrowser.contentWindowAsCPOW.getSelection();
+		sel.removeAllRanges();
+	  }
+	  
+	  mgsuite.overlay.rockerButtonsPressed--;
+	}
 
     if (mgsuite.overlay.aioDelayTO) {
 	  clearTimeout(mgsuite.overlay.aioDelayTO);
@@ -1249,14 +1263,15 @@ mgsuite.overlay = {
     if (button == mgsuite.overlay.aioDownButton) {
 	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
 	  mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
-	  if (button == mgsuite.const.RMB && !mgsuite.overlay.aioGestInProgress && !mgsuite.overlay.aioRockTimer) mgsuite.overlay.aioDisplayContextMenu(e);
-	  else {
+	  if (button == mgsuite.const.RMB && !mgsuite.overlay.aioGestInProgress && !mgsuite.overlay.aioRockTimer) {
+		mgsuite.overlay.aioDisplayContextMenu(e);
+	  } else {
 		if (mgsuite.overlay.aioRockTimer) clearTimeout(mgsuite.overlay.aioRockTimer);
 		mgsuite.overlay.aioRockTimer = null;
 	  }
     }
 
-    if (mgsuite.overlay.aioGestInProgress) {
+   if (mgsuite.overlay.aioGestInProgress) {
       var lastgesture = mgsuite.overlay.aioStrokes.join("");
 
       if (lastgesture) mgsuite.overlay.aioNukeEvent(e);
@@ -1282,7 +1297,7 @@ mgsuite.overlay = {
       }
       mgsuite.overlay.aioKillGestInProgress();
       mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-    }
+	}
   },
 
 //  aioDragGesture: function(e) {
