@@ -4,7 +4,7 @@
 	
 	Run C:\Program Files\FFNightly\firefox.exe  "D:\dev\aio-gestures\mouse-gestures-suite-1.7.0alpha2.xpi" -P "nightly" -console
 	WinWait ahk_class MozillaDialogClass
-	Sleep 1700
+	Sleep 300
 	Send {Enter}
 	Sleep 300
 	Send !f
