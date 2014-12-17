@@ -1995,7 +1995,7 @@ mgsuite.overlay = {
     if (mgsuite.overlay.aioScroll.scrollType == 3) return; // nothing to scroll
     if (!mgsuite.overlay.aioScroll.isXML && mgsuite.overlay.aioScroll.nodeToScroll.nodeName.toLowerCase() != "select") {
        mgsuite.overlay.aioScroll.cursorChangeable = true;
-       mgsuite.overlay.aioScroll.nodeToScroll.style.cursor = "url(chrome://allinonegest/content/allscroll.png), move";
+       mgsuite.overlay.aioScroll.nodeToScroll.style.cursor = "url(chrome://mgsuite/content/allscroll.png), move";
     }
     if (mgsuite.overlay.aioScrollAlaAcrobat) {mgsuite.overlay.aioScroll.ratioX = -1; mgsuite.overlay.aioScroll.ratioY = -1; }
   },

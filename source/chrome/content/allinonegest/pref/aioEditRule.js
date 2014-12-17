@@ -120,7 +120,7 @@ function addSiteListItem(listBox, url, actionVal, actionLabel) {
 }
 
 function openSiteListHelp() {
-  var win = window.open("chrome://allinonegest-en/content/help-options.html#siteList", "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=850,height=660");
+  var win = window.open("chrome://mgsuite-en/content/help-options.html#siteList", "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=850,height=660");
   win.focus(); 
 }
 
@@ -128,7 +128,7 @@ function insertRecentUrl(exactUrl) {
   var win = window.opener.opener;
   var url = win.content.document.location.href;
   
-  if (url.indexOf('about:') == 0 || url.indexOf('chrome://allinonegest/') == 0) {
+  if (url.indexOf('about:') == 0 || url.indexOf('chrome://mgsuite/') == 0) {
     url = getLastUrlFromHistory();
   }
   

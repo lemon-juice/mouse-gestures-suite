@@ -2,14 +2,14 @@
 
 <?xml-stylesheet href="chrome://communicator/skin/" type="text/css"?>
 
-<!DOCTYPE window SYSTEM "chrome://allinonegest/locale/allinonegest.dtd">
+<!DOCTYPE window SYSTEM "chrome://mgsuite/locale/allinonegest.dtd">
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         title="&drawgesture.title;"
         onload="init();">
 
 <stringbundleset id="stringbundleset"> 
-  <stringbundle id="allinonegestbundle" src="chrome://allinonegest/locale/allinonegest.properties"/>
+  <stringbundle id="allinonegestbundle" src="chrome://mgsuite/locale/allinonegest.properties"/>
 </stringbundleset>
 
 <script type="application/x-javascript" src="aioPlayGesture.js"/>

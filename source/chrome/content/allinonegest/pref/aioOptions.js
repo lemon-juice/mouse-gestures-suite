@@ -217,11 +217,11 @@ function restoreDefaultGestures() {
 }
 
 function openHelp(tabIndex) {
-  var url = "allinonegest/locale/help.html"; // this is fake url, will need to be changed to provide true localization
+  var url = "mgsuite/locale/help.html"; // this is fake url, will need to be changed to provide true localization
   
   if (!chromeFileExists(url)) {
     // default English help
-    url = "allinonegest-en/content/help-options.html";
+    url = "mgsuite-en/content/help-options.html";
   }
   
   if (typeof tabIndex != 'undefined') {
@@ -256,7 +256,7 @@ function chromeFileExists(file)
 }
 
 function openOptions() {
-  window.openDialog("chrome://allinonegest/content/pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
+  window.openDialog("chrome://mgsuite/content/pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
 }
 
 // Sort gesture and function strings according to order in
@@ -363,7 +363,7 @@ function exportSettings() {
   var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
   //var strBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].
   //                       getService(Components.interfaces.nsIStringBundleService);
-  //var aioBundle = strBundleService.createBundle("chrome://allinonegest/locale/allinonegest.properties");
+  //var aioBundle = strBundleService.createBundle("chrome://mgsuite/locale/allinonegest.properties");
   
   var windowTitle = "Save Mouse Gestures Suite settings...";
   
@@ -594,7 +594,7 @@ function reopenPrefWindow() {
   window.opener.aioOpenAioOptionsDelayed = function() {
     var openerWin = window.opener;
     openerWin.setTimeout(function() {
-      openerWin.openDialog("chrome://allinonegest/content/pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
+      openerWin.openDialog("chrome://mgsuite/content/pref/aioOptions.xul", "", "chrome,dialog,modal,resizable");
     }, 400);
   }
   
@@ -637,5 +637,5 @@ function openEditRuleWin(newRule) {
   
   var suffix = newRule ? "?new=1" : "";
   
-  window.openDialog("chrome://allinonegest/content/pref/aioEditRule.xul" + suffix, "", "width=540,height=230,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
+  window.openDialog("chrome://mgsuite/content/pref/aioEditRule.xul" + suffix, "", "width=540,height=230,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
 }

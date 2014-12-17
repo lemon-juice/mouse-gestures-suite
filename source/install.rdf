@@ -30,7 +30,7 @@
     <em:creator>Michał Kościelny</em:creator>
     <em:homepageURL>https://addons.mozilla.org/addon/mouse-gestures-suite/</em:homepageURL>
     <em:contributor>Marc Boullet, Optimoz, Joe4711, Skidooer &amp; all</em:contributor>
-    <em:optionsURL>chrome://allinonegest/content/pref/aioPrefs.xul</em:optionsURL>
-    <em:iconURL>chrome://allinonegest/content/aioIcon.png</em:iconURL>
+    <em:optionsURL>chrome://mgsuite/content/pref/aioPrefs.xul</em:optionsURL>
+    <em:iconURL>chrome://mgsuite/content/aioIcon.png</em:iconURL>
   </rdf:Description>
 </rdf:RDF>
