@@ -5,7 +5,7 @@
 <!DOCTYPE dialog [
 <!ENTITY % brandDTD SYSTEM "chrome://global/locale/brand.dtd" >
 %brandDTD;
-<!ENTITY % allinonegestDTD SYSTEM "chrome://allinonegest/locale/allinonegest.dtd" >
+<!ENTITY % allinonegestDTD SYSTEM "chrome://mgsuite/locale/allinonegest.dtd" >
 %allinonegestDTD;
 ]>
 
@@ -22,7 +22,7 @@
 <script type="application/x-javascript" src="aioEditRule.js"/>
 
 <stringbundleset id="stringbundleset"> 
-  <stringbundle id="allinonegestbundle" src="chrome://allinonegest/locale/allinonegest.properties"/>
+  <stringbundle id="allinonegestbundle" src="chrome://mgsuite/locale/allinonegest.properties"/>
   <stringbundle id="brandbundle" src="chrome://global/locale/brand.properties"/>
 </stringbundleset>
 

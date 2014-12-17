@@ -4,7 +4,7 @@
    width: 28px;
    border: none;
    padding: 0;
-   background-image: url("chrome://allinonegest/content/autoscroll_v.png");
+   background-image: url("chrome://mgsuite/content/autoscroll_v.png");
    background-color: transparent;
    cursor: n-resize;
    -moz-appearance: none;
@@ -14,7 +14,7 @@
    width: 28px;
    border: none;
    padding: 0;
-   background-image: url("chrome://allinonegest/content/autoscroll_h.png");
+   background-image: url("chrome://mgsuite/content/autoscroll_h.png");
    background-color: transparent;
    cursor: e-resize;
    -moz-appearance: none;
@@ -24,7 +24,7 @@
    width: 28px;
    border: none;
    padding: 0;
-   background-image: url("chrome://allinonegest/content/autoscroll_all.png");
+   background-image: url("chrome://mgsuite/content/autoscroll_all.png");
    background-color: transparent;
    cursor: move;
    -moz-appearance: none;

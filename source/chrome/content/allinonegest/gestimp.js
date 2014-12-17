@@ -496,7 +496,7 @@ mgsuite.imp = {
     var locFunc = mgsuite.overlay.aioGetStr("w.function").replace(/\'/g, "&#39;");
     var locMove = mgsuite.overlay.aioGetStr("w.move").replace(/\'/g, "&#39;");
     const K1 = '<th width="100" class="thTop" nowrap="nowrap">&nbsp;' + locGest + '&nbsp;</th>';
-    const imgURL = '<img src="chrome://allinonegest/content/gest-imgs/';
+    const imgURL = '<img src="chrome://mgsuite/content/gest-imgs/';
     
     var divCode = '<div class="buttons">';
     //divCode += '<button onclick="openOptions()">' + mgsuite.overlay.aioGetStr('g.aioOptions') + '</button>';

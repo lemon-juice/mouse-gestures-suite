@@ -125,7 +125,7 @@ function openSiteListHelp() {
   var prefBranch = prefs.getBranch("");
   var browserUrl = prefBranch.getCharPref('browser.chromeURL');
   
-  var win = window.openDialog(browserUrl, "mousegesturessuiteoptions", "chrome,all,dialog=no,width=850,height=660", "chrome://allinonegest-en/content/help-options.html#siteList");
+  var win = window.openDialog(browserUrl, "mousegesturessuiteoptions", "chrome,all,dialog=no,width=850,height=660", "chrome://mgsuite-en/content/help-options.html#siteList");
   win.focus(); 
 }
 
@@ -133,7 +133,7 @@ function insertRecentUrl(exactUrl) {
   var win = window.opener.opener;
   var url = win.gBrowser.selectedBrowser.contentWindowAsCPOW.location.href;
   
-  if (url.indexOf('about:') == 0 || url.indexOf('chrome://allinonegest/') == 0) {
+  if (url.indexOf('about:') == 0 || url.indexOf('chrome://mgsuite/') == 0) {
     url = getLastUrlFromHistory();
   }
   

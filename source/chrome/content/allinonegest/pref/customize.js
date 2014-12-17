@@ -333,7 +333,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   
   // load help descriptions for each action
   var parser = new DOMParser();
-  var helpDoc = parser.parseFromString(ReadFile("chrome://allinonegest-en/content/help-options.html"), "text/html");
+  var helpDoc = parser.parseFromString(ReadFile("chrome://mgsuite-en/content/help-options.html"), "text/html");
   var docTrs = helpDoc.querySelectorAll("table.gestlist tbody tr");
   var tds, matches, txt;
   for (var i=0; i<docTrs.length; i++) {
@@ -760,7 +760,7 @@ function openPlayWindow() {
   rv.trailColor = document.getElementById("trailPickerId").color;
   rv.trailSize = trailSize;
   rv.mousebutton = document.getElementById("mousebuttOptions").value;
-  window.openDialog("chrome://allinonegest/content/pref/aioPlayGesture.xul", "",
+  window.openDialog("chrome://mgsuite/content/pref/aioPlayGesture.xul", "",
        "chrome,centerscreen,modal=yes", rv);
   if (rv.gestString != undefined) inputBox.value = rv.gestString;
   inputBox.select(); inputBox.focus();

@@ -4,11 +4,11 @@
 
   <menupopup id="taskPopup">
     <menuitem id="mousegesturessuite_menu" label="Mouse Gestures Suite" 
-              oncommand="window.openDialog('chrome://allinonegest/content/pref/aioOptions.xul', '', 'chrome,dialog,modal,resizable');" />
+              oncommand="window.openDialog('chrome://mgsuite/content/pref/aioOptions.xul', '', 'chrome,dialog,modal,resizable');" />
   </menupopup>
 
   <menupopup id="menu_ToolsPopup">
     <menuitem id="mousegesturessuite_menu" label="Mouse Gestures Suite" 
-              oncommand="window.openDialog('chrome://allinonegest/content/pref/aioOptions.xul', '', 'chrome,dialog,modal,resizable');" />
+              oncommand="window.openDialog('chrome://mgsuite/content/pref/aioOptions.xul', '', 'chrome,dialog,modal,resizable');" />
   </menupopup>
 </overlay>

@@ -145,7 +145,7 @@ mgsuite.help = {
 
 
 window.addEventListener("DOMContentLoaded", function() {
-  mgsuite.bundle = mgsuite.help.aioCreateStringBundle("chrome://allinonegest/locale/allinonegest.properties");
+  mgsuite.bundle = mgsuite.help.aioCreateStringBundle("chrome://mgsuite/locale/allinonegest.properties");
 
   var aioPrefService = Components.classes["@mozilla.org/preferences-service;1"]
           .getService(Components.interfaces.nsIPrefService);

@@ -6,7 +6,7 @@
 <!DOCTYPE dialog [
 <!ENTITY % brandDTD SYSTEM "chrome://global/locale/brand.dtd" >
 %brandDTD;
-<!ENTITY % allinonegestDTD SYSTEM "chrome://allinonegest/locale/allinonegest.dtd" >
+<!ENTITY % allinonegestDTD SYSTEM "chrome://mgsuite/locale/allinonegest.dtd" >
 %allinonegestDTD;
 ]>
 
@@ -20,14 +20,14 @@
       ondialoghelp="openHelp();"
       persist="width height screenX screenY">
 
-<script type="application/x-javascript" src="chrome://allinonegest/content/defaultGestureString.js"/>
+<script type="application/x-javascript" src="chrome://mgsuite/content/defaultGestureString.js"/>
 <script type="application/x-javascript" src="customize.js"/>
 <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>
 <script type="application/x-javascript" src="aioOptions.js"/>
 <script type="application/x-javascript" src="aioEditRule.js"/>
 
 <stringbundleset id="stringbundleset"> 
-  <stringbundle id="allinonegestbundle" src="chrome://allinonegest/locale/allinonegest.properties"/>
+  <stringbundle id="allinonegestbundle" src="chrome://mgsuite/locale/allinonegest.properties"/>
   <stringbundle id="brandbundle" src="chrome://global/locale/brand.properties"/>
 </stringbundleset>
 
