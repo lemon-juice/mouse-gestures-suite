@@ -99,6 +99,7 @@ mgsuite.util = {
     var str = "";
     var req = new XMLHttpRequest();
     try {
+      // this is request for local file via chrome://
       req.open("GET", mgsuite.const.CHROME_DIR + "tlds.txt", false);
       req.send();
       str = req.responseText.trim();
