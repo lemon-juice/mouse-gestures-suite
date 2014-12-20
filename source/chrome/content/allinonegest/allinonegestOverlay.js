@@ -1095,8 +1095,10 @@ mgsuite.overlay = {
 			mgsuite.overlay.aioContent.addEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
         }
 
-        if (preventDefaultAction && e.button == mgsuite.const.LMB) mgsuite.overlay.aioNukeEvent(e);
-          mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
+        if (preventDefaultAction && (e.button == mgsuite.const.LMB && !mgsuite.overlay.aioGestureTab)) {
+		  mgsuite.overlay.aioNukeEvent(e);
+		}
+        mgsuite.overlay.aioOldX = e.screenX; mgsuite.overlay.aioOldY = e.screenY;
       }
        else {
         // middle button scrolling
