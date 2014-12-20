@@ -69,7 +69,7 @@ mgsuite.help = {
           if (tds[2]) {
             tds[2].classList.add("wintypes");
             tds[2].style.whiteSpace = "nowrap";
-            tds[2].innerHTML = mgsuite.help.aioPropertyToWindowTypes(matches[1]);
+            mgsuite.help.insertWindowTypeLabels(tds[2], matches[1]);
           }
         }
       }
@@ -91,11 +91,8 @@ mgsuite.help = {
     return gStr;
   },
 
-  // for the given property describing gesture return available
-  // window types in the form of (localized) space-delimited abbreviations,
-  // e.g. "BR MSG"
-  aioPropertyToWindowTypes: function(prop) {
-    var winTypes, info = "";
+  insertWindowTypeLabels: function(elem, prop) {
+    var winTypes, span;
 
     for (var i=0; i<mgsuite.imp.aioActionTable.length; i++) {
       if (mgsuite.imp.aioActionTable[i][1] == prop) {
@@ -109,23 +106,16 @@ mgsuite.help = {
             'mailcompose'
           ];
         }
-        for (var i=0; i<winTypes.length; i++) {
-          info += '<span class="' + mgsuite.help.aioEscapeHTML(winTypes[i]) + '">' + mgsuite.help.aioEscapeHTML(mgsuite.allWinTypes[winTypes[i]]) + '</span> ';
+        for (var j=0; j<winTypes.length; j++) {
+          span = document.createElement('span');
+          span.className = winTypes[j];
+          span.textContent = mgsuite.allWinTypes[winTypes[j]] + ' ';
+          elem.appendChild(span);
         }
-        return info;
+        break;
+      
       }
     }
-
-    return "";
-  },
-
-  aioEscapeHTML: function(s) {
-      s = s.replace(/&/g, '&amp;');
-      s = s.replace(/</g, '&lt;');
-      s = s.replace(/>/g, '&gt;');
-      s = s.replace(/"/g, '&quot;');
-      s = s.replace(/'/g, '&#039;');
-      return s;
   },
 
   // translate gesture preference string like "RUL" into current locale
