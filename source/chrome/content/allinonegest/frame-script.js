@@ -212,9 +212,17 @@ var mgsuiteFr = {
       entry = this.deserializeEntry(entries[i], idMap, docIdentMap);
       sHistory.addEntry(entry, true);
     }
+    
+    var scrollIsSet = false;
+    
+    addEventListener('DOMContentLoaded', function(e) {
+      if (!scrollIsSet) {
+        mgsuiteFr.setScrollPosition(msg.data.scrollX, msg.data.scrollY, 10);
+        scrollIsSet = true;
+      }
+    }, true);        
 
     docShell.gotoIndex(msg.data.index);
-    this.setScrollPosition(msg.data.scrollX, msg.data.scrollY, 10);
   },
   
   setScrollPosition: function(x, y, attempts) {
@@ -226,7 +234,7 @@ var mgsuiteFr = {
       timer.initWithCallback(function() {
         mgsuiteFr.setScrollPosition(x, y, --attempts);
         
-      }, 10, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+      }, 50, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
     }
   },
   
