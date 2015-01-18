@@ -639,7 +639,7 @@ mgsuite.overlay = {
 		}, true);
 	  }
   
-	  //window.addEventListener("dragstart", mgsuite.overlay.aioDragGesture, true);
+	  window.addEventListener("dragstart", mgsuite.overlay.dragStart, true);
 	  window.addEventListener("unload", mgsuite.overlay.aioWindowUnload, false);
 	  window.addEventListener("keypress", mgsuite.overlay.aioKeyPressed, true);
   
@@ -960,7 +960,6 @@ mgsuite.overlay = {
   },
 
   aioMouseDown: function(e) {
-	
 	if (mgsuite.overlay.ignoreNextMouseDown) {
 	  mgsuite.overlay.ignoreNextMouseDown = false;
 	  return;
@@ -1300,12 +1299,13 @@ mgsuite.overlay = {
 	}
   },
 
-//  aioDragGesture: function(e) {
-//    mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-//    mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
-//	dump("aioDragGesture:" + mgsuite.overlay.aioGestInProgress + "\n");
-//    if (mgsuite.overlay.aioGestInProgress) mgsuite.overlay.aioKillGestInProgress();
-//  },
+  /* Cancel gesture when user starts dragging an element. If not cancelled, then the gesture
+   * may be left unfinished because mouseup event does not fire after dragging */
+  dragStart: function(e) {
+    mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+    mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+    if (mgsuite.overlay.aioGestInProgress) mgsuite.overlay.aioKillGestInProgress();
+  },
 
   /* Scroll Wheel gestures
      Original code by Joe4711. Rewritten by Marc Boullet  */
