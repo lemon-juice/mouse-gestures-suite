@@ -1,8 +1,8 @@
-set xpi_name=mouse-gestures-suite-1.7.0alpha2.xpi
+set xpi_name=mouse-gestures-suite-1.7.0beta1.xpi
 rmdir "D:\dev\aio-gestures-build" /S /Q
 xcopy "D:\dev\aio-gestures\source" "D:\dev\aio-gestures-build" /I /E /Q
 
-"C:\Program Files\7-Zip\7z.exe" a -tzip "D:\dev\aio-gestures-build\chrome\allinonegest.jar" "D:\dev\aio-gestures-build\chrome\*"
+"C:\Program Files\7-Zip\7z.exe" a -tzip -mx0 "D:\dev\aio-gestures-build\chrome\allinonegest.jar" "D:\dev\aio-gestures-build\chrome\*"
 
 for /D %%f in ("D:\dev\aio-gestures-build\chrome\*") do rmdir %%f /S /Q
 
