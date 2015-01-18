@@ -1184,7 +1184,14 @@ mgsuite.imp = {
   },
   
   aioOpenInNewTab: function(bg) {
-    if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.util.collectedLinksUrls.length) {
+    var openLink = mgsuite.overlay.aioOpenLinkInNew;
+    
+    if (mgsuite.overlay.aioGestureTab) {
+      // always open blank tab when gesture initiated on tab
+      openLink = false;
+    }
+    
+    if (openLink && mgsuite.util.collectedLinksUrls.length) {
       mgsuite.imp.aioLinkInTab(mgsuite.util.collectedLinksUrls[0], false, bg);
     }
     else {
