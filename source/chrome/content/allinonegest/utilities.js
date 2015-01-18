@@ -233,9 +233,16 @@ mgsuite.util = {
       entry.contentType = shEntry.contentType;
 
     let x = {}, y = {};
-    shEntry.getScrollPosition(x, y);
-    if (x.value != 0 || y.value != 0)
+    
+    try {
+      // this errors out in e10s but somehow saving scroll works (for loaded tabs)
+      shEntry.getScrollPosition(x, y);
+    } catch (err) {
+    }
+    
+    if (x.value != 0 || y.value != 0) {
       entry.scroll = x.value + "," + y.value;
+    }
 
     // Collect owner data for the current history entry.
     try {
