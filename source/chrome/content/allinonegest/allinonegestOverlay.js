@@ -641,7 +641,7 @@ mgsuite.overlay = {
   
 	  window.addEventListener("dragstart", mgsuite.overlay.dragStart, true);
 	  window.addEventListener("unload", mgsuite.overlay.aioWindowUnload, false);
-	  window.addEventListener("keypress", mgsuite.overlay.aioKeyPressed, true);
+	  window.addEventListener("keydown", mgsuite.overlay.aioKeyPressed, true);
   
 	  // init some autoscroll variables
 	  mgsuite.overlay.aioSofar = [];
