@@ -1,6 +1,6 @@
 ﻿; build xpi
 ^`::
-	RunWait D:\dev\aio-gestures\aio.bat
+	RunWait D:\dev\aio-gestures\build.bat
 	WinActivate, ahk_class MozillaWindowClass
 	ifWinActive ahk_class MozillaWindowClass
 	{
@@ -25,7 +25,7 @@ return
 
 
 !`::
-	RunWait D:\dev\aio-gestures\aio.bat
+	RunWait D:\dev\aio-gestures\build.bat
 	WinActivate, ahk_class MozillaWindowClass
 	ifWinActive ahk_class MozillaWindowClass
 	{

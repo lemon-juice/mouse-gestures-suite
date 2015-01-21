@@ -1287,8 +1287,10 @@ mgsuite.imp = {
     
     var chromeURL = mgsuite.overlay.aioIsFx ? "chrome://browser/content/" : "chrome://navigator/content/";
     
-    if (gBrowser.selectedBrowser.contentDocumentAsCPOW) {
-      var charsetArg = "charset=" + gBrowser.selectedBrowser.contentDocumentAsCPOW.characterSet;
+    var content = (mgsuite.overlay.aioWindowType == "browser") ? gBrowser.selectedBrowser.contentDocumentAsCPOW : window.content;
+    
+    if (content) {
+      var charsetArg = content.characterSet ? ("charset=" + content.characterSet) : null;
       return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
     }
     return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url);
