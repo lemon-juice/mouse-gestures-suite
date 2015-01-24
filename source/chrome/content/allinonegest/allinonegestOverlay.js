@@ -960,10 +960,6 @@ mgsuite.overlay = {
   },
 
   aioMouseDown: function(e) {
-	if (mgsuite.overlay.ignoreNextMouseDown) {
-	  mgsuite.overlay.ignoreNextMouseDown = false;
-	  return;
-	}
 	
     var gesturesEnabled = mgsuite.overlay.aioGesturesEnabled;
 	mgsuite.util.clearCollectedItems();

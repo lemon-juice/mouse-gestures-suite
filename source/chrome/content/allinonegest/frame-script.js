@@ -37,6 +37,7 @@ var mgsuiteFr = {
     var elemInfo;
     
     if (e.button == 1 && (e.type == 'click' || e.type == 'mousedown')) {
+      // middle button
       elemInfo = this.getElementInfo(e);
       
       var scrollEnabled = this.prefBranch.getBoolPref("autoscrolling2") && this.prefBranch.getIntPref("autoscrollpref") != 1;
@@ -63,23 +64,21 @@ var mgsuiteFr = {
       
     }
     
-    //sendAsyncMessage("MouseGesturesSuite:test", e.which);
-    
-    
     if (e.type == 'mousedown') {
       e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
       var isKeyOK = !(e.altKey && this.prefBranch.getBoolPref("noAltGest"));
       
       if (isKeyOK && e.button == 0 && this.prefBranch.getIntPref("mousebuttonpref") == 0) {
+        // left button gesture
         var ok = this.isAreaOKForLeftButtonGesture(e.target);
         
         if (ok) {
+          // stop left button from reaching page - this will be gesture
           e.preventDefault();
           e.stopPropagation();
-          //sendAsyncMessage("MouseGesturesSuite:test", 'blocked default');
           
         } else {
-          //sendAsyncMessage("MouseGesturesSuite:test", 'kill gesture');
+          // do not perform gesture on certain elements
           sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
         }
       }
@@ -89,9 +88,7 @@ var mgsuiteFr = {
       return;
     }
     
-    //sendAsyncMessage("MouseGesturesSuite:test", 'mouse:' + e.type);
-    
-    // send link info found under gesture to mouse gesture script
+    // send link and image info found under gesture to mouse gesture script
     if (!elemInfo) {
       elemInfo = this.getElementInfo(e);
     }
@@ -170,7 +167,6 @@ var mgsuiteFr = {
   endMouseMove: function() {
     removeEventListener("mousemove", this);
     this.collectElementsData = false;
-    //sendAsyncMessage("MouseGesturesSuite:test", 'endMouseMove');
   },
    
   getContentWindow: function(msg) {
