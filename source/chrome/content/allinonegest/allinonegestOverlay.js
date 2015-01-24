@@ -827,7 +827,7 @@ mgsuite.overlay = {
 	if (e.buttons == 0 && mgsuite.overlay.buttonsPropSupported) {
 	  // in some unusual circumstances mouseup may not fire so we end gesture if
 	  // mouse is moved with no button pressed
-	  mgsuite.overlay.aioKillGestInProgress();
+	  mgsuite.overlay.aioKillGestInProgress(true);
 	  return;
 	}
 	
@@ -920,9 +920,9 @@ mgsuite.overlay = {
     return tag == "input" || tag == "textarea" || tag == "textbox";
   },
 
-  aioKillGestInProgress: function(clearMode) {
+  aioKillGestInProgress: function(doNotClearCollected) {
     mgsuite.overlay.aioGestInProgress = false;
-    if (!clearMode) {
+    if (!doNotClearCollected) {
       mgsuite.util.clearCollectedItems();
     }
     mgsuite.trail.eraseTrail();
