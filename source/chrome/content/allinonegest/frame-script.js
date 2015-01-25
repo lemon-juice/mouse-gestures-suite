@@ -65,7 +65,9 @@ var mgsuiteFr = {
     }
     
     if (e.type == 'mousedown') {
-      e.target.ownerDocument.mgsuiteMouseDownElement = e.target;
+      // save mousedown element e.g. for scrolling actions
+      e.target.ownerDocument.defaultView.top.mgsuiteMouseDownElement = e.target;
+
       var isKeyOK = !(e.altKey && this.prefBranch.getBoolPref("noAltGest"));
       
       if (isKeyOK && e.button == 0 && this.prefBranch.getIntPref("mousebuttonpref") == 0) {
@@ -558,7 +560,7 @@ var mgsuiteFr = {
    */
   scrollElement: function(msg) {
     var value = msg.data.value;
-    var node = content.document.mgsuiteMouseDownElement;
+    var node = content.top.mgsuiteMouseDownElement;
     
     if (!node) {
       return;
