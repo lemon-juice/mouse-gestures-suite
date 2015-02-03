@@ -15,6 +15,7 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:test", this);
     addMessageListener("MouseGesturesSuite:displayGesturesList", this);
     addMessageListener("MouseGesturesSuite:scrollElement", this);
+    addMessageListener("MouseGesturesSuite:goToNextPrevLink", this);
     addEventListener("mousedown", this, true);
     addEventListener("click", this, true);
   },
@@ -28,6 +29,7 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:displayGesturesList": this.displayGesturesList(aMsg); break;
       case "MouseGesturesSuite:insertHistory": this.insertHistory(aMsg); break;
       case "MouseGesturesSuite:scrollElement": this.scrollElement(aMsg); break;
+      case "MouseGesturesSuite:goToNextPrevLink": this.goToNextPrevLink(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -580,6 +582,62 @@ var mgsuiteFr = {
     else
        if (useScrollToBy) scrollObj.clientFrame.scrollTo(scrollObj.clientFrame.pageXOffset, value);
        else scrollObj.nodeToScroll.scrollTop = value;
+  },
+  
+  
+  /**
+   * Go to next or previous link whose text is defined in options.
+   * @param {String} msg.data.direction next|prev
+   * @param {String} msg.data.nextsString
+   * @param {String} msg.data.prevsString
+   */
+  goToNextPrevLink: function(msg) {
+    
+    var dir = msg.data.direction;
+    
+    var re = [];
+    var doc = content.document;
+    var links = doc.getElementsByTagName("link");
+    var imgElems;
+    for (var i = 0; i < links.length; ++i) {
+      if (links[i].getAttribute("rel") && links[i].getAttribute("rel").toLowerCase() == dir) {
+         if (links[i].href) { content.location.href = links[i].href; return; }
+      }
+    }
+      
+    var nextArray = (dir == "next") ? msg.data.nextsString.split("|") : msg.data.prevsString.split("|");
+    
+    if (!nextArray.length) return;
+    
+    for (var j = 0; j < nextArray.length; ++j) {
+       re[j] = new RegExp(nextArray[j], "i");
+    }
+    
+    links = doc.links;
+    
+    for (var j = 0; j < re.length; ++j) {
+      for (var i = 0; i < links.length; ++i) { // search for exact match
+        if (links[i].textContent && links[i].textContent.search(re[j]) != -1 &&
+            nextArray[j].length == links[i].textContent.length && links[i].href) {
+          content.location.href = links[i].href;
+          return;
+        }
+      }
+    }
+    
+    for (var j = 0; j < re.length; ++j) {
+      for (var i = 0; i < links.length; ++i) { // search for partial match
+        if (links[i].textContent && links[i].textContent.search(re[j]) != -1 && links[i].href) {
+          content.location.href = links[i].href;
+          return;
+        }
+        imgElems = links[i].getElementsByTagName("img"); // Is it an image tag?
+        if (imgElems.length > 0 && imgElems[0].src && imgElems[0].src.search(re[j]) != -1 && links[i].href) {
+          content.location.href = links[i].href;
+          return;
+        }
+      }
+    }
   },
 
 }

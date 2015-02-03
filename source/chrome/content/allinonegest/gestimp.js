@@ -1444,7 +1444,7 @@ mgsuite.imp = {
     }
   },
   
-  aioNextPrevLink: function(next) { // submitted by Christian Kruse
+  aioNextPrevLink: function(next) {
     if (next && document.getElementById("nextPleasePopupMenu")) {
        document.getElementById("nextPleasePopupMenu").doCommand();
        return;
@@ -1453,38 +1453,12 @@ mgsuite.imp = {
        document.getElementById("prevPleasePopupMenu").doCommand();
        return;
     }
-    var re = [];
-    var relStr = next ? "next" : "prev" ;
-    var doc = mgsuite.overlay.aioSrcEvent.target.ownerDocument;
-    var links = doc.getElementsByTagName("link");
-    var imgElems;
-    for (var i = 0; i < links.length; ++i)
-      if (links[i].getAttribute("rel") && links[i].getAttribute("rel").toLowerCase() == relStr)
-         if (links[i].href) {loadURI(links[i].href); return;}
-    if (!mgsuite.overlay.aioNextsString) return;
-    var nextArray = next ? mgsuite.overlay.aioNextsString.split("|") : mgsuite.overlay.aioPrevsString.split("|");
-    for (var j = 0; j < nextArray.length; ++j)
-       re[j] = new RegExp(nextArray[j], "i");
-    links = doc.links;
-    for (var j = 0; j < re.length; ++j)
-      for (var i = 0; i < links.length; ++i) // search for exact match
-        if (links[i].textContent && links[i].textContent.search(re[j]) != -1 &&
-            nextArray[j].length == links[i].textContent.length && links[i].href) {
-           loadURI(links[i].href);
-           return;
-        }
-    for (var j = 0; j < re.length; ++j)
-      for (var i = 0; i < links.length; ++i) { // search for partial match
-        if (links[i].textContent && links[i].textContent.search(re[j]) != -1 && links[i].href) {
-           loadURI(links[i].href);
-           return;
-        }
-        imgElems = links[i].getElementsByTagName("img"); // Is it an image tag?
-        if (imgElems.length > 0 && imgElems[0].src && imgElems[0].src.search(re[j]) != -1 && links[i].href) {
-           loadURI(links[i].href);
-           return;
-        }
-      }
+    
+    mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:goToNextPrevLink", {
+      direction: next ? "next" : "prev",
+      nextsString: mgsuite.overlay.aioNextsString,
+      prevsString: mgsuite.overlay.aioPrevsString
+    });
   },
   
   aioSmartBackForward: function(aRwnd, aCurrDomainEndPoint) { // derived from SHIMODA "Piro" Hiroshi Rewind/Fastforward buttons
