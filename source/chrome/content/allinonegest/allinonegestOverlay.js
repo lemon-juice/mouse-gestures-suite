@@ -970,17 +970,32 @@ mgsuite.overlay = {
   
 	  if (mgsuite.overlay.aioWindowType == "browser") {
 		var tg = e.originalTarget;
-		if (tg.nodeName == 'xul:tab' ||
-		  (tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)) {
-		  // tab in SM
-		  mgsuite.overlay.aioGestureTab = e.originalTarget;
-  
-		} else if (tg.nodeName == 'xul:hbox' || tg.nodeName == 'xul:label') {
-		  // tab in Fx
-		  var tab = tg.parentNode.parentNode.parentNode;
-	
-		  if (tab.nodeName == 'tab') {
-			mgsuite.overlay.aioGestureTab = tab;
+		
+		if (tg.nodeName == 'xul:tab'
+		   || (tg.nodeName == 'tab' && tg.parentNode.nodeName.indexOf('xul:') == 0)
+		   || tg.nodeName == 'xul:hbox'
+		   || tg.nodeName == 'xul:label'
+		   || tg.nodeName == 'xul:toolbarbutton'
+		  ) {
+		  // clicked on tab or on element inside tab
+		  let elem = tg;
+		  
+		  do {
+			if (elem.nodeName == 'tab' || elem.nodeName == 'xul:tab') {
+			  mgsuite.overlay.aioGestureTab = elem;
+			  break;
+			}
+			
+			elem = elem.parentNode;
+		  } while (elem);
+		}
+		
+		if (mgsuite.overlay.aioGestureTab) {
+		  // check if clicked on left or right half of tab
+		  mgsuite.overlay.clickedTabHalf = 'R';
+		  
+		  if (e.screenX < mgsuite.overlay.aioGestureTab.boxObject.screenX + mgsuite.overlay.aioGestureTab.boxObject.width / 2) {
+			mgsuite.overlay.clickedTabHalf = 'L';
 		  }
 		}
 	  }

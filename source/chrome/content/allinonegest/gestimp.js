@@ -1199,6 +1199,8 @@ mgsuite.imp = {
         if (mgsuite.overlay.aioGestureTab) {
           // open new tab next to selected tab
           var selectedTabPos = mgsuite.overlay.aioContent.getTabIndex ? mgsuite.overlay.aioContent.getTabIndex(mgsuite.overlay.aioGestureTab) : mgsuite.overlay.aioGestureTab._tPos;
+          
+          var newTabPosShift = (mgsuite.overlay.clickedTabHalf == 'R') ? 1 : 0;
         }
         
         if (!bg) {
@@ -1209,11 +1211,11 @@ mgsuite.imp = {
   
           BrowserOpenTab();
           if (mgsuite.overlay.aioGestureTab) {
-            mgsuite.overlay.aioContent.moveTabTo(mgsuite.overlay.aioContent.mCurrentTab, selectedTabPos + 1);
+            mgsuite.overlay.aioContent.moveTabTo(mgsuite.overlay.aioContent.mCurrentTab, selectedTabPos + newTabPosShift);
           
             if (mgsuite.overlay.aioIsRocker && mgsuite.overlay.aioSrcEvent && mgsuite.overlay.aioSrcEvent.button == aioLMB) {
               setTimeout(function() {
-                mgsuite.overlay.aioContent.mTabContainer.selectedIndex = selectedTabPos + 1;
+                mgsuite.overlay.aioContent.mTabContainer.selectedIndex = selectedTabPos + newTabPosShift;
               }, 100);
             }
           }
@@ -1221,7 +1223,7 @@ mgsuite.imp = {
         } else {
           var newTab = mgsuite.imp.aioLinkInTab("about:blank", false, true);
           if (mgsuite.overlay.aioGestureTab) {
-            mgsuite.overlay.aioContent.moveTabTo(newTab, selectedTabPos + 1);
+            mgsuite.overlay.aioContent.moveTabTo(newTab, selectedTabPos + newTabPosShift);
           }
         }
       
