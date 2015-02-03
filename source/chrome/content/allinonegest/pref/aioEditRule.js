@@ -131,7 +131,8 @@ function openSiteListHelp() {
 
 function insertRecentUrl(exactUrl) {
   var win = window.opener.opener;
-  var url = win.gBrowser.selectedBrowser.contentWindowAsCPOW.location.href;
+  var contentWin = win.gBrowser.selectedBrowser.contentWindowAsCPOW ? win.gBrowser.selectedBrowser.contentWindowAsCPOW : win.gBrowser.selectedBrowser.contentWindow;
+  var url = contentWin.location.href;
   
   if (url.indexOf('about:') == 0 || url.indexOf('chrome://mgsuite/') == 0) {
     url = getLastUrlFromHistory();

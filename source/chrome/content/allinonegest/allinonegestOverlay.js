@@ -1015,7 +1015,7 @@ mgsuite.overlay = {
 		  }
 		}
 		
-		let contentWin = gBrowser.selectedBrowser.contentWindowAsCPOW;
+		let contentWin = mgsuite.util.getContentWindow(gBrowser.selectedBrowser);
 		addPrioritizeEvents(contentWin.document);
   
 		var frames = contentWin.frames;
@@ -1248,7 +1248,7 @@ mgsuite.overlay = {
 	if (mgsuite.overlay.rockerButtonsPressed > 0) {
 	  if (mgsuite.overlay.rockerButtonsPressed == 1 && window.gBrowser) {
 		mgsuite.overlay.aioNukeEvent(e);
-		var sel = gBrowser.selectedBrowser.contentWindowAsCPOW.getSelection();
+		var sel = mgsuite.util.getContentWindow(gBrowser.selectedBrowser).getSelection();
 		sel.removeAllRanges();
 	  }
 	  

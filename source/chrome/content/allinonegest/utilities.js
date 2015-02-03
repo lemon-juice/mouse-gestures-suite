@@ -342,5 +342,17 @@ mgsuite.util = {
     // at the root of the document
     return shEntry.parent && shEntry.isDynamicallyAdded();
   },
+  
+  /**
+   * This is for backwards compatibility - contentWindowAsCPOW is quite new
+   */
+  getContentWindow: function(browser) {
+    var win = browser.contentWindowAsCPOW;
+    if (win) {
+      return win;
+    } else {
+      return browser.contentWindow;
+    }
+  }
 
 }
