@@ -16,6 +16,7 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:displayGesturesList", this);
     addMessageListener("MouseGesturesSuite:scrollElement", this);
     addMessageListener("MouseGesturesSuite:goToNextPrevLink", this);
+    addMessageListener("MouseGesturesSuite:reloadFrame", this);
     addEventListener("mousedown", this, true);
     addEventListener("click", this, true);
   },
@@ -30,6 +31,7 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:insertHistory": this.insertHistory(aMsg); break;
       case "MouseGesturesSuite:scrollElement": this.scrollElement(aMsg); break;
       case "MouseGesturesSuite:goToNextPrevLink": this.goToNextPrevLink(aMsg); break;
+      case "MouseGesturesSuite:reloadFrame": this.reloadFrame(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -639,6 +641,10 @@ var mgsuiteFr = {
       }
     }
   },
+  
+  reloadFrame: function() {
+    content.top.mgsuiteMouseDownElement.ownerDocument.location.reload();
+  }
 
 }
 

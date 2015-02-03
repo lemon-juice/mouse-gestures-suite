@@ -360,7 +360,7 @@ mgsuite.imp = {
           
         } else {
           // reload frame
-          mgsuite.overlay.aioSrcEvent.target.ownerDocument.location.reload();
+          mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:reloadFrame", "");
         }
         break;
   
