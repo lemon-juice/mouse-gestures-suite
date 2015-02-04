@@ -1510,11 +1510,19 @@ mgsuite.overlay = {
     mgsuite.overlay.aioTabPU = new mgsuite.overlay.aioPopUp(activeTab, 0, mgsuite.overlay.aioTabCount, false, "popup", mgsuite.overlay.aioOldX + 2, mgsuite.overlay.aioOldY + 2,
                             mgsuite.overlay.aioReverseScroll && mgsuite.overlay.noTabScrollPopup, mgsuite.overlay.aioTabWheelEnd, mgsuite.overlay.aioTabPopping, mgsuite.overlay.aioTabWheeling);
     mgsuite.overlay.aioTabPU.createPopup(0, "", "");
+	
+	var prevIndex = mgsuite.overlay.getPreviousSelectedTab(true);
+	
+	if (prevIndex !== null) {
+	  // mark previously visited tab as underlined
+	  mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold", prevIndex, "aioUnderline");
+	} else {
+	  // make sure that initial menu item is highlighted even if only 1 tab exists
+	  mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold");
+	}
   },
 
   aioTabPopping: function(e) {
-    mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold");
-
 	if (mgsuite.overlay.noTabScrollPopup) {
 	  e.preventDefault(); //no popup
 	  if (mgsuite.overlay.aioWheelMode == 2) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(mgsuite.overlay.aioCCW != mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
@@ -2130,7 +2138,22 @@ mgsuite.overlay = {
       target.removeEventListener(handler.type, handler.listenerObject, handler.capturing);
     }
     }
-  }
+  },
+
+  getPreviousSelectedTab: function(getAsIndex) {
+    var lTab;
+    if (mgsuite.overlay.aioTabFocusHistory.length < 2) return null;
+    var tabId = mgsuite.overlay.aioTabFocusHistory[mgsuite.overlay.aioTabFocusHistory.length - 2].focused;
+	
+    for (var i = 0; i < mgsuite.overlay.aioContent.mTabs.length; ++i) {
+      lTab = mgsuite.overlay.aioContent.mTabContainer.childNodes[i];
+	  
+      if (lTab.getAttribute("aioTabId") == tabId) {
+		return getAsIndex ? i : lTab;
+	  }
+    }
+    return null;
+  },
 }
 
 
@@ -2258,7 +2281,7 @@ mgsuite.tooltip = {
        setTimeout(function(){mgsuite.overlay.aioTTShown = false;}, 2000);
     }
     else mgsuite.overlay.aioTTShown = false;
-  }
+  },
 }
 
 

@@ -270,20 +270,9 @@ mgsuite.imp = {
       content.focus();
     }
   },
-  
-  aioPreviousSelectedTab: function() {
-    var lTab;
-    if (mgsuite.overlay.aioTabFocusHistory.length < 2) return null;
-    var tabId = mgsuite.overlay.aioTabFocusHistory[mgsuite.overlay.aioTabFocusHistory.length - 2].focused;
-    for (var i = 0; i < mgsuite.overlay.aioContent.mTabs.length; ++i) {
-      lTab = mgsuite.overlay.aioContent.mTabContainer.childNodes[i];
-      if (lTab.getAttribute("aioTabId") == tabId) return lTab;
-    }
-    return null;
-  },
-  
+    
   aioGoToPreviousSelectedTab: function() {
-    var lTab = mgsuite.imp.aioPreviousSelectedTab();
+    var lTab = mgsuite.overlay.getPreviousSelectedTab();
     if (lTab) {
        mgsuite.overlay.aioTabFocusHistory.pop();
        mgsuite.overlay.aioContent.selectedTab = lTab;
@@ -2039,21 +2028,21 @@ mgsuite.imp = {
     var activeId = activeTab.getAttribute("aioTabId");
     
     if (activeId) {
-       if (mgsuite.overlay.aioTabFocusHistory[mgsuite.overlay.aioTabFocusHistory.length - 1].focused == activeId) {
+      if (mgsuite.overlay.aioTabFocusHistory[mgsuite.overlay.aioTabFocusHistory.length - 1].focused == activeId) {
         return; // already at top
       
-       } else {
-          for (var i = 0; i < mgsuite.overlay.aioTabFocusHistory.length; ++i) //search for a duplicated entry
-            if (mgsuite.overlay.aioTabFocusHistory[i].focused == activeId) {
-               mgsuite.overlay.aioTabFocusHistory.splice(i, 1); // Found: delete it
-            }
-          mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
-       }
+      } else {
+        for (var i = 0; i < mgsuite.overlay.aioTabFocusHistory.length; ++i) //search for a duplicated entry
+          if (mgsuite.overlay.aioTabFocusHistory[i].focused == activeId) {
+            mgsuite.overlay.aioTabFocusHistory.splice(i, 1); // Found: delete it
+          }
+        mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
+      }
        
     } else { // tab's never been visited
-       activeId = "t" + mgsuite.imp.aioUnique++;
-       activeTab.setAttribute("aioTabId", activeId);
-       mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
+      activeId = "t" + mgsuite.imp.aioUnique++;
+      activeTab.setAttribute("aioTabId", activeId);
+      mgsuite.overlay.aioTabFocusHistory.push({focused: activeId});
     }
   },
   

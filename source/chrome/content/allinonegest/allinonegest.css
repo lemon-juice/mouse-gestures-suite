@@ -32,8 +32,8 @@
  .menuitem-iconic[aioBold] {
    font-weight: bold;
  }
- .menuitem-iconic[aioItalic] {
-   font-style:italic;
+ .menuitem-iconic[aioUnderline] {
+   text-decoration: underline;
  }
  #aioWheelPopup menuitem[_moz-menuactive] {
    color: -moz-menuhovertext;
