@@ -1090,22 +1090,12 @@ mgsuite.overlay = {
       }
     }
     else {
-	  if (gesturesEnabled && e.button == mgsuite.const.RMB) {
-		// turn off gesture on active flash because right click event may be triggered
-		// and the gesture may end up unfinished after choosing a context menu flash option
-		var targetName = e.target.localName.toLowerCase();
-		if ((targetName == "object" || targetName == "embed")
-		   && e.target.actualType == "application/x-shockwave-flash"
-			&& e.target.activated) {
-		  return;
-		}
-	  }
 
       if (gesturesEnabled && e.button == mgsuite.overlay.aioGestButton) {
 		// start mouse gesture
         if (mgsuite.overlay.aioGestEnabled && mgsuite.overlay.aioIsKeyOK(e)) {
           mgsuite.overlay.aioSrcEvent = e;
-          targetName  = e.target.nodeName.toLowerCase();
+          var targetName = e.target.nodeName.toLowerCase();
 
           if (targetName != 'toolbarbutton'
               && !mgsuite.overlay.aioGestInProgress) {

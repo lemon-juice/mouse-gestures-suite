@@ -84,10 +84,17 @@ var mgsuiteFr = {
           // stop left button from reaching page - this will be gesture
           e.preventDefault();
           e.stopPropagation();
-          
-        } else {
-          // do not perform gesture on certain elements
-          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.playFlashKillGestInProgress'});
+        }
+      }
+      
+      if (e.button == 2) {
+        // turn off gesture on active flash because right click event may be triggered
+		// and the gesture may end up unfinished after flash context menu appears
+        let targetName = e.target.localName.toLowerCase();
+        if ((targetName == "object" || targetName == "embed")
+             && e.target.actualType == "application/x-shockwave-flash"
+              && e.target.activated) {
+          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
         }
       }
     }
