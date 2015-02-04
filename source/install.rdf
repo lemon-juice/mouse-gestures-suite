@@ -3,7 +3,7 @@
          xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <rdf:Description rdf:about="urn:mozilla:install-manifest">
     <em:id>mousegesturessuite@lemon_juice.addons.mozilla.org</em:id>
-    <em:version>1.7.0beta5</em:version>
+    <em:version>1.7.0beta6</em:version>
     <em:type>2</em:type>
     <em:unpack>true</em:unpack>
 	<em:multiprocessCompatible>true</em:multiprocessCompatible>
