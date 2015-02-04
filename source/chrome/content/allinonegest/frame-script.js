@@ -17,6 +17,7 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:scrollElement", this);
     addMessageListener("MouseGesturesSuite:goToNextPrevLink", this);
     addMessageListener("MouseGesturesSuite:reloadFrame", this);
+    addMessageListener("MouseGesturesSuite:nukeFlashObjects", this);
     addEventListener("mousedown", this, true);
     addEventListener("click", this, true);
   },
@@ -32,6 +33,7 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:scrollElement": this.scrollElement(aMsg); break;
       case "MouseGesturesSuite:goToNextPrevLink": this.goToNextPrevLink(aMsg); break;
       case "MouseGesturesSuite:reloadFrame": this.reloadFrame(aMsg); break;
+      case "MouseGesturesSuite:nukeFlashObjects": this.nukeFlashObjects(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -85,7 +87,7 @@ var mgsuiteFr = {
           
         } else {
           // do not perform gesture on certain elements
-          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
+          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.playFlashKillGestInProgress'});
         }
       }
     }
@@ -644,7 +646,72 @@ var mgsuiteFr = {
   
   reloadFrame: function() {
     content.top.mgsuiteMouseDownElement.ownerDocument.location.reload();
-  }
+  },
+  
+  /**
+   * Hide all flash objects.
+   * @param {String} msg.data.clickToViewStr
+   */
+  nukeFlashObjects: function(msg) {
+    function getElemsByTagNameForAllFrames(frameDoc, tagName) {
+      var elsWithTag = [];
+      var frames = frameDoc.getElementsByTagName("frame");
+      for (var i = 0; i < frames.length; ++ i)
+          elsWithTag = elsWithTag.concat(getElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
+      frames = frameDoc.getElementsByTagName("iframe");
+      for (i = 0; i < frames.length; ++ i)
+          elsWithTag = elsWithTag.concat(getElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
+      var lEls = frameDoc.getElementsByTagName(tagName);
+      for (i = 0; i < lEls.length; ++i) elsWithTag.push(lEls[i]);
+      return elsWithTag;
+    }
+    
+    function playFlash(e) {
+      e.currentTarget.removeEventListener("click", playFlash, true);
+      var flashNode = e.currentTarget.nextSibling;
+      var disp = e.currentTarget.getAttribute("hiddenByMGSuite");
+      e.currentTarget.parentNode.removeChild(e.currentTarget);
+      var style = flashNode.getAttribute("style") || "";
+      flashNode.setAttribute("style", style + "display:" + disp + ";");
+    }
+    
+    var currFlash, height, width, top, next, span, text, view, disp, style;
+    var topDocument = content.top.document;
+    
+    var embeds = getElemsByTagNameForAllFrames(topDocument, "embed");
+    embeds = embeds.concat(getElemsByTagNameForAllFrames(topDocument, "object"));
+    
+    for (var i = 0; i < embeds.length; ++i) {
+      currFlash = embeds[i];
+      if (currFlash.getAttribute("type") != "application/x-shockwave-flash") continue;
+      if (currFlash.parentNode.nodeName.toLowerCase() == "object") {
+        top = currFlash.parentNode.parentNode;
+        next = currFlash.parentNode;
+      }
+      else {
+        top = currFlash.parentNode;
+        next = currFlash;
+      }
+      if (next.previousSibling && next.previousSibling.nodeName.toLowerCase() == "span"
+          && next.previousSibling.hasAttribute("hiddenByMGSuite")) continue;
+      view = next.ownerDocument.defaultView;
+      disp = view.getComputedStyle(next, "").getPropertyValue("display");
+      width = currFlash.offsetWidth;
+      height = currFlash.offsetHeight;
+      
+      if (height && width) {
+         style = next.getAttribute("style") || "";
+         next.setAttribute("style", style + "display:none;");
+         span = content.document.createElement("span");
+         text = content.document.createTextNode("[" + msg.data.clickToViewStr + "]");
+         span.appendChild(text);
+         top.insertBefore(span, next);
+         span.setAttribute("style", "height:" + (height - 2) + "px;width:" + (width - 2) + "px;border:1px solid black;display:inline-block;");
+         span.setAttribute("hiddenByMGSuite", disp);
+         span.addEventListener("click", playFlash, true);
+      }
+    }
+  },
 
 }
 

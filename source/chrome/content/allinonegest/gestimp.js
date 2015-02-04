@@ -602,62 +602,8 @@ mgsuite.imp = {
     }
   },
   
-  _aioGetElemsByTagNameForAllFrames: function(frameDoc, tagName) {
-    var elsWithTag = [];
-    var frames = frameDoc.getElementsByTagName("frame");
-    for (var i = 0; i < frames.length; ++ i)
-        elsWithTag = elsWithTag.concat(mgsuite.imp._aioGetElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
-    frames = frameDoc.getElementsByTagName("iframe");
-    for (i = 0; i < frames.length; ++ i)
-        elsWithTag = elsWithTag.concat(mgsuite.imp._aioGetElemsByTagNameForAllFrames(frames[i].contentDocument, tagName));
-    var lEls = frameDoc.getElementsByTagName(tagName);
-    for (i = 0; i < lEls.length; ++i) elsWithTag.push(lEls[i]);
-    return elsWithTag;
-  },
-  
   aioNukeFlash: function() {
-    var currFlash, height, width, top, next, span, text, view, disp, style;
-    var topDocument = mgsuite.overlay.aioSrcEvent.target.ownerDocument.defaultView.top.document;
-    var embeds = mgsuite.imp._aioGetElemsByTagNameForAllFrames(topDocument, "embed");
-    embeds = embeds.concat(mgsuite.imp._aioGetElemsByTagNameForAllFrames(topDocument, "object"));
-    
-    for (var i = 0; i < embeds.length; ++i) {
-      currFlash = embeds[i];
-      if (currFlash.getAttribute("type") != "application/x-shockwave-flash") continue;
-      if (currFlash.parentNode.nodeName.toLowerCase() == "object") {
-         top = currFlash.parentNode.parentNode; next = currFlash.parentNode;
-      }
-      else {
-         top = currFlash.parentNode; next = currFlash;
-      }
-      if (next.previousSibling && next.previousSibling.nodeName.toLowerCase() == "span"
-          && next.previousSibling.hasAttribute("aioFlash")) continue;
-      view = next.ownerDocument.defaultView;
-      disp = view.getComputedStyle(next, "").getPropertyValue("display");
-      width = currFlash.offsetWidth;
-      height = currFlash.offsetHeight;
-      
-      if (height && width) {
-         style = next.getAttribute("style") || "";
-         next.setAttribute("style", style + "display:none;");
-         span = document.createElementNS(mgsuite.const.xhtmlNS, "span");
-         text = document.createTextNode("[" + mgsuite.overlay.aioGetStr("g.clickToView") + "]");
-         span.appendChild(text);
-         top.insertBefore(span, next);
-         span.setAttribute("style", "height:" + (height - 2) + "px;width:" + (width - 2) + "px;border:1px solid black;display:-moz-inline-box;");
-         span.setAttribute("aioFlash", disp);
-         span.addEventListener("click", mgsuite.imp.aioPlayFlash, true);
-      }
-    }
-  },
-  
-  aioPlayFlash: function(e) {
-    e.currentTarget.removeEventListener("click", mgsuite.imp.aioPlayFlash, true);
-    var flashNode = e.currentTarget.nextSibling;
-    var disp = e.currentTarget.getAttribute("aioFlash");
-    e.currentTarget.parentNode.removeChild(e.currentTarget);
-    var style = flashNode.getAttribute("style") || "";
-    flashNode.setAttribute("style", style + "display:" + disp + ";");
+    mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:nukeFlashObjects", {clickToViewStr: mgsuite.overlay.aioGetStr("g.clickToView")});
   },
   
   aioNukeAnything: function() {
