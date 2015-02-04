@@ -114,7 +114,6 @@ mgsuite.overlay = {
   aioTTPU: null,
   aioTabCount: null,
   aioTabSrc: null,
-  aioTabDest: -1,
   aioCCW: null,
   aioTTTimer: null,
   aioTTShown: false,
@@ -1505,7 +1504,6 @@ mgsuite.overlay = {
   aioTabWheelNav: function() {
     var activeTab = mgsuite.overlay.aioContent.mTabContainer.selectedIndex;
     if (activeTab != mgsuite.overlay.aioTabSrc) {
-       mgsuite.overlay.aioTabDest = -1;
        mgsuite.overlay.aioTabSrc = activeTab;
     }
     // Create and Display the popup menu
@@ -1515,14 +1513,7 @@ mgsuite.overlay = {
   },
 
   aioTabPopping: function(e) {
-    var row = (mgsuite.overlay.aioTabDest != -1 && mgsuite.overlay.aioTabDest < mgsuite.overlay.aioTabPU.popupLength) ? mgsuite.overlay.aioTabDest : -1;
-	
-    if (row != -1) {
-       mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold", row, "aioItalic");
-    }
-    else {
-       mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold");
-    }
+    mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold");
 
 	if (mgsuite.overlay.noTabScrollPopup) {
 	  e.preventDefault(); //no popup
@@ -1532,14 +1523,6 @@ mgsuite.overlay = {
 
   aioTabWheeling: function(e) {
     mgsuite.overlay.aioTabPU.scrollPopup(e);
-    if (mgsuite.overlay.aioTabDest != -1 && mgsuite.overlay.aioTabDest < mgsuite.overlay.aioTabPU.popupLength) {
-      if (mgsuite.overlay.aioTabPU.activeRow == mgsuite.overlay.aioTabPU.initialRow) {
-        mgsuite.overlay.aioTabPU.scrollerNode.childNodes[mgsuite.overlay.aioTabDest].setAttribute("aioItalic", "true")
-	  }
-      else {
-	    mgsuite.overlay.aioTabPU.scrollerNode.childNodes[mgsuite.overlay.aioTabDest].removeAttribute("aioItalic");
-	  }
-	}
 	
     if (mgsuite.overlay.noTabScrollPopup) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
   },
@@ -1553,17 +1536,6 @@ mgsuite.overlay = {
 	
 	if (mgsuite.overlay.aioTabPU.activeRow != mgsuite.overlay.aioTabPU.initialRow) {
 	  if (mgsuite.overlay.aioTabSrc != mgsuite.overlay.aioTabPU.activeRow) {
-		mgsuite.overlay.aioTabDest = mgsuite.overlay.aioTabSrc;
-		mgsuite.overlay.aioTabSrc = mgsuite.overlay.aioTabPU.activeRow;
-	  }
-	  else {
-		mgsuite.overlay.aioTabDest = -1;
-	  }
-	   
-	} else {
-	  if (mgsuite.overlay.aioTabDest != -1 && mgsuite.overlay.aioTabDest < mgsuite.overlay.aioTabPU.popupLength) {
-		mgsuite.overlay.aioTabPU.activeRow = mgsuite.overlay.aioTabDest;
-		mgsuite.overlay.aioTabDest = mgsuite.overlay.aioTabSrc;
 		mgsuite.overlay.aioTabSrc = mgsuite.overlay.aioTabPU.activeRow;
 	  }
 	}
