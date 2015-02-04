@@ -2,6 +2,7 @@
 
 var mgsuiteFr = {
   collectElementsData: false,
+  undoHideObjects: [],
   
   init: function() {
     var prefService = Components.classes["@mozilla.org/preferences-service;1"]
@@ -18,6 +19,8 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:goToNextPrevLink", this);
     addMessageListener("MouseGesturesSuite:reloadFrame", this);
     addMessageListener("MouseGesturesSuite:nukeFlashObjects", this);
+    addMessageListener("MouseGesturesSuite:hideObject", this);
+    addMessageListener("MouseGesturesSuite:undoHideObject", this);
     addEventListener("mousedown", this, true);
     addEventListener("click", this, true);
   },
@@ -34,6 +37,8 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:goToNextPrevLink": this.goToNextPrevLink(aMsg); break;
       case "MouseGesturesSuite:reloadFrame": this.reloadFrame(aMsg); break;
       case "MouseGesturesSuite:nukeFlashObjects": this.nukeFlashObjects(aMsg); break;
+      case "MouseGesturesSuite:hideObject": this.hideObject(aMsg); break;
+      case "MouseGesturesSuite:undoHideObject": this.undoHideObject(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -718,6 +723,28 @@ var mgsuiteFr = {
          span.addEventListener("click", playFlash, true);
       }
     }
+  },
+  
+  hideObject: function() {
+    var node = content.top.mgsuiteMouseDownElement;
+    if (!node) return;
+    
+    var view = node.ownerDocument.defaultView;
+    var disp = view.getComputedStyle(node, "").getPropertyValue("display");
+    node.setAttribute("MGSuiteOriginalDisplay", "display:" + disp + ";");
+    var style = node.getAttribute("style") || "";
+    node.setAttribute("style", style + "display:none;");
+    this.undoHideObjects.push(node);
+  },
+  
+  undoHideObject: function() {
+    try {
+      var node = this.undoHideObjects.pop();
+      if (!node || !node.hasAttribute("MGSuiteOriginalDisplay")) return;
+      var style = node.getAttribute("style") || "";
+      node.setAttribute("style", style + node.getAttribute("MGSuiteOriginalDisplay"));
+    }
+    catch(err) {}
   },
 
 }

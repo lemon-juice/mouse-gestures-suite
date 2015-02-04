@@ -50,7 +50,7 @@ mgsuite.imp = {
       [function(){mgsuite.imp.aioDoubleWin();}, "g.doubleStackWin", 0, "", ["browser", "source", "messenger"]], // 26
       [function(){mgsuite.imp.aioSetImgSize(true,false);}, "g.doubleImageSize", 1, "28", ["browser", "messenger"]], // 27
       [function(){mgsuite.imp.aioSetImgSize(false,false);}, "g.halveImageSize", 1, "27", ["browser", "messenger"]], // 28
-      [function(){mgsuite.imp.aioNukeAnything();}, "g.hideObject", 0, "", ["browser", "messenger"]], // 29
+      [function(){mgsuite.imp.hideObject();}, "g.hideObject", 0, "", ["browser", "messenger"]], // 29
       [function(){mgsuite.imp.aioZoomEnlarge();}, "g.zoomIn", 1, "31", ["browser", "source", "messenger"]], // 30
       [function(){mgsuite.imp.aioZoomReduce();}, "g.zoomOut", 1, "30", ["browser", "source", "messenger"]], // 31
       [function(){mgsuite.imp.aioZoomReset();}, "g.resetZoom", 1, "", ["browser", "source", "messenger"]], // 32
@@ -77,7 +77,7 @@ mgsuite.imp = {
       [function(){mgsuite.imp.aioPrintPreview();}, "g.printPreview", 0, "", ["browser", "source", "messenger"]], //53
       [function(shiftKey){mgsuite.imp.aioOpenInNewTab(!shiftKey);}, "g.browserOpenTabInBg", 0, "", null], // 54
       [function(){mgsuite.imp.aioDeleteCookies();}, "g.deleteSiteCookies", 0, "", ["browser"]], // 55
-      [function(){mgsuite.imp.aioUndoNukeAnything();}, "g.undoHideObject", 0, "", ["browser", "messenger"]], // 56
+      [function(){mgsuite.imp.undoHideObject();}, "g.undoHideObject", 0, "", ["browser", "messenger"]], // 56
       [function(){mgsuite.imp.aioFavoriteURL('1');}, "g.openFav1", 0, "", null], // 57
       [function(){mgsuite.imp.aioFavoriteURL('2');}, "g.openFav2", 0, "", null], // 58
       [function(){mgsuite.imp.aioOpenBlankTab();}, "g.openBlankTab", 0, "", null], // 59
@@ -135,7 +135,6 @@ mgsuite.imp = {
      ],
      
   aioSchemas: {},
-  aioUndoHide: [],
   aioUnique: 0,
   aioStatusMessageTO: null,
   aioClonedData: null,
@@ -606,25 +605,12 @@ mgsuite.imp = {
     mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:nukeFlashObjects", {clickToViewStr: mgsuite.overlay.aioGetStr("g.clickToView")});
   },
   
-  aioNukeAnything: function() {
-    var node = mgsuite.overlay.aioSrcEvent.target;
-    if (!node) return;
-    var view = node.ownerDocument.defaultView;
-    var disp = view.getComputedStyle(node, "").getPropertyValue("display");
-    node.setAttribute("aioDisp", "display:" + disp + ";");
-    var style = node.getAttribute("style") || "";
-    node.setAttribute("style", style + "display:none;");
-    mgsuite.imp.aioUndoHide.push(node);
+  hideObject: function() {
+    mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:hideObject", "");
   },
   
-  aioUndoNukeAnything: function() {
-    try {
-      var node = mgsuite.imp.aioUndoHide.pop();
-      if (!node || !node.hasAttribute("aioDisp")) return;
-      var style = node.getAttribute("style") || "";
-      node.setAttribute("style", style + node.getAttribute("aioDisp"));
-    }
-    catch(err) {}
+  undoHideObject: function() {
+    mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:undoHideObject", "");
   },
   
   aioVScrollDocument: function(relativeScroll, aValue) {
