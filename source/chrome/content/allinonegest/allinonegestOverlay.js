@@ -11,7 +11,6 @@ if (typeof mgsuite == 'undefined') {
   var mgsuite = {};
 }
 
-
 mgsuite.overlay = {
   
   // variables for mouse gestures
@@ -54,6 +53,7 @@ mgsuite.overlay = {
   aioSmoothTrail: null,
   aioWheelEnabled: null,
   aioScrollEnabled: null,
+  noTabScrollPopup: false,
   aioNoScrollMarker: null,
   aioStartOnLinks: null,
   aioWhatAS: null,
@@ -1510,34 +1510,66 @@ mgsuite.overlay = {
     }
     // Create and Display the popup menu
     mgsuite.overlay.aioTabPU = new mgsuite.overlay.aioPopUp(activeTab, 0, mgsuite.overlay.aioTabCount, false, "popup", mgsuite.overlay.aioOldX + 2, mgsuite.overlay.aioOldY + 2,
-                            mgsuite.overlay.aioReverseScroll, mgsuite.overlay.aioTabWheelEnd, mgsuite.overlay.aioTabPopping, mgsuite.overlay.aioTabWheeling);
+                            mgsuite.overlay.aioReverseScroll && mgsuite.overlay.noTabScrollPopup, mgsuite.overlay.aioTabWheelEnd, mgsuite.overlay.aioTabPopping, mgsuite.overlay.aioTabWheeling);
     mgsuite.overlay.aioTabPU.createPopup(0, "", "");
   },
 
   aioTabPopping: function(e) {
     var row = (mgsuite.overlay.aioTabDest != -1 && mgsuite.overlay.aioTabDest < mgsuite.overlay.aioTabPU.popupLength) ? mgsuite.overlay.aioTabDest : -1;
-    if (row != -1)
+	
+    if (row != -1) {
        mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold", row, "aioItalic");
-    else
+    }
+    else {
        mgsuite.overlay.aioTabPU.updatePopup(mgsuite.overlay.aioTabPU.initialRow, "_moz-menuactive", mgsuite.overlay.aioTabPU.initialRow, "aioBold");
+    }
 
-    e.preventDefault(); //no popup
-    if (mgsuite.overlay.aioWheelMode == 2) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(mgsuite.overlay.aioCCW != mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
+	if (mgsuite.overlay.noTabScrollPopup) {
+	  e.preventDefault(); //no popup
+	  if (mgsuite.overlay.aioWheelMode == 2) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(mgsuite.overlay.aioCCW != mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
+	}
   },
 
   aioTabWheeling: function(e) {
     mgsuite.overlay.aioTabPU.scrollPopup(e);
-    if (mgsuite.overlay.aioTabDest != -1 && mgsuite.overlay.aioTabDest < mgsuite.overlay.aioTabPU.popupLength)
-       if (mgsuite.overlay.aioTabPU.activeRow == mgsuite.overlay.aioTabPU.initialRow)
-          mgsuite.overlay.aioTabPU.scrollerNode.childNodes[mgsuite.overlay.aioTabDest].setAttribute("aioItalic", "true")
-       else mgsuite.overlay.aioTabPU.scrollerNode.childNodes[mgsuite.overlay.aioTabDest].removeAttribute("aioItalic");
-    mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
+    if (mgsuite.overlay.aioTabDest != -1 && mgsuite.overlay.aioTabDest < mgsuite.overlay.aioTabPU.popupLength) {
+      if (mgsuite.overlay.aioTabPU.activeRow == mgsuite.overlay.aioTabPU.initialRow) {
+        mgsuite.overlay.aioTabPU.scrollerNode.childNodes[mgsuite.overlay.aioTabDest].setAttribute("aioItalic", "true")
+	  }
+      else {
+	    mgsuite.overlay.aioTabPU.scrollerNode.childNodes[mgsuite.overlay.aioTabDest].removeAttribute("aioItalic");
+	  }
+	}
+	
+    if (mgsuite.overlay.noTabScrollPopup) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
   },
 
   aioTabWheelEnd: function(e) {
-    mgsuite.overlay.aioTabPU.closePopup(0);
-    mgsuite.overlay.aioRestoreListeners();
-    return;
+	if (mgsuite.overlay.noTabScrollPopup) {
+	  mgsuite.overlay.aioTabPU.closePopup(0);
+	  mgsuite.overlay.aioRestoreListeners();
+	  return;
+	}
+	
+	if (mgsuite.overlay.aioTabPU.activeRow != mgsuite.overlay.aioTabPU.initialRow) {
+	  if (mgsuite.overlay.aioTabSrc != mgsuite.overlay.aioTabPU.activeRow) {
+		mgsuite.overlay.aioTabDest = mgsuite.overlay.aioTabSrc;
+		mgsuite.overlay.aioTabSrc = mgsuite.overlay.aioTabPU.activeRow;
+	  }
+	  else {
+		mgsuite.overlay.aioTabDest = -1;
+	  }
+	   
+	} else {
+	  if (mgsuite.overlay.aioTabDest != -1 && mgsuite.overlay.aioTabDest < mgsuite.overlay.aioTabPU.popupLength) {
+		mgsuite.overlay.aioTabPU.activeRow = mgsuite.overlay.aioTabDest;
+		mgsuite.overlay.aioTabDest = mgsuite.overlay.aioTabSrc;
+		mgsuite.overlay.aioTabSrc = mgsuite.overlay.aioTabPU.activeRow;
+	  }
+	}
+	
+	mgsuite.overlay.aioTabPU.closePopup(1);
+	mgsuite.overlay.aioRestoreListeners();
   },
 
   aioHistoryWheelNav: function() {
