@@ -1610,7 +1610,8 @@ mgsuite.imp = {
   
   aioViewCookies: function() {
     var cookieStr = "";
-    var cookies = mgsuite.imp._aioGetDomainCookies(gBrowser.selectedBrowser.contentDocumentAsCPOW);
+    var doc = mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document;
+    var cookies = mgsuite.imp._aioGetDomainCookies(doc);
     
     if (cookies.length) {
       for (var i=0; i<cookies.length; i++) {
@@ -1626,7 +1627,8 @@ mgsuite.imp = {
   },
   
   aioDeleteCookies: function() {
-    var cookies = mgsuite.imp._aioGetDomainCookies(gBrowser.selectedBrowser.contentDocumentAsCPOW);
+    var doc = mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document;
+    var cookies = mgsuite.imp._aioGetDomainCookies(doc);
     if (!cookies.length) {
       alert(mgsuite.overlay.aioGetStr("noCookies"));
       return;
