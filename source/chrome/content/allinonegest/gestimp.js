@@ -1221,7 +1221,7 @@ mgsuite.imp = {
     
     var chromeURL = mgsuite.overlay.aioIsFx ? "chrome://browser/content/" : "chrome://navigator/content/";
     
-    var content = (mgsuite.overlay.aioWindowType == "browser") ? gBrowser.selectedBrowser.contentDocumentAsCPOW : window.content;
+    var content = (mgsuite.overlay.aioWindowType == "browser") ? mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document : window.content;
     
     if (content) {
       var charsetArg = content.characterSet ? ("charset=" + content.characterSet) : null;
@@ -1704,7 +1704,7 @@ mgsuite.imp = {
   
   aioMetaInfo: function() {
     var metas, metastr, mymeta;
-    metas = gBrowser.selectedBrowser.contentDocumentAsCPOW.getElementsByTagName("meta");
+    metas = mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document.getElementsByTagName("meta");
     if (metas.length) {
       metastr = mgsuite.overlay.aioGetStr("meta") + "\n\n";
       for (var i = 0; i < metas.length; ++i) {
@@ -1828,7 +1828,7 @@ mgsuite.imp = {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
       case "source":
-        saveDocument(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.contentDocumentAsCPOW : gBrowser.selectedBrowser.contentDocumentAsCPOW);
+        saveDocument(mgsuite.overlay.aioGestureTab ? mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document : mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document);
         break;
       
       case "messenger":
