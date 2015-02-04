@@ -1114,7 +1114,7 @@ mgsuite.overlay = {
          // it can be the start of a wheelscroll gesture as well
         if (mgsuite.overlay.aioWheelEnabled && (mgsuite.overlay.aioWindowType == "browser" || mgsuite.overlay.aioWindowType == "messenger" || mgsuite.overlay.aioWindowType == "source")) {
 		  
-		  mgsuite.overlay.aioTabCount = (mgsuite.overlay.aioWindowType == "browser") ? mgsuite.overlay.aioContent.mPanelContainer.childNodes.length : 0;
+		  mgsuite.overlay.aioTabCount = (mgsuite.overlay.aioWindowType == "browser") ? mgsuite.overlay.aioContent.mTabContainer.childNodes.length : 0;
 		  if (mgsuite.overlay.aioWheelRocker) {
 			if (!mgsuite.overlay.aioGestInProgress) {
 			  mgsuite.overlay.aioSrcEvent = e;
@@ -1609,7 +1609,7 @@ mgsuite.overlay = {
   },
 
   aioSwitchTabs: function(e) {
-    if (typeof(TabbrowserService) == "object" || mgsuite.overlay.aioContent.mPanelContainer.childNodes.length <= 1)  return;
+    if (typeof(TabbrowserService) == "object" || mgsuite.overlay.aioContent.mTabContainer.childNodes.length <= 1)  return;
     mgsuite.overlay.aioNukeEvent(e);
     mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
   },
