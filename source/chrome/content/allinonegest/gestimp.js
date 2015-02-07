@@ -1587,7 +1587,7 @@ mgsuite.imp = {
       if (frame) {
         let doc = mgsuite.overlay.aioGestureTab ?
         mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document
-        : mgsuite.overlay.aioSrcEvent.target.ownerDocument;
+        : mgsuite.util.collectedFrame.document;
         BrowserViewSourceOfDocument(doc);
         
       } else {
