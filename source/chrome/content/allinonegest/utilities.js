@@ -47,6 +47,12 @@ mgsuite.util = {
     mgsuite.util.collectedLinksUrls = [];
     mgsuite.util.collectedImg = null;
     mgsuite.util.collectedImgUrl = null;
+    mgsuite.util.collectedFrame = null;
+  },
+  
+  // collect document frame on mousedown
+  CollectFrameListener: function(msg) {
+    mgsuite.util.collectedFrame = msg.objects.frame;
   },
   
   returnWithCallback: function(msg) {

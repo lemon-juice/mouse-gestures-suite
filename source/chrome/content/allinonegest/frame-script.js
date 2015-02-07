@@ -72,10 +72,11 @@ var mgsuiteFr = {
           sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.middleButtonDown'}, {param: [nodeToScroll, e.target]});
         }
       }
-      
     }
     
     if (e.type == 'mousedown') {
+      sendAsyncMessage("MouseGesturesSuite:CollectFrame", {}, {frame: e.target.ownerDocument.defaultView});
+      
       // save mousedown element e.g. for scrolling actions
       e.target.ownerDocument.defaultView.top.mgsuiteMouseDownElement = e.target;
 
@@ -104,19 +105,18 @@ var mgsuiteFr = {
       }
     }
     
-    if (!this.collectElementsData && e.type != 'mousedown') {
-      return;
+    if (this.collectElementsData || e.type == 'mousedown') {
+      // send link and image info found under gesture to mouse gesture script
+      if (!elemInfo) {
+        elemInfo = this.getElementInfo(e);
+      }
+      
+      if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl) {
+        // send link url or image
+        sendAsyncMessage("MouseGesturesSuite:CollectLinks", {bgImgUrl: elemInfo.bgImgUrl, eventType: e.type}, {link: elemInfo.link, img: elemInfo.img});
+      }
     }
     
-    // send link and image info found under gesture to mouse gesture script
-    if (!elemInfo) {
-      elemInfo = this.getElementInfo(e);
-    }
-    
-    if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl) {
-      // send link url or image
-      sendAsyncMessage("MouseGesturesSuite:CollectLinks", {bgImgUrl: elemInfo.bgImgUrl, eventType: e.type}, {link: elemInfo.link, img: elemInfo.img});
-    }
   },
   
   

@@ -1535,9 +1535,11 @@ mgsuite.imp = {
   },
   
   aioFrameInfo: function() {
-    var targetDoc = mgsuite.overlay.aioSrcEvent.target.ownerDocument;
-    if (targetDoc.defaultView.frameElement) BrowserPageInfo(targetDoc); // it's a frame
-    else BrowserPageInfo(mgsuite.overlay.aioGestureTab ? mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document : null);
+    if (mgsuite.overlay.aioGestureTab) {
+      BrowserPageInfo(mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document);
+    } else {
+      BrowserPageInfo(mgsuite.util.collectedFrame.document);
+    }
   },
   
   aioShowHideStatusBar: function() {
