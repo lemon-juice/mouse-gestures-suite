@@ -119,6 +119,7 @@ mgsuite.imp = {
       [function(shiftKey){mgsuite.imp.aioOpenNewWindow(null, shiftKey, false, true);}, "g.openPrivateWindow", 0, "", null], //95
       [function(){mgsuite.imp.aioToggleBookmarksToolbar();}, "g.toggleBookmarksToolbar", 0, "", ["browser"]], //96
       [function(){mgsuite.imp.aioCloseRightTabs();}, "g.closeTabsToTheRight", 0, "", ["browser"]], // 97
+      [function(){mgsuite.imp.aioSaveImageAs(true);}, "g.saveImage", 0, "", ["browser", "messenger"]], // 98
       
 // Unused legacy actions:
 //      [function(){aioCloseLeftTabs(true);}, "g.CloseAllLeftTab", 0, "", null], // 90
@@ -904,15 +905,15 @@ mgsuite.imp = {
     }
   },
   
-  aioSaveImageAs: function() {
+  aioSaveImageAs: function(skipPrompt) {
     var img = mgsuite.util.collectedImg;
     if (!img) return;
     
-    if (mgsuite.overlay.aioFxV18) saveImageURL(img.src, null, "SaveImageTitle", false, false, img.ownerDocument.documentURIObject, img.ownerDocument);
-    else 
-       saveImageURL(img.src, null, "SaveImageTitle", false,
-         false, img.ownerDocument.documentURIObject);
-  
+    if (skipPrompt) {
+      saveImageURL(img.src, null, null, false, true, img.ownerDocument.documentURIObject, img.ownerDocument);
+    } else {
+      saveImageURL(img.src, null, "SaveImageTitle", false, false, img.ownerDocument.documentURIObject, img.ownerDocument);
+    }
   },
   
   aioCloseCurrTab: function(lastTabClosesWindow) {

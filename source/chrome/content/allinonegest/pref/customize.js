@@ -256,6 +256,7 @@ var gestActionTableTokens = [
       "g.openPrivateWindow", //95
       "g.toggleBookmarksToolbar", //96
       "g.closeTabsToTheRight", //97
+      "g.saveImage", //98
     ];
 var gestActionTable = [];
 var rockerGestName = [
