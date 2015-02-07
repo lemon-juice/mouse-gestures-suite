@@ -1038,7 +1038,10 @@ mgsuite.imp = {
   
   aioGetReferrer: function() {
     try {
-      var refURL = mgsuite.overlay.aioSrcEvent.target.ownerDocument.location.href;
+      if (!mgsuite.util.collectedFrame) {
+        return null;
+      }
+      var refURL = mgsuite.util.collectedFrame.location.href;
       var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                       .getService(Components.interfaces.nsIIOService);
       if (refURL) return ioService.newURI(refURL, null, null);
