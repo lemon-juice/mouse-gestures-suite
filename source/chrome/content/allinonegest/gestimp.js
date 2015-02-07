@@ -1037,18 +1037,27 @@ mgsuite.imp = {
   },
   
   
-  aioGetReferrer: function() {
+  aioGetReferrer: function(originLink) {
+    // Note: we use undefined if we need to return no referrer because
+    // tabbrowser.addTab() fails in Fx when null is passed, and empty string
+    // works in Fx but fails in SM. undefined works in both.
     try {
       if (!mgsuite.util.collectedFrame) {
-        return null;
+        return undefined;
       }
+      
+      if (originLink && /(?:^|\s)noreferrer(?:\s|$)/i.test(originLink.getAttribute("rel"))) {
+        // rel="noreferrer" found
+        return undefined;
+      }
+      
       var refURL = mgsuite.util.collectedFrame.location.href;
       var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                       .getService(Components.interfaces.nsIIOService);
       if (refURL) return ioService.newURI(refURL, null, null);
     }
     catch (e) {}
-    return null;
+    return undefined;
   },
   
   /**
@@ -1057,13 +1066,14 @@ mgsuite.imp = {
    * from opened links" in tabbed browsing preferences
    * @param {boolean} bg Whether to open in background tab 
    * @param {boolean} [reverseBg] Whether to reverse final background setting
+   * @param {string} [referrer] Referrer to send
    * @returns {object|null} New tab if invoked from a browser window
    */
-  aioLinkInTab: function(url, usePref, bg, reverseBg) {
+  aioLinkInTab: function(url, usePref, bg, reverseBg, referrer) {
     url = mgsuite.imp.aioSanitizeUrl(url);
     
     if (mgsuite.overlay.aioWindowType == "browser") {
-      var tab = mgsuite.overlay.aioContent.addTab(url, mgsuite.imp.aioGetReferrer());
+      var tab = mgsuite.overlay.aioContent.addTab(url, referrer);
       var loadInBg = (usePref && (mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.loadInBackground") != bg)) || (!usePref && bg);
       
       if (reverseBg) {
@@ -1117,7 +1127,8 @@ mgsuite.imp = {
     }
     
     if (openLink && mgsuite.util.collectedLinksUrls.length) {
-      mgsuite.imp.aioLinkInTab(mgsuite.util.collectedLinksUrls[0], false, bg);
+      var referrer = mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]);
+      mgsuite.imp.aioLinkInTab(mgsuite.util.collectedLinksUrls[0], false, bg, false, referrer);
     }
     else {
       if (mgsuite.overlay.aioWindowType == "browser") {
@@ -1165,7 +1176,7 @@ mgsuite.imp = {
   aioLinksInTabs: function() {
     if (mgsuite.overlay.aioWindowType == "browser") {
       for (var i = 0; i < mgsuite.util.collectedLinksUrls.length; ++i) {
-        mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), mgsuite.imp.aioGetReferrer());
+        mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[i]));
       }
     
     } else {
@@ -1758,7 +1769,8 @@ mgsuite.imp = {
   },
   
   aioImageInTab: function() {
-     if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioLinkInTab(mgsuite.util.collectedImgUrl, false, false);
+    var referrer = mgsuite.imp.aioGetReferrer();
+    if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioLinkInTab(mgsuite.util.collectedImgUrl, false, false, false, referrer);
   },
   
   aioSwitchTab: function(advanceBy) {
