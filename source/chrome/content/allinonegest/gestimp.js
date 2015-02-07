@@ -1220,7 +1220,7 @@ mgsuite.imp = {
     }
   },
   
-  aioNewWindow: function(url, flag, noSanitize) {
+  aioNewWindow: function(url, flag, noSanitize, referrer) {
     if (!noSanitize) url = mgsuite.imp.aioSanitizeUrl(url);
     
     var chromeURL = mgsuite.overlay.aioIsFx ? "chrome://browser/content/" : "chrome://navigator/content/";
@@ -1229,32 +1229,37 @@ mgsuite.imp = {
     
     if (content) {
       var charsetArg = content.characterSet ? ("charset=" + content.characterSet) : null;
-      return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url, charsetArg);
+      return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url, charsetArg, referrer);
     }
-    return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url);
+    return window.openDialog(chromeURL, "_blank", "chrome,all,dialog=no" + flag, url, null, referrer);
   },
   
   aioLinksInWindows: function() {
     if (!mgsuite.util.collectedLinksUrls.length) return;
     if (mgsuite.overlay.aioSingleNewWindow) {
-      var win = mgsuite.imp.aioNewWindow(mgsuite.util.collectedLinksUrls[0], "");
+      var win = mgsuite.imp.aioNewWindow(mgsuite.util.collectedLinksUrls[0], "", false, mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]));
       
       var gestureLinks = [];
       for (var i = 1; i < mgsuite.util.collectedLinksUrls.length; ++i) {
-        gestureLinks.push(mgsuite.util.collectedLinksUrls[i]);
+        gestureLinks.push(
+          {
+            url: mgsuite.util.collectedLinksUrls[i],
+            referrer: mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[i])
+          }
+        );
       }
       
       win.addEventListener("load", function () {
         setTimeout(function() {
           for (var i = 0; i < gestureLinks.length; ++i) {
-            win.gBrowser.addTab(mgsuite.imp.aioSanitizeUrl(gestureLinks[i]));
+            win.gBrowser.addTab(mgsuite.imp.aioSanitizeUrl(gestureLinks[i].url), gestureLinks[i].referrer);
           }
         }, 100);
       }, true);
     }
     else
        for (var i = 0; i < mgsuite.util.collectedLinksUrls.length; ++i) {
-          mgsuite.imp.aioNewWindow(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), "");
+          mgsuite.imp.aioNewWindow(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), "", false, mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[i]));
        }
   },
   
@@ -1280,9 +1285,12 @@ mgsuite.imp = {
       flags += ",private";
     }
     
+    var referrer;
+    
     if (url === null) {
       if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.util.collectedLinksUrls.length) {
          url = mgsuite.util.collectedLinksUrls[0];
+         referrer = mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]);
       }
       else {
          url = "";
@@ -1291,9 +1299,10 @@ mgsuite.imp = {
     
     if (url == "" && priv) {
       url = "about:privatebrowsing";
+      referrer = undefined;
     }
     
-    var win = mgsuite.imp.aioNewWindow(url, flags, noSanitize);
+    var win = mgsuite.imp.aioNewWindow(url, flags, noSanitize, referrer);
     
     if (background) {
       if (mgsuite.overlay.aioIsWin) {
@@ -1358,15 +1367,21 @@ mgsuite.imp = {
     var link = mgsuite.util.collectedLinksUrls.length ? mgsuite.util.collectedLinksUrls[0] : "about:blank";
     window.moveTo(screen.availLeft, screen.availTop);
     
+    var referrer;
+    
+    if (mgsuite.util.collectedLinks.length) {
+      referrer = mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]);
+    }
+    
     if (mgsuite.overlay.aioIsWin) {
       // only on Win screen.availWidth & screen.availHeight are correct
-      var win = mgsuite.imp.aioNewWindow(link, "");
+      var win = mgsuite.imp.aioNewWindow(link, "", false, referrer);
       window.resizeTo(screen.availWidth / 2, screen.availHeight);
       win.moveTo(screen.availWidth / 2 + screen.availLeft, screen.availTop);
       win.resizeTo(screen.availWidth / 2, screen.availHeight);
      
     } else {
-      var win = mgsuite.imp.aioNewWindow(link, "top=" + screen.availTop + ",left=" + screen.availLeft + ",outerWidth=" + screen.availWidth + ",outerHeight=" + screen.availHeight);
+      var win = mgsuite.imp.aioNewWindow(link, "top=" + screen.availTop + ",left=" + screen.availLeft + ",outerWidth=" + screen.availWidth + ",outerHeight=" + screen.availHeight, false, referrer);
       
       var shift = 5; // prevent overlapping on linux
   
@@ -1765,7 +1780,7 @@ mgsuite.imp = {
   },
   
   aioImageInWindow: function() {
-     if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioNewWindow(mgsuite.util.collectedImgUrl);
+     if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioNewWindow(mgsuite.util.collectedImgUrl, "", false, mgsuite.imp.aioGetReferrer());
   },
   
   aioImageInTab: function() {
