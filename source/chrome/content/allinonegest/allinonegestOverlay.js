@@ -583,6 +583,12 @@ mgsuite.overlay = {
 			  // don't run this when only URL hash changed or tab switched;
 			  // Fx and SM 2.29.1 and later run it even on tab switching.
 			  mgsuite.overlay.aioParseSiteList();
+			  
+			  // we remove mousemove event from content on document load because
+			  // for some mysterious reason mousemove registers after dragging site icon
+			  // from location bar onto a blank tab and persists, which is not desirable
+			  mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+			  mgsuite.util.clearCollectedItems();
 		    }
 		  },
 		  onStateChange: function() {},
@@ -639,7 +645,7 @@ mgsuite.overlay = {
 		}, true);
 	  }
   
-	  window.addEventListener("dragstart", mgsuite.overlay.dragStart, true);
+	  window.addEventListener("dragend", mgsuite.overlay.cancelGestureOnDrag, true);
 	  window.addEventListener("unload", mgsuite.overlay.aioWindowUnload, false);
 	  window.addEventListener("keydown", mgsuite.overlay.aioKeyPressed, true);
   
@@ -1302,10 +1308,14 @@ mgsuite.overlay = {
 
   /* Cancel gesture when user starts dragging an element. If not cancelled, then the gesture
    * may be left unfinished because mouseup event does not fire after dragging */
-  dragStart: function(e) {
+  cancelGestureOnDrag: function(e) {
     mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
     mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
-    if (mgsuite.overlay.aioGestInProgress) mgsuite.overlay.aioKillGestInProgress();
+    if (mgsuite.overlay.aioGestInProgress) {
+	  mgsuite.overlay.aioKillGestInProgress(true);
+	}
+	mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+	mgsuite.util.clearCollectedItems();
   },
 
   /* Scroll Wheel gestures
