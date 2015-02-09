@@ -934,6 +934,13 @@ mgsuite.overlay = {
     mgsuite.trail.eraseTrail();
     window.removeEventListener("mousemove", mgsuite.overlay.aioGestMove, true);
   },
+  
+  killGestureOnFlash: function() {
+	mgsuite.overlay.aioKillGestInProgress();
+	mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:endMouseMove");
+	mgsuite.overlay.unBlockMouseEventsForRocker();
+	mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
+  },
 
   aioClearRocker: function() {
     mgsuite.overlay.aioRockTimer = null;
@@ -966,7 +973,6 @@ mgsuite.overlay = {
   },
 
   aioMouseDown: function(e) {
-	
     var gesturesEnabled = mgsuite.overlay.aioGesturesEnabled;
 	mgsuite.util.clearCollectedItems();
 

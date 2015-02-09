@@ -100,7 +100,7 @@ var mgsuiteFr = {
         if ((targetName == "object" || targetName == "embed")
              && e.target.actualType == "application/x-shockwave-flash"
               && e.target.activated) {
-          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.aioKillGestInProgress'});
+          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.killGestureOnFlash'});
         }
       }
     }
