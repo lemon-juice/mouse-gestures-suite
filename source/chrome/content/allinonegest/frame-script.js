@@ -45,6 +45,11 @@ var mgsuiteFr = {
   
   /* Handle mouse event */
   handleEvent: function(e) {
+    if (!e.target.ownerDocument) {
+      // in print preview we don't need to collect any document data
+      return;
+    }
+    
     var elemInfo;
     
     if (e.button == 1 && (e.type == 'click' || e.type == 'mousedown')) {
