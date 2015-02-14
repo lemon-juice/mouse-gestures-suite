@@ -17,6 +17,7 @@ mgsuite.util = {
   // collect elements (links, images) under performed gesture
   CollectLinksListener: function(msg) {
     //dump("CollectLinksListener: " + JSON.stringify(msg.data) + "\n");
+    //dump("[CLL] ");
     var bgImgUrl = msg.data.bgImgUrl;
     var link, linkUrl;
     

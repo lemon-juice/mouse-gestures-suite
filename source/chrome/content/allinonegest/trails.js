@@ -14,10 +14,29 @@ mgsuite.trail = {
 	this.docX = window.mozInnerScreenX;
 	this.docY = window.mozInnerScreenY;
 	
+	this.mouseRatio = 1;
+
 	// insert trail outside viewable document to avoid DOM delays on large documents
 	switch (mgsuite.overlay.aioWindowType) {
 	  case 'browser':
 		this.insertionNode = document.getElementById("content"); // tabbrowser
+		
+		var ppc = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+						 .getInterface(Components.interfaces.nsIDOMWindowUtils)
+						 .screenPixelsPerCSSPixel;
+	
+		var browser, notificationbox;
+		
+		// try to detect if current document is print preview
+		if (document.getElementById("print-preview-toolbar")
+			&& (browser = document.getAnonymousElementByAttribute(this.insertionNode, "type", "content-primary"))
+			&& (notificationbox = this._findParentNode(browser, "notificationbox"))
+			&& notificationbox.getAttribute("notificationshidden") == "true"
+			&& ppc) {
+		  // for some weird reason screenX/screenY report 150% lower values in Print Preview
+		  // at 100% OS DPI so we need to adjust
+		  this.mouseRatio = 1.5 / ppc;
+		}
 		break;
 	  
 	  case 'messenger':
@@ -36,8 +55,9 @@ mgsuite.trail = {
 	
 	this.halfTrailSize = Math.ceil(mgsuite.overlay.aioTrailSize / 2);
 	
-	var x = e.screenX - this.docX;
-	var y = e.screenY - this.docY;
+	
+	var x = e.screenX * this.mouseRatio - this.docX;
+	var y = e.screenY * this.mouseRatio - this.docY;
 	
 	this.trailPoints = [];
 	this.trailPoints.push([x, y]);
@@ -48,16 +68,30 @@ mgsuite.trail = {
 	this.maxY = y + this.halfTrailSize;
   },
   
+  _findParentNode: function(startNode, nodeName) {
+	var node = startNode.parentNode;
+	
+	do {
+	  if (node.localName == nodeName) {
+		return node;
+	  }
+	  
+	  node = node.parentNode;
+	} while (node);
+	
+	return null;
+  },
+  
   drawTrail: function(e) {
 	if (!this.insertionNode) return;
 	
 	if (!this.trailCont) {
-	  var cnv = this.makeTrailCanvas();
+	  var cnv = this._makeTrailCanvas();
 	  this.trailCont = cnv.canvas;
 	  this.ctx = cnv.ctx;
 	  
 	  if (!mgsuite.overlay.aioSmoothTrail) {
-		this.setCtxProperties(this.ctx, 1);
+		this._setCtxProperties(this.ctx, 1);
 	  }
 	}
 	
@@ -66,8 +100,8 @@ mgsuite.trail = {
 	  this.trailCont.style.display = 'block';
 	}
 	
-	var x = e.screenX - this.docX;
-	var y = e.screenY - this.docY;
+	var x = e.screenX * this.mouseRatio - this.docX;
+	var y = e.screenY * this.mouseRatio - this.docY;
 	this.trailPoints.push([x, y]);
 	
 	if (mgsuite.overlay.aioSmoothTrail) {
@@ -92,7 +126,7 @@ mgsuite.trail = {
 	  this.trailCont.width = this.maxX - this.minX; // this erases canvas
 	  this.trailCont.height = this.maxY - this.minY;
 	  
-	  this.setCtxProperties(this.ctx, 1);
+	  this._setCtxProperties(this.ctx, 1);
 		
 	  var shiftX = this.trailCont.offsetLeft;
 	  var shiftY = this.trailCont.offsetTop;
@@ -111,7 +145,7 @@ mgsuite.trail = {
 	this.ctx.stroke();
   },
   
-  makeTrailCanvas: function() {
+  _makeTrailCanvas: function() {
 	var canvas = document.createElementNS(mgsuite.const.xhtmlNS, "canvas");
 	canvas.style.position = "fixed";
 	canvas.width = window.outerWidth;
@@ -136,7 +170,7 @@ mgsuite.trail = {
 	};
   },
   
-  setCtxProperties: function(ctx, opacity) {
+  _setCtxProperties: function(ctx, opacity) {
 	ctx.lineWidth = mgsuite.overlay.aioTrailSize;
 	ctx.lineJoin = 'round';
 	ctx.lineCap = 'round';
@@ -153,7 +187,7 @@ mgsuite.trail = {
 		  // instead of simply changing opacity of main canvas, we create another canvas
 		  // where we draw the same trail with smaller opacity line - we do this because
 		  // changing opacity of canvas causes it to hide behind window-mode flash objects
-		  var cnv = this.makeTrailCanvas();
+		  var cnv = this._makeTrailCanvas();
 		  this.timeoutTrailCont = cnv.canvas;
 		  this.timeoutCtx = cnv.ctx;
 		} else {
@@ -166,7 +200,7 @@ mgsuite.trail = {
 		this.timeoutTrailCont.height = this.trailCont.height;
 		
 		// draw all trail again with smaller opacity
-		this.setCtxProperties(this.timeoutCtx, 0.5);
+		this._setCtxProperties(this.timeoutCtx, 0.5);
 		
 		var shiftX = this.timeoutTrailCont.offsetLeft;
 		var shiftY = this.timeoutTrailCont.offsetTop;
