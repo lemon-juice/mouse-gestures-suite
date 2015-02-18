@@ -217,12 +217,8 @@ function restoreDefaultGestures() {
 }
 
 function openHelp(tabIndex) {
-  var url = "mgsuite/locale/help.html"; // this is fake url, will need to be changed to provide true localization
-  
-  if (!chromeFileExists(url)) {
-    // default English help
-    url = "mgsuite-en/content/help-options.html";
-  }
+  // default English help
+  var  url = "mgsuite-en/content/help-options.html";
   
   if (typeof tabIndex != 'undefined') {
     if (tabIndex != '') {
@@ -247,22 +243,6 @@ function openHelp(tabIndex) {
     var win = window.openDialog(browserUrl, "mousegesturessuiteoptions", "chrome,all,dialog=no,width=850,height=660", "chrome://" + url);
   }
   win.focus();
-}
-
-function chromeFileExists(file)
-{
-  var xmlhttp = new window.XMLHttpRequest();
-  try {
-    xmlhttp.open("GET", "chrome://" + file, false);
-    xmlhttp.onreadystatechange = function() {
-      xmlhttp.abort();
-    }
-    xmlhttp.send(null);
-  }
-  catch (ex) {
-    return false;
-  }
-  return true;
 }
 
 function openOptions() {

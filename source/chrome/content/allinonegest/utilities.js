@@ -172,12 +172,13 @@ mgsuite.util = {
     // check top level domain
     var tld = matches[3];
     
-    // load list of top level domains
+    // load list of top level domains 
     // see http://data.iana.org/TLD/tlds-alpha-by-domain.txt
     var str = "";
     var req = new XMLHttpRequest();
     try {
-      req.open("GET", mgsuite.const.CHROME_DIR + "tlds.txt", false);
+      // read local file!
+      req.open("GET", "chrome://mgsuite/content/tlds.txt", false);
       req.send();
       str = req.responseText.trim();
       
