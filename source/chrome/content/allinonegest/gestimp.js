@@ -909,10 +909,14 @@ mgsuite.imp = {
     var img = mgsuite.util.collectedImg;
     if (!img) return;
     
+    var docURI = BrowserUtils.makeURIFromCPOW ? BrowserUtils.makeURIFromCPOW(img.ownerDocument.documentURIObject) : img.ownerDocument.documentURIObject;
+    
     if (skipPrompt) {
-      saveImageURL(img.src, null, null, false, true, img.ownerDocument.documentURIObject, img.ownerDocument);
+      saveImageURL(img.src, null, null, false, true,
+                  docURI, img.ownerDocument);
     } else {
-      saveImageURL(img.src, null, "SaveImageTitle", false, false, img.ownerDocument.documentURIObject, img.ownerDocument);
+      saveImageURL(img.src, null, "SaveImageTitle", false, false,
+                  docURI, img.ownerDocument);
     }
   },
   
@@ -1206,17 +1210,24 @@ mgsuite.imp = {
   },
   
   aioLinksInFiles: function() {
+    if (!mgsuite.util.collectedLinks.length) {
+      return;
+    }
+    
     var hRefLC, dontAskBefore;
     try {dontAskBefore = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.download.useDownloadDir");}
     catch(err) {dontAskBefore = false;}
+    
+    var docURI = BrowserUtils.makeURIFromCPOW ? BrowserUtils.makeURIFromCPOW(mgsuite.util.collectedLinks[0].ownerDocument.documentURIObject) : mgsuite.util.collectedLinks[0].ownerDocument.documentURIObject;
+    
     for (var i = 0; i < mgsuite.util.collectedLinks.length; ++i) {
       hRefLC = mgsuite.util.collectedLinksUrls[i].toLowerCase();
       if (hRefLC.substr(0, 7) != "mailto:" && hRefLC.substr(0, 11) != "javascript:" &&
-          hRefLC.substr(0, 5) != "news:" && hRefLC.substr(0, 6) != "snews:")
-          if (mgsuite.overlay.aioFxV18) saveURL(mgsuite.util.collectedLinksUrls[i], mgsuite.tooltip.aioGetTextForTitle(mgsuite.util.collectedLinks[i]), null, true, dontAskBefore, mgsuite.util.collectedLinks[i].ownerDocument.documentURIObject, mgsuite.util.collectedLinks[i].ownerDocument);
-         
-          else saveURL(mgsuite.util.collectedLinksUrls[i], mgsuite.tooltip.aioGetTextForTitle(mgsuite.util.collectedLinks[i]), null, true, dontAskBefore);
-  
+          hRefLC.substr(0, 5) != "news:" && hRefLC.substr(0, 6) != "snews:") {
+        
+          saveURL(mgsuite.util.collectedLinksUrls[i], mgsuite.tooltip.aioGetTextForTitle(mgsuite.util.collectedLinks[i]), null, true
+                , dontAskBefore, docURI, mgsuite.util.collectedLinks[i].ownerDocument);
+      }
     }
   },
   
