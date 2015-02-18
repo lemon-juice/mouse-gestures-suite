@@ -203,9 +203,12 @@ var mgsuiteFr = {
     addEventListener("DOMContentLoaded", mgsuiteFr.displayGesturesList2, false);
   },
   
+  // Create help page at chrome://mgsuite/content/show-gestures.html listing all defined gestures
   displayGesturesList2: function(e) {
     var doc = content.document;
     
+    // Page content for innerHTML comes from aioGesturesPage() function in gestimp.js
+    // and contains html code with table containing gestures list and their definitions.
     var str = "(function(){window.addEventListener('load',function(e){document.title='" + mgsuiteFr.recentMsgData.title +
        "';document.body.innerHTML='" + mgsuiteFr.recentMsgData.content + "';},false);})();"
     var script = doc.createElement("script");
