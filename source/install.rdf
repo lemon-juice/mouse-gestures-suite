@@ -5,6 +5,7 @@
     <em:id>mousegesturessuite@lemon_juice.addons.mozilla.org</em:id>
     <em:version>1.7.0</em:version>
     <em:type>2</em:type>
+    <em:unpack>true</em:unpack>
 	<em:multiprocessCompatible>true</em:multiprocessCompatible>
 
     <em:targetApplication>
@@ -26,7 +27,7 @@
     </em:targetApplication>
   
    <em:name>Mouse Gestures Suite</em:name>
-    <em:description>This extension allows you to execute common commands using mouse gestures, rocker navigation, scroll wheel navigation and page scrolling. This is a fork of All-in-One Gestures by Marc Boullet adapted for Seamonkey and Firefox and further developed.</em:description>
+    <em:description>This extension allows you to execute common commands using mouse gestures, rocker navigation, scroll wheel navigation and page scrolling. This is a fork of All-in-One Gestures by Marc Boullet adapted for Seamonkey and further developed. Firefox is supported since version 1.5.0.</em:description>
     <em:creator>Michał Kościelny</em:creator>
     <em:homepageURL>https://addons.mozilla.org/addon/mouse-gestures-suite/</em:homepageURL>
     <em:contributor>Marc Boullet, Optimoz, Joe4711, Skidooer &amp; all</em:contributor>
