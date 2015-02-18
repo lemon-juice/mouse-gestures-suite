@@ -1626,13 +1626,13 @@ mgsuite.imp = {
       
     } else {
       if (frame) {
-        let doc = mgsuite.overlay.aioGestureTab ?
+        var doc = mgsuite.overlay.aioGestureTab ?
         mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document
         : mgsuite.util.collectedFrame.document;
         BrowserViewSourceOfDocument(doc);
         
       } else {
-        let doc = mgsuite.overlay.aioGestureTab ?
+        var doc = mgsuite.overlay.aioGestureTab ?
           mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document
           : mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document;
         BrowserViewSourceOfDocument(doc);
