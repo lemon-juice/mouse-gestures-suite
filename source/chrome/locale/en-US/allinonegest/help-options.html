@@ -62,11 +62,14 @@
         time. This feature is complete in browser windows only. It also works in
         messenger and page source windows only if <em>Perform Gesture Actions</em>
         option is selected.</li>
-      <li> <strong>Middle button scrolling</strong> - scroll pages or textareas
-        by pressing the middle mouse button once and then moving the mouse up or
-        down. <i>Grab and Drag</i> options allow you to scroll by moving the
-        mouse while the middle button is depressed. This feature is available in
-        browser, mail and view message windows.</li>
+      <li> <strong>Middle button scrolling</strong> - auto scroll pages or
+        textareas by clicking the middle mouse button once (pressing and
+        releasing) and then control the scrolling speed by moving the mouse or
+        using arrow keys – this is similar to built-in autoscroll available in
+        SeaMonkey or Firefox but with some additions. <i>Grab and Drag</i>
+        options allow you to scroll by moving the mouse while the middle button
+        is depressed. This feature is available in browser, mail and view
+        message windows.</li>
       <li> <strong>Link tooltip</strong> - see details about links as you hover
         over them with your mouse. Useful especially for browsing without the
         status bar like in full screen mode. This feature is available in
@@ -85,8 +88,13 @@
         the Gestures Customization tab at the bottom of the list: Forward &amp;
         Backward Scrollwheel Gesture. Any action from the list can be assigned
         by using the <em>Edit function</em> button.</li>
-      <li><strong>Navigate through History</strong> - go forward/back.</li>
-      <li><strong>Navigate through Tabs</strong> - switch to next/previous tab.</li>
+      <li><strong>Navigate through History</strong> - go forward/back. A list of
+        pages in history will pop up and you will be able to choose one. The
+        current tab's name will appear in <span style="font-weight: bold;">bold</span>,
+        while the last visited tab will appear as <span style="text-decoration: underline;">underlined</span>.</li>
+      <li><strong>Navigate through Tabs</strong> - switch to next/previous tab.
+        A list of all open tabs will pop up and you will be able to choose one
+        to switch to. </li>
       <li><strong>History / Tabs based on initial rotation</strong> - either <em>Navigate
           through History</em> or <em>Navigate through Tabs</em> depending on
         the initial scroll wheel rotation (clockwise or anti-clockwise).</li>
@@ -111,19 +119,10 @@
         enabled.</li>
     </ul>
     <h2 id="tab2">Gestures Customization</h2>
-    <span style="font-weight: bold;">The Shift key</span> can be used with some
-    gestures that open a new tab or window to reverse the opening in background
-    versus foreground – just like you can use Shift for the same purpose when
-    middle-clicking on links. For example, action <em>{g.browserOpenTabInFg}</em>
-    normally opens a new foreground tab but if performed with Shift pressed it
-    will open a tab in background. Conversely, if an action opens a new
-    tab/window in foreground then the Shift key will change it to open in
-    background. Actions affected by the Shift key are marked in their
-    descriptions below.
-    <p><span style="font-weight: bold;">Some gestures can be initiated on
-        browser tabs</span> and then they will apply to the target tab even if
-      it is not active. Here is the list of actions that can affect targeted
-      tabs via gestures:</p>
+    <span style="font-weight: bold;">Some gestures can be initiated on browser
+      tabs</span> and then they will apply to the target tab even if it is not
+    active. Here is the list of actions that can affect targeted tabs via
+    gestures:
     <ul>
       <li><em>{g.closeTab}</em></li>
       <li><em>{g.closeDoc}</em></li>
@@ -150,15 +149,25 @@
       <li><em>{g.frameInfo}</em> (applies to top frame when invoked on tab)</li>
       <li><em>{g.savePageAs}</em></li>
     </ul>
+    <p><span style="font-weight: bold;">The Shift key</span> can be used with
+      some gestures that open a new tab or window to reverse the opening in
+      background versus foreground – just like you can use Shift for the same
+      purpose when middle-clicking on links. For example, action <em>{g.browserOpenTabInFg}</em>
+      normally opens a new foreground tab but if performed with Shift pressed it
+      will open a tab in background. Conversely, if an action opens a new
+      tab/window in foreground then the Shift key will change it to open in
+      background. Actions affected by the Shift key are marked in their
+      descriptions below. </p>
     <p>Column '<strong>Available in</strong>' - shows in what window types the
       function is available:</p>
     <ul>
-      <li><strong>{abbreviation.browser}</strong> - browser window</li>
-      <li><strong>{abbreviation.source}</strong> - view source window</li>
-      <li><strong>{abbreviation.messenger}</strong> - messenger window: main
-        mail and message view windows (in the main mail window gestures work
-        only in the message page)</li>
-      <li><strong>{abbreviation.mailcompose}</strong> - mail compose window</li>
+      <li><strong>{abbreviation.browser}</strong> – browser window</li>
+      <li><strong>{abbreviation.source}</strong> – view source window</li>
+      <li><strong>{abbreviation.messenger}</strong> – (SeaMonkey only) messenger
+        window: main mail and message view windows (in the main mail window
+        gestures work only in the message page)</li>
+      <li><strong>{abbreviation.mailcompose}</strong> – (SeaMonkey only) mail
+        compose window</li>
     </ul>
     <ul>
     </ul>
@@ -248,7 +257,9 @@
             <br>
             If you initiate the gesture on a tab then a new tab will be opened
             next to the selected tab (by default new blank tabs open at the
-            right end).<br>
+            right end). If initiated on the right half of the tab the new tab
+            will open to the right. If initiated on the left half – it will open
+            to the left of the tab.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
               foreground&lt;–&gt;background opening of tab/window.</em></td>
@@ -280,7 +291,9 @@
             <br>
             If you initiate the gesture on a tab then a new tab will be opened
             next to the selected tab (by default new blank tabs open at the
-            right end). </td>
+            right end). If initiated on the right half of the tab the new tab
+            will open to the right. If initiated on the left half – it will open
+            to the left of the tab.</td>
         </tr>
         <tr>
           <td>{g.duplicateTab}</td>
@@ -490,8 +503,7 @@
             the page of default search engine is opened.<br>
             <br>
             <em class="shift-info">Shift key can be used to reverse
-              foreground&lt;–&gt;background opening of tab/window</em><em class="shift-info"><em
-
+              foreground&lt;–&gt;background opening of tab/window</em><em class="shift-info"><em
                 class="shift-info"> (SeaMonkey only)</em>.</em></td>
         </tr>
         <tr>
@@ -724,8 +736,18 @@
           </td>
           <td><br>
           </td>
+          <td>Save image as file (asks for location on disk).<br>
+          </td>
+        </tr>
+        <tr>
+          <td>{g.saveImage}</td>
           <td><br>
           </td>
+          <td><br>
+          </td>
+          <td>Save image as file directly to download folder without prompting
+            for location. For this to work as expected make sure you set up a
+            default location for downloads in browser preferences.</td>
         </tr>
         <tr>
           <td>{g.enlargeObject}</td>
@@ -764,7 +786,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Open image in new tab. This works for background images, too.<br>
           </td>
         </tr>
         <tr>
@@ -773,8 +795,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
-          </td>
+          <td>Open image in new window. This works for background images, too. </td>
         </tr>
         <tr>
           <td>{g.hideObject}</td>
@@ -811,7 +832,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Open Page Source.<br>
           </td>
         </tr>
         <tr>
@@ -847,7 +868,7 @@
           </td>
           <td><br>
           </td>
-          <td><br>
+          <td>Open Page Info window.<br>
           </td>
         </tr>
         <tr>
@@ -1249,8 +1270,7 @@
         - full URLs like this will match exactly the page at given address and
         nothing else.</li>
       <li><span style="text-decoration: underline;">www.example.com/</span> (or
-        <span style="text-decoration: underline;">www.example.com</span>), or <span
-
+        <span style="text-decoration: underline;">www.example.com</span>), or <span
           style="text-decoration: underline;">www.example.com/contact</span> -
         same as above but if no protocol is given then this will match pages
         under any protocol like http:// or https://.</li>
