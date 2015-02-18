@@ -488,7 +488,7 @@ mgsuite.imp = {
     const imgURL = '<img src="chrome://mgsuite/content/gest-imgs/';
     
     var divCode = '<div class="buttons">';
-    //divCode += '<button onclick="openOptions()">' + mgsuite.overlay.aioGetStr('g.aioOptions') + '</button>';
+    divCode += '<button onclick="openOptions()">' + mgsuite.overlay.aioGetStr('g.aioOptions') + '</button>';
     divCode += '<button onclick="openHelp(2)">Help</button>';
     divCode += '</div>';
     divCode += '<table width="100%" cellpadding="2" cellspacing="1" class="forumline">';
