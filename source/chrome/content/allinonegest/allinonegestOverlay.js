@@ -876,7 +876,7 @@ mgsuite.overlay = {
         mgsuite.overlay.aioStrokes.push(tempMove); mgsuite.overlay.aioLocaleGest.push(mgsuite.overlay.aioShortGest[tempMove]);
 
 		var sequence = mgsuite.overlay.aioStrokes.join("");
-			var index = mgsuite.imp.aioGestTable[sequence];
+		var index = mgsuite.imp.aioGestTable[sequence];
   
 		if (index == null) {
 		  index = mgsuite.imp.aioGestTable["+" + sequence.substr(-2)];

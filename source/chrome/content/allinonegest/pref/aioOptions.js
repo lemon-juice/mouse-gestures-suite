@@ -181,6 +181,13 @@ function savePrefs() {
   pref.setCharPref("allinonegest.gestureString", returnCustomizedString(0));
   pref.setCharPref("allinonegest.functionString", returnCustomizedString(1));
   pref.setCharPref("allinonegest.rockerString", returnCustomizedString(2));
+  
+  // save custom gestures
+  var str = Components.classes[ "@mozilla.org/supports-string;1" ].createInstance(Components.interfaces.nsISupportsString);
+  str.data = JSON.stringify(getCustomGestures());
+  pref.setComplexValue("allinonegest.customGestures", Components.interfaces.nsISupportsString, str);
+
+  
   var str = Components.classes[ "@mozilla.org/supports-string;1" ].createInstance(Components.interfaces.nsISupportsString);
   str.data = document.getElementById("nextsStringId").value;
   pref.setComplexValue("allinonegest.nextsString", Components.interfaces.nsISupportsString, str);
