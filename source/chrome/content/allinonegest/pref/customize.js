@@ -92,7 +92,10 @@ gestCustomizeTreeView.prototype = {
   getColumnProperties: function(column) { },
   isContainer: function(index) {return false;},
   isContainerOpen: function(index) {return false;},
-  isSeparator: function(index) {return index == this.stdRowCount},
+  isSeparator: function(index) {
+    var cells = this.data[index].row;
+    return cells[0] == "" && cells[1] == "" && cells[2] == "" && cells[3] == "";
+  },
   isSorted: function() { },
   canDrop: function(index, orientation) {
      this.before = orientation == -1;
@@ -144,7 +147,11 @@ var localizedGest = [];
 var abbrLocalizedGest = [];
 var selTable = [], selHasRocker = false, selMissingDup = false;
 var dragService = Components.classes[kDragContractId].getService(kDSIID);
-var abbrTable = [], isEnabledTable = [], funcNbTable = [], rowIdTable = [];
+
+// Contains abbreviated gesture definitions for each row like L, R, UDR, etc.
+// Empty string if no gesture defined. '?' for rocker and scrollwheel gestures
+var abbrTable = [];
+var isEnabledTable = [], funcNbTable = [], rowIdTable = [];
 var rockFuncTable = [];
 var helpTable = {};
 var uniqueRowId;
@@ -308,13 +315,23 @@ function setScrollGesturesVisibility(show) {
 function returnCustomizedString(aCase) {
   var gestTable = [];
   var funcWritten = [] ;
-  for (var i = 0; i < rowCount; ++i) funcWritten[i] = false;
-  if (aCase == 2) {
-     for (i = rowCount + 1; i < totalCount; ++i) gestTable.push(isEnabledTable[i] + funcNbTable[i]);
-     if (rockerCount < rockerGestName.length)
-        for (i = rockerCount; i < rockerGestName.length; ++i) gestTable.push(rockFuncTable[i]);
-     return gestTable.join("|");
+  
+  for (var i = 0; i < rowCount; ++i) {
+    funcWritten[i] = false;
   }
+  
+  if (aCase == 2) {
+    for (i = rowCount + 1; i < totalCount; ++i) {
+      gestTable.push(isEnabledTable[i] + funcNbTable[i]);
+    }
+    if (rockerCount < rockerGestName.length) {
+      for (i = rockerCount; i < rockerGestName.length; ++i) {
+        gestTable.push(rockFuncTable[i]);
+      }
+    }
+    return gestTable.join("|");
+  }
+  
   var j = 0;
   for (i = 0; i < rowCount; ++i) {
      if (!abbrTable[i] && (funcNbTable[i] == funcNbTable[i + 1] || funcWritten[funcNbTable[i]])) continue;
@@ -401,14 +418,29 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   }
   rowCount = abbrTable.length;
   for (i = maxFunc + 1; i < maxActions; ++i) { // enter actions new to this version
-     gestView.addRow(["", gestActionTable[i], "", expandedText("")], gestActionTableTokens[i]);
-     abbrTable[rowCount] = ""; funcNbTable[rowCount] = i + ""; rowIdTable[rowCount] = rowCount + "";
-     isEnabledTable[rowCount++] = "";
+    gestView.addRow(["", gestActionTable[i], "", expandedText("")], gestActionTableTokens[i]);
+    abbrTable[rowCount] = "";
+    funcNbTable[rowCount] = i + "";
+    rowIdTable[rowCount] = rowCount + "";
+    isEnabledTable[rowCount++] = "";
   }
   gestView.stdRowCount = rowCount;
   gestView.addRow(["", "", "", ""], null);  // separator
-  abbrTable[rowCount] = ""; funcNbTable[rowCount] = ""; rowIdTable[rowCount] = rowCount + "";
+  
+  // custom gestures
+  gestView.addRow(["", "Menu: F11", "", "DLR"], "sometoken");
+  abbrTable[rowCount] = "";
+  rowCount++;
+  abbrTable[rowCount] = "";
+  rowCount++;
+  
+  gestView.addRow(["", "", "", ""], null);  // separator
+  
+  abbrTable[rowCount] = "";
+  funcNbTable[rowCount] = "";
+  rowIdTable[rowCount] = rowCount + "";
   totalCount = rowCount + rockerCount + 1;
+  
   j = rowCount + 1;
   for (i = 0; i < rockerCount; ++i, ++j) {
      if (rockFuncTable[i].charAt(0) == "/") {
