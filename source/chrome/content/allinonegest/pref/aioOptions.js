@@ -41,8 +41,20 @@ function init() {
   var gestureString = pref.getCharPref("allinonegest.gestureString");
   var functionString = pref.getCharPref("allinonegest.functionString");
   var gestureStrings = sortGestureStrings(gestureString, functionString, mgsuite.default.functionString);
+  
+  var customGestures = [];
+  try {
+    let prefStr = pref.getComplexValue("allinonegest.customGestures", Components.interfaces.nsISupportsString);
+    customGestures = JSON.parse(prefStr);
+  } catch (err) {}
+  
+  if (!Array.isArray(customGestures)) {
+    customGestures = [];
+  }
+  
   populateTree(gestureStrings.gestureString, gestureStrings.functionString,
-               pref.getCharPref("allinonegest.rockerString"));
+               pref.getCharPref("allinonegest.rockerString"),
+               customGestures);
   setScrollGesturesVisibility(document.getElementById("wheelScrollOptions").value == 0);
   
   populateSiteList(pref.getComplexValue("allinonegest.sitesList", Components.interfaces.nsISupportsString).data);

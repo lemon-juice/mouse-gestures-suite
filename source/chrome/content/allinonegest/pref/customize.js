@@ -342,7 +342,7 @@ function returnCustomizedString(aCase) {
   return gestTable.join("|");
 }
 
-function populateTree(aGesturesString, aFuncsString, aRockerString) {
+function populateTree(aGesturesString, aFuncsString, aRockerString, customGestures) {
   edfuncButton = document.getElementById("edfuncId");
   edfuncLabel = edfuncButton.label;
   addgestLabel = document.getElementById("addId").label;
@@ -428,12 +428,14 @@ function populateTree(aGesturesString, aFuncsString, aRockerString) {
   gestView.addRow(["", "", "", ""], null);  // separator
   
   // custom gestures
-  gestView.addRow(["", "Menu: F11", "", "DLR"], "sometoken");
-  abbrTable[rowCount] = "";
-  rowCount++;
-  abbrTable[rowCount] = "";
-  rowCount++;
+  for (var i=0; i<customGestures.length; i++) {
+    gestView.addRow(["", customGestures[i].name, "", expandedText(customGestures[i].shape)], "");
+    abbrTable[rowCount] = "";
+    rowCount++;
+  }
   
+  abbrTable[rowCount] = "";
+  rowCount++;
   gestView.addRow(["", "", "", ""], null);  // separator
   
   abbrTable[rowCount] = "";
