@@ -219,44 +219,104 @@ mgsuite.imp = {
        for (i = 0; i < len; ++i) mgsuite.imp.aioActionTable[i][1] = mgsuite.overlay.aioGetStr(mgsuite.imp.aioActionTable[i][1])
     var gestTable = mgsuite.overlay.aioActionString.split("|");
     var funcTable = mgsuite.overlay.aioFuncString.split("|");
-    mgsuite.imp.aioGestTable = [];
+
+    
+    // aioGestTable: key is gesture sequence string, value is function index
+    mgsuite.imp.aioGestTable = {};
     for (i = 0; i < gestTable.length; ++i) {
       func = funcTable[i] - 0;
-      if (gestTable[i] && func >= 0 && func < len) mgsuite.imp.aioGestTable[gestTable[i]] = func;
+      if (gestTable[i] && func >= 0 && func < len) {
+        if (typeof gestTable[i] == 'string') {
+          mgsuite.imp.aioGestTable[gestTable[i]] = func;
+        }
+      }
+    }
+    
+    // add indexes of custom gestures
+    // function index begins with C letter for custom gestures and refers to entry in
+    // customGestures pref
+    var entry;
+    for (var j=0; j<mgsuite.overlay.customGestures.length; j++) {
+      entry = mgsuite.overlay.customGestures[j];
+      mgsuite.imp.aioGestTable[entry.shape] = "C" + j;
     }
   },
   
+  /**
+   * @param {string} aGesture - gesture stroke sequence like R, RLU, etc.
+   * @param {boolean} shiftKey
+   */
   aioFireGesture: function(aGesture, shiftKey) {
     var index = mgsuite.imp.aioGestTable[aGesture];
+    
     if (index == null) {
-       index = mgsuite.imp.aioGestTable["+" + aGesture.substr(-2)];
-       if (index == null)
-          index = mgsuite.imp.aioGestTable["+" + aGesture.substr(-3)];
+      index = mgsuite.imp.aioGestTable["+" + aGesture.substr(-2)];
+      if (index == null)
+        index = mgsuite.imp.aioGestTable["+" + aGesture.substr(-3)];
     }
+    
     if (index == null) {
-       index = mgsuite.imp.aioGestTable["/" + aGesture];
-       if (index == null) mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioUnknownStr + ": " + aGesture, 2000);
-       else mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.disabled") + ": " + mgsuite.imp.aioActionTable[index][1], 2000);
+      index = mgsuite.imp.aioGestTable["/" + aGesture];
+      if (index == null) {
+        mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioUnknownStr + ": " + aGesture, 2000);
+      }
+      else {
+        var actionEntry = mgsuite.imp._getActionEntry(index);
+        mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.disabled") + ": " + actionEntry.name, 2000);
+      }
     }
     else
-       try {
-         var allowedWinTypes = mgsuite.imp.aioActionTable[index][4];
-         
-         if (allowedWinTypes === null || allowedWinTypes.indexOf(mgsuite.overlay.aioWindowType) >=0) {
-           mgsuite.imp.aioStatusMessage(mgsuite.imp.aioActionTable[index][1], 2000);
-           mgsuite.imp.aioActionTable[index][0](shiftKey);
-         } else {
-           mgsuite.imp.aioStatusMessage(mgsuite.imp.aioActionTable[index][1] + " — " + mgsuite.overlay.aioGetStr("g.aborted"), 2000);
-         }
-       }
-       catch(err) {}
+      try {
+        var actionEntry = mgsuite.imp._getActionEntry(index);
+        
+        var allowedWinTypes = actionEntry.winTypes;
+        
+        if (allowedWinTypes === null || allowedWinTypes.indexOf(mgsuite.overlay.aioWindowType) >=0) {
+          mgsuite.imp.aioStatusMessage(actionEntry.name, 2000);
+          actionEntry.callback(shiftKey);
+        } else {
+          mgsuite.imp.aioStatusMessage(actionEntry.name + " — " + mgsuite.overlay.aioGetStr("g.aborted"), 2000);
+        }
+      }
+      catch(err) {}
+    
     mgsuite.overlay.aioKillGestInProgress();
     mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
   },
   
+  /**
+   * Get entry of gesture action to execute
+   * @param {number|string} index Index in aioActionTable for built-in gestures
+   *   or (beginning with C) index in customGestures for custom gestures.
+   * @returns {Object}
+   */
+  _getActionEntry: function(index) {
+    if (typeof index == 'number') {
+      var at = mgsuite.imp.aioActionTable[index];
+      return {
+        callback: at[0],
+        name: at[1],
+        winTypes: at[4]
+      };
+      
+    } else if (typeof index == 'string' && index.charAt(0) == 'C') {
+      // custom action
+      index = parseInt(index.substr(1));
+      var at = mgsuite.overlay.customGestures[index];
+      
+      return {
+        callback: function() { dump("custom!\n"); },
+        name: at.name,
+        winTypes: at.winTypes.split(',')
+      };
+    }
+    
+    dump("_getActionEntry: unknown index '" + index + "'\n");
+    return null;
+  },
+  
   
   /*  Gesture actions */
-  
   aioBackForward: function(back) {
     if (mgsuite.overlay.aioWindowType == 'messenger') {
       back ? goDoCommand('cmd_goBack') : goDoCommand('cmd_goForward');

@@ -472,12 +472,12 @@ mgsuite.overlay = {
 
     mgsuite.overlay.aioSiteList = [];
     try {
-    var prefList = mgsuite.overlay.aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString);
+	  var prefList = mgsuite.overlay.aioPref.getComplexValue("sitesList", Components.interfaces.nsISupportsString);
 
-    mgsuite.overlay.aioSiteList = JSON.parse(prefList);
+	  mgsuite.overlay.aioSiteList = JSON.parse(prefList);
 
     } catch (err) {
-    var str = Components.classes['@mozilla.org/supports-string;1'].createInstance(Components.interfaces.nsISupportsString);
+	  var str = Components.classes['@mozilla.org/supports-string;1'].createInstance(Components.interfaces.nsISupportsString);
       str.data = "[]";
       mgsuite.overlay.aioPref.setComplexValue("sitesList", Components.interfaces.nsISupportsString, str);
     }
@@ -508,6 +508,20 @@ mgsuite.overlay = {
       mgsuite.overlay.aioPrevsString = mgsuite.overlay.aioDefPrevSearch;
       mgsuite.overlay.aioPref.setComplexValue("prevsString", Components.interfaces.nsISupportsString, str);
     }
+	
+	// read custom getures pref
+	mgsuite.overlay.customGestures = [];
+    try {
+	  let prefStr = mgsuite.overlay.aioPref.getComplexValue("customGestures", Components.interfaces.nsISupportsString);
+	  mgsuite.overlay.customGestures = JSON.parse(prefStr);
+
+    } catch (err) {}
+    
+    if (!Array.isArray(mgsuite.overlay.customGestures)) {
+      mgsuite.overlay.customGestures = [];
+    }
+	
+	
     if (mgsuite.overlay.aioNoAltWithGest) mgsuite.overlay.aioLeftDefault = false;
     mgsuite.overlay.aioWheelRocker = mgsuite.overlay.aioWheelMode == 0;
 
@@ -871,7 +885,8 @@ mgsuite.overlay = {
 		}
   
 		if (index != null) {
-		  mgsuite.overlay.aioCurrGest = mgsuite.imp.aioActionTable[index][1];
+		  var actionEntry = mgsuite.imp._getActionEntry(index);
+		  mgsuite.overlay.aioCurrGest = actionEntry.name;
 		} else {
 		  mgsuite.overlay.aioCurrGest = mgsuite.overlay.aioUnknownStr;
 		}
