@@ -304,11 +304,58 @@ mgsuite.imp = {
       index = parseInt(index.substr(1));
       var at = mgsuite.overlay.customGestures[index];
       
-      return {
-        callback: function() { dump("custom!\n"); },
-        name: at.name,
-        winTypes: at.winTypes.split(',')
-      };
+      switch (at.type) {
+        case "menu":
+          // execute menu item action
+          var item = document.getElementById(at.id);
+          var command; // command element
+          var commandName = "?";
+          
+          if (item) {
+            if (item.command) {
+              command = document.getElementById(item.command);
+            }
+            
+            var commandName = item.getAttribute("label");
+            
+            if (!commandName && command) {
+              commandName = command.getAttribute("label");
+            }
+          }
+
+          return {
+            callback: function() {
+              
+              if (command) {
+                // invoke command on corresponding <command> element
+                var controller = document.commandDispatcher.getControllerForCommand(item.command);
+                
+                if (controller) {
+                  if (controller.isCommandEnabled(item.command)) {
+                    controller.doCommand(item.command);
+                  }
+                } else {
+                  // controller not found - run manually
+                  // this happens for some actions for obscure reasons
+                  if (command.getAttribute("disabled") != "true" && command.getAttribute("hidden") != "true"
+                      && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
+                    command.doCommand();
+                  }
+                }
+                
+              } else {
+                // no command attribute found - try to act on the oncommand
+                if (item.getAttribute("oncommand") && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
+                  item.doCommand();
+                }
+              }
+            },
+            name: commandName,
+            winTypes: at.winTypes.split(',')
+          };
+          
+          break;
+      }
     }
     
     dump("_getActionEntry: unknown index '" + index + "'\n");
