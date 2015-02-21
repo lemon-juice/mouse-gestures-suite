@@ -231,15 +231,6 @@ mgsuite.imp = {
         }
       }
     }
-    
-    // add indexes of custom gestures
-    // function index begins with C letter for custom gestures and refers to entry in
-    // customGestures pref
-    var entry;
-    for (var j=0; j<mgsuite.overlay.customGestures.length; j++) {
-      entry = mgsuite.overlay.customGestures[j];
-      mgsuite.imp.aioGestTable[entry.shape] = "C" + j;
-    }
   },
   
   /**
@@ -247,116 +238,146 @@ mgsuite.imp = {
    * @param {boolean} shiftKey
    */
   aioFireGesture: function(aGesture, shiftKey) {
-    var index = mgsuite.imp.aioGestTable[aGesture];
+    var action = mgsuite.imp.getActionData(aGesture, mgsuite.overlay.aioWindowType);
     
-    if (index == null) {
-      index = mgsuite.imp.aioGestTable["+" + aGesture.substr(-2)];
-      if (index == null)
-        index = mgsuite.imp.aioGestTable["+" + aGesture.substr(-3)];
-    }
-    
-    if (index == null) {
-      index = mgsuite.imp.aioGestTable["/" + aGesture];
-      if (index == null) {
-        mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioUnknownStr + ": " + aGesture, 2000);
-      }
-      else {
-        var actionEntry = mgsuite.imp._getActionEntry(index);
-        mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.disabled") + ": " + actionEntry.name, 2000);
-      }
-    }
-    else
+    if (!action) {
+      mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioUnknownStr + ": " + aGesture, 2000);
+      
+    } else if (!action.enabled) {
+      mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.disabled") + ": " + action.name, 2000);
+      // " — " + mgsuite.overlay.aioGetStr("g.aborted")
+      
+    } else {
       try {
-        var actionEntry = mgsuite.imp._getActionEntry(index);
-        
-        var allowedWinTypes = actionEntry.winTypes;
-        
-        if (allowedWinTypes === null || allowedWinTypes.indexOf(mgsuite.overlay.aioWindowType) >=0) {
-          mgsuite.imp.aioStatusMessage(actionEntry.name, 2000);
-          actionEntry.callback(shiftKey);
-        } else {
-          mgsuite.imp.aioStatusMessage(actionEntry.name + " — " + mgsuite.overlay.aioGetStr("g.aborted"), 2000);
-        }
+        mgsuite.imp.aioStatusMessage(action.name, 2000);
+        action.callback(shiftKey);
       }
       catch(err) {}
+    }
     
     mgsuite.overlay.aioKillGestInProgress();
     mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
   },
-  
+   
   /**
-   * Get entry of gesture action to execute
-   * @param {number|string} index Index in aioActionTable for built-in gestures
-   *   or (beginning with C) index in customGestures for custom gestures.
+   * Get action data for drawn gesture
+   * @param {string} gesture Gesture sequence drawn
+   * @param {string} winType
    * @returns {Object}
+   *   {callback} callback
+   *   {string} name
+   *   {boolean} enabled
+   *   {string} type native|custom
    */
-  _getActionEntry: function(index) {
-    if (typeof index == 'number') {
-      var at = mgsuite.imp.aioActionTable[index];
-      return {
-        callback: at[0],
-        name: at[1],
-        winTypes: at[4]
-      };
+  getActionData: function(gesture, winType) {
+    
+    var retObj = {};
+    
+    // first look in custom gestures as they have higher precedence over built-in
+    var len = mgsuite.overlay.customGestures.length;
+    var gestEntry, plainEntryShape, winTypes, custGestEntry;
+    
+    for (var i=0; i<len; i++) {
+      gestEntry = mgsuite.overlay.customGestures[i];
       
-    } else if (typeof index == 'string' && index.charAt(0) == 'C') {
-      // custom action
-      index = parseInt(index.substr(1));
-      var at = mgsuite.overlay.customGestures[index];
+      // trim starting / which marks disabled gesture
+      plainEntryShape = gestEntry.shape.replace(/^\//, "");
       
-      if (at.menuId) {
-        // execute menu item action
-        var item = document.getElementById(at.menuId);
+      if (plainEntryShape == gesture
+          || plainEntryShape == "+" + gesture.substr(-2)
+          || plainEntryShape == "+" + gesture.substr(-3)
+        ) {
+        winTypes = gestEntry.winTypes.split(",");
+        
+        // found custom gesture for this stroke
+        retObj.type = "custom";
+        retObj.name = gestEntry.name;
+        retObj.enabled = (plainEntryShape == gestEntry.shape) && (winTypes.indexOf(winType) >= 0);
+        custGestEntry = gestEntry;
+        
+        if (retObj.enabled) {
+          break;
+          // continue looking if gesture is not enabled in this context
+        }
+      }
+    }
+    
+    if (!retObj.type || !retObj.enabled) {
+      // try to find native gesture
+      var index = mgsuite.imp.aioGestTable[gesture];
+      
+      if (index == null) {
+        index = mgsuite.imp.aioGestTable["+" + gesture.substr(-2)];
+        if (index == null)
+          index = mgsuite.imp.aioGestTable["+" + gesture.substr(-3)];
+      }
+      
+      var enabled = false;
+      
+      if (index == null) {
+        index = mgsuite.imp.aioGestTable["/" + gesture];
+        
+      } else {
+        enabled = true;
+      }
+      
+      if (index != null) {
+        // native gesture found
+        var at = mgsuite.imp.aioActionTable[index];
+        
+        // check if it's allowed in this window type
+        if (!at[4] || at[4].indexOf(winType) >= 0) {
+          retObj.type = "native";
+          retObj.enabled = enabled;
+          retObj.callback = at[0];
+          retObj.name = at[1];
+        }
+      }
+    }
+    
+    if (retObj.type == "custom") {
+      // create callback for custom action execution
+      
+      if (custGestEntry.menuId) {
+         // execute menu item action
+        var item = document.getElementById(custGestEntry.menuId);
         var command; // command element
-        var commandName = "?";
         
         if (item) {
           if (item.command) {
             command = document.getElementById(item.command);
           }
-          
-          var commandName = item.getAttribute("label");
-          
-          if (!commandName && command) {
-            commandName = command.getAttribute("label");
-          }
         }
 
-        return {
-          callback: function() {
+        retObj.callback = function() {
+          if (command) {
+            // invoke command on corresponding <command> element
+            var controller = document.commandDispatcher.getControllerForCommand(item.command);
             
-            if (command) {
-              // invoke command on corresponding <command> element
-              var controller = document.commandDispatcher.getControllerForCommand(item.command);
-              
-              if (controller) {
-                if (controller.isCommandEnabled(item.command)) {
-                  controller.doCommand(item.command);
-                }
-              } else {
-                // controller not found - run manually
-                // this happens for some actions for obscure reasons
-                if (command.getAttribute("disabled") != "true" && command.getAttribute("hidden") != "true"
-                    && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
-                  command.doCommand();
-                }
+            if (controller) {
+              if (controller.isCommandEnabled(item.command)) {
+                controller.doCommand(item.command);
               }
-              
             } else {
-              // no command attribute found - try to act on the oncommand
-              if (item.getAttribute("oncommand") && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
-                item.doCommand();
+              // controller not found - run manually
+              // this happens for some actions for obscure reasons
+              if (command.getAttribute("disabled") != "true" && command.getAttribute("hidden") != "true"
+                  && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
+                command.doCommand();
               }
             }
-          },
-          name: commandName,
-          winTypes: at.winTypes.split(',')
+            
+          } else {
+            // no command attribute found - try to act on the oncommand
+            if (item.getAttribute("oncommand") && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
+              item.doCommand();
+            }
+          }
         };
       }
     }
     
-    dump("_getActionEntry: unknown index '" + index + "'\n");
-    return null;
+    return retObj.type ? retObj : null;
   },
   
   

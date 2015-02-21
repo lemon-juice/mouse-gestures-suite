@@ -873,20 +873,14 @@ mgsuite.overlay = {
        else tempMove = x_dir > 0 ? "R" : "L";
 	   
       if (!mgsuite.overlay.aioStrokes.length || mgsuite.overlay.aioStrokes[mgsuite.overlay.aioStrokes.length-1] != tempMove) {
-        mgsuite.overlay.aioStrokes.push(tempMove); mgsuite.overlay.aioLocaleGest.push(mgsuite.overlay.aioShortGest[tempMove]);
+        mgsuite.overlay.aioStrokes.push(tempMove);
+		mgsuite.overlay.aioLocaleGest.push(mgsuite.overlay.aioShortGest[tempMove]);
 
 		var sequence = mgsuite.overlay.aioStrokes.join("");
-		var index = mgsuite.imp.aioGestTable[sequence];
-  
-		if (index == null) {
-		  index = mgsuite.imp.aioGestTable["+" + sequence.substr(-2)];
-		  if (index == null)
-			index = mgsuite.imp.aioGestTable["+" + sequence.substr(-3)];
-		}
-  
-		if (index != null) {
-		  var actionEntry = mgsuite.imp._getActionEntry(index);
-		  mgsuite.overlay.aioCurrGest = actionEntry.name;
+		var action = mgsuite.imp.getActionData(sequence, mgsuite.overlay.aioWindowType);
+		
+		if (action) {
+		  mgsuite.overlay.aioCurrGest = action.name;
 		} else {
 		  mgsuite.overlay.aioCurrGest = mgsuite.overlay.aioUnknownStr;
 		}
