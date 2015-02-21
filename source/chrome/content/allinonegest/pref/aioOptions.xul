@@ -228,7 +228,7 @@
        <vbox id="customSwap" hidden="true">
         <label value="&customize.swaptxt;" />
        </vbox>
-       <vbox id="customEdit" flex="1">
+ <!--  <vbox id="customEdit" flex="1">
          <hbox align="center" flex="1">
           <button label="&customize.draw;" oncommand="openPlayWindow();" />
           <label value="&customize.enter;" control="customTextbox"/>
@@ -236,7 +236,7 @@
           <spacer flex="1" />
           <button label="&customize.apply;" oncommand="newGestValue();" />
          </hbox>
-       </vbox>
+       </vbox>-->
      </hbox>
    </vbox>  
   </tabpanel>

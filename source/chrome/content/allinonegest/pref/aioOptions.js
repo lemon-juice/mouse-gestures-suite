@@ -159,11 +159,7 @@ function savePrefs() {
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
                      "scrollrateOptions"];
   var checkbox, radiogroup, i;
-  if (document.getElementById("tabpanId").selectedIndex == 1 &&
-      !document.getElementById("customEdit").hasAttribute("hidden")) {
-     setTimeout(function() {newGestValue();}, 0);
-     return false;
-  }
+
   var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
   for (i = 0; i < checkboxes.length; ++i) {
     checkbox = document.getElementById(checkboxes[i]);
@@ -647,4 +643,11 @@ function openEditRuleWin(newRule) {
   var suffix = newRule ? "?new=1" : "";
   
   window.openDialog("chrome://mgsuite/content/pref/aioEditRule.xul" + suffix, "", "width=540,height=230,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
+}
+
+function editGesture() {
+  var x = window.screenX + 10;
+  var y = Math.max(window.screenY + Math.round(window.outerHeight / 2 - 275), 0);
+  
+  window.openDialog("chrome://mgsuite/content/pref/editGesture.xul", "", "width=580,height=550,chrome,dialog,modal,resizable,top=" + y + ",left=" + x); 
 }
