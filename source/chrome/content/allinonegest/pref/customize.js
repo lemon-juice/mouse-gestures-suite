@@ -300,15 +300,19 @@ function setScrollGesturesVisibility(show) {
      if (!show) return;
      var k = rockerCount;
      rockerCount += kNumberOfWheelGestures;
-     j = totalCount;  totalCount += kNumberOfWheelGestures;
+     var j = totalCount;
+     totalCount += kNumberOfWheelGestures;
      for (var i = k; i < rockerCount; ++i, ++j) {
         if (rockFuncTable[i].charAt(0) == "/") {
            rockFuncTable[i] = rockFuncTable[i].substr(1);
            isEnabledTable[j] = "/";
         }
         else isEnabledTable[j] = "";
+        
         gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], null);
-        abbrTable[j] = "?"; funcNbTable[j] = rockFuncTable[i]; rowIdTable[j] = ++uniqueRowId + "";
+        abbrTable[j] = "?";
+        funcNbTable[j] = rockFuncTable[i];
+        rowIdTable[j] = ++uniqueRowId + "";
      }
   }
   treeBox.invalidate();
@@ -427,23 +431,25 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   var funcNb = aFuncsString.split("|");
   rockFuncTable = aRockerString.split("|");
   var maxFunc = 0, j = 0, func;
+  
   for (i = 0; i < abbrT.length; ++i) {
-     func = funcNb[i] - 0;
-     if (func < 0 || func >= maxActions || gestActionTable[func] == 'g.nullAction') continue;
-     funcNbTable[j] = funcNb[i];
-     if (abbrT[i].charAt(0) == "/") {
-        abbrTable[j] = abbrT[i].substr(1);
-        isEnabledTable[j] = "/";
-     }
-     else {
-        abbrTable[j] = abbrT[i];
-        isEnabledTable[j] = "";
-     }
-     rowIdTable[j] = j + "";
-     gestView.addRow(["", gestActionTable[func], "", expandedText(abbrTable[j])], gestActionTableTokens[func]);
-     maxFunc = Math.max(maxFunc, func);
-     ++j;
+    func = funcNb[i] - 0;
+    if (func < 0 || func >= maxActions || gestActionTable[func] == 'g.nullAction') continue;
+    funcNbTable[j] = funcNb[i];
+    if (abbrT[i].charAt(0) == "/") {
+       abbrTable[j] = abbrT[i].substr(1);
+       isEnabledTable[j] = "/";
+    }
+    else {
+       abbrTable[j] = abbrT[i];
+       isEnabledTable[j] = "";
+    }
+    rowIdTable[j] = j + "";
+    gestView.addRow(["", gestActionTable[func], "", expandedText(abbrTable[j])], gestActionTableTokens[func]);
+    maxFunc = Math.max(maxFunc, func);
+    ++j;
   }
+  
   rowCount = abbrTable.length;
   for (i = maxFunc + 1; i < maxActions; ++i) { // enter actions new to this version
     gestView.addRow(["", gestActionTable[i], "", expandedText("")], gestActionTableTokens[i]);
@@ -479,6 +485,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
                     , rowData);
     
     abbrTable[rowCount] = shape;
+    rowIdTable[rowCount] = rowCount + "";
     rowCount++;
   }
   
@@ -489,6 +496,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   rowIdTable[rowCount] = rowCount + "";
   totalCount = rowCount + rockerCount + 1;
   
+  // rocker gestures
   j = rowCount + 1;
   for (i = 0; i < rockerCount; ++i, ++j) {
      if (rockFuncTable[i].charAt(0) == "/") {
@@ -499,7 +507,9 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
      func = rockFuncTable[i] - 0;
      if (func < 0 || func >= maxActions) rockFuncTable[i] = "0";
      gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], null);
-     abbrTable[j] = "?"; funcNbTable[j] = rockFuncTable[i]; rowIdTable[j] = j + "";
+     abbrTable[j] = "?";
+     funcNbTable[j] = rockFuncTable[i];
+     rowIdTable[j] = j + "";
   }
   uniqueRowId = totalCount;
   clearSelectionTable();
@@ -585,16 +595,24 @@ function selectRow(aRow) {
 
 function getSelections() {
   var sels = [];
-  selHasRocker = false; selMissingDup = false;
+  selHasRocker = false;
+  selMissingDup = false;
   var count = treeBoxView.selection.getRangeCount();
   var min = { }, max = { };
   for (var i = 0; i < count; i++) {
-     treeBoxView.selection.getRangeAt(i, min, max);
-     if ((min.value > 1 && funcNbTable[min.value] == funcNbTable[min.value - 1]) ||
-         (max.value > 0 && max.value < rowCount && funcNbTable[max.value] == funcNbTable[max.value + 1]))
-        selMissingDup = true;
-     for (var k = min.value; k <= max.value; ++k)
-        if (k != -1) {sels.push(k); selTable[k] = true; if (k >= rowCount) selHasRocker = true;}
+    treeBoxView.selection.getRangeAt(i, min, max);
+    if ((min.value > 1 && funcNbTable[min.value] == funcNbTable[min.value - 1]) ||
+         (max.value > 0 && max.value < rowCount && funcNbTable[max.value] == funcNbTable[max.value + 1])) {
+      selMissingDup = true;
+    }
+    
+    for (var k = min.value; k <= max.value; ++k) {
+      if (k != -1) {
+        sels.push(k);
+        selTable[k] = true;
+        if (k >= rowCount) selHasRocker = true;
+      }
+    }
   }
   return sels;
 }
@@ -923,12 +941,19 @@ function addGesture() {
   var currRow = getSelections()[0];
   var currFunc = funcNbTable[currRow];
   gestView.addRow(["", gestActionTable[currFunc - 0], "", expandedText("")], gestActionTableTokens[currFunc - 0]);
-  abbrTable[totalCount] = ""; funcNbTable[totalCount] = currFunc; rowIdTable[totalCount] = ++uniqueRowId + "";
+  abbrTable[totalCount] = "";
+  funcNbTable[totalCount] = currFunc;
+  rowIdTable[totalCount] = ++uniqueRowId + "";
   isEnabledTable[totalCount] = "";
-  saveForUndo(totalCount, ++gUndoId); swapFunc.pop(); swapFunc.push("%");
+  saveForUndo(totalCount, ++gUndoId);
+  swapFunc.pop();
+  swapFunc.push("%");
   var rowObj = aioGetRowValue(totalCount);
   currRow++;
-  for (var i = totalCount; i > currRow; --i) aioSetRowValue(i, aioGetRowValue(i - 1));
+  for (var i = totalCount; i > currRow; --i) {
+    aioSetRowValue(i, aioGetRowValue(i - 1));
+  }
+  
   aioSetRowValue(currRow, rowObj);
   totalCount++; rowCount++; gestView.stdRowCount++;
   treeBox.invalidate();
