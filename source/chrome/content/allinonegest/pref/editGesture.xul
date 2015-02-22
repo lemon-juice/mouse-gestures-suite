@@ -13,12 +13,13 @@
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
       title="Gesture Properties"
       buttons="accept, cancel, help"
-      onload="gprop.init();"
+      onload="gprop.init(); initPlayGesture();"
       ondialogaccept="return gprop.saveGesture();"
       persist="width height screenX screenY">
 
 <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>
 <script type="application/x-javascript" src="editGesture.js"/>
+<script type="application/x-javascript" src="aioPlayGesture.js"/>
 
 <stringbundleset id="stringbundleset"> 
   <stringbundle id="allinonegestbundle" src="chrome://mgsuite/locale/allinonegest.properties"/>
@@ -38,8 +39,14 @@
 
 <hbox>
    <label value="Gesture:" />
-   <textbox id="gestureShape" size="10" />
+   <textbox id="gestureShape" size="15" maxlength="15" />
 </hbox>
+
+<bbox>
+  <label value="&customize.draw;:" />
+</bbox>
+<iframe id="gestDrawArea" width="400" height="350" type="content"
+      style="overflow:hidden; border:1px solid black;" />
 
 
 </dialog>

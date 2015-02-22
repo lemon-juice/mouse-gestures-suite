@@ -6,9 +6,10 @@ var aioTrailDot;
 var aioTrailCont = null;
 var aioTrailCnt;
 var aioTrailX, aioTrailY, aioDocX, aioDocY;
-var rv, gestureStarted, iframe;
+var rv = {}, gestureStarted, iframe;
+var shapeElem;
 
-function init() {
+function initPlayGesture() {
   const httpProtocolHandler = Components.classes["@mozilla.org/network/protocol;1?name=http"]
                                .getService(Components.interfaces.nsIHttpProtocolHandler);
 
@@ -18,14 +19,20 @@ function init() {
   aioShortGest["L"] = aioBundle.getString("abbreviation.left");
   aioShortGest["U"] = aioBundle.getString("abbreviation.up");
   aioShortGest["D"] = aioBundle.getString("abbreviation.down");
-  rv = window.arguments[0];
+  
+  rv.trailColor = window.opener.document.getElementById("trailPickerId").color;
+  rv.trailSize = window.opener.trailSize;
+  rv.mousebutton = window.opener.document.getElementById("mousebuttOptions").value;
+
   iframe.addEventListener("mousedown", startGesture, true);
-  iframe.addEventListener("mouseup", endGesture, true);
+  window.addEventListener("mouseup", endGesture, true);
   gestureStarted = false;
+  shapeElem = document.getElementById("gestureShape");
 }
 
 function startGesture(e) {
   if (e.button != rv.mousebutton) return;
+  
   gestureStarted = true;
   iframe.addEventListener("mousemove", gestMove, true);
   aioOldX = e.screenX; aioOldY = e.screenY;
@@ -56,21 +63,32 @@ function gestMove(e) {
   drawTrail(e);
   var pente = absY <= 5 ? 100 : absX / absY;
   if (pente < 0.58 || pente > 1.73) {
-     if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
-     else tempMove = x_dir > 0 ? "R" : "L";
-     if (!aioStrokes.length || aioStrokes[aioStrokes.length-1] != tempMove) {
-        aioStrokes.push(tempMove); aioLocaleGest.push(aioShortGest[tempMove]);
-     }
+    if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
+    else tempMove = x_dir > 0 ? "R" : "L";
+    
+    if (!aioStrokes.length || aioStrokes[aioStrokes.length-1] != tempMove) {
+      aioStrokes.push(tempMove);
+      
+      var localeMove = aioShortGest[tempMove];
+      aioLocaleGest.push(localeMove);
+      
+      if (aioStrokes.length == 1) {
+        shapeElem.value = localeMove;
+      } else if (aioStrokes.length > 1) {
+        shapeElem.value += localeMove;
+      }
+    }
   }
   aioOldX = e.screenX; aioOldY = e.screenY;
 }
 
 function endGesture() {
   if (gestureStarted) {
-     eraseTrail();
-     window.arguments[0].gestString = aioLocaleGest.join("");
+    eraseTrail();
+    aioLocaleGest = [];
+    aioStrokes = [];
   }
-  window.close();
+  iframe.removeEventListener("mousemove", gestMove, true);
 }
 
 function drawTrail(e) {
@@ -80,6 +98,7 @@ function drawTrail(e) {
       dot.style.left = x + "px";
       dot.style.top = y + "px";
       aioTrailCont.appendChild(dot);
+      
     }
   }
   if (!aioTrailCont) return;
