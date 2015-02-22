@@ -900,13 +900,14 @@ function newGestValue(s, currRow) {
        alert(bundle.getString("error.plusChar"));
        isCorrect = false;
     }
-    if (isCorrect) { // check if not duplicated or conflicting
-      for (i = 0; i < rowCount; ++i) {
+    
+    if (isCorrect && currRow < gestView.stdRowCount) { // check if not duplicated or conflicting
+      for (i = 0; i < gestView.stdRowCount; ++i) {
         s1 = abbrTable[i];
         if (t == s1  || (s1.charAt(0) == "+" && t.length >= s1.length &&
                   t.substr(-s1.length + 1) == s1.substr(-s1.length + 1))) break;
       }
-      if (i != rowCount && i != currRow)
+      if (i != gestView.stdRowCount && i != currRow)
         if (t == s1)
            if (confirm(s.toUpperCase() + " " + bundle.getString("error.conflict") +
                  gestView.getCellText(i, functionCol) + "'\n" + bundle.getString("error.swap"))) {
@@ -969,7 +970,9 @@ function addGesture() {
   }
   
   aioSetRowValue(currRow, rowObj);
-  totalCount++; rowCount++; gestView.stdRowCount++;
+  totalCount++;
+  rowCount++;
+  gestView.stdRowCount++;
   treeBox.invalidate();
   setTimeout(function(a){selectRow(a);}, 0, currRow);
   setTimeout(function(){editCurrentRow(true);}, 100);
@@ -979,7 +982,9 @@ function undoAddGesture(aRow) {
   for (var i = aRow + 1; i < totalCount; ++i)
      aioSetRowValue(i - 1, aioGetRowValue(i));
   gestView.removeLastRow();
-  totalCount--; rowCount--; gestView.stdRowCount--;
+  totalCount--;
+  rowCount--;
+  gestView.stdRowCount--;
   treeBox.invalidate();
   setTimeout(function(a){selectRow(a);}, 0, aRow - 1);
 }       
