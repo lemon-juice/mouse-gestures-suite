@@ -35,6 +35,12 @@ var gprop = {
   },
   
   saveGesture: function() {
-    window.opener.newGestValue(document.getElementById("gestureShape").value, this.row);
+    var ok = window.opener.newGestValue(document.getElementById("gestureShape").value, this.row);
+    
+    if (ok === false) {
+      window.focus();
+      document.getElementById("gestureShape").focus();
+    }
+    return ok;
   }
 }

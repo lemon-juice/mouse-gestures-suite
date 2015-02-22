@@ -874,61 +874,62 @@ function newGestValue(s, currRow) {
   var isCorrect = true;
   //var currRow = getSelections()[0];
   if (s) {
-     for (i = 0; i < s.length; ++i) {
-       currChar = reverseLocalizedGest(s.charAt(i).toUpperCase());
-       if (currChar && currChar != prev && (currChar != "+"  || i == 0)) {
-          t += currChar;
-          prev = currChar;
-       }
-       else {
-          alert("'" + s.charAt(i) + "' " + bundle.getString("error.invalidChar") + " " + (i+1));
-          isCorrect = false;
-          break;
-       }
-     }
-     if (isCorrect && t.charAt(0) == "+" && t.length != 3 && t.length != 4) {
-        alert(bundle.getString("error.plusChar"));
-        isCorrect = false;
-     }
-     if (isCorrect) { // check if not duplicated or conflicting
-        for (i = 0; i < rowCount; ++i) {
-            s1 = abbrTable[i];
-            if (t == s1  || (s1.charAt(0) == "+" && t.length >= s1.length &&
-                      t.substr(-s1.length + 1) == s1.substr(-s1.length + 1))) break;
-        }
-        if (i != rowCount && i != currRow)
-           if (t == s1)
-              if (confirm(s.toUpperCase() + " " + bundle.getString("error.conflict") +
-                    gestView.getCellText(i, functionCol) + "'\n" + bundle.getString("error.swap"))) {
-                 if (!addingGest) ++gUndoId;
-                 saveForUndo(currRow, gUndoId);
-                 swapFunc[swapFunc.length -1] = rowIdTable[i];
-                 swapVal.push(t);
-                 setGestureText(i, abbrTable[currRow]);
-                 setGestureText(currRow, t);
-                 gestureTree.setAttribute("seltype", "multiple");
-                 //editArea.setAttribute("hidden", "true");              
-                 buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);
-                 return;
-              }
-              else isCorrect = false;
-           else {
-              alert (s.toUpperCase() + " " + bundle.getString("error.conflict") +
-                       gestView.getCellText(i, functionCol) + "'");
-              isCorrect = false;
+    for (i = 0; i < s.length; ++i) {
+      currChar = reverseLocalizedGest(s.charAt(i).toUpperCase());
+      if (currChar && currChar != prev && (currChar != "+"  || i == 0)) {
+         t += currChar;
+         prev = currChar;
+      }
+      else {
+         alert("'" + s.charAt(i) + "' " + bundle.getString("error.invalidChar") + " " + (i+1));
+         isCorrect = false;
+         break;
+      }
+    }
+    if (isCorrect && t.charAt(0) == "+" && t.length != 3 && t.length != 4) {
+       alert(bundle.getString("error.plusChar"));
+       isCorrect = false;
+    }
+    if (isCorrect) { // check if not duplicated or conflicting
+      for (i = 0; i < rowCount; ++i) {
+          s1 = abbrTable[i];
+          if (t == s1  || (s1.charAt(0) == "+" && t.length >= s1.length &&
+                    t.substr(-s1.length + 1) == s1.substr(-s1.length + 1))) break;
+      }
+      if (i != rowCount && i != currRow)
+        if (t == s1)
+           if (confirm(s.toUpperCase() + " " + bundle.getString("error.conflict") +
+                 gestView.getCellText(i, functionCol) + "'\n" + bundle.getString("error.swap"))) {
+              if (!addingGest) ++gUndoId;
+              saveForUndo(currRow, gUndoId);
+              swapFunc[swapFunc.length -1] = rowIdTable[i];
+              swapVal.push(t);
+              setGestureText(i, abbrTable[currRow]);
+              setGestureText(currRow, t);
+              gestureTree.setAttribute("seltype", "multiple");
+              //editArea.setAttribute("hidden", "true");              
+              buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);
+              return true;
            }
-     }
+           else isCorrect = false;
+        else {
+          alert (s.toUpperCase() + " " + bundle.getString("error.conflict") +
+                   gestView.getCellText(i, functionCol) + "'");
+          isCorrect = false;
+        }
+    }
   }
   if (isCorrect) {
-     //editArea.setAttribute("hidden", "true");
-     if (!addingGest) ++gUndoId;
-     saveForUndo(currRow, gUndoId);
-     setGestureText(currRow, t);
-     gestureTree.setAttribute("seltype", "multiple");
-     buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);
-     editing = false;
+    //editArea.setAttribute("hidden", "true");
+    if (!addingGest) ++gUndoId;
+    saveForUndo(currRow, gUndoId);
+    setGestureText(currRow, t);
+    gestureTree.setAttribute("seltype", "multiple");
+    buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);
+    editing = false;
   }
   //else setTextBox();
+  return isCorrect;
 }
 
 function swapTwoRows() {
