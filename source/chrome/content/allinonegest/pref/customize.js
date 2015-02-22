@@ -41,8 +41,14 @@ gestCustomizeTreeView.prototype = {
     this.data[row].row[column.index] = value;
   },
 
-  addRow: function(row, token, metaData) {
-    this.rows = this.data.push({"row": row, "token": token, "metaData": metaData});
+  addRow: function(row, type, token, metaData) {
+    this.rows = this.data.push(
+        {
+          "row": row,
+          "type": type,
+          "token": token,
+          "metaData": metaData
+        });
     this.rowCountChanged(this.rows - 1, 1);
   },
 
@@ -121,6 +127,9 @@ gestCustomizeTreeView.prototype = {
   },
   setActionToken: function(token, row) {
     this.data[row].token = token;
+  },
+  getRowType: function(row) {
+    return this.data[row] ? this.data[row].type : null;
   },
   getRowMetaData: function(row) {
     return this.data[row] ? this.data[row].metaData : null;
@@ -309,7 +318,7 @@ function setScrollGesturesVisibility(show) {
         }
         else isEnabledTable[j] = "";
         
-        gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], null);
+        gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], "rocker", null);
         abbrTable[j] = "?";
         funcNbTable[j] = rockFuncTable[i];
         rowIdTable[j] = ++uniqueRowId + "";
@@ -342,7 +351,7 @@ function returnCustomizedString(aCase) {
   
   var j = 0;
   for (i = 0; i < rowCount; ++i) {
-    if (/^g\.\w+$/.test(gestView.getActionToken(i))) {
+    if (gestView.getRowType(i) == 'native') {
       // get info only for built-in gestures
       if (!abbrTable[i] && (funcNbTable[i] == funcNbTable[i + 1] || funcWritten[funcNbTable[i]])) continue;
       funcWritten[funcNbTable[i]] = true;
@@ -363,7 +372,7 @@ function getCustomGestures() {
   var gestures = [];
   
   for (var i = 0; i < rowCount; ++i) {
-    if (gestView.getActionToken(i) == '[custom]') {
+    if (gestView.getRowType(i) == 'custom') {
       let data = gestView.getRowMetaData(i);
       data.name = gestView.getCellText(i, functionCol);
       data.shape = isEnabledTable[i] + abbrTable[i];
@@ -445,21 +454,21 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
        isEnabledTable[j] = "";
     }
     rowIdTable[j] = j + "";
-    gestView.addRow(["", gestActionTable[func], "", expandedText(abbrTable[j])], gestActionTableTokens[func]);
+    gestView.addRow(["", gestActionTable[func], "", expandedText(abbrTable[j])], "native", gestActionTableTokens[func]);
     maxFunc = Math.max(maxFunc, func);
     ++j;
   }
   
   rowCount = abbrTable.length;
   for (i = maxFunc + 1; i < maxActions; ++i) { // enter actions new to this version
-    gestView.addRow(["", gestActionTable[i], "", expandedText("")], gestActionTableTokens[i]);
+    gestView.addRow(["", gestActionTable[i], "", expandedText("")], "native", gestActionTableTokens[i]);
     abbrTable[rowCount] = "";
     funcNbTable[rowCount] = i + "";
     rowIdTable[rowCount] = rowCount + "";
     isEnabledTable[rowCount++] = "";
   }
   gestView.stdRowCount = rowCount;
-  gestView.addRow(["", "", "", ""], null);  // separator
+  gestView.addRow(["", "", "", ""], "separator", null);  // separator
   
   abbrTable[rowCount] = "";
   rowCount++;
@@ -481,7 +490,8 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
     }
     
     gestView.addRow(["", customGestures[i].name, "", expandedText(shape)]
-                    , "[custom]"
+                    , "custom"
+                    , null
                     , rowData);
     
     abbrTable[rowCount] = shape;
@@ -489,7 +499,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
     rowCount++;
   }
   
-  gestView.addRow(["", "", "", ""], null);  // separator
+  gestView.addRow(["", "", "", ""], "separator", null);  // separator
   
   abbrTable[rowCount] = "";
   funcNbTable[rowCount] = "";
@@ -506,7 +516,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
      else isEnabledTable[j] = "";
      func = rockFuncTable[i] - 0;
      if (func < 0 || func >= maxActions) rockFuncTable[i] = "0";
-     gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], null);
+     gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], "rocker", null);
      abbrTable[j] = "?";
      funcNbTable[j] = rockFuncTable[i];
      rowIdTable[j] = j + "";
@@ -892,14 +902,15 @@ function newGestValue(s, currRow) {
     }
     if (isCorrect) { // check if not duplicated or conflicting
       for (i = 0; i < rowCount; ++i) {
-          s1 = abbrTable[i];
-          if (t == s1  || (s1.charAt(0) == "+" && t.length >= s1.length &&
-                    t.substr(-s1.length + 1) == s1.substr(-s1.length + 1))) break;
+        s1 = abbrTable[i];
+        if (t == s1  || (s1.charAt(0) == "+" && t.length >= s1.length &&
+                  t.substr(-s1.length + 1) == s1.substr(-s1.length + 1))) break;
       }
       if (i != rowCount && i != currRow)
         if (t == s1)
            if (confirm(s.toUpperCase() + " " + bundle.getString("error.conflict") +
                  gestView.getCellText(i, functionCol) + "'\n" + bundle.getString("error.swap"))) {
+              // swap gestures
               if (!addingGest) ++gUndoId;
               saveForUndo(currRow, gUndoId);
               swapFunc[swapFunc.length -1] = rowIdTable[i];
@@ -943,7 +954,7 @@ function swapTwoRows() {
 function addGesture() {
   var currRow = getSelections()[0];
   var currFunc = funcNbTable[currRow];
-  gestView.addRow(["", gestActionTable[currFunc - 0], "", expandedText("")], gestActionTableTokens[currFunc - 0]);
+  gestView.addRow(["", gestActionTable[currFunc - 0], "", expandedText("")], "native", gestActionTableTokens[currFunc - 0]);
   abbrTable[totalCount] = "";
   funcNbTable[totalCount] = currFunc;
   rowIdTable[totalCount] = ++uniqueRowId + "";

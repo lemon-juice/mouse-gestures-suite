@@ -3,9 +3,9 @@ var gprop = {
     this.row = window.opener.getSelections()[0];
     
     var nameInput = document.getElementById("gestureName");
-    var actionToken = window.opener.gestView.getActionToken(this.row);
+    var rowType = window.opener.gestView.getRowType(this.row);
     
-    if (actionToken == '[custom]') {
+    if (rowType == 'custom') {
       // custom gesture
       document.getElementById("gestureType").value = "custom";
       
@@ -13,7 +13,7 @@ var gprop = {
       
       nameInput.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
       
-    } else if (actionToken) {
+    } else if (rowType == 'native') {
       // native gesture
       document.getElementById("gestureType").value = "built-in";
       nameInput.hidden = true;
