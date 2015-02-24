@@ -379,6 +379,11 @@ function getCustomGestures() {
       let data = gestView.getRowMetaData(i);
       data.name = gestView.getCellText(i, functionCol);
       data.shape = isEnabledTable[i] + abbrTable[i];
+      
+      if (typeof data.winTypes == 'object') {
+        // shorter notation for pref
+        data.winTypes = data.winTypes.join(",");
+      }
       gestures.push(data);
     }
   }

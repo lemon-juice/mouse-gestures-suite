@@ -66,16 +66,12 @@ var gprop = {
           var menuListBox = document.getElementById("menuItemsList");
           var selectedMenu = menuListBox.selectedItem;
           
-          if (!selectedMenu) {
-            alert("Choose a menu item to execute!");
-            return false;
-          }
-          if (!selectedMenu.value) {
+          if (selectedMenu && !selectedMenu.value) {
             alert("Menu item '" + selectedMenu.label.trim() + "' cannot be selected as gesture action");
             return false;
           }
           
-          data.menuId = selectedMenu.value;        
+          data.menuId = selectedMenu ? selectedMenu.value : null;
           break;
         
         case 1:  // script
