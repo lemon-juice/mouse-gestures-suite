@@ -645,9 +645,24 @@ function openEditRuleWin(newRule) {
   window.openDialog("chrome://mgsuite/content/pref/aioEditRule.xul" + suffix, "", "width=540,height=230,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
 }
 
-function editGesture() {
-  var x = window.screenX + 0;
-  var y = Math.max(window.screenY + Math.round(window.outerHeight / 2 - 275), 0);
+function editGesture(type) {
+  var sizeStr = "";
   
-  window.openDialog("chrome://mgsuite/content/pref/editGesture.xul", "", "width=680,height=550,chrome,dialog,modal,resizable,top=" + y + ",left=" + x); 
+  if (type == "native") {
+    var w = 375;
+    var h = 460;
+    
+    var x = Math.max(window.screenX + Math.round(window.outerWidth / 2 - w /2), 0);
+    var y = Math.max(window.screenY + Math.round(window.outerHeight / 2 - h / 2), 0);
+    
+    sizeStr = ",width=" + w
+      + ",height=" + h
+      + ",top=" + y
+      + ",left=" + x;
+    
+  } else if (type == "custom") {
+    //sizeStr = ",width=900,height=auto";
+  }
+  
+  window.openDialog("chrome://mgsuite/content/pref/editGesture.xul", "", "chrome,dialog,modal,resizable" + sizeStr); 
 }

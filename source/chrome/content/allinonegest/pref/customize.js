@@ -842,7 +842,8 @@ function clearRows() {
 }
 
 function editCurrentRow(newRow) {
-  editGesture();
+  var row = getSelections()[0];
+  editGesture(gestView.getRowType(row));
   //gestureTree.setAttribute("seltype", "single");
   //buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [false, false, false, false]);
   //inputBox.value = "";
@@ -946,6 +947,7 @@ function newGestValue(currRow, data) {
     if (data.menuId) {
       gestView.changeRowMetaData(currRow, "menuId", data.menuId);
     }
+    gestView.changeRowMetaData(currRow, "winTypes", data.winTypes);
     
     gestureTree.setAttribute("seltype", "multiple");
     buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);

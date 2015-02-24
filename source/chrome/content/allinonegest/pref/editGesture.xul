@@ -56,15 +56,25 @@
   <groupbox flex="1" id="actionBox" hidden="true">
     <caption label="Action" />
     
-    <bbox>
-      <label value="Execute:" />
-      <menulist id="actionTypeSelect" oncommand="gprop.changeActionType()">
-        <menupopup>
-          <menuitem label="Menu Item Action" />
-          <menuitem label="Script" />
-        </menupopup>
-      </menulist>
-    </bbox>
+    <vbox>
+      <bbox>
+        <label value="Execute:" />
+        <menulist id="actionTypeSelect" oncommand="gprop.changeActionType()">
+          <menupopup>
+            <menuitem label="Menu Item Action" />
+            <menuitem label="Script" />
+          </menupopup>
+        </menulist>
+      </bbox>
+      
+      <bbox>
+        <label value="Scope:" />
+        <checkbox id="scope-browser" label="browser" />
+        <checkbox id="scope-source" label="source" />
+        <checkbox id="scope-messenger" label="messenger" />
+        <checkbox id="scope-mailcompose" label="mailcompose" />
+      </bbox>
+    </vbox>
     
     <vbox id="menuBox" hidden="true">
       <listbox id="menuItemsList" rows="18">

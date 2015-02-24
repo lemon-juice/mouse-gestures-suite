@@ -36,6 +36,13 @@ var gprop = {
       // show current action
       document.getElementById("actionBox").hidden = false;
       this.changeActionType();
+      this.prefillScope();
+      
+      setTimeout(function() {
+        if (window.outerWidth < 900) {
+          window.resizeTo(900, window.outerHeight);
+        }
+      }, 0);
     }
   },
   
@@ -73,6 +80,21 @@ var gprop = {
         
         case 1:  // script
           break;
+      }
+      
+      // pass scope checkboxes
+      data.winTypes = [];
+      if (document.getElementById("scope-browser").checked) {
+        data.winTypes.push("browser");
+      }
+      if (document.getElementById("scope-source").checked) {
+        data.winTypes.push("source");
+      }
+      if (document.getElementById("scope-messenger").checked) {
+        data.winTypes.push("messenger");
+      }
+      if (document.getElementById("scope-mailcompose").checked) {
+        data.winTypes.push("mailcompose");
       }
     }
     
@@ -251,6 +273,16 @@ var gprop = {
         nameElem.className = "";
       }, 900);
     }
+  },
+  
+  // set scope checkboxes
+  prefillScope: function() {
+    var winTypes = this.customData.winTypes;
+    
+    document.getElementById("scope-browser").checked = (winTypes.indexOf("browser") >= 0);
+    document.getElementById("scope-source").checked = (winTypes.indexOf("source") >= 0);
+    document.getElementById("scope-messenger").checked = (winTypes.indexOf("messenger") >= 0);
+    document.getElementById("scope-mailcompose").checked = (winTypes.indexOf("mailcompose") >= 0);
   },
   
   getContentWindow: function() {
