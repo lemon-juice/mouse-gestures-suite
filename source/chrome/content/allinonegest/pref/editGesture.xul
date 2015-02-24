@@ -26,27 +26,57 @@
   <stringbundle id="brandbundle" src="chrome://global/locale/brand.properties"/>
 </stringbundleset>
 
-<hbox>
-  <label value="Gesture type:" />
-  <description id="gestureType" style="font-weight: bold" />
+<hbox flex="1">
+  <groupbox width="350">
+    <hbox>
+      <label value="Gesture type:" />
+      <description id="gestureType" style="font-weight: bold" />
+    </hbox>
+    
+    <hbox>
+       <label value="Gesture name:" />
+       <textbox id="gestureName" size="50" />
+       <description id="gestureNameDesc" hidden="true" style="font-weight: bold" />
+    </hbox>
+    
+    <bbox>
+       <label value="Gesture:" />
+       <textbox id="gestureShape" size="15" maxlength="15" />
+    </bbox>
+    
+    <bbox>
+      <label value="&customize.draw;:" />
+    </bbox>
+    <iframe id="gestDrawArea" width="300" height="300" type="content"
+          style="overflow:hidden; border:1px solid black;" />
+  
+  </groupbox>
+  
+  <groupbox flex="1">
+    <caption label="Action" />
+    
+    <bbox>
+      <label value="Execute:" />
+      <menulist id="actionTypeSelect" oncommand="gprop.changeActionType()">
+        <menupopup>
+          <menuitem label="Menu Item Action" />
+          <menuitem label="Script" />
+        </menupopup>
+      </menulist>
+    </bbox>
+    
+    <vbox id="menuBox" hidden="true">
+      <listbox id="menuItemsList" height="400">
+        <listitem label="---"/>
+      </listbox>
+    </vbox>
+    
+     <vbox id="scriptBox" hidden="true">
+      <textbox id="scriptInput" multiline="true" width="500" height="400"/>
+    </vbox>
+   
+
+  </groupbox>
 </hbox>
-
-<hbox>
-   <label value="Gesture name:" />
-   <textbox id="gestureName" size="50" />
-   <description id="gestureNameDesc" hidden="true" style="font-weight: bold" />
-</hbox>
-
-<hbox>
-   <label value="Gesture:" />
-   <textbox id="gestureShape" size="15" maxlength="15" />
-</hbox>
-
-<bbox>
-  <label value="&customize.draw;:" />
-</bbox>
-<iframe id="gestDrawArea" width="400" height="350" type="content"
-      style="overflow:hidden; border:1px solid black;" />
-
 
 </dialog>

@@ -646,8 +646,8 @@ function openEditRuleWin(newRule) {
 }
 
 function editGesture() {
-  var x = window.screenX + 10;
+  var x = window.screenX + 0;
   var y = Math.max(window.screenY + Math.round(window.outerHeight / 2 - 275), 0);
   
-  window.openDialog("chrome://mgsuite/content/pref/editGesture.xul", "", "width=580,height=550,chrome,dialog,modal,resizable,top=" + y + ",left=" + x); 
+  window.openDialog("chrome://mgsuite/content/pref/editGesture.xul", "", "width=680,height=550,chrome,dialog,modal,resizable,top=" + y + ",left=" + x); 
 }
