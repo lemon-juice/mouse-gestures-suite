@@ -350,6 +350,8 @@ mgsuite.imp = {
         }
 
         retObj.callback = function() {
+          var itemType = item.getAttribute("type");
+          
           if (command) {
             // invoke command on corresponding <command> element
             var controller = document.commandDispatcher.getControllerForCommand(item.command);
@@ -366,11 +368,19 @@ mgsuite.imp = {
                 command.doCommand();
               }
             }
-            
+          
           } else {
             // no command attribute found - try to act on the oncommand
             if (item.getAttribute("oncommand") && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
               item.doCommand();
+              
+            } else if (item.nodeName == "menuitem") {
+              // last resort - send click
+              // we use timeout because without it the gesture is fired twice for some reason
+              // after calling click()
+              setTimeout(function() {
+                item.click();
+              }, 0);
             }
           }
         };

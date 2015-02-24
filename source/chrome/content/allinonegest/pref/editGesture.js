@@ -86,16 +86,21 @@ var gprop = {
     var menuWrapper = win.document.getElementById("main-menubar");
     
     var menu = this.getMenu(win, menuWrapper);
-    var menuItem;
+    var menuItem, label;
     
     for (var i=0; i<menu.length; i++) {
-      menuItem = mList.appendItem(menu[i].label, menu[i].value);
+      label = menu[i].label;
+      if (menu[i].nodeName == "menu") {
+        label += " »";
+      }
+      menuItem = mList.appendItem(label, menu[i].value);
       
       if (menu[i].depth == 0) {
         menuItem.style.fontWeight = "bold";
         
-      } else if (!menu[i].hasCommand) {
-        menuItem.style.color = "#888";
+      }
+      if (!menu[i].value) {
+        menuItem.style.fontStyle = "italic";
       }
     }
   },
@@ -121,7 +126,7 @@ var gprop = {
             "label": pad + menu.label,
             "value": null,
             "depth": depth,
-            "hasCommand": false
+            "nodeName": "menu",
           };
           retItems.push(item);
         
@@ -160,7 +165,7 @@ var gprop = {
             "label": pad + label,
             "value": menu.id,
             "depth": depth,
-            "hasCommand": this.menuItemHasCommand(menu)
+            "nodeName": "menuitem",
           };
           retItems.push(item);
         }
@@ -168,13 +173,6 @@ var gprop = {
     }
     
     return retItems;
-  },
-  
-  /**
-   * Check if menu element has command attached to it
-   */
-  menuItemHasCommand: function(menuElem) {
-    return menuElem.command || menuElem.getAttribute("oncommand");
   },
   
   getContentWindow: function() {
