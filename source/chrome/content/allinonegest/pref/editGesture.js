@@ -3,17 +3,16 @@ var gprop = {
     this.row = window.opener.getSelections()[0];
     
     var nameInput = document.getElementById("gestureName");
-    var rowType = window.opener.gestView.getRowType(this.row);
+    this.rowType = window.opener.gestView.getRowType(this.row);
     
-    if (rowType == 'custom') {
+    this.customData = window.opener.gestView.getRowMetaData(this.row);
+    
+    if (this.rowType == 'custom') {
       // custom gesture
       document.getElementById("gestureType").value = "custom";
-      
-      let data = window.opener.gestView.getRowMetaData(this.row);
-      
       nameInput.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
       
-    } else if (rowType == 'native') {
+    } else if (this.rowType == 'native') {
       // native gesture
       document.getElementById("gestureType").value = "built-in";
       nameInput.hidden = true;
@@ -33,11 +32,51 @@ var gprop = {
     document.getElementById("gestureShape").value = shape;
     document.getElementById("gestureShape").focus();
     
-    this.changeActionType();
+    if (this.rowType == 'custom') {
+      // show current action
+      document.getElementById("actionBox").hidden = false;
+      this.changeActionType();
+    }
   },
   
   saveGesture: function() {
-    var ok = window.opener.newGestValue(document.getElementById("gestureShape").value, this.row);
+    var data = {
+      shape: document.getElementById("gestureShape").value,
+    }
+    
+    if (this.rowType == 'custom') {
+      data.name = document.getElementById("gestureName").value;
+      
+      if (!data.name) {
+        alert("Enter name of this gesture");
+        return false;
+      }
+      
+      var selected = document.getElementById("actionTypeSelect").selectedIndex;
+      
+      switch (selected) {
+        case 0:  // menu item
+          var menuListBox = document.getElementById("menuItemsList");
+          var selectedMenu = menuListBox.selectedItem;
+          
+          if (!selectedMenu) {
+            alert("Choose a menu item to execute!");
+            return false;
+          }
+          if (!selectedMenu.value) {
+            alert("Menu item '" + selectedMenu.label.trim() + "' cannot be selected as gesture action");
+            return false;
+          }
+          
+          data.menuId = selectedMenu.value;        
+          break;
+        
+        case 1:  // script
+          break;
+      }
+    }
+    
+    var ok = window.opener.newGestValue(this.row, data);
     
     if (ok === false) {
       window.focus();
@@ -62,12 +101,12 @@ var gprop = {
       case 0:
         menuBox.hidden = false;
         this.fillMenuItems();
+        this.preselectMenuItem(this.customData.menuId);
         break;
       
       case 1:
         scriptBox.hidden = false;
         break;
-      
     }
   },
   
@@ -86,21 +125,45 @@ var gprop = {
     var menuWrapper = win.document.getElementById("main-menubar");
     
     var menu = this.getMenu(win, menuWrapper);
-    var menuItem, label;
+    var listitem, label;
     
     for (var i=0; i<menu.length; i++) {
       label = menu[i].label;
       if (menu[i].nodeName == "menu") {
         label += " »";
       }
-      menuItem = mList.appendItem(label, menu[i].value);
+      listitem = mList.appendItem(label, menu[i].value);
       
       if (menu[i].depth == 0) {
-        menuItem.style.fontWeight = "bold";
+        listitem.style.fontWeight = "bold";
         
       }
       if (!menu[i].value) {
-        menuItem.style.fontStyle = "italic";
+        listitem.style.fontStyle = "italic";
+      }
+    }
+  },
+  
+  preselectMenuItem: function(menuId) {
+    if (!menuId) {
+      return;
+    }
+    
+    var listbox = document.getElementById("menuItemsList");
+    var items = listbox.getElementsByTagName("listitem");
+    
+    for (var i=0; i<items.length; i++) {
+      if (items[i].getAttribute("value") == menuId) {
+        
+        setTimeout(function() {
+          document.getElementById("menuItemsList").ensureIndexIsVisible(i);
+        }, 200);
+        
+        setTimeout(function() {
+          listbox.selectItem(items[i]);
+        }, 400);
+        
+        return;
       }
     }
   },
@@ -124,7 +187,7 @@ var gprop = {
         if (menu.label) {
           item = {
             "label": pad + menu.label,
-            "value": null,
+            "value": "",
             "depth": depth,
             "nodeName": "menu",
           };

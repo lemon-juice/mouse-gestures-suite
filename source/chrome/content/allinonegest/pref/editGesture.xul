@@ -52,7 +52,7 @@
   
   </groupbox>
   
-  <groupbox flex="1">
+  <groupbox flex="1" id="actionBox" hidden="true">
     <caption label="Action" />
     
     <bbox>
@@ -66,7 +66,7 @@
     </bbox>
     
     <vbox id="menuBox" hidden="true">
-      <listbox id="menuItemsList" height="400">
+      <listbox id="menuItemsList" rows="18">
         <listitem label="---"/>
       </listbox>
     </vbox>

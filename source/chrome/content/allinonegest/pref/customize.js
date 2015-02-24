@@ -133,6 +133,9 @@ gestCustomizeTreeView.prototype = {
   },
   getRowMetaData: function(row) {
     return this.data[row] ? this.data[row].metaData : null;
+  },
+  changeRowMetaData: function(row, key, val) {
+    this.data[row].metaData[key] = val;
   }
 };
 
@@ -877,9 +880,9 @@ function reverseLocalizedGest(aChar) {
 //  inputBox.select(); inputBox.focus();
 //}
 
-function newGestValue(s, currRow) {
+function newGestValue(currRow, data) {
   var i, s1;
-  //var s = inputBox.value;
+  var s = data.shape;
   var t = "", prev = "", currChar;
   var isCorrect = true;
   //var currRow = getSelections()[0];
@@ -936,6 +939,14 @@ function newGestValue(s, currRow) {
     if (!addingGest) ++gUndoId;
     saveForUndo(currRow, gUndoId);
     setGestureText(currRow, t);
+    
+    if (data.name) {
+      gestView.setCellText(currRow, functionCol, data.name);
+    }
+    if (data.menuId) {
+      gestView.changeRowMetaData(currRow, "menuId", data.menuId);
+    }
+    
     gestureTree.setAttribute("seltype", "multiple");
     buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);
     editing = false;
