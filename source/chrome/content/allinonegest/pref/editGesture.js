@@ -178,14 +178,6 @@ var gprop = {
   getContentWindow: function() {
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                      .getService(Components.interfaces.nsIWindowMediator);
-    var enumerator = wm.getEnumerator("navigator:browser");
-    
-    var win;
-    
-    if (enumerator.hasMoreElements()) {
-      win = enumerator.getNext();
-    }
-
-    return win;
+    return wm.getMostRecentWindow("navigator:browser");
   }
 }
