@@ -141,6 +141,7 @@ var gprop = {
       if (!menu[i].value) {
         listitem.style.fontStyle = "italic";
       }
+      listitem.addEventListener("dblclick", gprop.copyMenuNameToGestureName);
     }
   },
   
@@ -236,6 +237,20 @@ var gprop = {
     }
     
     return retItems;
+  },
+  
+  copyMenuNameToGestureName: function() {
+    var menuListBox = document.getElementById("menuItemsList");
+    var selectedMenu = menuListBox.selectedItem;
+     
+    if (selectedMenu) {
+      var nameElem = document.getElementById("gestureName");
+      nameElem.value = selectedMenu.label.trim();
+      nameElem.className = "blinkme";
+      setTimeout(function() {
+        nameElem.className = "";
+      }, 900);
+    }
   },
   
   getContentWindow: function() {

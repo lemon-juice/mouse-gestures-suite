@@ -1,6 +1,7 @@
 <?xml version="1.0"?> 
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="editGesture.css" type="text/css"?>
 
 <!DOCTYPE dialog [
 <!ENTITY % brandDTD SYSTEM "chrome://global/locale/brand.dtd" >
@@ -28,20 +29,20 @@
 
 <hbox flex="1">
   <groupbox width="350">
-    <hbox>
+    <bbok>
       <label value="Gesture type:" />
       <description id="gestureType" style="font-weight: bold" />
-    </hbox>
+    </bbok>
     
-    <hbox>
+    <bbok>
        <label value="Gesture name:" />
        <textbox id="gestureName" size="50" />
        <description id="gestureNameDesc" hidden="true" style="font-weight: bold" />
-    </hbox>
+    </bbok>
     
     <bbox>
        <label value="Gesture:" />
-       <textbox id="gestureShape" size="15" maxlength="15" />
+       <textbox id="gestureShape" size="20" maxlength="18" />
     </bbox>
     
     <bbox>
@@ -69,6 +70,7 @@
       <listbox id="menuItemsList" rows="18">
         <listitem label="---"/>
       </listbox>
+      <button label="Set gesture name" oncommand="gprop.copyMenuNameToGestureName();" />
     </vbox>
     
      <vbox id="scriptBox" hidden="true">

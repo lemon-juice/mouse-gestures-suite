@@ -1,0 +1,10 @@
+.blinkme {
+  animation-name: blinker;
+  animation-duration: .3s;
+  animation-timing-function: step-start;
+  animation-iteration-count: infinite;
+  outline: 2px solid transparent;
+}
+@keyframes blinker {  
+  50% { outline: 2px solid #00d490; }
+}
