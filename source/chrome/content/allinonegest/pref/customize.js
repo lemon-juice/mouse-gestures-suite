@@ -47,7 +47,7 @@ gestCustomizeTreeView.prototype = {
           "row": row,
           "type": type,
           "token": token,
-          "metaData": metaData
+          "metaData": metaData || null
         });
     this.rowCountChanged(this.rows - 1, 1);
   },
@@ -147,8 +147,14 @@ gestCustomizeTreeView.prototype = {
   getRowType: function(row) {
     return this.data[row] ? this.data[row].type : null;
   },
+  setRowType: function(type, row) {
+    this.data[row].type = type;
+  },
   getRowMetaData: function(row) {
     return this.data[row] ? this.data[row].metaData : null;
+  },
+  setRowMetaData: function(metaData, row) {
+    this.data[row].metaData = metaData;
   },
   changeRowMetaData: function(row, key, val) {
     this.data[row].metaData[key] = val;
@@ -167,7 +173,7 @@ const kNumberOfWheelGestures = 2;
 
 var gestView, treeBoxView;
 var gestureTree, treeBox, swapArea, funcArea, rowCount, rockerCount, totalCount;
-var functionCol, gestureCol, enabledCol;
+var infoCol, functionCol, gestureCol, enabledCol;
 var undoFunc = [], swapFunc = [], undoVal = [], swapVal = [], undoId = [];
 var gUndoId = 0;
 var swapping = false, editing = true, funcEditing = false, addingGest = false;
@@ -454,6 +460,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   treeBox = gestureTree.treeBoxObject;
   
   gestView = new gestCustomizeTreeView(["infoColId", "functionId", "enabledColId", "gestTextId"]);
+  infoCol = gestureTree.columns["infoColId"];
   functionCol = gestureTree.columns["functionId"];
   gestureCol = gestureTree.columns["gestTextId"];
   enabledCol = gestureTree.columns["enabledColId"];
@@ -715,7 +722,10 @@ function mouseDownInTree(e) {
   if (swapping || editing || funcEditing) {
      if (swapping) { // on the selected row since selectionInTree has not been called
         swapping = false;
-        undoFunc.pop(); undoVal.pop(); undoId.pop(); swapFunc.pop();
+        undoFunc.pop();
+        undoVal.pop();
+        undoId.pop();
+        swapFunc.pop();
         swapArea.setAttribute("hidden", "true");
         buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [true, true, true, isDuplicable(r.value), undoFunc.length]);
      }
@@ -726,7 +736,10 @@ function mouseDownInTree(e) {
      }
      else { // funcEditing
         funcEditing = false;
-        undoFunc.pop(); undoVal.pop(); undoId.pop(); swapFunc.pop();
+        undoFunc.pop();
+        undoVal.pop();
+        undoId.pop();
+        swapFunc.pop();
         funcArea.setAttribute("hidden", "true");
         buttEnable(["edfuncId", "undoId"], [true, undoFunc.length]);
      }
@@ -811,7 +824,10 @@ function selectionInTree() {
      else if (swapping) {
         swapping = false;
         if (currRow >= rowCount) {
-          undoFunc.pop(); undoVal.pop(); undoId.pop(); swapFunc.pop();
+          undoFunc.pop();
+          undoVal.pop();
+          undoId.pop();
+          swapFunc.pop();
         }
         else {
           var last = undoFunc.length - 1;
@@ -1037,8 +1053,8 @@ function undoAddGesture(aRow) {
 
 function editFunction() {
   if (edfuncButton.label == addgestLabel) {
-     addGesture();
-     return;
+    addGesture();
+    return;
   }
   gestureTree.setAttribute("seltype", "single");
   buttEnable(["edfuncId", "undoId"], [false, false]);
@@ -1162,7 +1178,8 @@ function performRowsMove(dragEndRow, dragStartRow) {
 */
 
 function aioGetRowValue(aRow) {
-  var rowObj = {fTxt: "", gTxt: "", aTxt: "", fNbr: "", eChr: "", roId: ""};
+  var rowObj = {iTxt: "", fTxt: "", gTxt: "", aTxt: "", fNbr: "", eChr: "", roId: ""};
+  rowObj.iTxt = gestView.getCellText(aRow, infoCol);
   rowObj.fTxt = gestView.getCellText(aRow, functionCol);
   rowObj.gTxt = gestView.getCellText(aRow, gestureCol);
   rowObj.aTxt = abbrTable[aRow];
@@ -1170,10 +1187,13 @@ function aioGetRowValue(aRow) {
   rowObj.eChr = isEnabledTable[aRow];
   rowObj.roId = rowIdTable[aRow];
   rowObj.token = gestView.getActionToken(aRow);
+  rowObj.type = gestView.getRowType(aRow);
+  rowObj.metaData = gestView.getRowMetaData(aRow);
   return rowObj;
 }
 
 function aioSetRowValue(aRow, rowObj) {
+  gestView.setCellText(aRow, infoCol, rowObj.iTxt);
   gestView.setCellText(aRow, functionCol, rowObj.fTxt);
   gestView.setCellText(aRow, gestureCol, rowObj.gTxt);
   abbrTable[aRow] = rowObj.aTxt;
@@ -1181,4 +1201,6 @@ function aioSetRowValue(aRow, rowObj) {
   isEnabledTable[aRow] = rowObj.eChr;
   rowIdTable[aRow] = rowObj.roId;
   gestView.setActionToken(rowObj.token, aRow);
+  gestView.setRowType(rowObj.type, aRow);
+  gestView.setRowMetaData(rowObj.metaData, aRow);
 }

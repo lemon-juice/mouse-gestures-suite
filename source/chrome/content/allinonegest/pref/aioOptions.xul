@@ -214,7 +214,7 @@
        <button label="&customize.clear;" id="clearId" oncommand="clearRows();" />
        <button label="&customize.edit;" id="editId" oncommand="editCurrentRow(false);" />
        <button label="&customize.swap;" id="swapId" oncommand="swapTwoRows();" />
-       <button label="&customize.add;" id="addId" hidden="true" />
+       <button label="&customize.add;" id="addId" hidden="true" /><!-- dummy button only for getting label by js -->
        <button label="&customize.edfunc;" id="edfuncId" oncommand="editFunction();" />
        <button label="&customize.undo;" id="undoId" oncommand="performUndo();" />
        <button label="&customize.restore;" id="restoreId" oncommand="restoreDefaultGestures();" />
