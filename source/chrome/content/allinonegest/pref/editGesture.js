@@ -222,17 +222,24 @@ var gprop = {
     
     for (var i=0; i<menu.length; i++) {
       label = menu[i].label;
+      
       if (menu[i].nodeName == "menu") {
         label += " »";
       }
-      listitem = mList.appendItem(label, menu[i].value);
       
+      listitem = mList.appendItem(label, menu[i].menuId);
+      
+      if (menu[i].nodeName == "menu") {
+        listitem.style.fontStyle = "italic";
+      }
       if (menu[i].depth == 0) {
         listitem.style.fontWeight = "bold";
         
       }
-      if (!menu[i].value) {
-        listitem.style.fontStyle = "italic";
+      if (!menu[i].menuId) {
+      }
+      if (menu[i].nodeName == "menuitem" && menu[i].depth > 0 && !menu[i].menuId) {
+        listitem.style.color = "#888";
       }
       listitem.addEventListener("dblclick", gprop.copyMenuNameToGestureName);
     }
@@ -281,7 +288,7 @@ var gprop = {
         if (menu.label) {
           item = {
             "label": pad + menu.label,
-            "value": "",
+            "menuId": "",
             "depth": depth,
             "nodeName": "menu",
           };
@@ -317,13 +324,18 @@ var gprop = {
           }
         }
         
-        if (label && menu.id) {
+        if (label && (menu.id || menu.label)) {
           item = {
             "label": pad + label,
-            "value": menu.id,
+            "menuId": menu.id ? menu.id : "",
             "depth": depth,
             "nodeName": "menuitem",
           };
+          
+          if (!menu.id && menu.label) {
+            item.menuLabel = menu.label;
+          }
+          
           retItems.push(item);
         }
       }
