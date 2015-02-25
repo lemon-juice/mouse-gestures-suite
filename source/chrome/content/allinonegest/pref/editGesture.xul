@@ -99,7 +99,10 @@
         </tabpanels>
       </tabbox>
  
-      <button label="Set gesture name" oncommand="gprop.copyMenuNameToGestureName();" />
+      <hbox>
+        <button label="Set gesture name" oncommand="gprop.copyMenuNameToGestureName();" />
+        <button label="Refresh menu list" oncommand="gprop.refreshMenuList();" />
+      </hbox>
     </vbox>
     
      <vbox id="scriptBox" hidden="true">

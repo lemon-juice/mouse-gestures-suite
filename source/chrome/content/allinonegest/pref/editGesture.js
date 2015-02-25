@@ -72,12 +72,16 @@ var gprop = {
         if (document.getElementById("openWinInfo")) {
           // refresh only if menu list is empty
           setTimeout(function() {
-            gprop.fillMenuItems();
-            gprop.preselectMenuItem(gprop.customData.menuId);
+            gprop.refreshMenuList();
           }, 200);
         }
        });
     }
+  },
+  
+  refreshMenuList: function() {
+    gprop.fillMenuItems();
+    gprop.preselectMenuItem(gprop.customData.menuId);
   },
   
   saveGesture: function() {
@@ -152,8 +156,7 @@ var gprop = {
     switch (selected) {
       case 0:
         menuBox.hidden = false;
-        this.fillMenuItems();
-        this.preselectMenuItem(this.customData.menuId);
+        this.refreshMenuList();
         break;
       
       case 1:
@@ -170,8 +173,7 @@ var gprop = {
     if (!listBox) {
       // move!
       selectedPanel.appendChild(document.getElementById("menuItemsList"));
-      this.fillMenuItems();
-      this.preselectMenuItem(this.customData.menuId);
+      this.refreshMenuList();
     }
   },
   
