@@ -709,11 +709,13 @@ function mouseDownInTree(e) {
   if (e.originalTarget.localName != "treechildren") return;
   var r = {}, c = {}, type = {};
   treeBox.getCellAt(e.clientX, e.clientY, r, c, type);
+  
   if (c.value == enabledCol && !e.ctrlKey && !e.shiftKey) {
-     if (isEnabledTable[r.value]) isEnabledTable[r.value] = "";
-     else isEnabledTable[r.value]= "/";
-     treeBox.invalidateCell(r.value, c.value);
-     return;
+    // toggle enabled marker
+    if (isEnabledTable[r.value]) isEnabledTable[r.value] = "";
+    else isEnabledTable[r.value]= "/";
+    treeBox.invalidateCell(r.value, c.value);
+    return;
   }
   
   if (c.value && c.value.id == 'infoColId') {
@@ -819,6 +821,8 @@ function selectionInTree() {
      return;
   }
   var currRow = sels[0];
+  var rowType = gestView.getRowType(currRow);
+  
   if (swapping || editing || funcEditing) {
      if (editing) {
         editing = false;
@@ -826,13 +830,15 @@ function selectionInTree() {
      }
      else if (swapping) {
         swapping = false;
-        if (currRow >= rowCount) {
+        if (currRow >= rowCount || rowType == "separator") {
+          // cancel swap
           undoFunc.pop();
           undoVal.pop();
           undoId.pop();
           swapFunc.pop();
         }
         else {
+          // perform swap
           var last = undoFunc.length - 1;
           swapFunc[last] = rowIdTable[currRow];
           var s = abbrTable[currRow];
@@ -858,8 +864,6 @@ function selectionInTree() {
      }
      gestureTree.addEventListener("mouseup", mouseUpInTree, true);
   }
-  
-  var rowType = gestView.getRowType(currRow);
   
   if (rowType == "native" || rowType == "custom") {
     edfuncButton.label = addgestLabel;
