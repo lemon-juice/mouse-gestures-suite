@@ -43,6 +43,12 @@ var gprop = {
           window.resizeTo(900, window.outerHeight);
         }
       }, 0);
+      
+      window.addEventListener("activate", function() {
+        // refresh menus on window focus
+        gprop.fillMenuItems();
+        gprop.preselectMenuItem(gprop.customData.menuId);
+       });
     }
   },
   
@@ -128,21 +134,65 @@ var gprop = {
     }
   },
   
+  selectTab: function() {
+    // move menu listbox to selected tab
+    var selectedPanel = document.getElementById("menuTabbox").selectedPanel;
+    var listBox = selectedPanel.querySelector("#menuItemsList");
+    
+    if (!listBox) {
+      // move!
+      selectedPanel.appendChild(document.getElementById("menuItemsList"));
+      this.fillMenuItems();
+      this.preselectMenuItem(this.customData.menuId);
+    }
+  },
+  
   fillMenuItems: function() {
+    var desc = document.getElementById("openWinInfo");
+    if (desc) {
+      desc.parentNode.removeChild(desc);
+    }
+    
     var mList = document.getElementById("menuItemsList");
+    mList.hidden = false;
     
     while (mList.itemCount > 0) {
       mList.removeItemAt(0);
     }
     
-    var win = this.getContentWindow();
+    var winType = document.getElementById("menuTabbox").selectedTab.value;
+    var win = this.getContentWindow(winType);
     
     if (!win) {
+      // info about window being not open
+      document.getElementById("menuItemsList").hidden = true;
+      
+      let selectedPanel = document.getElementById("menuTabbox").selectedPanel;
+      let winName =  document.getElementById("menuTabbox").selectedTab.label;
+      let desc = document.createElement("vbox");
+      desc.textContent = "Open " + winName + " window for the menu to become accessible";
+      desc.id = "openWinInfo";
+      selectedPanel.appendChild(desc);
       return;
     }
-    var menuWrapper = win.document.getElementById("main-menubar");
+    
+    // get root menu element
+    var rootIds = {
+      browser: "main-menubar",
+      source: "viewSource-main-menubar",
+      messenger: "mail-menubar",
+      mailcompose: "mail-menubar",
+    }
+
+    var menuWrapper = win.document.getElementById(rootIds[winType]);
+    
+    if (!menuWrapper) {
+      alert("Cannot find menu element in this window");
+      return;
+    }
     
     var menu = this.getMenu(win, menuWrapper);
+    
     var listitem, label;
     
     for (var i=0; i<menu.length; i++) {
@@ -192,7 +242,7 @@ var gprop = {
       depth = 0;
     }
     
-    var pad = "    ".repeat(depth);
+    var pad = "      ".repeat(depth);
     var retItems = [];
     var children = node.childNodes;
     var menu, item, items, label;
@@ -271,6 +321,15 @@ var gprop = {
     }
   },
   
+  menuItemSelect: function() {
+    var menuListBox = document.getElementById("menuItemsList");
+    var selectedMenu = menuListBox.selectedItem;
+    
+    if (selectedMenu && selectedMenu.value) {
+      this.customData.menuId = selectedMenu.value;
+    }
+  },
+  
   // set scope checkboxes
   prefillScope: function() {
     var winTypes = this.customData.winTypes;
@@ -281,9 +340,16 @@ var gprop = {
     document.getElementById("scope-mailcompose").checked = (winTypes.indexOf("mailcompose") >= 0);
   },
   
-  getContentWindow: function() {
+  getContentWindow: function(winType) {
+    var map = {
+      browser: "navigator:browser",
+      source: "navigator:view-source",
+      messenger: "mail:3pane",
+      mailcompose: "msgcompose",
+    }
+    
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                      .getService(Components.interfaces.nsIWindowMediator);
-    return wm.getMostRecentWindow("navigator:browser");
+    return wm.getMostRecentWindow(map[winType]);
   }
 }

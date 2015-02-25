@@ -68,18 +68,37 @@
       </bbox>
       
       <bbox>
-        <label value="Scope:" />
-        <checkbox id="scope-browser" label="browser" />
-        <checkbox id="scope-source" label="source" />
-        <checkbox id="scope-messenger" label="messenger" />
-        <checkbox id="scope-mailcompose" label="mailcompose" />
+        <label value="Execute in:" />
+        <checkbox id="scope-browser" label="Browser" />
+        <checkbox id="scope-source" label="Page Source" />
+        <checkbox id="scope-messenger" label="Mail" />
+        <checkbox id="scope-mailcompose" label="Mail Compose" />
       </bbox>
     </vbox>
     
     <vbox id="menuBox" hidden="true">
-      <listbox id="menuItemsList" rows="18">
-        <listitem label="---"/>
-      </listbox>
+      <label value="Select menu item to run:" style="margin-top: 5px" />
+      
+      <tabbox id="menuTabbox">
+        <tabs onselect="gprop.selectTab();">
+          <tab value="browser" label="Browser" />
+          <tab value="source" label="Page Source" />
+          <tab value="messenger" label="Mail" />
+          <tab value="mailcompose" label="Mail Compose" />
+        </tabs>
+        <tabpanels>
+          <tabpanel>
+            <!-- This listbox will be moved to selected tabpanel by script -->
+            <listbox flex="1" id="menuItemsList" onselect="gprop.menuItemSelect()" rows="18">
+              <listitem label="---"/>
+            </listbox>
+          </tabpanel>
+          <tabpanel></tabpanel>
+          <tabpanel></tabpanel>
+          <tabpanel></tabpanel>
+        </tabpanels>
+      </tabbox>
+ 
       <button label="Set gesture name" oncommand="gprop.copyMenuNameToGestureName();" />
     </vbox>
     

@@ -1,3 +1,24 @@
+tabbox {
+  padding: 0;
+}
+tabpanels {
+  -moz-appearance: none;
+  padding: 0;
+  border: 0;
+}
+tabpanel {
+  padding: 0;
+}
+tabpanels listbox {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+#openWinInfo {
+  margin: 20px 0 60px 0;
+}
+
+
 .blinkme {
   animation-name: blinker;
   animation-duration: .3s;
