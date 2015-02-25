@@ -295,9 +295,22 @@ var gprop = {
       menu = children[i];
       
       if (menu.nodeName == "menu") {
-        if (menu.label) {
+        label = menu.label;
+        
+        if (!label && menu.id=="menu_zoom") {
+          // Zoom menu may be not populated in SeaMonkey - get the label manually
+          try {
+            let zoomBundle = win.document.getElementById("bundle_viewZoom");
+            label = zoomBundle.getString("fullZoom.label")
+                                      .replace(/\([^)]*\)/, "");
+          } catch(err) {
+            label = "Zoom";
+          }
+        }
+        
+        if (label) {
           item = {
-            "label": menu.label,
+            "label": label,
             "menuId": "",
             "depth": depth,
             "nodeName": "menu",
