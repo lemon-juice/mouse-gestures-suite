@@ -172,7 +172,7 @@ const kAtomService = Components.classes["@mozilla.org/atom-service;1"].createIns
 const kNumberOfWheelGestures = 2;
 
 var gestView, treeBoxView;
-var gestureTree, treeBox, swapArea, funcArea, rowCount, rockerCount, totalCount;
+var gestureTree, treeBox, swapArea, customGestArea, funcArea, rowCount, rockerCount, totalCount;
 var infoCol, functionCol, gestureCol, enabledCol;
 var undoFunc = [], swapFunc = [], undoVal = [], swapVal = [], undoId = [];
 var gUndoId = 0;
@@ -455,6 +455,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   //inputBox = document.getElementById("customTextbox");
   //editArea = document.getElementById("customEdit");
   swapArea = document.getElementById("customSwap");
+  customGestArea = document.getElementById("customGesturesControl");
   funcArea = document.getElementById("customEditFunc");
   gestureTree = document.getElementById("gesttree");
   treeBox = gestureTree.treeBoxObject;
@@ -611,7 +612,7 @@ function buttEnable(idTable, condTable) {
 }
 
 function clearButtonsButUndo() {
-  buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [false, false, false, false, undoFunc.length]);
+  buttEnable(["clearId", "editId", "swapId", "edfuncId", "addCustom", "removeCustom", "undoId"], [false, false, false, false, false, false, undoFunc.length]);
 }
 
 function expandedText(aString) {
@@ -727,6 +728,7 @@ function mouseDownInTree(e) {
         undoId.pop();
         swapFunc.pop();
         swapArea.setAttribute("hidden", "true");
+        customGestArea.removeAttribute("hidden");
         buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [true, true, true, isDuplicable(r.value), undoFunc.length]);
      }
      else if (editing) {
@@ -741,6 +743,7 @@ function mouseDownInTree(e) {
         undoId.pop();
         swapFunc.pop();
         funcArea.setAttribute("hidden", "true");
+        customGestArea.removeAttribute("hidden");
         buttEnable(["edfuncId", "undoId"], [true, undoFunc.length]);
      }
      gestureTree.addEventListener("mouseup", mouseUpInTree, true);
@@ -838,6 +841,7 @@ function selectionInTree() {
           setGestureText(getRowFromRowId(undoFunc[last]), s);
         }
         swapArea.setAttribute("hidden", "true");
+        customGestArea.removeAttribute("hidden");
      }
      else { // funcEditing
         funcEditing = false;
@@ -859,7 +863,7 @@ function selectionInTree() {
   
   if (rowType == "native" || rowType == "custom") {
     edfuncButton.label = addgestLabel;
-    buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [true, true, true, isDuplicable(currRow), undoFunc.length]);
+    buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId", "addCustom", "removeCustom"], [true, true, true, isDuplicable(currRow), undoFunc.length, (rowType == "custom"), (rowType == "custom")]);
   }
   else if (rowType == "separator") {
     clearButtonsButUndo();
@@ -867,7 +871,7 @@ function selectionInTree() {
   else {
     // rocker & scrollwheel
     edfuncButton.label = edfuncLabel;
-    buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [false, false, false, true, undoFunc.length]);
+    buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId", "addCustom", "removeCustom"], [false, false, false, true, undoFunc.length, false, false]);
   }
 }
 
@@ -934,6 +938,8 @@ function newGestValue(currRow, data) {
   var t = "", prev = "", currChar;
   var isCorrect = true;
   //var currRow = getSelections()[0];
+  var rowType = gestView.getRowType(currRow);
+
   if (s) {
     for (i = 0; i < s.length; ++i) {
       currChar = reverseLocalizedGest(s.charAt(i).toUpperCase());
@@ -970,8 +976,8 @@ function newGestValue(currRow, data) {
               setGestureText(i, abbrTable[currRow]);
               setGestureText(currRow, t);
               gestureTree.setAttribute("seltype", "multiple");
-              //editArea.setAttribute("hidden", "true");              
-              buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);
+              //editArea.setAttribute("hidden", "true");
+              buttEnable(["clearId", "swapId", "edfuncId", "undoId", "addCustom", "removeCustom"], [true, true, isDuplicable(currRow), true, (rowType == "custom"), (rowType == "custom")]);
               return true;
            }
            else isCorrect = false;
@@ -999,7 +1005,7 @@ function newGestValue(currRow, data) {
     }
     
     gestureTree.setAttribute("seltype", "multiple");
-    buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);
+    buttEnable(["clearId", "swapId", "edfuncId", "undoId", "addCustom", "removeCustom"], [true, true, isDuplicable(currRow), true, (rowType == "custom"), (rowType == "custom")]);
     editing = false;
   }
   //else setTextBox();
@@ -1010,6 +1016,7 @@ function swapTwoRows() {
   gestureTree.setAttribute("seltype", "single");
   buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [false, false, false, false, false]);
   swapArea.removeAttribute("hidden");
+  customGestArea.setAttribute("hidden", "true");
   swapping = true;
   saveForUndo(getSelections()[0], ++gUndoId);
 }
@@ -1059,6 +1066,7 @@ function editFunction() {
   gestureTree.setAttribute("seltype", "single");
   buttEnable(["edfuncId", "undoId"], [false, false]);
   funcArea.removeAttribute("hidden");
+  customGestArea.setAttribute("hidden", "true");
   funcEditing = true;
   saveForUndo(getSelections()[0], ++gUndoId);
 }
