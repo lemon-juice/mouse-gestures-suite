@@ -69,10 +69,13 @@ var gprop = {
           return;
         }
         
-        setTimeout(function() {
-          gprop.fillMenuItems();
-          gprop.preselectMenuItem(gprop.customData.menuId);
-        }, 200);
+        if (document.getElementById("openWinInfo")) {
+          // refresh only if menu list is empty
+          setTimeout(function() {
+            gprop.fillMenuItems();
+            gprop.preselectMenuItem(gprop.customData.menuId);
+          }, 200);
+        }
        });
     }
   },
@@ -258,11 +261,11 @@ var gprop = {
         
         setTimeout(function() {
           document.getElementById("menuItemsList").ensureIndexIsVisible(i);
-        }, 200);
+        }, 100);
         
         setTimeout(function() {
           listbox.selectItem(items[i]);
-        }, 400);
+        }, 250);
         
         return;
       }
