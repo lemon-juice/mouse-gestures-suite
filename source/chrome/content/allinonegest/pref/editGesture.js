@@ -42,12 +42,27 @@ var gprop = {
         if (window.outerWidth < 900) {
           window.resizeTo(900, window.outerHeight);
         }
+        
+        // preselect tab based on window types
+        var tabbox = document.getElementById("menuTabbox");
+        var tabs = tabbox.querySelectorAll("tabs tab");
+        
+        for (let i=0; i<tabs.length; i++) {
+          let winType = tabs[i].value;
+          if (gprop.customData.winTypes && gprop.customData.winTypes.indexOf(winType) >= 0) {
+            tabbox.selectedTab = tabs[i];
+            break;
+          }
+        }
+        
       }, 0);
       
       window.addEventListener("activate", function() {
         // refresh menus on window focus
-        gprop.fillMenuItems();
-        gprop.preselectMenuItem(gprop.customData.menuId);
+        setTimeout(function() {
+          gprop.fillMenuItems();
+          gprop.preselectMenuItem(gprop.customData.menuId);
+        }, 200);
        });
     }
   },
