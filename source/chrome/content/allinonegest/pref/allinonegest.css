@@ -7,6 +7,9 @@ treechildren::-moz-tree-row(aioHovered) {
 treechildren::-moz-tree-row(aioHoverCol) {
   background: #F0F0F0 url("feedback.png") no-repeat top left;
 }
+treechildren::-moz-tree-row(separator) {
+  background: #2d4363;
+}
 treecol.enableColHeader {
   list-style-image: url("enabled.png");
 }
@@ -29,6 +32,10 @@ treechildren::-moz-tree-image(hover, hasInfo, documented) {
 }
 treechildren::-moz-tree-image(hasInfo, documented) {
   cursor: pointer;
+}
+treechildren::-moz-tree-cell-text(separator) {
+  font-weight: bold;
+  color: white;
 }
 html|div#infoPopupContent {
   padding: 1.5ex;

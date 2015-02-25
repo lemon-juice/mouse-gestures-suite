@@ -5,7 +5,9 @@ var gprop = {
     var nameInput = document.getElementById("gestureName");
     this.rowType = window.opener.gestView.getRowType(this.row);
     
-    this.customData = JSON.parse(JSON.stringify(window.opener.gestView.getRowMetaData(this.row)));
+    this.customData = JSON.parse(JSON.stringify(
+      window.opener.gestView.getRowMetaData(this.row) || {}
+    ));
     
     if (this.rowType == 'custom') {
       // custom gesture

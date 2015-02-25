@@ -44,8 +44,8 @@ function init() {
   
   var customGestures = [];
   try {
-    let prefStr = pref.getComplexValue("allinonegest.customGestures", Components.interfaces.nsISupportsString);
-    customGestures = JSON.parse(prefStr);
+    let prefS = pref.getComplexValue("allinonegest.customGestures", Components.interfaces.nsISupportsString);
+    customGestures = JSON.parse(prefS);
   } catch (err) {}
   
   if (!Array.isArray(customGestures)) {

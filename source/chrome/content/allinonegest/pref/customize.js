@@ -66,6 +66,11 @@ gestCustomizeTreeView.prototype = {
   },
 
   getRowProperties: function(row, prop) {
+    if (this.getCellText(row, functionCol) == ""
+        && this.getCellText(row, gestureCol) == "") {
+      return "separator";
+    }
+    
     if (row == this.hoveredRow) {
       if (this.topOrBottom) {
         return "aioHoverCol";
@@ -82,10 +87,21 @@ gestCustomizeTreeView.prototype = {
 
   getCellProperties: function(row, column) {
     if (column.id == "enabledColId") {
-      if (isEnabledTable[row]) return "aioGestDisabled";
-      else return "aioGestEnabled";
+      if (this.getCellText(row, functionCol) == ""
+          && this.getCellText(row, gestureCol) == "") {
+        return "noMarker";
+      } else if (isEnabledTable[row]) {
+        return "aioGestDisabled";
+      } else {
+        return "aioGestEnabled";
+      }
     }
     if (column.id == "infoColId") {
+      if (this.getCellText(row, functionCol) == ""
+          && this.getCellText(row, gestureCol) == "") {
+        return "separator";
+      }
+      
       var token = this.getActionToken(row);
       var props = token ? "hasInfo" : "";
       if (token && helpTable[token]) {
@@ -476,7 +492,8 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
     isEnabledTable[rowCount++] = "";
   }
   gestView.stdRowCount = rowCount;
-  gestView.addRow(["", "", "", ""], "separator", null);  // separator
+  //gestView.addRow(["", "", "", ""], "separator", null);  // separator
+  gestView.addRow([" Custom Gestures:", "", "", ""], "separator", null);  // separator
   
   abbrTable[rowCount] = "";
   rowCount++;
@@ -507,7 +524,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
     rowCount++;
   }
   
-  gestView.addRow(["", "", "", ""], "separator", null);  // separator
+  gestView.addRow([" Rocker & Scroll Wheel Gestures:", "", "", ""], "separator", null);  // separator
   
   abbrTable[rowCount] = "";
   funcNbTable[rowCount] = "";
@@ -794,15 +811,15 @@ function selectionInTree() {
      else if (swapping) {
         swapping = false;
         if (currRow >= rowCount) {
-            undoFunc.pop(); undoVal.pop(); undoId.pop(); swapFunc.pop();
+          undoFunc.pop(); undoVal.pop(); undoId.pop(); swapFunc.pop();
         }
         else {
-           var last = undoFunc.length - 1;
-           swapFunc[last] = rowIdTable[currRow];
-           var s = abbrTable[currRow];
-           swapVal.push(s);
-           setGestureText(currRow, undoVal[last]);
-           setGestureText(getRowFromRowId(undoFunc[last]), s);
+          var last = undoFunc.length - 1;
+          swapFunc[last] = rowIdTable[currRow];
+          var s = abbrTable[currRow];
+          swapVal.push(s);
+          setGestureText(currRow, undoVal[last]);
+          setGestureText(getRowFromRowId(undoFunc[last]), s);
         }
         swapArea.setAttribute("hidden", "true");
      }
@@ -812,21 +829,30 @@ function selectionInTree() {
         rockerRow = getRowFromRowId(undoFunc[undoFunc.length - 1]);
         funcVal = funcNbTable[currRow];
         if (currRow == rowCount) {
-           undoFunc.pop(); undoVal.pop(); undoId.pop(); swapFunc.pop();
-           funcVal = funcNbTable[rockerRow];
+          undoFunc.pop();
+          undoVal.pop();
+          undoId.pop();
+          swapFunc.pop();
+          funcVal = funcNbTable[rockerRow];
         }
      }
      gestureTree.addEventListener("mouseup", mouseUpInTree, true);
   }
-  if (currRow < rowCount) {
-     edfuncButton.label = addgestLabel;
-     buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [true, true, true, isDuplicable(currRow), undoFunc.length]);
+  
+  var rowType = gestView.getRowType(currRow);
+  
+  if (rowType == "native" || rowType == "custom") {
+    edfuncButton.label = addgestLabel;
+    buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [true, true, true, isDuplicable(currRow), undoFunc.length]);
   }
-  else if (currRow == rowCount) clearButtonsButUndo();
-       else {
-          edfuncButton.label = edfuncLabel;
-          buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [false, false, false, true, undoFunc.length]);
-       }
+  else if (rowType == "separator") {
+    clearButtonsButUndo();
+  }
+  else {
+    // rocker & scrollwheel
+    edfuncButton.label = edfuncLabel;
+    buttEnable(["clearId", "editId", "swapId", "edfuncId", "undoId"], [false, false, false, true, undoFunc.length]);
+  }
 }
 
 function saveForUndo(aRow, saveId) {

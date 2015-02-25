@@ -193,7 +193,7 @@
           ondblclick="dblClickInTree(event);">
         <treecols>
           <treecol id="infoColId" persist="width" class="treecol-image infoColHeader"
-                   fixed="true" tooltiptext="Info about actions"/>
+                   fixed="true" tooltiptext="Info about actions" overflow="true"/>
           <splitter class="tree-splitter"/>
           <treecol persist="width" flex="8" id="functionId" label="&customize.function;"/>
           <splitter class="tree-splitter"/>
