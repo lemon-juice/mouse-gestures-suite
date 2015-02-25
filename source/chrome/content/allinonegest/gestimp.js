@@ -341,6 +341,20 @@ mgsuite.imp = {
       if (custGestEntry.menuId) {
          // execute menu item action
         var item = document.getElementById(custGestEntry.menuId);
+        
+        if (!item) {
+          var matches = custGestEntry.menuId.match(/([^>]+)\>(.+)/);
+          
+          if (matches) {
+            // this menu item has no id and is defined as "menuId>Label"
+            // where Label should be a child of menuId
+            let menuId = matches[1];
+            let label = matches[2].replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+            item = document.getElementById(menuId).querySelector('menuitem[label="' + label + '"]')
+          }
+        }
+        
+        
         var command; // command element
         
         if (item) {

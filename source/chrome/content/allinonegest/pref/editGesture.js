@@ -221,27 +221,32 @@ var gprop = {
     
     var menu = this.getMenu(win, menuWrapper);
     
-    var listitem, label;
+    var listitem, listitemValue, label;
     
     for (var i=0; i<menu.length; i++) {
-      label = menu[i].label;
+      label = "      ".repeat(menu[i].depth) + menu[i].label;
       
       if (menu[i].nodeName == "menu") {
         label += " »";
       }
       
-      listitem = mList.appendItem(label, menu[i].menuId);
+      listitemValue = menu[i].menuId;
+      
+      if (!listitemValue && menu[i].parentId && menu[i].label) {
+        // this item doesn't have menuId but we use parent's menuId
+        // and current item's label as a way of identification
+        listitemValue = menu[i].parentId + ">" + menu[i].label;
+      }
+      
+      listitem = mList.appendItem(label, listitemValue);
       
       if (menu[i].nodeName == "menu") {
         listitem.style.fontStyle = "italic";
       }
       if (menu[i].depth == 0) {
         listitem.style.fontWeight = "bold";
-        
       }
-      if (!menu[i].menuId) {
-      }
-      if (menu[i].nodeName == "menuitem" && menu[i].depth > 0 && !menu[i].menuId) {
+      if (menu[i].nodeName == "menuitem" && menu[i].depth > 0 && !listitemValue) {
         listitem.style.color = "#888";
       }
       listitem.addEventListener("dblclick", gprop.copyMenuNameToGestureName);
@@ -272,12 +277,14 @@ var gprop = {
     }
   },
   
-  getMenu: function(win, node, depth) {
+  getMenu: function(win, node, depth, parentId) {
     if (typeof depth != "number") {
       depth = 0;
     }
+    if (typeof parentId == "undefined") {
+      parentId = null;
+    }
     
-    var pad = "      ".repeat(depth);
     var retItems = [];
     var children = node.childNodes;
     var menu, item, items, label;
@@ -290,10 +297,11 @@ var gprop = {
       if (menu.nodeName == "menu") {
         if (menu.label) {
           item = {
-            "label": pad + menu.label,
+            "label": menu.label,
             "menuId": "",
             "depth": depth,
             "nodeName": "menu",
+            "parentId": null
           };
           retItems.push(item);
         
@@ -304,7 +312,7 @@ var gprop = {
             menupopup = children2[j];
             
             if (menupopup.nodeName == "menupopup") {
-              items = this.getMenu(win, menupopup, depth+1);
+              items = this.getMenu(win, menupopup, depth+1, menu.id);
               if (items.length) {
                 retItems = retItems.concat(items);
               }
@@ -329,10 +337,11 @@ var gprop = {
         
         if (label && (menu.id || menu.label)) {
           item = {
-            "label": pad + label,
+            "label": label,
             "menuId": menu.id ? menu.id : "",
             "depth": depth,
             "nodeName": "menuitem",
+            "parentId": parentId
           };
           
           if (!menu.id && menu.label) {
