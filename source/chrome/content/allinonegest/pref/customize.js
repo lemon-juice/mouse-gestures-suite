@@ -952,7 +952,9 @@ function newGestValue(currRow, data) {
     if (data.menuId) {
       gestView.changeRowMetaData(currRow, "menuId", data.menuId);
     }
-    gestView.changeRowMetaData(currRow, "winTypes", data.winTypes);
+    if (data.winTypes) {
+      gestView.changeRowMetaData(currRow, "winTypes", data.winTypes);
+    }
     
     gestureTree.setAttribute("seltype", "multiple");
     buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [true, true, isDuplicable(currRow), true]);

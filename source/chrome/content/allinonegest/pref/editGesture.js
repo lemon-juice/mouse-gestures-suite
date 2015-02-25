@@ -5,7 +5,7 @@ var gprop = {
     var nameInput = document.getElementById("gestureName");
     this.rowType = window.opener.gestView.getRowType(this.row);
     
-    this.customData = window.opener.gestView.getRowMetaData(this.row);
+    this.customData = JSON.parse(JSON.stringify(window.opener.gestView.getRowMetaData(this.row)));
     
     if (this.rowType == 'custom') {
       // custom gesture
@@ -50,15 +50,25 @@ var gprop = {
         for (let i=0; i<tabs.length; i++) {
           let winType = tabs[i].value;
           if (gprop.customData.winTypes && gprop.customData.winTypes.indexOf(winType) >= 0) {
-            tabbox.selectedTab = tabs[i];
+            if (i > 0) {
+              tabbox.selectedTab = tabs[i];
+            }
             break;
           }
         }
         
       }, 0);
       
+      gprop.firstActivateEvent = true;
+      
       window.addEventListener("activate", function() {
         // refresh menus on window focus
+        if (gprop.firstActivateEvent) {
+          // skip when opening window
+          gprop.firstActivateEvent = false;
+          return;
+        }
+        
         setTimeout(function() {
           gprop.fillMenuItems();
           gprop.preselectMenuItem(gprop.customData.menuId);
@@ -341,7 +351,7 @@ var gprop = {
     var selectedMenu = menuListBox.selectedItem;
     
     if (selectedMenu && selectedMenu.value) {
-      this.customData.menuId = selectedMenu.value;
+      gprop.customData.menuId = selectedMenu.value;
     }
   },
   
