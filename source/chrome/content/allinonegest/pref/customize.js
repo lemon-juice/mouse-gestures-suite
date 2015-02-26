@@ -188,7 +188,11 @@ var dragService = Components.classes[kDragContractId].getService(kDSIID);
 // Contains abbreviated gesture definitions for each row like L, R, UDR, etc.
 // Empty string if no gesture defined. '?' for rocker and scrollwheel gestures
 var abbrTable = [];
-var isEnabledTable = [], funcNbTable = [], rowIdTable = [];
+var isEnabledTable = [];
+
+// Contains array of built-in numeric function id's where key is row index
+var funcNbTable = [];
+var rowIdTable = [];
 var rockFuncTable = [];
 var helpTable = {};
 var uniqueRowId;
@@ -477,8 +481,12 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   
   for (i = 0; i < abbrT.length; ++i) {
     func = funcNb[i] - 0;
-    if (func < 0 || func >= maxActions || gestActionTable[func] == 'g.nullAction') continue;
+    if (func < 0 || func >= maxActions || gestActionTable[func] == 'g.nullAction') {
+      continue;
+    }
+    
     funcNbTable[j] = funcNb[i];
+    
     if (abbrT[i].charAt(0) == "/") {
        abbrTable[j] = abbrT[i].substr(1);
        isEnabledTable[j] = "/";
@@ -926,6 +934,27 @@ function addCustomGesture() {
   editGesture("custom", true);
 }
 
+function removeCustomFunctions() {
+  var sels = getSelections();
+  
+  for (var i=0; i<sels.length; i++) {
+    _removeRow(sels[i]);
+  }
+  
+  var custGestures = getCustomGestures();
+  
+  if (custGestures.length == 0) {
+    // remove separator
+    for (var i = 0; i < rowCount; ++i) {
+      if (gestView.getRowType(i) == 'separator') {
+        _removeRow(i);
+        break;
+      }
+    }
+  }
+}
+
+
 function reverseLocalizedGest(aChar) {
   for (var i in abbrLocalizedGest)
     if (aChar == abbrLocalizedGest[i]) return i;
@@ -1012,6 +1041,24 @@ function _insertRowAtPosition(pos, firstCol, name, shape, rowType, rowToken, met
   }
   treeBox.invalidate();
   setTimeout(function(a){selectRow(a);}, 0, pos);
+}
+
+function _removeRow(pos) {
+  var rowType = gestView.getRowType(pos);
+  
+  for (var i = pos + 1; i < totalCount; ++i) {
+    aioSetRowValue(i - 1, aioGetRowValue(i));
+  }
+  gestView.removeLastRow();
+  
+  totalCount--;
+  rowCount--;
+  if (rowType == "native") {
+    gestView.stdRowCount--;
+  }
+  
+  treeBox.invalidate();
+  setTimeout(function(a){selectRow(a);}, 0, pos - 1);
 }
 
 function changeGestureData(currRow, data) {
