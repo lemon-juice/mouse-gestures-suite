@@ -1,18 +1,34 @@
 var gprop = {
   init: function() {
+    this.isNew = window.arguments[0];
     this.row = window.opener.getSelections()[0];
     
-    var nameInput = document.getElementById("gestureName");
-    this.rowType = window.opener.gestView.getRowType(this.row);
+    if (this.isNew) {
+      // new custom gesture
+      this.rowType = "custom";
+      this.customData = {
+        "winTypes": ["browser"],
+        "menuId": null,
+      };
+      
+    } else {
+      // edit existing gesture
+      this.rowType = window.opener.gestView.getRowType(this.row);
+      
+      this.customData = JSON.parse(JSON.stringify(
+        window.opener.gestView.getRowMetaData(this.row) || {}
+      ));
+    }
     
-    this.customData = JSON.parse(JSON.stringify(
-      window.opener.gestView.getRowMetaData(this.row) || {}
-    ));
+    var nameInput = document.getElementById("gestureName");
     
     if (this.rowType == 'custom') {
       // custom gesture
       document.getElementById("gestureType").value = "custom";
-      nameInput.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
+      
+      if (!this.isNew) {
+        nameInput.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
+      }
       
     } else if (this.rowType == 'native') {
       // native gesture
@@ -23,7 +39,7 @@ var gprop = {
       desc.hidden = false;
     }
   
-    var shapeDef = window.opener.abbrTable[this.row];
+    var shapeDef = this.isNew ? "" : window.opener.abbrTable[this.row];
     
     // translate
     var shape = "";
@@ -134,13 +150,18 @@ var gprop = {
       }
     }
     
-    var ok = window.opener.newGestValue(this.row, data);
-    
-    if (ok === false) {
-      window.focus();
-      document.getElementById("gestureShape").focus();
+    if (this.isNew) {
+      window.opener.insertNewCustomGesture(data);
+      
+    } else {
+      var ok = window.opener.changeGestureData(this.row, data);
+      
+      if (ok === false) {
+        window.focus();
+        document.getElementById("gestureShape").focus();
+      }
+      return ok;
     }
-    return ok;
   },
   
   /**

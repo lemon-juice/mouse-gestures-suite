@@ -645,7 +645,11 @@ function openEditRuleWin(newRule) {
   window.openDialog("chrome://mgsuite/content/pref/aioEditRule.xul" + suffix, "", "width=540,height=230,chrome,dialog,modal,resizable,top=" + y + ",left=" + x);
 }
 
-function editGesture(type) {
+/**
+ * @param {String} type
+ * @param {Boolean} isNew If it will be new gesture
+ */
+function editGesture(type, isNew) {
   var sizeStr = "";
   
   if (type == "native") {
@@ -659,10 +663,7 @@ function editGesture(type) {
       + ",height=" + h
       + ",top=" + y
       + ",left=" + x;
-    
-  } else if (type == "custom") {
-    //sizeStr = ",width=900,height=auto";
   }
   
-  window.openDialog("chrome://mgsuite/content/pref/editGesture.xul", "", "chrome,dialog,modal,resizable" + sizeStr); 
+  window.openDialog("chrome://mgsuite/content/pref/editGesture.xul", "", "chrome,dialog,modal,resizable" + sizeStr, isNew); 
 }

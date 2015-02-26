@@ -238,7 +238,7 @@
           <label value="&customize.enter;" control="customTextbox"/>
           <textbox id="customTextbox" class="padded" value="" flex="1"/>
           <spacer flex="1" />
-          <button label="&customize.apply;" oncommand="newGestValue();" />
+          <button label="&customize.apply;" oncommand="changeGestureData();" />
          </hbox>
        </vbox>-->
      </hbox>

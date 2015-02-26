@@ -194,6 +194,8 @@ var helpTable = {};
 var uniqueRowId;
 var hidePopupTimer;
 
+var customGestSeparatorLabel = " " + "Custom Gestures" + ":";
+
 
 // When you want to remove an action change its name to "g.nullAction" in the table
 // below. Such an action will not appear in customization preferences and its
@@ -503,7 +505,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   
   if (customGestures.length) {
     // custom gestures separator
-    gestView.addRow([" Custom Gestures:", "", "", ""], "separator", null);  // separator
+    gestView.addRow([customGestSeparatorLabel, "", "", ""], "separator", null);  // separator
     abbrTable[rowCount] = "";
     rowCount++;
   }
@@ -512,7 +514,6 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   for (var i=0; i<customGestures.length; i++) {
     let rowData = {
       "menuId": customGestures[i].menuId,
-      "id": customGestures[i].id,
       "winTypes": customGestures[i].winTypes,
     }
     var shape = customGestures[i].shape;
@@ -900,7 +901,7 @@ function clearRows() {
 
 function editCurrentRow(newRow) {
   var row = getSelections()[0];
-  editGesture(gestView.getRowType(row));
+  editGesture(gestView.getRowType(row), false);
   //gestureTree.setAttribute("seltype", "single");
   //buttEnable(["clearId", "swapId", "edfuncId", "undoId"], [false, false, false, false]);
   //inputBox.value = "";
@@ -921,6 +922,10 @@ function editCurrentRow(newRow) {
 //  inputBox.focus();
 //}
 
+function addCustomGesture() {
+  editGesture("custom", true);
+}
+
 function reverseLocalizedGest(aChar) {
   for (var i in abbrLocalizedGest)
     if (aChar == abbrLocalizedGest[i]) return i;
@@ -938,7 +943,78 @@ function reverseLocalizedGest(aChar) {
 //  inputBox.select(); inputBox.focus();
 //}
 
-function newGestValue(currRow, data) {
+function insertNewCustomGesture(data) {
+  var lastNativeRow, lastCustomRow;
+  var type;
+  
+  for (var i=0; i<totalCount; i++) {
+    type = gestView.getRowType(i);
+    if (type == "native") {
+      lastNativeRow = i;
+    } else if (type == "custom") {
+      lastCustomRow = i;
+    }
+  }
+  
+  var currRow;
+  
+  if (lastCustomRow) {
+    currRow = lastCustomRow;
+    
+  } else {
+    // first custom gesture - need to add separator
+    _insertRowAtPosition(lastNativeRow, customGestSeparatorLabel, "", "", "separator", "", null);
+    currRow = lastNativeRow + 1;
+  }
+  
+  var metaData = {
+    "menuId": data.menuId,
+    "winTypes": data.winTypes,
+  }
+  
+  _insertRowAtPosition(currRow, "", data.name, data.shape, "custom", "", metaData);
+}
+
+/**
+ * @param {number} pos
+ * @param {string} firstCol content of 1st col. (for separator)
+ * @param {string} name action name
+ * @param {string} shape e.g. RUL
+ * @param {string} rowType
+ * @param {string} rowToken
+ * @param {object} metaData
+ */
+function _insertRowAtPosition(pos, firstCol, name, shape, rowType, rowToken, metaData) {
+  var currFunc = funcNbTable[pos];
+  
+  var shapeStr = (firstCol == "" && name != "") ? expandedText(shape) : "";
+  gestView.addRow([firstCol, name, "", shapeStr], rowType, rowToken, metaData);
+  
+  abbrTable[totalCount] = shape;
+  funcNbTable[totalCount] = currFunc;
+  rowIdTable[totalCount] = ++uniqueRowId + "";
+  isEnabledTable[totalCount] = "";
+  saveForUndo(totalCount, ++gUndoId);
+  swapFunc.pop();
+  swapFunc.push("%");
+  var rowObj = aioGetRowValue(totalCount);
+  pos++;
+  for (var i = totalCount; i > pos; --i) {
+    aioSetRowValue(i, aioGetRowValue(i - 1));
+  }
+  
+  aioSetRowValue(pos, rowObj);
+  totalCount++;
+  rowCount++;
+  
+  if (rowType == "native") {
+    gestView.stdRowCount++;
+  }
+  treeBox.invalidate();
+  setTimeout(function(a){selectRow(a);}, 0, pos);
+}
+
+function changeGestureData(currRow, data) {
   var i, s1;
   var s = data.shape;
   var t = "", prev = "", currChar;
@@ -1030,27 +1106,12 @@ function swapTwoRows() {
 function addGesture() {
   var currRow = getSelections()[0];
   var currFunc = funcNbTable[currRow];
-  gestView.addRow(["", gestActionTable[currFunc - 0], "", expandedText("")], "native", gestActionTableTokens[currFunc - 0]);
-  abbrTable[totalCount] = "";
-  funcNbTable[totalCount] = currFunc;
-  rowIdTable[totalCount] = ++uniqueRowId + "";
-  isEnabledTable[totalCount] = "";
-  saveForUndo(totalCount, ++gUndoId);
-  swapFunc.pop();
-  swapFunc.push("%");
-  var rowObj = aioGetRowValue(totalCount);
-  currRow++;
-  for (var i = totalCount; i > currRow; --i) {
-    aioSetRowValue(i, aioGetRowValue(i - 1));
-  }
   
-  aioSetRowValue(currRow, rowObj);
-  totalCount++;
-  rowCount++;
-  gestView.stdRowCount++;
-  treeBox.invalidate();
-  setTimeout(function(a){selectRow(a);}, 0, currRow);
-  setTimeout(function(){editCurrentRow(true);}, 100);
+  _insertRowAtPosition(currRow, "", gestActionTable[currFunc - 0], "", "native", gestActionTableTokens[currFunc - 0], null);
+  
+  setTimeout(function() {
+    editCurrentRow(true);
+  }, 100);
 }
 
 function undoAddGesture(aRow) {
