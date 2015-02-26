@@ -952,6 +952,10 @@ function removeCustomFunctions() {
       }
     }
   }
+  
+  // for now we clear undo to avoid errors because remove action
+  // is not yet implemented in undo mechanism
+  clearUndoHistory();
 }
 
 
@@ -1187,22 +1191,47 @@ function editFunction() {
 
 function performUndo() {
   var row, saveId, swFunc;
+  
   do {
     saveId = undoId.pop();
     swFunc = swapFunc.pop();
-    if (swFunc)
-        if (swFunc == "%") {
-           undoAddGesture(getRowFromRowId(undoFunc.pop()));
-           undoVal.pop(); continue;
-        }   
-        else setGestureText(getRowFromRowId(swFunc), swapVal.pop());
+    
+    if (swFunc) {
+      if (swFunc == "%") {
+        // remove row
+        undoAddGesture(getRowFromRowId(undoFunc.pop()));
+        undoVal.pop();
+        continue;
+      }   
+      else {
+        setGestureText(getRowFromRowId(swFunc), swapVal.pop());
+      }
+    }
     row = getRowFromRowId(undoFunc.pop());
-    if (abbrTable[row] != "?") setGestureText(row, undoVal.pop());
-    else setFunctionText(undoVal.pop(), row);
+    
+    if (abbrTable[row] != "?") {
+      setGestureText(row, undoVal.pop());
+    }
+    else {
+      setFunctionText(undoVal.pop(), row);
+    }
+    
   } while (undoId.length && undoId[undoId.length - 1] == saveId)
+  
   treeBox.ensureRowIsVisible(row);
   buttEnable(["undoId"], [undoFunc.length]);
-  if (row < rowCount) buttEnable(["edfuncId"], [isDuplicable(row)]);
+  
+  if (row < rowCount) {
+    buttEnable(["edfuncId"], [isDuplicable(row)]);
+  }
+}
+
+function clearUndoHistory() {
+  undoFunc = [];
+  swapFunc = [];
+  undoVal = [];
+  swapVal = [];
+  undoId = [];
 }
 
 /*
