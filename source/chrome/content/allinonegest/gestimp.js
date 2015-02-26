@@ -245,12 +245,19 @@ mgsuite.imp = {
       
     } else if (!action.enabled) {
       mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr("g.disabled") + ": " + action.name, 2000);
-      // " — " + mgsuite.overlay.aioGetStr("g.aborted")
+      
+    //} else if (!action.winTypeOK) {
+    //  mgsuite.imp.aioStatusMessage(mgsuite.overlay.aioGetStr(action.name + " — " + mgsuite.overlay.aioGetStr("g.aborted")), 2000);
       
     } else {
       try {
         mgsuite.imp.aioStatusMessage(action.name, 2000);
-        action.callback(shiftKey);
+        var result = action.callback(shiftKey);
+        
+        if (result && result.mouseGestureFuncError) {
+          // action was not run
+          mgsuite.imp.aioStatusMessage(result.mouseGestureFuncError + ": " + action.name, 3000);
+        }
       }
       catch(err) {}
     }
@@ -290,10 +297,12 @@ mgsuite.imp = {
         winTypes = gestEntry.winTypes.split(",");
         
         // found custom gesture for this stroke
-        retObj.type = "custom";
-        retObj.name = gestEntry.name;
-        retObj.enabled = (plainEntryShape == gestEntry.shape) && (winTypes.indexOf(winType) >= 0);
-        custGestEntry = gestEntry;
+        if (winTypes.indexOf(winType) >= 0) {
+          retObj.type = "custom";
+          retObj.name = gestEntry.name;
+          retObj.enabled = (plainEntryShape == gestEntry.shape);
+          custGestEntry = gestEntry;
+        }
         
         if (retObj.enabled) {
           break;
@@ -337,6 +346,7 @@ mgsuite.imp = {
     
     if (retObj.type == "custom") {
       // create callback for custom action execution
+      // The callback may return error msg in object key 'mouseGestureFuncError'
       
       if (custGestEntry.menuId) {
          // execute menu item action
@@ -357,14 +367,19 @@ mgsuite.imp = {
         
         var command; // command element
         
-        if (item) {
-          if (item.command) {
-            command = document.getElementById(item.command);
-          }
+        if (item && item.command) {
+          command = document.getElementById(item.command);
         }
 
         retObj.callback = function() {
+          if (!item) {
+            return {
+              mouseGestureFuncError: "Menu item not found"
+            };
+          }
+          
           var itemType = item.getAttribute("type");
+          var executed = false;
           
           if (command) {
             // invoke command on corresponding <command> element
@@ -373,6 +388,7 @@ mgsuite.imp = {
             if (controller) {
               if (controller.isCommandEnabled(item.command)) {
                 controller.doCommand(item.command);
+                executed = true;
               }
             } else {
               // controller not found - run manually
@@ -380,6 +396,7 @@ mgsuite.imp = {
               if (command.getAttribute("disabled") != "true" && command.getAttribute("hidden") != "true"
                   && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
                 command.doCommand();
+                executed = true;
               }
             }
           
@@ -387,6 +404,7 @@ mgsuite.imp = {
             // no command attribute found - try to act on the oncommand
             if (item.getAttribute("oncommand") && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
               item.doCommand();
+              executed = true;
               
             } else if (item.nodeName == "menuitem") {
               // last resort - send click
@@ -394,9 +412,18 @@ mgsuite.imp = {
               // after calling click()
               setTimeout(function() {
                 item.click();
+                executed = true;
               }, 0);
             }
           }
+          
+          if (!executed) {
+            return {
+              mouseGestureFuncError: "No action found to execute"
+            };
+          }
+          
+          return true;
         };
       }
     }
