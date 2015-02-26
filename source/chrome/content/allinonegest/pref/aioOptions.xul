@@ -229,8 +229,8 @@
         <label value="&customize.swaptxt;" />
        </vbox>
        <hbox id="customGesturesControl" flex="1" pack="center">
-        <button label="Add Custom Gesture" id="addCustom" oncommand="addCustomGesture();" />
-        <button label="Remove Custom Gestures" id="removeCustom" oncommand="removeCustomFunctions();" />
+        <button label="Add Custom Function" id="addCustom" oncommand="addCustomFunction();" />
+        <button label="Remove Custom Function" id="removeCustom" oncommand="removeCustomFunctions();" />
        </hbox>
  <!--  <vbox id="customEdit" flex="1">
          <hbox align="center" flex="1">

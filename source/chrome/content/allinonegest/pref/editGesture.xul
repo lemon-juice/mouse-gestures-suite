@@ -30,14 +30,14 @@
 <hbox flex="1">
   <groupbox width="350">
     <bbok>
-      <label value="Gesture type:" />
-      <description id="gestureType" style="font-weight: bold" />
+      <label value="Function type:" />
+      <description id="functionType" style="font-weight: bold" />
     </bbok>
     
     <bbok>
-       <label value="Gesture name:" />
-       <textbox id="gestureName" size="50" />
-       <description id="gestureNameDesc" hidden="true" style="font-weight: bold" />
+       <label value="Function name:" />
+       <textbox id="functionName" size="50" />
+       <description id="functionNameDesc" hidden="true" style="font-weight: bold" />
     </bbok>
     
     <bbox>
@@ -77,7 +77,7 @@
     </vbox>
     
     <vbox id="menuBox" hidden="true">
-      <label value="Select menu item to run:" style="margin-top: 5px" />
+      <description style="margin: 5px 0">Choose action to execute from the menu list of a window:</description>
       
       <tabbox id="menuTabbox">
         <tabs onselect="gprop.selectTab();">
@@ -99,8 +99,11 @@
         </tabpanels>
       </tabbox>
  
+      <vbox>
+        <description style="height: 36px">Some menu items may not appear in the list immediately. If this happens try refreshing the list.</description>
+      </vbox>
       <hbox>
-        <button label="Set gesture name" oncommand="gprop.copyMenuNameToGestureName();" />
+        <button label="Set function name" oncommand="gprop.copyMenuNameToFunctionName();" />
         <button label="Refresh menu list" oncommand="gprop.refreshMenuList();" />
       </hbox>
     </vbox>

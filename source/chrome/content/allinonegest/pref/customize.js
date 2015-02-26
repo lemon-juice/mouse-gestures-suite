@@ -198,7 +198,7 @@ var helpTable = {};
 var uniqueRowId;
 var hidePopupTimer;
 
-var customGestSeparatorLabel = " " + "Custom Gestures" + ":";
+var customGestSeparatorLabel = " " + "Custom Functions" + ":";
 
 
 // When you want to remove an action change its name to "g.nullAction" in the table
@@ -383,7 +383,7 @@ function returnCustomizedString(aCase) {
   var j = 0;
   for (i = 0; i < rowCount; ++i) {
     if (gestView.getRowType(i) == 'native') {
-      // get info only for built-in gestures
+      // get info only for built-in functions
       if (!abbrTable[i] && (funcNbTable[i] == funcNbTable[i + 1] || funcWritten[funcNbTable[i]])) continue;
       funcWritten[funcNbTable[i]] = true;
       if (aCase == 1) {
@@ -930,7 +930,7 @@ function editCurrentRow(newRow) {
 //  inputBox.focus();
 //}
 
-function addCustomGesture() {
+function addCustomFunction() {
   editGesture("custom", true);
 }
 
@@ -976,7 +976,7 @@ function reverseLocalizedGest(aChar) {
 //  inputBox.select(); inputBox.focus();
 //}
 
-function insertNewCustomGesture(data) {
+function insertNewCustomFunction(data) {
   var lastNativeRow, lastCustomRow;
   var type;
   

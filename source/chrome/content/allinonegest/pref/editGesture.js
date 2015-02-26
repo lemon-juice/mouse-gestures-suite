@@ -4,7 +4,7 @@ var gprop = {
     this.row = window.opener.getSelections()[0];
     
     if (this.isNew) {
-      // new custom gesture
+      // new custom function
       this.rowType = "custom";
       this.customData = {
         "winTypes": ["browser"],
@@ -12,7 +12,7 @@ var gprop = {
       };
       
     } else {
-      // edit existing gesture
+      // edit existing function
       this.rowType = window.opener.gestView.getRowType(this.row);
       
       this.customData = JSON.parse(JSON.stringify(
@@ -20,21 +20,21 @@ var gprop = {
       ));
     }
     
-    var nameInput = document.getElementById("gestureName");
+    var nameInput = document.getElementById("functionName");
     
     if (this.rowType == 'custom') {
-      // custom gesture
-      document.getElementById("gestureType").value = "custom";
+      // custom function
+      document.getElementById("functionType").value = "custom";
       
       if (!this.isNew) {
         nameInput.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
       }
       
     } else if (this.rowType == 'native') {
-      // native gesture
-      document.getElementById("gestureType").value = "built-in";
+      // native function
+      document.getElementById("functionType").value = "built-in";
       nameInput.hidden = true;
-      let desc = document.getElementById("gestureNameDesc");
+      let desc = document.getElementById("functionNameDesc");
       desc.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
       desc.hidden = false;
     }
@@ -108,10 +108,10 @@ var gprop = {
     }
     
     if (this.rowType == 'custom') {
-      data.name = document.getElementById("gestureName").value;
+      data.name = document.getElementById("functionName").value;
       
       if (!data.name) {
-        alert("Enter name of this gesture");
+        alert("Enter name of this function");
         return false;
       }
       
@@ -123,7 +123,7 @@ var gprop = {
           var selectedMenu = menuListBox.selectedItem;
           
           if (selectedMenu && !selectedMenu.value) {
-            alert("Menu item '" + selectedMenu.label.trim() + "' cannot be selected as gesture action");
+            alert("Menu item '" + selectedMenu.label.trim() + "' cannot be selected as function");
             return false;
           }
           
@@ -151,7 +151,8 @@ var gprop = {
     }
     
     if (this.isNew) {
-      window.opener.insertNewCustomGesture(data);
+      window.opener.insertNewCustomFunction(data);
+      return true;
       
     } else {
       var ok = window.opener.changeGestureData(this.row, data);
@@ -274,7 +275,7 @@ var gprop = {
       if (menu[i].nodeName == "menuitem" && menu[i].depth > 0 && !listitemValue) {
         listitem.style.color = "#888";
       }
-      listitem.addEventListener("dblclick", gprop.copyMenuNameToGestureName);
+      listitem.addEventListener("dblclick", gprop.copyMenuNameToFunctionName);
     }
   },
   
@@ -394,12 +395,12 @@ var gprop = {
     return retItems;
   },
   
-  copyMenuNameToGestureName: function() {
+  copyMenuNameToFunctionName: function() {
     var menuListBox = document.getElementById("menuItemsList");
     var selectedMenu = menuListBox.selectedItem;
      
     if (selectedMenu) {
-      var nameElem = document.getElementById("gestureName");
+      var nameElem = document.getElementById("functionName");
       nameElem.value = selectedMenu.label.trim();
       nameElem.className = "blinkme";
       setTimeout(function() {
