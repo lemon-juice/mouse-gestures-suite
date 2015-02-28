@@ -29,16 +29,16 @@
 
 <hbox flex="1">
   <groupbox width="350">
-    <bbok>
+    <bbox>
       <label value="Function type:" />
       <description id="functionType" style="font-weight: bold" />
-    </bbok>
+    </bbox>
     
-    <bbok>
+    <bbox>
        <label value="Function name:" />
-       <textbox id="functionName" size="50" />
+       <textbox id="functionName" size="45" />
        <description id="functionNameDesc" hidden="true" style="font-weight: bold" />
-    </bbok>
+    </bbox>
     
     <bbox>
        <label value="Gesture:" />

@@ -29,6 +29,7 @@ var gprop = {
       if (!this.isNew) {
         nameInput.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
       }
+      document.getElementById("functionName").focus();
       
     } else if (this.rowType == 'native') {
       // native function
@@ -37,6 +38,7 @@ var gprop = {
       let desc = document.getElementById("functionNameDesc");
       desc.value = window.opener.gestView.getCellText(this.row, window.opener.functionCol);
       desc.hidden = false;
+      document.getElementById("gestureShape").focus();
     }
   
     var shapeDef = this.isNew ? "" : window.opener.abbrTable[this.row];
@@ -48,7 +50,6 @@ var gprop = {
     }
     
     document.getElementById("gestureShape").value = shape;
-    document.getElementById("gestureShape").focus();
     
     if (this.rowType == 'custom') {
       // show current action
