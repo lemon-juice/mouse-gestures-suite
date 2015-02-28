@@ -87,6 +87,18 @@ var gprop = {
         
       }, 0);
       
+      // preselect scriptScope radio
+      var scriptScope = document.getElementById("scriptScope");
+      if (this.customData.scope && /^\w+$/.test(this.customData.scope)) {
+        scriptScope.selectedItem = scriptScope.querySelector("radio[id=" + this.customData.scope + "]");
+      }
+      
+      if (!scriptScope.selectedItem) {
+        scriptScope.selectedItem = scriptScope.querySelector("radio[id=chrome]");
+      }
+      
+      this.changeScriptScope();
+      
       gprop.firstActivateEvent = true;
       
       window.addEventListener("activate", function() {
@@ -110,6 +122,13 @@ var gprop = {
   refreshMenuList: function() {
     gprop.fillMenuItems();
     gprop.preselectMenuItem(gprop.customData.menuId);
+    this.resizeWindow();
+  },
+  
+  resizeWindow: function() {
+    var w = window.outerWidth;
+    window.sizeToContent();
+    window.resizeTo(w, window.outerHeight);
   },
   
   saveGesture: function() {
@@ -142,11 +161,13 @@ var gprop = {
           break;
         
         case 1:  // script
-          this.saveFile(gprop.customData.script, document.getElementById("scriptInput").value);
+          data.script = this.customData.script;  // filename
+          data.scope = document.getElementById("scriptScope").selectedItem.id;
+          this.saveFile(this.customData.script, document.getElementById("scriptInput").value);
           break;
       }
       
-      // pass scope checkboxes
+      // pass window type checkboxes
       data.winTypes = [];
       if (document.getElementById("scope-browser").checked) {
         data.winTypes.push("browser");
@@ -183,9 +204,11 @@ var gprop = {
   changeActionType: function() {
     var menuBox = document.getElementById("menuBox");
     var scriptBox = document.getElementById("scriptBox");
+    var scriptScopeBox = document.getElementById("scriptScopeBox");
     
     menuBox.hidden = true;
     scriptBox.hidden = true;
+    scriptScopeBox.hidden = true;
     
     var selected = document.getElementById("actionTypeSelect").selectedIndex;
     
@@ -197,8 +220,19 @@ var gprop = {
       
       case 1:
         scriptBox.hidden = false;
+        scriptScopeBox.hidden = false;
+        this.resizeWindow();
         break;
     }
+  },
+  
+  /**
+   * Script scope radio changed
+   */
+  changeScriptScope: function() {
+    var scope = document.getElementById("scriptScope").selectedItem.id;
+    
+    document.getElementById("winTypesBox").hidden = (scope == "content");
   },
   
   selectTab: function() {
@@ -433,6 +467,12 @@ var gprop = {
   // set scope checkboxes
   prefillScope: function() {
     var winTypes = this.customData.winTypes;
+    
+    if (!Array.isArray(winTypes)) {
+      dump(winTypes + ";\n");
+      dump(typeof winTypes + ";\n");
+      winTypes = ["browser"];
+    }
     
     document.getElementById("scope-browser").checked = (winTypes.indexOf("browser") >= 0);
     document.getElementById("scope-source").checked = (winTypes.indexOf("source") >= 0);

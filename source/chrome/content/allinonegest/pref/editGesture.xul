@@ -16,7 +16,7 @@
       buttons="accept, cancel, help"
       onload="gprop.init(); initPlayGesture();"
       ondialogaccept="return gprop.saveGesture();"
-      persist="width height screenX screenY">
+      persist="width screenX screenY">
 
 <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>
 <script type="application/x-javascript" src="editGesture.js"/>
@@ -67,7 +67,15 @@
         </menulist>
       </bbox>
       
-      <bbox>
+      <bbox id="scriptScopeBox">
+        <label value="Script scope:" />
+        <radiogroup id="scriptScope" orient="horizontal" oncommand="gprop.changeScriptScope()">
+          <radio id="chrome" label="ChromeWindow (privileged code)" />
+          <radio id="content" label="Web page content" />
+        </radiogroup>
+      </bbox>
+      
+      <bbox id="winTypesBox">
         <label value="Execute in:" />
         <checkbox id="scope-browser" label="Browser" />
         <checkbox id="scope-source" label="Page Source" />
@@ -89,7 +97,7 @@
         <tabpanels>
           <tabpanel>
             <!-- This listbox will be moved to selected tabpanel by script -->
-            <listbox flex="1" id="menuItemsList" onselect="gprop.menuItemSelect()" rows="18">
+            <listbox flex="1" id="menuItemsList" onselect="gprop.menuItemSelect()" rows="17">
               <listitem label="---"/>
             </listbox>
           </tabpanel>
@@ -109,7 +117,7 @@
     </vbox>
     
      <vbox id="scriptBox" hidden="true">
-      <textbox id="scriptInput" multiline="true" width="500" height="400"/>
+      <textbox id="scriptInput" multiline="true" width="500" rows="24"/>
     </vbox>
    
 

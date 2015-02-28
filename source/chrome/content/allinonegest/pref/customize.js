@@ -399,6 +399,11 @@ function returnCustomizedString(aCase) {
   return gestTable.join("|");
 }
 
+/**
+ * Get custom gestures in a format to be stored in a pref
+ * (but not yet JSON encoded)
+ * @returns {array} Array of gesture objects
+ */
 function getCustomGestures() {
   var gestures = [];
   
@@ -407,6 +412,12 @@ function getCustomGestures() {
       let data = gestView.getRowMetaData(i);
       data.name = gestView.getCellText(i, functionCol);
       data.shape = isEnabledTable[i] + abbrTable[i];
+      
+      if (data.script) {
+        if (data.scope == "content") {
+          delete data.winTypes;
+        }
+      }
       
       if (typeof data.winTypes == 'object') {
         // shorter notation for pref
@@ -419,6 +430,12 @@ function getCustomGestures() {
   return gestures;
 }
 
+/**
+ * @param {string} aGesturesString
+ * @param {string} aFuncsString
+ * @param {string} aRockerString rockerString pref
+ * @param {Array} customGestures Array of custom gestures object as defined in pref
+ */
 function populateTree(aGesturesString, aFuncsString, aRockerString, customGestures) {
   edfuncButton = document.getElementById("edfuncId");
   edfuncLabel = edfuncButton.label;
@@ -524,7 +541,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
       "menuId": customGestures[i].menuId,
       "script": customGestures[i].script,
       "scope": customGestures[i].scope,
-      "winTypes": customGestures[i].winTypes,
+      "winTypes": customGestures[i].winTypes ? customGestures[i].winTypes.split(',') : [],
     }
     var shape = customGestures[i].shape;
     
