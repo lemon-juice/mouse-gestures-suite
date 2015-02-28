@@ -522,6 +522,8 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   for (var i=0; i<customGestures.length; i++) {
     let rowData = {
       "menuId": customGestures[i].menuId,
+      "script": customGestures[i].script,
+      "scope": customGestures[i].scope,
       "winTypes": customGestures[i].winTypes,
     }
     var shape = customGestures[i].shape;
@@ -1003,6 +1005,8 @@ function insertNewCustomFunction(data) {
   var metaData = {
     "menuId": data.menuId,
     "winTypes": data.winTypes,
+    "script": data.script,
+    "scope": data.scope,
   }
   
   _insertRowAtPosition(currRow, "", data.name, data.shape, "custom", "", metaData);
@@ -1136,7 +1140,13 @@ function changeGestureData(currRow, data) {
     if (data.winTypes) {
       gestView.changeRowMetaData(currRow, "winTypes", data.winTypes);
     }
-    
+    if (data.script) {
+      gestView.changeRowMetaData(currRow, "script", data.script);
+    }
+    if (data.scope) {
+      gestView.changeRowMetaData(currRow, "scope", data.scope);
+    }
+   
     gestureTree.setAttribute("seltype", "multiple");
     buttEnable(["clearId", "swapId", "edfuncId", "undoId", "addCustom", "removeCustom"], [true, true, isDuplicable(currRow), true, true, (rowType == "custom")]);
     editing = false;

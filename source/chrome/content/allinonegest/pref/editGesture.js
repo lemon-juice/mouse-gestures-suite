@@ -53,13 +53,23 @@ var gprop = {
     if (this.rowType == 'custom') {
       // show current action
       document.getElementById("actionBox").hidden = false;
-      this.changeActionType();
       this.prefillScope();
       
       setTimeout(function() {
         if (window.outerWidth < 900) {
           window.resizeTo(900, window.outerHeight);
         }
+        
+        // preselect function type
+        if (gprop.customData.menuId) {
+          document.getElementById("actionTypeSelect").selectedIndex = 0;
+          
+        } else if (gprop.customData.script) {
+          document.getElementById("actionTypeSelect").selectedIndex = 1;
+          document.getElementById("scriptInput").value = gprop.readFile(gprop.customData.script);
+        }
+        
+        gprop.changeActionType();
         
         // preselect tab based on window types
         var tabbox = document.getElementById("menuTabbox");
@@ -103,6 +113,7 @@ var gprop = {
   },
   
   saveGesture: function() {
+    
     var data = {
       shape: document.getElementById("gestureShape").value,
     }
@@ -131,6 +142,7 @@ var gprop = {
           break;
         
         case 1:  // script
+          this.saveFile(gprop.customData.script, document.getElementById("scriptInput").value);
           break;
       }
       
@@ -439,5 +451,49 @@ var gprop = {
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                      .getService(Components.interfaces.nsIWindowMediator);
     return wm.getMostRecentWindow(map[winType]);
+  },
+  
+  /**
+   * Save data to a file in profile dir
+   * @param {string} filename
+   * @param {string} data
+   */
+  saveFile: function(filename, data) {
+    Components.utils.import("resource://gre/modules/FileUtils.jsm");
+    
+    var file = this.getScriptsDir()
+    file.append(filename);
+    
+    var stream = FileUtils.openFileOutputStream(file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
+    stream.write(data, data.length);
+    stream.close();
+  },
+  
+  readFile: function(filename) {
+    var file = this.getScriptsDir();
+    file.append(filename);
+    
+    var data = new String();
+    var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
+                        .createInstance(Components.interfaces.nsIFileInputStream);
+    var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"]
+                        .createInstance(Components.interfaces.nsIScriptableInputStream);
+    fiStream.init(file, 1, 0, false);
+    siStream.init(fiStream);
+    data += siStream.read(-1);
+    siStream.close();
+    fiStream.close();
+    //if (charset) {
+    //    data = this.toUnicode(charset, data);
+    //}
+    return data;
+  },
+  
+  /**
+   * @returns {nsIFile}
+   */
+  getScriptsDir: function() {
+    Components.utils.import("resource://gre/modules/FileUtils.jsm");
+    return FileUtils.getDir("ProfD", ["MouseGesturesSuite"], true);
   }
 }
