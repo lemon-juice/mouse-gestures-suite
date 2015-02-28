@@ -162,12 +162,22 @@ var gprop = {
           break;
         
         case 1:  // script
+          var js = document.getElementById("scriptInput").value;
+          
+          try {
+			new Function(js);
+		  }
+          catch(ex) {
+            alert(ex);
+            return false;
+          }
+          
           data.scope = document.getElementById("scriptScope").selectedItem.id;
           
           var filename = this.customData.script ? this.customData.script : this.getNextScriptFilename();
           data.script = filename;
           
-          this.saveFile(filename, document.getElementById("scriptInput").value);
+          this.saveFile(filename, js);
           break;
       }
       
