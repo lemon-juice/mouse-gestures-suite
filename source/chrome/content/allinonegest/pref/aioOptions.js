@@ -179,9 +179,11 @@ function savePrefs() {
   pref.setCharPref("allinonegest.rockerString", returnCustomizedString(2));
   
   // save custom gestures
+  var customGestures = getCustomGestures();
   var str = Components.classes[ "@mozilla.org/supports-string;1" ].createInstance(Components.interfaces.nsISupportsString);
-  str.data = JSON.stringify(getCustomGestures());
+  str.data = JSON.stringify(customGestures);
   pref.setComplexValue("allinonegest.customGestures", Components.interfaces.nsISupportsString, str);
+  deleteUnusedScriptFiles(customGestures);
 
   
   var str = Components.classes[ "@mozilla.org/supports-string;1" ].createInstance(Components.interfaces.nsISupportsString);
@@ -208,6 +210,35 @@ function savePrefs() {
   pref.setComplexValue("allinonegest.sitesList", Components.interfaces.nsISupportsString, str);
   
   return true;
+}
+
+function deleteUnusedScriptFiles(customGestures) {
+  var usedFiles = [];
+  
+  for (var i=0; i<customGestures.length; i++) {
+    if (customGestures[i].script) {
+      usedFiles.push(customGestures[i].script);
+    }
+  }
+  
+  // directory listing
+  Components.utils.import("resource://gre/modules/FileUtils.jsm");
+  var file = FileUtils.getDir("ProfD", ["MouseGesturesSuite"], true);
+  var entries = file.directoryEntries;
+  
+  var toDelete = [];
+  
+  while (entries.hasMoreElements()) {
+    var entry = entries.getNext();
+    entry.QueryInterface(Components.interfaces.nsIFile);
+    
+    if (entry.isFile()
+        && /\.js$/i.test(entry.leafName)
+        && usedFiles.indexOf(entry.leafName) < 0) {
+      // delete unused file
+      entry.remove(false);
+    }
+  }
 }
 
 function changeTrace(inc) {

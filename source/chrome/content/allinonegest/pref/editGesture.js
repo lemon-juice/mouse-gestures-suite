@@ -161,10 +161,10 @@ var gprop = {
           break;
         
         case 1:  // script
-          data.script = this.customData.script;  // filename
           data.scope = document.getElementById("scriptScope").selectedItem.id;
           
           var filename = this.customData.script ? this.customData.script : this.getNextScriptFilename();
+          data.script = filename;
           
           this.saveFile(filename, document.getElementById("scriptInput").value);
           break;
