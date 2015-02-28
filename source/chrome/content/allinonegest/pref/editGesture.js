@@ -522,11 +522,16 @@ var gprop = {
                         .createInstance(Components.interfaces.nsIFileInputStream);
     var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"]
                         .createInstance(Components.interfaces.nsIScriptableInputStream);
-    fiStream.init(file, 1, 0, false);
-    siStream.init(fiStream);
-    data += siStream.read(-1);
-    siStream.close();
-    fiStream.close();
+    try {
+      fiStream.init(file, 1, 0, false);
+      siStream.init(fiStream);
+      data += siStream.read(-1);
+      siStream.close();
+      fiStream.close();
+      
+    } catch (err) {
+      return "";
+    }
     
     converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
     converter.charset = "utf-8";
