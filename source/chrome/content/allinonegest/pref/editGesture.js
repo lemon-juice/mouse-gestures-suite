@@ -505,8 +505,12 @@ var gprop = {
     file.append(filename);
     
     var stream = FileUtils.openFileOutputStream(file, FileUtils.MODE_WRONLY | FileUtils.MODE_CREATE | FileUtils.MODE_TRUNCATE);
-    stream.write(data, data.length);
-    stream.close();
+    
+    var converter = Components.classes["@mozilla.org/intl/converter-output-stream;1"].
+                createInstance(Components.interfaces.nsIConverterOutputStream);
+    converter.init(stream, "UTF-8", 0, 0);
+    converter.writeString(data);
+    converter.close();
   },
   
   readFile: function(filename) {
@@ -523,9 +527,11 @@ var gprop = {
     data += siStream.read(-1);
     siStream.close();
     fiStream.close();
-    //if (charset) {
-    //    data = this.toUnicode(charset, data);
-    //}
+    
+    converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+    converter.charset = "utf-8";
+    data = converter.ConvertToUnicode(data);
+    
     return data;
   },
   
