@@ -163,7 +163,10 @@ var gprop = {
         case 1:  // script
           data.script = this.customData.script;  // filename
           data.scope = document.getElementById("scriptScope").selectedItem.id;
-          this.saveFile(this.customData.script, document.getElementById("scriptInput").value);
+          
+          var filename = this.customData.script ? this.customData.script : this.getNextScriptFilename();
+          
+          this.saveFile(filename, document.getElementById("scriptInput").value);
           break;
       }
       
@@ -546,5 +549,37 @@ var gprop = {
   getScriptsDir: function() {
     Components.utils.import("resource://gre/modules/FileUtils.jsm");
     return FileUtils.getDir("ProfD", ["MouseGesturesSuite"], true);
+  },
+  
+  /**
+   * Get filename for script having the next sequential number after the highest
+   * one in directory
+   * @returns {string}
+   */
+  getNextScriptFilename: function() {
+    // directory listing
+    var file = this.getScriptsDir();
+    var entries = file.directoryEntries;
+    
+    var highestNum = 0;
+    
+    while (entries.hasMoreElements()) {
+      var entry = entries.getNext();
+      entry.QueryInterface(Components.interfaces.nsIFile);
+      if (entry.isFile()) {
+        // extract file number from filename
+        var matches = entry.leafName.match(/^script(\d{1,7})\.js$/);
+        
+        if (matches) {
+          var num = parseInt(matches[1], 10);
+          
+          if (num > highestNum) {
+            highestNum = num;
+          }
+        }
+      }
+    }
+    
+    return "script" + (highestNum + 1) + ".js";
   }
 }
