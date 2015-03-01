@@ -1,3 +1,5 @@
+"use strict";
+
 var gprop = {
   init: function() {
     this.isNew = window.arguments[0];
@@ -547,11 +549,9 @@ var gprop = {
       return "";
     }
     
-    converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+    var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
     converter.charset = "utf-8";
-    data = converter.ConvertToUnicode(data);
-    
-    return data;
+    return converter.ConvertToUnicode(data);
   },
   
   /**

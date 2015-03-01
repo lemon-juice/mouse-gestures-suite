@@ -425,12 +425,77 @@ mgsuite.imp = {
           
           return true;
         };
+        
+      } else if (custGestEntry.script) {
+        // execute user script
+        var js = mgsuite.imp.readScriptFile(custGestEntry.script);
+        
+        switch (custGestEntry.scope) {
+          case "chrome":
+            retObj.callback = function() {
+              if (js === null) {
+                return {
+                  mouseGestureFuncError: "Script not found"
+                };
+              }
+              
+              try {
+                (new Function("event", "MG", js))
+                (
+                  mgsuite.overlay.aioSrcEvent,
+                  {
+                    links: mgsuite.util.collectedLinks,
+                    linksUrls: mgsuite.util.collectedLinksUrls,
+                    img: mgsuite.util.collectedImg,
+                    imgUrl: mgsuite.util.collectedImgUrl,
+                    frame: mgsuite.util.collectedFrame
+                  }
+                );
+              }
+              catch(ex) {
+                return {
+                  mouseGestureFuncError: ex
+                };
+              }
+              return null;
+            }
+            break;
+          
+          case "content":
+            
+            break;
+        }
       }
     }
     
     return retObj.type ? retObj : null;
   },
   
+  readScriptFile: function(filename) {
+    Components.utils.import("resource://gre/modules/FileUtils.jsm");
+    var file = FileUtils.getDir("ProfD", ["MouseGesturesSuite"], true);
+    file.append(filename);
+    
+    var data = new String();
+    var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
+                        .createInstance(Components.interfaces.nsIFileInputStream);
+    var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"]
+                        .createInstance(Components.interfaces.nsIScriptableInputStream);
+    try {
+      fiStream.init(file, 1, 0, false);
+      siStream.init(fiStream);
+      data += siStream.read(-1);
+      siStream.close();
+      fiStream.close();
+      
+    } catch (err) {
+      return null;
+    }
+    
+    var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+    converter.charset = "utf-8";
+    return converter.ConvertToUnicode(data);
+  },
   
   /*  Gesture actions */
   aioBackForward: function(back) {
