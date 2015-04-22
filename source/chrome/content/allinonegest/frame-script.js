@@ -21,6 +21,7 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:nukeFlashObjects", this);
     addMessageListener("MouseGesturesSuite:hideObject", this);
     addMessageListener("MouseGesturesSuite:undoHideObject", this);
+    addMessageListener("MouseGesturesSuite:runUserScript", this);
     addEventListener("mousedown", this, true);
     addEventListener("click", this, true);
   },
@@ -39,6 +40,7 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:nukeFlashObjects": this.nukeFlashObjects(aMsg); break;
       case "MouseGesturesSuite:hideObject": this.hideObject(aMsg); break;
       case "MouseGesturesSuite:undoHideObject": this.undoHideObject(aMsg); break;
+      case "MouseGesturesSuite:runUserScript": this.runUserScript(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -83,7 +85,7 @@ var mgsuiteFr = {
       sendAsyncMessage("MouseGesturesSuite:CollectFrame", {}, {frame: e.target.ownerDocument.defaultView});
       
       // save mousedown element e.g. for scrolling actions
-      e.target.ownerDocument.defaultView.top.mgsuiteMouseDownElement = e.target;
+      e.target.ownerDocument.defaultView.top.mgsuiteMouseDownEvent = e;
 
       var isKeyOK = !(e.altKey && this.prefBranch.getBoolPref("noAltGest"));
       
@@ -586,7 +588,7 @@ var mgsuiteFr = {
    */
   scrollElement: function(msg) {
     var value = msg.data.value;
-    var node = content.top.mgsuiteMouseDownElement;
+    var node = content.top.mgsuiteMouseDownEvent.target;
     
     if (!node) {
       return;
@@ -665,7 +667,7 @@ var mgsuiteFr = {
   },
   
   reloadFrame: function() {
-    content.top.mgsuiteMouseDownElement.ownerDocument.location.reload();
+    content.top.mgsuiteMouseDownEvent.target.ownerDocument.location.reload();
   },
   
   /**
@@ -734,7 +736,7 @@ var mgsuiteFr = {
   },
   
   hideObject: function() {
-    var node = content.top.mgsuiteMouseDownElement;
+    var node = content.top.mgsuiteMouseDownEvent.target;
     if (!node) return;
     
     var view = node.ownerDocument.defaultView;
@@ -754,7 +756,28 @@ var mgsuiteFr = {
     }
     catch(err) {}
   },
+  
+  runUserScript: function(msg) {
+    var doc = content.document;
+    
+    if (!doc.body) {
+      // probably a non-html document is loaded, like XML
+      return;
+    }
 
+    var node = content.top.mgsuiteMouseDownEvent.target;
+    node.setAttribute('data-mgsuite-mousedown-tmp-node', 'dummy');
+    
+    var str = "(function(param) { " + msg.data.js + " })("
+      + "document.querySelector('*[data-mgsuite-mousedown-tmp-node]')"
+      + ");";
+    
+    var script = doc.createElement("script");
+    script.textContent = str;
+    doc.head.appendChild(script);
+    doc.head.removeChild(script);
+    node.removeAttribute('data-mgsuite-mousedown-tmp-node');
+  }
 }
 
 mgsuiteFr.init();

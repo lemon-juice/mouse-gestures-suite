@@ -294,7 +294,12 @@ mgsuite.imp = {
           || plainEntryShape == "+" + gesture.substr(-2)
           || plainEntryShape == "+" + gesture.substr(-3)
         ) {
-        winTypes = gestEntry.winTypes.split(",");
+        
+        if (gestEntry.scope && gestEntry.scope == "content") {
+          winTypes = ["browser"];
+        } else {
+          winTypes = gestEntry.winTypes.split(",");
+        }
         
         // found custom gesture for this stroke
         if (winTypes.indexOf(winType) >= 0) {
@@ -462,7 +467,16 @@ mgsuite.imp = {
             break;
           
           case "content":
-            
+            retObj.callback = function() {
+              if (js === null) {
+                return {
+                  mouseGestureFuncError: "Script not found"
+                };
+              }
+              
+              mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:runUserScript", {js: js});
+              return null;
+            }
             break;
         }
       }
