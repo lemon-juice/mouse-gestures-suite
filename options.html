@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mouse Gestures Suite :: Mouse gestures for SeaMonkey and Firefox</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+    <div id="header">
+      <nav>
+        <ul class="sections">
+          <li><a href="./">Overview</a></li>
+          <li><a href="options.html">Main Options</a></li>
+          <li><a href="custom-functions.html">Custom Functions</a></li>
+          <li><a href="scripts.html">User Scripts</a></li>
+        </ul>
+        <ul class="downloads">
+          <li class="fork"><a href="https://github.com/lemon-juice/mouse-gestures-suite">View
+              On GitHub</a></li>
+          <li class="downloads"><a href="https://addons.mozilla.org/addon/mouse-gestures-suite/">DOWNLOAD</a></li>
+        </ul>
+      </nav>
+    </div>
+    <!-- end header -->
+    <div class="wrapper">
+      <section>
+        <div id="title">
+          <h1>Mouse Gestures Suite</h1>
+          <hr> </div>
+        <h2>Main Options</h2>
+        <p>Table of contents:</p>
+        <ol>
+          <li><a href="#tab1">General Preferences</a></li>
+          <li><a href="#tab2">Gestures Customization</a></li>
+          <li><a href="#tab3">Advanced Prefs #1</a></li>
+          <li><a href="#tab4">Advanced Prefs #2</a></li>
+          <li><a href="#exp-imp">Exporting, importing Mouse Gesture preferences
+              &amp; restoring defaults</a></li>
+        </ol>
+        <h2 id="tab1">General Preferences</h2>
+        <strong>Enable</strong> - enable/disable main features:<br>
+        <ul>
+          <li> <strong>Mouse gestures</strong> - performed by moving the mouse
+            with a button depressed allow you to quickly navigate through pages,
+            open/close tabs and windows and perform many other commands without
+            having to use toolbar buttons, menus or keyboard shortcuts. By
+            default they are used by keeping the right mouse button down and
+            drawing gesture shape in one of four directions: up, right, down or
+            left. After releasing the mouse button the gesture function is
+            executed. If you started drawing a gesture and want to cancel it
+            just stop moving the mouse and wait at least one second before
+            releasing the mouse button – the gesture trail will appear bleaker
+            and the status bar information will end with <em>[X]</em>, which
+            are visual signs that timeout has been reached and the gesture will
+            be aborted if you do not continue drawing. Mouse gestures are
+            available in browser, messenger, page source and mail compose
+            windows. In some windows the range of available actions is limited -
+            see <a href="#tab2">Gestures Customization</a> table for details.</li>
+          <li> <strong>Rocker gestures</strong> - invoked by pressing one mouse
+            button and then the other while keeping the first one pressed. By
+            default used to go back and forward in browsing history but can be
+            assigned to any gesture function. To customize these gestures, go to
+            the gesture customization tab, select the gesture (at the end of the
+            table) and click the <em>Edit function</em> button. Then clicking
+            on any row will assign the function of the clicked row to the
+            gesture. Rocker gestures are available in browser, messenger, page
+            source and mail compose windows. In some windows the range of
+            available actions is limited - see <a href="#tab2">Gestures
+              Customization</a> table for details.<br>
+            <br>
+            Functions which have a repetitive nature can be repeated without
+            releasing the trigger button. The <em>Allow repetition for actions
+              that load pages</em> advanced preference controls the
+            repeatability of functions that load pages.</li>
+          <li> <strong>Scroll wheel in tab bar</strong> - you can switch
+            between tabs by scrolling mouse wheel over the tab bar. This feature
+            is available in browser windows only.</li>
+          <li> <strong>Scroll wheel navigation</strong> - perform your favorite
+            actions by pressing a mouse button and scrolling mouse wheel at the
+            same time. This feature is complete in browser windows only. It also
+            works in messenger and page source windows only if <em>Perform
+              Gesture Actions</em> option is selected.</li>
+          <li> <strong>Middle button scrolling</strong> - auto scroll pages or
+            textareas by clicking the middle mouse button once (pressing and
+            releasing) and then control the scrolling speed by moving the mouse
+            or using arrow keys – this is similar to built-in autoscroll
+            available in SeaMonkey or Firefox but with some additions. <i>Grab
+              and Drag</i> options allow you to scroll by moving the mouse while
+            the middle button is depressed. This feature is available in
+            browser, mail and view message windows.</li>
+          <li> <strong>Link tooltip</strong> - see details about links as you
+            hover over them with your mouse. Useful especially for browsing
+            without the status bar like in full screen mode. This feature is
+            available in browser windows only.</li>
+        </ul>
+        <hr><strong>Mouse Gestures: Prefs</strong> - customize trail color for
+        mouse gestures.<br>
+        <hr><strong>Link Tooltip: Prefs</strong> - options for customizing link
+        tooltips, available only when link tooltips are enabled.<br>
+        <hr><strong>Scroll Wheel Navigation</strong> - options available when
+        scroll wheel navigation is enabled. To use scroll wheel navigation
+        scroll mouse wheel while keeping a mouse button pressed (the mouse
+        button is defined in Advanced Prefs #1). Available options:<br>
+        <ul>
+          <li><strong>Perform Gesture Actions</strong> - perform actions defined
+            in the Gestures Customization tab at the bottom of the list: Forward
+            &amp; Backward Scrollwheel Gesture. Any action from the list can be
+            assigned by using the <em>Edit function</em> button.</li>
+          <li><strong>Navigate through History</strong> - go forward/back. A
+            list of pages in history will pop up and you will be able to choose
+            one. The current tab's name will appear in <span style="font-weight: bold;">bold</span>,
+            while the last visited tab will appear as <span style="text-decoration: underline;">underlined</span>.</li>
+          <li><strong>Navigate through Tabs</strong> - switch to next/previous
+            tab. A list of all open tabs will pop up and you will be able to
+            choose one to switch to. </li>
+          <li><strong>History / Tabs based on initial rotation</strong> - either
+            <em>Navigate through History</em> or <em>Navigate through Tabs</em>
+            depending on the initial scroll wheel rotation (clockwise or
+            anti-clockwise).</li>
+        </ul>
+        <hr><strong>Middle Button Scrolling</strong> - options available when
+        middle button scrolling is enabled:<br>
+        <ul>
+          <li><strong>Mouse Gestures autoscroll</strong> - to scroll the page
+            press and release the middle button and then move the mouse up or
+            down. Stop autoscroll by clicking middle or left button. Once
+            activated, autoscroll can also be controlled with arrow keys and
+            stopped by pressing any other key. Autoscroll refresh rate can be
+            configured in <em>Advanced Prefs #2</em>.</li>
+          <li><strong>Native autoscroll</strong> - same as above except it uses
+            the built-in mechanism in Seamonkey/Firefox instead of the one in
+            this extension. This may result in faster and smoother scrolling,
+            however keyboard navigation is not available. Choose the one that
+            works better for you.</li>
+          <li><strong>MG autoscroll + Grab and Drag</strong> - both Mouse
+            Gestures autoscroll and Grab and Drag are enabled. To use Grab and
+            Drag keep the middle button depressed and move the mouse up or down.</li>
+          <li><strong>Grab and Drag scrolling</strong> - only Grab and Drag is
+            enabled.</li>
+        </ul>
+        <h2 id="tab2">Gestures Customization</h2>
+        <span style="font-weight: bold;">Some gestures can be initiated on
+          browser tabs</span> and then they will apply to the target tab even if
+        it is not active. Here is the list of actions that can affect targeted
+        tabs via gestures:
+        <ul>
+          <li><em>Close current Tab</em></li>
+          <li><em>Close Document</em></li>
+          <li><em>Close all other Tabs</em></li>
+          <li><em>Close Tabs to the Right</em></li>
+          <li><em>History Back</em></li>
+          <li><em>History Forward</em></li>
+          <li><em>Reload Document</em></li>
+          <li><em>Reload Document from Network</em> </li>
+          <li><em>Stop Loading</em></li>
+          <li><em>Reload Frame</em> (applies to top frame when invoked on tab)</li>
+          <li><em>Open new Tab in Foreground</em>, <em>Open new Tab in
+              Background</em>, <em>Open blank Tab</em> – location sensitive:
+            new blank tab will be opened to the left or right of selected tab
+            depending on which half of tab the gesture was started on</li>
+          <li><em>Duplicate Tab</em></li>
+          <li><em>Duplicate Window</em></li>
+          <li><em>Detach Tab to New Window</em></li>
+          <li><em>Detach Next Tab and Double Stack Windows</em> </li>
+          <li><em>View Page Source</em></li>
+          <li><em>View Frame Source</em> (applies to top frame when invoked on
+            tab)</li>
+          <li><em>View Page Info</em></li>
+          <li><em>View Frame Info</em> (applies to top frame when invoked on
+            tab)</li>
+          <li><em>Save Page As...</em></li>
+        </ul>
+        <p><span style="font-weight: bold;">The Shift key</span> can be used
+          with some gestures that open a new tab or window to reverse the
+          opening in background versus foreground – just like you can use Shift
+          for the same purpose when middle-clicking on links. For example,
+          action <em>Open new Tab in Foreground</em> normally opens a new
+          foreground tab but if performed with Shift pressed it will open a tab
+          in background. Conversely, if an action opens a new tab/window in
+          foreground then the Shift key will change it to open in background.
+          Actions affected by the Shift key are marked in their descriptions
+          below. </p>
+        <p>Column '<strong>Available in</strong>' - shows in what window types
+          the function is available:</p>
+        <ul>
+          <li><strong>br</strong> – browser window</li>
+          <li><strong>src</strong> – view source window</li>
+          <li><strong>msg</strong> – (SeaMonkey only) messenger window: main
+            mail and message view windows (in the main mail window gestures work
+            only in the message page)</li>
+          <li><strong>mc</strong> – (SeaMonkey only) mail compose window</li>
+        </ul>
+        <table class="gestlist">
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Available in</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>History Back</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Go to previous page in history. Equivalent to the browser back
+                button.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>History Forward</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Go to next page in history. Equivalent to the browser forward
+                button. </td>
+            </tr>
+            <tr>
+              <td>Reload Document</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Reload page (same as Control+R or F5).<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Reload Document from Network</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Force reload from network (same as Control+Shift+R).</td>
+            </tr>
+            <tr>
+              <td>Stop Loading</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Stop loading page.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Reload Frame</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Reload frame under gesture or reload page if no frame was
+                detected.</td>
+            </tr>
+            <tr>
+              <td>Reload All Tabs</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Open new Tab in Foreground</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Open new tab or open link in new tab if a link was found under
+                gesture. Behavior of this action is affected by advanced
+                preference <em>'Open new Tab/Window' opens link under performed
+                  gesture</em>.<br>
+                <br>
+                If you initiate the gesture on a tab then a new tab will be
+                opened next to the selected tab (by default new blank tabs open
+                at the right end). If initiated on the right half of the tab the
+                new tab will open to the right. If initiated on the left half –
+                it will open to the left of the tab.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window.</em></td>
+            </tr>
+            <tr>
+              <td>Open new Tab in Background</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Open new background tab or open link in new background tab if
+                a link was found under gesture. Behavior of this action is
+                affected by advanced preference <em>'Open new Tab/Window' opens
+                  link under performed gesture</em>.<br>
+                <br>
+                If you initiate the gesture on a tab then a new tab will be
+                opened next to the selected tab.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window.</em></td>
+            </tr>
+            <tr>
+              <td>Open blank Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Open blank tab.<br>
+                <br>
+                If you initiate the gesture on a tab then a new tab will be
+                opened next to the selected tab (by default new blank tabs open
+                at the right end). If initiated on the right half of the tab the
+                new tab will open to the right. If initiated on the left half –
+                it will open to the left of the tab.</td>
+            </tr>
+            <tr>
+              <td>Duplicate Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Open current page in new tab. In Mail/News: open selected
+                message in new tab.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window.</em><br>
+              </td>
+            </tr>
+            <tr>
+              <td>Duplicate Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Open current page in new window. In Mail/News: open selected
+                message in new window.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window.</em><br>
+              </td>
+            </tr>
+            <tr>
+              <td>Detach Tab to New Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Move tab from current window to a new window. Tab history,
+                scroll position and zoom level are preserved. Works only if two
+                or more tabs are open in current window.</td>
+            </tr>
+            <tr>
+              <td>Detach Next Tab and Double Stack Windows</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Detach next tab to new window and place both windows side by
+                side each covering half of the screen. Useful if you have two
+                pages open in two tabs and want to view them side by side. The
+                window with the current tab will be positioned on the left half
+                of the screen whereas the new window with the page from the next
+                tab (to the right) will be positioned on the right half of the
+                screen. If the rightmost tab is active then this action will
+                work for the active tab and for the one to the left.</td>
+            </tr>
+            <tr>
+              <td>Open new Window in Foreground</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Open new window or open link in new window if a link was found
+                under gesture. Behavior of this action is affected by advanced
+                preference <em>'Open new Tab/Window' opens link under performed
+                  gesture</em>.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window.</em></td>
+            </tr>
+            <tr>
+              <td>Open new Window in Background</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Open new background window or open link in new background
+                window if a link was found under gesture. Behavior of this
+                action is affected by advanced preference <em>'Open new
+                  Tab/Window' opens link under performed gesture</em>.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window.</em></td>
+            </tr>
+            <tr>
+              <td>Open Private Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Open new private window or open link in new private window if
+                a link was found under gesture. Behavior of this action is
+                affected by advanced preference <em>'Open new Tab/Window' opens
+                  link under performed gesture</em>.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window.</em></td>
+            </tr>
+            <tr>
+              <td>Double Stack in new Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Open link in new window: the opener window and the new window
+                are positioned side by side, each covering half of the screen.
+                If no link has been found under performed gesture then the new
+                window will be blank.</td>
+            </tr>
+            <tr>
+              <td>Previous Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Go to tab to the left. This action will wrap around if run on
+                the leftmost tab.</td>
+            </tr>
+            <tr>
+              <td>Next Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Go to tab to the right. This action will wrap around if run on
+                the rightmost tab.</td>
+            </tr>
+            <tr>
+              <td>Last Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Go to rightmost tab.</td>
+            </tr>
+            <tr>
+              <td>Return to Previous Selected Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Go to last focused tab.</td>
+            </tr>
+            <tr>
+              <td>Close current Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Close tab. If run on page with one tab it will leave the
+                browser window open with one blank tab.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Close all other Tabs</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Close Tabs to the Right</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Undo Close Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Close Document</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Close current tab. Close window if only one tab is open.</td>
+            </tr>
+            <tr>
+              <td>Open Selection in new Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>If a web address is selected then open it in new tab.
+                Otherwise search for selected text in new tab. If no text is
+                selected then the page of default search engine is opened.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window (SeaMonkey
+                  only).</em></td>
+            </tr>
+            <tr>
+              <td>Search for Selection in new Tab/Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Perform web search using default search engine in new tab or
+                window (depending on browser settings). If no text is selected
+                then the page of default search engine is opened.<br>
+                <br>
+                <em class="shift-info">Shift key can be used to reverse
+                  foreground&lt;–&gt;background opening of tab/window</em><em class="shift-info"><em
+
+                    class="shift-info"> (SeaMonkey only)</em>.</em></td>
+            </tr>
+            <tr>
+              <td>Open Links in Tabs</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>All links that you have drawn the gesture over will be opened
+                in new tabs.<br>
+                <br>
+                The default gesture for this action is +RU (=any gesture
+                sequence-Right-Up), which allows you to draw a long path in any
+                shape over the links you want to open and then finish the
+                gesture with Right-Up.</td>
+            </tr>
+            <tr>
+              <td>Open Links in Windows</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>All links that you have drawn the gesture over will be opened
+                in new windows. If you enable <em>'Open Links in Windows':
+                  Single new window with tabs</em> option in advanced
+                preferences then this action will open one new window and load
+                all links in separate tabs.<br>
+                <br>
+                The default gesture for this action is +RUL (=any gesture
+                sequence-Right-Up-Left), which allows you to draw a long path in
+                any shape over the links you want to open and then finish the
+                gesture with Right-Up-Left.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Open Favorite Bookmark #1</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Load favorite bookmark with keyword <em>fav1</em>.</td>
+            </tr>
+            <tr>
+              <td>Open Favorite Bookmark #2</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Load favorite bookmark with keyword <em>fav2</em>.</td>
+            </tr>
+            <tr>
+              <td>Double Stack 2 Windows</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>This action allows you to view any two open windows side by
+                side. It takes the current window and previously focused window
+                and places them side by side each covering half of the screen.
+                Works for all kinds of windows (Browser, Source View, Mail &amp;
+                Mail Compose) and their combinations.</td>
+            </tr>
+            <tr>
+              <td>Restore or Maximise Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Minimize Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Close Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Full Screen</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Opens browser in full screen mode. For non-browser windows it
+                does the same thing as <em>Restore or Maximise Window</em>. </td>
+            </tr>
+            <tr>
+              <td>Load Home Page</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Scroll to top of page</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Scroll to bottom of page</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Scroll Down</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Scroll down one page.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Scroll Up</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Scroll up one page.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Go Up to parent directory / domain</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Treat the URL of current page as a directory and change it so
+                that it points to the directory one level up. For example, page
+                at<br>
+                <ul>
+                  <li><span style="text-decoration: underline;">http://animals.example.com/category/dogs</span></li>
+                </ul>
+                <span style="text-decoration: underline;"></span> will be
+                subsequently converted to the following URLs:<br>
+                <ul>
+                  <li>http://<span style="text-decoration: underline;">animals</span>.example.com/category/</li>
+                  <li>http://<span style="text-decoration: underline;">animals</span>.example.com/</li>
+                  <li>http://example.com/</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>Go to First Page in History</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Go to first page in history of current tab/window. </td>
+            </tr>
+            <tr>
+              <td>Increase Text Size</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Increase text size on the page. Size of graphics and other
+                elements will also be increased if your browser is set up to
+                zoom full pages.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Decrease Text Size</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Decrease text size on the page. Size of graphics and other
+                elements will also be decreased if your browser is set up to
+                zoom full pages. </td>
+            </tr>
+            <tr>
+              <td>Reset Text Size</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Double Image Size</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Increase image size (will not work on background images).<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Halve Image Size</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Decrease image size (will not work on background images). </td>
+            </tr>
+            <tr>
+              <td>Reset Image Size</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Save Image As...</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Save image as file (asks for location on disk).<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Save Image</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Save image as file directly to download folder without
+                prompting for location. For this to work as expected make sure
+                you set up a default location for downloads in browser
+                preferences.</td>
+            </tr>
+            <tr>
+              <td>Zoom In on Image/Text</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>If performed over image zoom in the image. Otherwise zoom in
+                text on page (along with graphics and other elements depending
+                on your browser settings).<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Zoom Out on Image/Text</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>If performed over image zoom out the image. Otherwise zoom out
+                text on page (along with graphics and other elements depending
+                on your browser settings). </td>
+            </tr>
+            <tr>
+              <td>Reset Image/Text Size</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>If performed over image reset the image size. Otherwise reset
+                text size on page (along with graphics and other elements
+                depending on your browser settings). </td>
+            </tr>
+            <tr>
+              <td>Open Image in new Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Open image in new tab. This works for background images, too.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Open Image in new Window</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Open image in new window. This works for background images,
+                too. </td>
+            </tr>
+            <tr>
+              <td>Hide Object</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Hide any object (html element) on page.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Undo Hide Object</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Undo hide last object. This will also work for multiple hidden
+                objects one by one.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Hide Flash Animations</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Hide all flash objects on page. Later you can click each one
+                to show it again.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>View Page Source</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>Open Page Source.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>View Frame Source</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>View frame source. If there is no frame under gesture then
+                view page source.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>View Cookies</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Show cookies on current site.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Delete Cookies from this site</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Delete cookies on current site.</td>
+            </tr>
+            <tr>
+              <td>View Page Info</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Open Page Info window.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>View Frame Info</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>View frame info. If there is no frame under gesture then view
+                page info. </td>
+            </tr>
+            <tr>
+              <td>View Javascript Console</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Show error console. In Firefox – show web console.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Add Bookmark</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Bookmark current page.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Validate this Document</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Validate page online at validator.w3.org.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Translate this document</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Translate page at translate.google.com.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Meta Info</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>View meta tags in page.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Open Bookmarks Manager</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Open Download Manager</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Show/Hide Sidebar/Folder Pane</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="messenger">msg </span></td>
+              <td>SeaMonkey: show or hide sidebar. In Mail/News: show or hide
+                Folder Pane.<br>
+                Firefox: show or hide bookmarks sidebar.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Show/Hide Status Bar</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td>Show or hide status bar. In Firefox this action will work for
+                status bar or add-on bar only if you have <em>Status-4-Evar</em>
+                or <em>Classic Theme Restorer</em> extension installed.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Copy URL to Clipboard</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Open URL from Clipboard in new Tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Increment digit in URL</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Increment number in URL (for example, page number). If there
+                are multiple numbers you will be asked to choose which number to
+                increment.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Decrement digit in URL</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Decrement number in URL. If there are multiple numbers you
+                will be asked to choose which number to decrement.</td>
+            </tr>
+            <tr>
+              <td>Clear digit flipper</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Forget your choice about which number to increment/decrement
+                in URL. Next time you will be asked again which number to
+                increment/decrement.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Save Links to Disk</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td>Save all links under gesture to disk.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Print Preview</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Print</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Save Page As...</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Show my gestures in new tab</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Show your gesture definitions in new tab.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Open Mouse Gestures Suite Options</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span><span class="source">src </span><span class="messenger">msg
+                  </span><span class="mailcompose">mc </span></td>
+              <td> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>Follow Next Link</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Link that contains one of the strings defined in <em>Advanced
+                  Prefs #1</em> will be followed. The <em>next</em> strings are
+                delimited with |. Useful for navigating to the next page on a
+                site.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Follow Previous Link</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>Link that contains one of the strings defined in <em>Advanced
+                  Prefs #1</em> will be followed. The <em>previous</em> strings
+                are delimited with |. Useful for navigating to the previous page
+                on a site. </td>
+            </tr>
+            <tr>
+              <td>Back to Last Page of Previous Domain</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>This will go back in history of current tab to the last page
+                of the previous site you were viewing. </td>
+            </tr>
+            <tr>
+              <td>Back to First Page of Current Domain</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>This will go back in history of current tab to the first page
+                of the site you are viewing. If you are already on the first
+                page of the site then this will move you to the first page of
+                the previous site in history.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Fast Forward</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>This acts like the normal <strong>History Forward</strong>
+                function as far as there are pages in forward history. Once at
+                the end, it acts like the <strong>Follow Next Link</strong>
+                function. </td>
+            </tr>
+            <tr>
+              <td>Forward to First Page of Next Domain</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>This will go forward in history of current tab to the first
+                page of the next site. </td>
+            </tr>
+            <tr>
+              <td>Forward to Last Page of Current Domain</td>
+              <td style="white-space: nowrap;" class="wintypes"> <span class="browser">br
+                  </span></td>
+              <td>This will go forward in history of current tab to the last
+                page of the site you are viewing. If you are already on the last
+                page of the site then this will move you to the last page of the
+                next site in history. </td>
+            </tr>
+            <tr>
+              <td colspan="3"><br>
+              </td>
+            </tr>
+            <tr>
+              <td>Left Rocker Gesture</td>
+              <td class="wintypes"> <span class="browser">br</span> <span class="source">src</span>
+                <span class="messenger">msg</span> <span class="mailcompose">mc</span>
+              </td>
+              <td rowspan="4">Press <em>Edit function</em> button to assign any
+                function to the rocker or scroll wheel gestures.<br>
+              </td>
+            </tr>
+            <tr>
+              <td>Right Rocker Gesture</td>
+              <td class="wintypes"> <span class="browser">br</span> <span class="source">src</span>
+                <span class="messenger">msg</span> <span class="mailcompose">mc</span>
+              </td>
+            </tr>
+            <tr>
+              <td>Backward Scrollwheel Gesture</td>
+              <td class="wintypes"><span class="browser">br</span> <span class="source">src</span>
+                <span class="messenger">msg</span></td>
+            </tr>
+            <tr>
+              <td>Forward Scrollwheel Gesture</td>
+              <td class="wintypes"><span class="browser">br</span> <span class="source">src</span>
+                <span class="messenger">msg</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <h2>Custom Functions</h2>
+        <p> Apart from running one of the built-in functions you can create your
+          own functions to be executed with mouse gestures — use the Add Custom
+          Function button for this. You can use custom function to either invoke
+          a menu item in the browser or mail component, or to run your own
+          script. Detailed description of how custom functions work can be found
+          <a href="http://lemon-juice.github.io/mouse-gestures-suite/custom-functions.html">here</a>.</p>
+        <p> </p>
+        <h2 id="tab3">Advanced Prefs #1</h2>
+        <p><strong>Trigger button</strong> - choose which mouse button will be
+          used for mouse gestures and scroll wheel navigation.</p>
+        <p><strong>Mouse Gesture Actions</strong> - define behavior of some
+          gesture actions:</p>
+        <ul>
+          <li><strong>'Open Links in Windows': Single new window with tabs</strong>
+            - <em>Open Links in Windows</em> will open one new window with each
+            link in separate tab.</li>
+          <li><strong>'Open new Tab/Window' opens link under performed gesture</strong>
+            - determines whether these functions will open links in new
+            windows/tabs.</li>
+          <li><strong>Open new blank tab next to current one</strong> - actions
+            <em>Open new Tab in Foreground</em>, <em>Open new Tab in Background</em>
+            and <em>Open blank Tab</em> will open blank tabs next to the
+            current tab. By default SeaMonkey and Firefox open blank tabs at the
+            end of all tabs – with this setting you can change this behavior for
+            mouse gestures. Please note that opening links is not affected by
+            this setting; by default links are opened next to the current tab
+            anyway, which is controlled by the <em>browser.tabs.insertRelatedAfterCurrent
+              </em>config.</li>
+          <li><strong>'Go Up to parent ...' / 'Load Home Page': Open in new tab</strong>
+            - open new tab when performing these functions.</li>
+          <li><strong>Rocker &amp; Scrollwheel gestures: Allow repetition for
+              actions that load pages</strong> - functions which have a
+            repetitive nature (like switching tabs, going back/forward) can be
+            repeated without releasing the trigger button. This also applies to
+            actions: <em>Close Document</em>, <em>Close current Tab</em> and <em>Undo
+              Close Tab</em>.</li>
+        </ul>
+        <p><strong>Tab scrolling</strong> - enabled to reverse scrolling
+          direction of tabs if <em>Scroll wheel in tab bar</em> is enabled.</p>
+        <p><strong>Script blocking on web pages</strong></p>
+        <p> </p>
+        <ul>
+          <li><strong>Disable ClickHeat scripts</strong> - ClickHeat by
+            Labsmedia (at <a target="_blank" href="http://www.labsmedia.com/clickheat/index.html">http://www.labsmedia.com/clickheat/index.html</a>)
+            is a javascript library for collecting mouse clicks on web pages and
+            then presenting them on a <i>clicks heatmap</i>. The problem is
+            that this particular library has an inherent flaw in that it locks
+            up the browser for half a second after every mouse click by
+            performing a CPU-intensive loop that really does nothing apart from
+            waiting. This short browser lock-up is enough to interfere with
+            mouse gesture detection since the extension can't really trace mouse
+            movements during that time. By enabling this option ClickHeat will
+            be disabled on the sites you visit. If ClickHeat has been detected
+            and suppressed then after every mouse button press the status bar
+            will show message <em>ClickHeat disabled!</em>. A side effect of
+            this will be that your clicks will not be sent over to the site
+            owner but you can actually treat it as an advantage! This option is
+            disabled by default because it affects the behavior of web pages you
+            visit and can potentially cause some other side effects (but that is
+            <em>very</em> unlikely - ClickHeat is detected by the presence of <em>catchClickHeat()</em>
+            javascript function on web pages). Turn it on for best mouse gesture
+            experience.<br>
+            <p>Note: In multi-process Firefox it is no longer necessary to
+              disable bad scripts in order to get rid of gesture delays because
+              gesture drawing happens in a separate process from web page
+              scripts so those scripts do not block mouse gestures. </p>
+          </li>
+        </ul>
+        <h2 id="tab4">Advanced Prefs #2</h2>
+        <p><strong>Middle Button Scrolling</strong> - define options for middle
+          button scrolling. Availability of most of these options depend on
+          which type of middle button scrolling is enabled in the <a href="#tab1">General
+            Preferences</a>.</p>
+        <p id="siteList"><strong>Site specific behavior</strong> - here you can
+          define rules for special handling of mouse gestures on specified sites
+          and web pages. For each web address (URL) you can define the following
+          actions:</p>
+        <ul>
+          <li><strong><em>Prioritize gestures</em></strong> - use this on sites
+            that cause delays in gesture execution. Some sites use scripts that
+            do some 'heavy stuff' when you click anywhere in the web page and
+            the browser gets locked up for a moment - even half a second lock-up
+            is enough to interfere with comfortable gesture drawing. With this
+            option you will be able to draw mouse gestures without delays,
+            however the web page will become blind to your right clicks and
+            middle clicks. Usually, this is not a problem but if a web page
+            offers certain features when you right- or middle-click then these
+            features will not work. Quite often the problematic pages are those
+            containing scripts for tracking mouse clicks. Technical note: this
+            setting will prevent <em>mousedown</em> and <em>mouseup</em>
+            events for middle and right buttons from working on the site (on
+            Linux <em>contextmenu</em> events are also suppressed).<br>
+            <br>
+            Note: In multi-process Firefox it is no longer necessary to
+            prioritize gestures in order to get rid of gesture delays because
+            gesture drawing happens in a separate process from web page scripts
+            so those scripts do not block mouse gestures. However, you can still
+            use this preference to block scripts when drawing mouse gestures.<br>
+            &nbsp;</li>
+          <li><strong><em>Disable gestures</em></strong> - use this for turning
+            off mouse gestures completely on certain pages. Even if mouse
+            gestures are turned off in this way in a web page they will still
+            work if you initiate them on a tab. It is quite rare but it may
+            happen that mouse gestures interfere with functionality of a web
+            page, especially one that makes use of right- or middle-clicks.</li>
+          <li><strong><em>Do nothing</em></strong> - mouse gestures will work
+            normally, this option has the same effect as if you deleted the web
+            site from the list but the entry is preserved for future use.</li>
+        </ul>
+        <p><strong>URL</strong> format and examples:</p>
+        <ul>
+          <li><span style="text-decoration: underline;">http://www.example.com/</span>
+            or <span style="text-decoration: underline;">https://www.example.com/contact</span>
+            - full URLs like this will match exactly the page at given address
+            and nothing else.</li>
+          <li><span style="text-decoration: underline;">www.example.com/</span>
+            (or <span style="text-decoration: underline;">www.example.com</span>),
+            or <span style="text-decoration: underline;">www.example.com/contact</span>
+            - same as above but if no protocol is given then this will match
+            pages under any protocol like http:// or https://.</li>
+          <li><span style="text-decoration: underline;">www.example.com/*</span>
+            - use this to match any page within the whole site/domain. The *
+            character means "any number of characters or no characters at all".</li>
+          <li><span style="text-decoration: underline;">http://www.example.com/*.html</span>
+            - this will match all pages at <em>http://www.example.com/</em>
+            whose URLs end with .html</li>
+          <li><span style="text-decoration: underline;">http://www.example.com/about#contact</span>
+            - any targets specified with the hash character are ignored so it is
+            the same as <span style="text-decoration: underline;">http://www.example.com/about</span>.</li>
+          <li><span style="text-decoration: underline;">*.example.com/*</span> -
+            this will match all subdomains of <em>example.com</em>. Please note
+            this will not match <em>example.com</em> itself - you would need to
+            add a separate entry for that.</li>
+        </ul>
+        <p>When you visit a site for which a special rule has been defined you
+          will see the information in the status bar when you press the right or
+          middle mouse button anywhere within the page - it will read <em>Prioritize
+            gestures</em> or <em>Disable gestures</em> depending on which
+          option you have chosen. </p>
+        <h2 id="exp-imp">Exporting, importing Mouse Gesture preferences &amp;
+          restoring defaults</h2>
+        Use the buttons in the <em>Settings Management</em> group in Advanced
+        Prefs #2. These operations will apply to all mouse gesture settings
+        including your gesture definitions and custom functions and scripts.
+        Only the option "Middle-click pastes in text boxes" will not be exported
+        because it's not really a Mouse Gestures Suite option, it's the built-in
+        option of the browser (controlled by the hidden pref <em>middlemouse.paste</em>).</section>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mouse Gestures Suite :: Mouse gestures for SeaMonkey and Firefox</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+    <div id="header">
+      <nav>
+        <ul class="sections">
+          <li><a href="./">Overview</a></li>
+          <li><a href="options.html">Main Options</a></li>
+          <li><a href="custom-functions.html">Custom Functions</a></li>
+          <li><a href="scripts.html">User Scripts</a></li>
+        </ul>
+        <ul class="downloads">
+          <li class="fork"><a href="https://github.com/lemon-juice/mouse-gestures-suite">View
+              On GitHub</a></li>
+          <li class="downloads"><a href="https://addons.mozilla.org/addon/mouse-gestures-suite/">DOWNLOAD</a></li>
+        </ul>
+      </nav>
+    </div>
+    <!-- end header -->
+    <div class="wrapper">
+      <section>
+        <div id="title">
+          <h1>Mouse Gestures Suite</h1>
+          <hr> </div>
+        <h2> User Scripts</h2>
+        <p><em>Note: Custom functions and user scripts are available since
+            version 2.0.0.</em></p>
+        <p>Mouse Gestures Suite allows you to create your own functions so you
+          are not limited only to the built-in set. You can write any script to
+          be executed when you perform a gesture. Scripts are written in
+          JavaScript and can be run in one of the two scopes:</p>
+        <ul>
+          <li>&nbsp;ChromeWindow (extension) scope</li>
+          <li>Web page scope</li>
+        </ul>
+        <img alt="User Script setup" src="images/user-script.png">
+        <ul>
+        </ul>
+        <h2>ChromeWindow Scope</h2>
+        <p>In this mode the script will be executed as if run directly from an
+          extension having full browser privileges. It will always be run inside
+          a function so you do not have to worry about variable name conflicts
+          with this or other extensions. However, you will also have access to
+          the global scope of a typical XUL extension — the <code>window</code>
+          variable will refer to the <code>ChromeWinow</code> object, which is
+          the browser's window XUL element.</p>
+        <p>Use this scope if you want to invoke internal functions of the
+          browser rather than interacting with the web page. These scripts will
+          run even when JavaScript is turned off.</p>
+        <p>If there is an error during script execution it will be displayed as
+          a gesture status message in the lower left corner of the browser.</p>
+        <p>Parameters passed to the script in ChromeWindow scope mode:</p>
+        <table style="width: 100%" border="1">
+          <tbody>
+            <tr>
+              <td><code>event</code></td>
+              <td>Event which started the gesture, typically this will be the
+                mousedown event. Please note that trying to determine which page
+                element the gesture was started on is not always reliable using
+                this event — in multi-process Firefox event.target will point to
+                a browser's XUL element, not the HTML element within the page.
+                Use other parameters for this purpose (below) or use web page
+                scope mode.<br>
+              </td>
+            </tr>
+            <tr>
+              <td><code>links</code></td>
+              <td>Array with references to all links found under gesture. Note
+                that in multi-process Firefox these will be objects wrapped in
+                CPOWs so accessing or manipulating them may be slow.<br>
+              </td>
+            </tr>
+            <tr>
+              <td><code>linksUrls</code></td>
+              <td>Array with URLs of all links found under gesture. </td>
+            </tr>
+            <tr>
+              <td><code>img</code></td>
+              <td>Reference to image found under gesture. Note that in
+                multi-process Firefox this will be an object wrapped in a CPOW
+                so accessing or manipulating it may be slow. </td>
+            </tr>
+            <tr>
+              <td><code>imgUrl</code></td>
+              <td>URL of image found under gesture. A background image usually
+                will also be found but normal images will have a priority. </td>
+            </tr>
+            <tr>
+              <td><code>frame</code></td>
+              <td>Reference to the frame or iframe at the start of the gesture.
+                If no frame was found this will be the top window element. This
+                will be null for gestures started on tabs. Note that in
+                multi-process Firefox this will be an object wrapped in a CPOW
+                so accessing or manipulating it may be slow. </td>
+            </tr>
+            <tr>
+              <td><code>tab</code></td>
+              <td>For gestures started on a tab this will contain a reference to
+                the browser's XUL&nbsp; <code>tab</code> element.</td>
+            </tr>
+          </tbody>
+        </table>
+        <h3>Examples</h3>
+        <p>Load www.google.com page:</p>
+        <pre><code>gBrowser.loadURI("http://www.google.com/");</code></pre>
+        <p>Open www.wikipedia.org in a new tab:</p>
+        <pre><code>openNewTabWith("http://www.wikipedia.org/");</code></pre>
+        <p>Open link under gesture always in the current tab, even if it would
+          normally open in a new tab or window:</p>
+        <pre><code>if (</code><code><code>linksUrls</code>.length) {
+  gBrowser.loadURI(linksUrls[0]);<br>}<br></code></pre>
+        <p>Exit Firefox/SeaMonkey:</p>
+        <pre><code>goQuitApplication();</code></pre>
+        <h2>Web Page Scope</h2>
+        <p>Use this scope if you want your gesture to perform certain actions in
+          the web page or access some information in the page. Your script will
+          be injected into the page and executed with the same scope and
+          privileges as a regular web script. You can easily access and modify
+          page content, and execute or suppress functions in the page. Your
+          script will be run from within an anonymous function and the global <code>window</code>
+          variable will refer to the web page window object. JavaScript needs to
+          be enabled for these scripts to run.</p>
+        <p>If there is an error during script execution you can see it in the
+          browser's standard JavaScript console or web console.</p>
+        <p>Parameters passed to the script in web page scope mode:</p>
+        <table style="width: 100%" border="1">
+          <tbody>
+            <tr>
+              <td><code>node</code></td>
+              <td>Reference (DOM object) to the element on which the gesture was
+                started. If gesture was started on current tab this will be the
+                <code>document.documentElement</code> object of the page (the <code>html</code>
+                element).</td>
+            </tr>
+            <tr>
+              <td><code>link</code></td>
+              <td>Reference (DOM object) to the first link found under gesture
+                or <code>null</code> if no link was found.</td>
+            </tr>
+            <tr>
+              <td><code>onTab</code></td>
+              <td><code>true</code> if gesture was started on a tab, <code>false</code>
+                otherwise.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>If there are frames in a page the script will be injected into the
+          frame where the gesture was started. Therefore, if you start a gesture
+          in a frame and then draw it over a link outside the frame then you may
+          not get access to the <code>link</code> parameter.</p>
+        <p>If a gesture is started on a tab and there are frames in the page
+          then the script will be executed in the top frame. Web page scope
+          scripts will not be executed for gestures started on a different tab
+          than the active one.</p>
+        <h3>Examples</h3>
+        <p> Focus cursor on the first input box in the page:</p>
+        <p> </p>
+        <pre><code>var input = document.querySelector("input[type=text],input[type=search]");
+if (input) {
+  input.focus();
+}</code></pre>
+        <p> Show (hidden by default) all links to cached and similar pages on
+          google results page:</p>
+        <p> </p>
+        <pre><code>if (/\.google\.[a-z.]+\/search\?/.test(location.href)) {
+  var hiddenElements = document.querySelectorAll('div.ab_dropdown.action-menu-panel');
+  for (var i=0; i&lt;hiddenElements.length; i++) {
+    if (hiddenElements[i].style.visibility != 'visible') {
+      hiddenElements[i].style.visibility = 'visible';
+    } else {
+      hiddenElements[i].style.visibility = 'hidden';
+    }
+  }
+}</code></pre>
+        <p> Enlarge font of a page element:</p>
+        <p> </p>
+        <pre><code>var size = getComputedStyle(node).getPropertyValue("font-size");
+if (size) {
+  var newSize = parseInt(size) + 2;
+  node.style.fontSize = newSize + 'px';
+}</code></pre>
+        <p> Insert predefined text into form field:</p>
+        <p> </p>
+        <pre><code>if (node.nodeName == 'TEXTAREA' ||
+  (node.nodeName == 'INPUT' &amp;&amp; /^(text|search)$/.test(node.type))
+  ) {
+  node.value = "This is me!";
+}</code></pre>
+        <br>
+      </section>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
