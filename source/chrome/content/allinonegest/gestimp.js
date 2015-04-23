@@ -451,6 +451,7 @@ mgsuite.imp = {
                               , "img"
                               , "imgUrl"
                               , "frame"
+                              , "tab"
                               , js))
                 (
                   mgsuite.overlay.aioSrcEvent,
@@ -458,7 +459,8 @@ mgsuite.imp = {
                   mgsuite.util.collectedLinksUrls,
                   mgsuite.util.collectedImg,
                   mgsuite.util.collectedImgUrl,
-                  mgsuite.util.collectedFrame
+                  mgsuite.util.collectedFrame,
+                  mgsuite.overlay.aioGestureTab
                 );
               }
               catch(ex) {
@@ -475,6 +477,13 @@ mgsuite.imp = {
               if (js === null) {
                 return {
                   mouseGestureFuncError: "Script not found"
+                };
+              }
+              
+              if (mgsuite.overlay.aioGestureTab) {
+                // don't run on tab
+                return {
+                  mouseGestureFuncError: mgsuite.overlay.aioGetStr("g.aborted")
                 };
               }
               
