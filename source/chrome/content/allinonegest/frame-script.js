@@ -84,6 +84,8 @@ var mgsuiteFr = {
     if (e.type == 'mousedown') {
       sendAsyncMessage("MouseGesturesSuite:CollectFrame", {}, {frame: e.target.ownerDocument.defaultView});
       
+      this.firstLink = null;
+      
       // save mousedown element e.g. for scrolling actions
       e.target.ownerDocument.defaultView.top.mgsuiteMouseDownEvent = e;
 
@@ -119,6 +121,10 @@ var mgsuiteFr = {
       }
       
       if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl) {
+        if (elemInfo.link && !this.firstLink) {
+          this.firstLink = elemInfo.link;
+        }
+        
         // send link url or image
         sendAsyncMessage("MouseGesturesSuite:CollectLinks", {bgImgUrl: elemInfo.bgImgUrl, eventType: e.type}, {link: elemInfo.link, img: elemInfo.img});
       }
@@ -758,7 +764,10 @@ var mgsuiteFr = {
   },
   
   runUserScript: function(msg) {
-    var doc = content.document;
+    var event = content.top.mgsuiteMouseDownEvent;
+    
+    // the document can be a frame, that's why we get it from event
+    var doc = event.target.ownerDocument.defaultView.document;
     
     if (!doc.body) {
       // probably a non-html document is loaded, like XML
@@ -768,15 +777,24 @@ var mgsuiteFr = {
     var node = content.top.mgsuiteMouseDownEvent.target;
     node.setAttribute('data-mgsuite-mousedown-tmp-node', 'dummy');
     
-    var str = "(function(param) { " + msg.data.js + " })("
-      + "document.querySelector('*[data-mgsuite-mousedown-tmp-node]')"
+    if (this.firstLink) {
+      this.firstLink.node.setAttribute('data-mgsuite-mousedown-tmp-link', 'dummy');
+    }
+    
+    var str = "(function(node, link) { " + msg.data.js + " })("
+      +   "document.querySelector('*[data-mgsuite-mousedown-tmp-node]')"
+      + ", document.querySelector('*[data-mgsuite-mousedown-tmp-link]')"
       + ");";
     
     var script = doc.createElement("script");
     script.textContent = str;
     doc.head.appendChild(script);
     doc.head.removeChild(script);
+    
     node.removeAttribute('data-mgsuite-mousedown-tmp-node');
+    if (this.firstLink) {
+      this.firstLink.node.removeAttribute('data-mgsuite-mousedown-tmp-link', 'dummy');
+    }
   }
 }
 

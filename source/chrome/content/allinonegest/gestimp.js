@@ -445,16 +445,20 @@ mgsuite.imp = {
               }
               
               try {
-                (new Function("event", "MG", js))
+                (new Function("event"
+                              , "links"
+                              , "linksUrls"
+                              , "img"
+                              , "imgUrl"
+                              , "frame"
+                              , js))
                 (
                   mgsuite.overlay.aioSrcEvent,
-                  {
-                    links: mgsuite.util.collectedLinks,
-                    linksUrls: mgsuite.util.collectedLinksUrls,
-                    img: mgsuite.util.collectedImg,
-                    imgUrl: mgsuite.util.collectedImgUrl,
-                    frame: mgsuite.util.collectedFrame
-                  }
+                  mgsuite.util.collectedLinks,
+                  mgsuite.util.collectedLinksUrls,
+                  mgsuite.util.collectedImg,
+                  mgsuite.util.collectedImgUrl,
+                  mgsuite.util.collectedFrame
                 );
               }
               catch(ex) {
