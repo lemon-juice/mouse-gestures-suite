@@ -394,6 +394,30 @@ function exportSettings() {
     alert("Cannot export settings. Open new browser window and try exporting again.");
     return;
   }
+  
+  // export scripts
+  var customGestures = [];
+  try {
+    let prefS = aioPref.getComplexValue("customGestures", Components.interfaces.nsISupportsString);
+    customGestures = JSON.parse(prefS);
+  } catch (err) {}
+  
+  if (Array.isArray(customGestures)) {
+    var cg, js;
+    
+    for (var i=0; i<customGestures.length; i++) {
+      cg = customGestures[i];
+      if (!cg.script) {
+        continue;
+      }
+      
+      js = settingsIO.readFile(cg.script);
+      
+      data += cg.script + "=" + JSON.stringify(js) + "\n";
+    }
+  }
+  
+  
    
   var nsIFilePicker = Components.interfaces.nsIFilePicker;
   var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
@@ -492,6 +516,7 @@ function importSettings() {
   var name, val, saveVal;
   var countSet = 0;
   var firstLine = true;
+  var savedFiles = [];
 
   do {
       more = lis.readLine(inpLine);
@@ -543,6 +568,18 @@ function importSettings() {
                 countSet++;
                 break;
             }
+          } else if (/\.js$/i.test(name)) {
+            // import script and save it to file
+            try {
+              var data = JSON.parse(val);
+              
+              if (typeof data == 'string') {
+                settingsIO.saveFile(name, data);
+                savedFiles.push(name);
+                countSet++;
+              }
+              
+            } catch (err) {};
           }
         }
       }
@@ -552,6 +589,7 @@ function importSettings() {
   inputStream.close();
   
   if (countSet > 0) {
+    settingsIO.deleteAllExcept(savedFiles);
     reopenPrefWindow();
   } else {
     alert("Error: could not import any settings from this file.");
@@ -587,6 +625,7 @@ function getPrefsForImportExport() {
     ['autoscrolling2', 'bool'],
     ['autoscrollpref', 'int'],
     ['crispResize', 'bool'],
+    ['customGestures', 'char'],
     ['disableClickHeat', 'bool'],
     ['dragAlaAcrobat', 'bool'],
     ['evenOnLink', 'bool'],
