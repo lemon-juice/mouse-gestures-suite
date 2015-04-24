@@ -1380,7 +1380,12 @@ mgsuite.imp = {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
         var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.currentURI.spec : gBrowser.selectedBrowser.currentURI.spec;
-        mgsuite.imp.aioLinkInTab(url, true, false, reverseBg);
+        
+        // pass referer so that browser.tabs.insertRelatedAfterCurrent is respected
+        var ioService = Components.classes["@mozilla.org/network/io-service;1"]
+                      .getService(Components.interfaces.nsIIOService);
+        var referrer = ioService.newURI(url, null, null);
+        mgsuite.imp.aioLinkInTab(url, true, false, reverseBg, referrer);
         break;
       
       case "messenger":
