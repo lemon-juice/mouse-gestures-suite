@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Manage dialog window for editing a single gesture function and its properties,
+ * including defining custom functions.
+ */
 var gprop = {
   init: function() {
     this.isNew = window.arguments[0];

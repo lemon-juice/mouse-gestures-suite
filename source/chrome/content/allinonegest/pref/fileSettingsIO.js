@@ -1,5 +1,8 @@
 "use strict";
 
+/**
+ * Reading and writing setting files in user profile for storing user scripts
+ */
 var settingsIO = {
   /**
    * Save data to a file in profile dir
