@@ -230,8 +230,8 @@
         <label value="&customize.swaptxt;" />
        </vbox>
        <hbox id="customGesturesControl" flex="1" pack="center">
-        <button label="Add Custom Function" id="addCustom" oncommand="addCustomFunction();" />
-        <button label="Remove Custom Function" id="removeCustom" oncommand="removeCustomFunctions();" />
+        <button label="&customize.addCustomFun;" id="addCustom" oncommand="addCustomFunction();" />
+        <button label="&customize.deleteCustomFun;" id="removeCustom" oncommand="removeCustomFunctions();" />
        </hbox>
  <!--  <vbox id="customEdit" flex="1">
          <hbox align="center" flex="1">
@@ -380,8 +380,8 @@
         <listcol width="130"/>
       </listcols>
       <listhead>
-        <listheader label="URL"/>
-        <listheader label="Action"/>
+        <listheader label="&siteSpecific.url;"/>
+        <listheader label="&siteSpecific.action;"/>
       </listhead>
 <!-- example: <listitem>
         <listcell label="mysite.com/*" />
@@ -391,14 +391,14 @@
     </listbox>
     
     <vbox style="margin-top: 25px">
-     <button label="Add Rule" oncommand="addRule();" />
-     <button label="Edit Rule" oncommand="editRule();" />
-     <button label="Delete" oncommand="deleteRule();" />
+     <button label="&aioAddRule.label;" oncommand="addRule();" />
+     <button label="&aioEditRule.label;" oncommand="editRule();" />
+     <button label="&aioDeleteRule.label;" oncommand="deleteRule();" />
     </vbox>
   </groupbox>
    
    <groupbox orient="horizontal">
-     <caption label="&aioImportExport.label;"/>
+     <caption label="&aioManageSettings.label;"/>
      <hbox>
        <button label="&aioImport.label;" oncommand="importSettings();" />
        <button label="&aioExport.label;" oncommand="exportSettings();" />

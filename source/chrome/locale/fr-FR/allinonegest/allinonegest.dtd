@@ -98,7 +98,7 @@
 <!ENTITY aioTabscroll.label    "Défilement des onglets">
 <!ENTITY aioTabscroll.revScroll    "Défiler les onglets vers la gauche quand la molette tourne vers l'arrière">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

@@ -11,7 +11,7 @@
 
 <dialog id="allInOneSiteRule"
       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-      title="Site Rule"
+      title="&siteSpecificDialog.title;"
       buttons="accept, cancel, help"
       onload="initEditRule();"
       ondialogaccept="return saveRule();"
@@ -27,18 +27,18 @@
 </stringbundleset>
 
 <groupbox orient="horizontal">
-  <caption label="URL (wildcard characters * are allowed):"/>
+  <caption label="&siteSpecificDialog.url;:"/>
   <vbox>
     <textbox id="siteURL" width="500" />
     <hbox>
-      <button label="Insert rule for recently viewed site" oncommand="insertRecentUrl(false);" />
-      <button label="Insert rule for recently viewed page" oncommand="insertRecentUrl(true);" />
+      <button label="&siteSpecificDialog.insertSite;" oncommand="insertRecentUrl(false);" />
+      <button label="&siteSpecificDialog.insertPage;" oncommand="insertRecentUrl(true);" />
     </hbox>
   </vbox>
 </groupbox>
 
 <groupbox orient="horizontal">
-  <caption label="Action:" />
+  <caption label="Action&siteSpecific.action;:" />
   <hbox>
     <radiogroup id="siteAction" orient="horizontal">
     </radiogroup>

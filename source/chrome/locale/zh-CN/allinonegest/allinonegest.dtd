@@ -98,7 +98,7 @@
 <!ENTITY aioTabscroll.label    "标签滚动">
 <!ENTITY aioTabscroll.revScroll    "滚轮向后滚动时向左滚动标签页">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

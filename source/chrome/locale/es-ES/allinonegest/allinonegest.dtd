@@ -33,7 +33,7 @@
 <!ENTITY aioTabscroll.label "Desplazamiento en pestañas">
 <!ENTITY aioTabscroll.revScroll "Desplazarse hacia la izquierda en las pestañas cuando la rueda se mueve en sentido contrario">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

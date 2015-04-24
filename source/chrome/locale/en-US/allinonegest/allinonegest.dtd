@@ -28,6 +28,8 @@
 <!ENTITY customize.draw           "Draw">
 <!ENTITY customize.swaptxt        "Click on a new row to swap (new row gesture &lt;-&gt; current row gesture)">
 <!ENTITY customize.edfunctxt      "Click on the function to be assigned to this predefined gesture">
+<!ENTITY customize.addCustomFun   "Add Custom Function">
+<!ENTITY customize.deleteCustomFun "Remove Custom Function">
 <!ENTITY customize.apply          "OK">
 
 <!ENTITY mousegest.label       "Mouse Gestures: Prefs">
@@ -93,12 +95,22 @@
 
 <!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.action       "Action">
+<!ENTITY siteSpecific.url          "URL">
+<!ENTITY siteSpecificDialog.title  "Site Rule">
+<!ENTITY siteSpecificDialog.url    "URL (wildcard characters * are allowed)">
+<!ENTITY siteSpecificDialog.insertSite "Insert rule for recently viewed site">
+<!ENTITY siteSpecificDialog.insertPage "Insert rule for recently viewed page">
 <!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
 
 <!ENTITY aioTabscroll.label    "Tab scrolling">
 <!ENTITY aioTabscroll.revScroll    "Scroll tabs to the left when the wheel is rotated backward">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioAddRule.label "Add Rule">
+<!ENTITY aioEditRule.label "Edit Rule">
+<!ENTITY aioDeleteRule.label "Delete">
+
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

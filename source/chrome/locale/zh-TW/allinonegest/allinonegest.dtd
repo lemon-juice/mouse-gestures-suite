@@ -103,7 +103,7 @@
 <!ENTITY aioTabscroll.label    "分頁捲動">
 <!ENTITY aioTabscroll.revScroll    "當滾輪向下捲動時將分頁向左捲動">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

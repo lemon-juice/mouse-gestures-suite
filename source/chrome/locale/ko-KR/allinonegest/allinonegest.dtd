@@ -98,7 +98,7 @@
 <!ENTITY aioTabscroll.label       "탭 이동">
 <!ENTITY aioTabscroll.revScroll   "휠을 뒤로 스크롤하면 왼쪽 탭으로 이동합니다.">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

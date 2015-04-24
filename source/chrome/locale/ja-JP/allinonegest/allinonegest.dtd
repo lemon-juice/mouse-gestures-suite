@@ -98,7 +98,7 @@
 <!ENTITY aioTabscroll.label "タブスクロール">
 <!ENTITY aioTabscroll.revScroll "タブバー上で、マウスホイール下で左のタブに切り替える (デフォルトは右に)">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

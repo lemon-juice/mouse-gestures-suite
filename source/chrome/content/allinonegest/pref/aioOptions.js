@@ -421,9 +421,6 @@ function exportSettings() {
    
   var nsIFilePicker = Components.interfaces.nsIFilePicker;
   var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-  //var strBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].
-  //                       getService(Components.interfaces.nsIStringBundleService);
-  //var aioBundle = strBundleService.createBundle("chrome://mgsuite/locale/allinonegest.properties");
   
   var windowTitle = "Save Mouse Gestures Suite settings...";
   
@@ -469,6 +466,8 @@ function exportSettings() {
 }
 
 function importSettings() {
+  if (!confirm(bundle.getString("opt.confirmRestoreDefaults"))) return;
+  
   var aioPrefService = Components.classes["@mozilla.org/preferences-service;1"]
                        .getService(Components.interfaces.nsIPrefService);
   var aioPref = aioPrefService.getBranch("allinonegest.");
@@ -524,7 +523,7 @@ function importSettings() {
       
       if (firstLine && line.indexOf("# Mouse Gestures Suite settings") != 0) {
         inputStream.close();
-        alert("Error: this is not a valid settings file.");
+        alert(bundle.getString("opt.invalidSettingsFile"));
         return;
       }
       
@@ -592,12 +591,12 @@ function importSettings() {
     settingsIO.deleteAllExcept(savedFiles);
     reopenPrefWindow();
   } else {
-    alert("Error: could not import any settings from this file.");
+    alert(bundle.getString("opt.invalidSettingsFile"));
   }
 }
 
 function restoreDefaultSettings() {
-  if (!confirm("This will reset all your mouse gesture settings including gesture definitions.\n\nContinue?")) {
+  if (!confirm(bundle.getString("opt.restoreDefaultsConfirm"))) {
     return;
   }
   
@@ -685,7 +684,7 @@ function addRule() {
 function editRule() {
   var listBox = document.getElementById('siteList');
   if (listBox.selectedCount != 1) {
-    alert("Please select one item to edit.");
+    alert(bundle.getString("opt.only1ItemToEdit"));
     return;
   }
   openEditRuleWin(false);

@@ -98,7 +98,7 @@
 <!ENTITY aioTabscroll.label    "Tabs durchblättern (Mausrad)">
 <!ENTITY aioTabscroll.revScroll    "Tabs nach links durchblättern, wenn das Rad nach unten bewegt wird">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">

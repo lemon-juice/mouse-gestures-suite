@@ -184,6 +184,7 @@ var localizedGest = [];
 var abbrLocalizedGest = [];
 var selTable = [], selHasRocker = false, selMissingDup = false;
 var dragService = Components.classes[kDragContractId].getService(kDSIID);
+var customGestSeparatorLabel;
 
 // Contains abbreviated gesture definitions for each row like L, R, UDR, etc.
 // Empty string if no gesture defined. '?' for rocker and scrollwheel gestures
@@ -197,8 +198,6 @@ var rockFuncTable = [];
 var helpTable = {};
 var uniqueRowId;
 var hidePopupTimer;
-
-var customGestSeparatorLabel = " " + "Custom Functions" + ":";
 
 
 // When you want to remove an action change its name to "g.nullAction" in the table
@@ -441,6 +440,8 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   edfuncLabel = edfuncButton.label;
   addgestLabel = document.getElementById("addId").label;
   bundle = document.getElementById("allinonegestbundle");
+  customGestSeparatorLabel = " " + bundle.getString("opt.listCustomFunctions") + ":";
+
   var maxActions = gestActionTableTokens.length;
   
   // load help descriptions for each action
@@ -562,7 +563,7 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
     rowCount++;
   }
   
-  gestView.addRow([" Rocker & Scroll Wheel Gestures:", "", "", ""], "separator", null);  // separator
+  gestView.addRow([" " + bundle.getString("opt.listRockerAndScrollWheel") + ":", "", "", ""], "separator", null);  // separator
   
   abbrTable[rowCount] = "";
   funcNbTable[rowCount] = "";

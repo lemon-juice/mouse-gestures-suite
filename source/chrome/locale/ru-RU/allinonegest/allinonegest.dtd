@@ -98,7 +98,7 @@
 <!ENTITY aioTabscroll.label "Листание вкладок">
 <!ENTITY aioTabscroll.revScroll "При вращении колеса прокрутки на себя листать вкладки влево.">
 
-<!ENTITY aioImportExport.label "Import/Export">
+<!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
 <!ENTITY aioRestore.label "Restore Default Settings">
