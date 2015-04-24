@@ -28,6 +28,8 @@
 <!ENTITY customize.draw           "绘制">
 <!ENTITY customize.swaptxt        "点击目标手势进行交换(新手势 &lt;-&gt; 当前手势)">
 <!ENTITY customize.edfunctxt      "点击指定给预设手势的功能">
+<!ENTITY customize.addCustomFun   "Add Custom Function">
+<!ENTITY customize.deleteCustomFun "Remove Custom Function">
 <!ENTITY customize.apply          "确定">
 
 <!ENTITY mousegest.label       "鼠标手势:首选项">
@@ -93,10 +95,20 @@
 
 <!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.action       "Action">
+<!ENTITY siteSpecific.url          "URL">
+<!ENTITY siteSpecificDialog.title  "Site Rule">
+<!ENTITY siteSpecificDialog.url    "URL (wildcard characters * are allowed)">
+<!ENTITY siteSpecificDialog.insertSite "Insert rule for recently viewed site">
+<!ENTITY siteSpecificDialog.insertPage "Insert rule for recently viewed page">
 <!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
 
 <!ENTITY aioTabscroll.label    "标签滚动">
 <!ENTITY aioTabscroll.revScroll    "滚轮向后滚动时向左滚动标签页">
+
+<!ENTITY aioAddRule.label "Add Rule">
+<!ENTITY aioEditRule.label "Edit Rule">
+<!ENTITY aioDeleteRule.label "Delete">
 
 <!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">

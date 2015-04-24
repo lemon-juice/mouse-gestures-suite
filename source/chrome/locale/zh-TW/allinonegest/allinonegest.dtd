@@ -28,6 +28,8 @@
 <!ENTITY customize.draw           "描繪">
 <!ENTITY customize.swaptxt        "按一下另一列互換手勢（另一列的手勢 &lt;-&gt; 目前這一列的手勢）">
 <!ENTITY customize.edfunctxt      "按一下你想要指定給這個手勢的功能">
+<!ENTITY customize.addCustomFun   "Add Custom Function">
+<!ENTITY customize.deleteCustomFun "Remove Custom Function">
 <!ENTITY customize.apply          "確定">
 
 <!ENTITY mousegest.label       "滑鼠手勢：偏好設定">
@@ -98,10 +100,20 @@
 
 <!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.action       "Action">
+<!ENTITY siteSpecific.url          "URL">
+<!ENTITY siteSpecificDialog.title  "Site Rule">
+<!ENTITY siteSpecificDialog.url    "URL (wildcard characters * are allowed)">
+<!ENTITY siteSpecificDialog.insertSite "Insert rule for recently viewed site">
+<!ENTITY siteSpecificDialog.insertPage "Insert rule for recently viewed page">
 <!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
 
 <!ENTITY aioTabscroll.label    "分頁捲動">
 <!ENTITY aioTabscroll.revScroll    "當滾輪向下捲動時將分頁向左捲動">
+
+<!ENTITY aioAddRule.label "Add Rule">
+<!ENTITY aioEditRule.label "Edit Rule">
+<!ENTITY aioDeleteRule.label "Delete">
 
 <!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">

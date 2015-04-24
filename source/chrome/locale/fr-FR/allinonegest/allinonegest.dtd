@@ -28,6 +28,8 @@
 <!ENTITY customize.draw           "Dessiner">
 <!ENTITY customize.swaptxt        "Cliquer sur une nouvelle ligne pour échanger (geste de la nouvelle ligne &lt;-&gt; geste de la ligne courante)">
 <!ENTITY customize.edfunctxt      "Cliquer sur la fonction à assigner à ce geste">
+<!ENTITY customize.addCustomFun   "Add Custom Function">
+<!ENTITY customize.deleteCustomFun "Remove Custom Function">
 <!ENTITY customize.apply          "Valider">
 
 <!ENTITY mousegest.label       "Gestes de souris: Préfs">
@@ -92,11 +94,21 @@
 <!ENTITY aioAction.rockermode      "Gestes Bascule &amp; Molette: Permettre les répétitions pour les actions chargeant des pages">
 
 <!ENTITY scriptBlocking.label  "Script blocking on web pages">
+<!ENTITY siteSpecific.action       "Action">
+<!ENTITY siteSpecific.url          "URL">
+<!ENTITY siteSpecificDialog.title  "Site Rule">
+<!ENTITY siteSpecificDialog.url    "URL (wildcard characters * are allowed)">
+<!ENTITY siteSpecificDialog.insertSite "Insert rule for recently viewed site">
+<!ENTITY siteSpecificDialog.insertPage "Insert rule for recently viewed page">
 <!ENTITY siteSpecific.label        "Site specific behavior">
 <!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
 
 <!ENTITY aioTabscroll.label    "Défilement des onglets">
 <!ENTITY aioTabscroll.revScroll    "Défiler les onglets vers la gauche quand la molette tourne vers l'arrière">
+
+<!ENTITY aioAddRule.label "Add Rule">
+<!ENTITY aioEditRule.label "Edit Rule">
+<!ENTITY aioDeleteRule.label "Delete">
 
 <!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">

@@ -28,6 +28,8 @@
 <!ENTITY customize.draw           "동작 그리기">
 <!ENTITY customize.swaptxt        "교환하려는 줄을 선택하십시오. (현재 줄과 선택된 줄을 서로 바꿉니다.)">
 <!ENTITY customize.edfunctxt      "이 동작으로 실행할 기능을 선택하십시오.">
+<!ENTITY customize.addCustomFun   "Add Custom Function">
+<!ENTITY customize.deleteCustomFun "Remove Custom Function">
 <!ENTITY customize.apply          "입력">
 
 <!ENTITY mousegest.label          "마우스 동작: 설정">
@@ -93,10 +95,20 @@
 
 <!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.action       "Action">
+<!ENTITY siteSpecific.url          "URL">
+<!ENTITY siteSpecificDialog.title  "Site Rule">
+<!ENTITY siteSpecificDialog.url    "URL (wildcard characters * are allowed)">
+<!ENTITY siteSpecificDialog.insertSite "Insert rule for recently viewed site">
+<!ENTITY siteSpecificDialog.insertPage "Insert rule for recently viewed page">
 <!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
 
 <!ENTITY aioTabscroll.label       "탭 이동">
 <!ENTITY aioTabscroll.revScroll   "휠을 뒤로 스크롤하면 왼쪽 탭으로 이동합니다.">
+
+<!ENTITY aioAddRule.label "Add Rule">
+<!ENTITY aioEditRule.label "Edit Rule">
+<!ENTITY aioDeleteRule.label "Delete">
 
 <!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">

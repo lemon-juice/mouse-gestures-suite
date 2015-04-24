@@ -28,6 +28,8 @@
 <!ENTITY customize.draw           "Disegna">
 <!ENTITY customize.swaptxt        "Clicca su una nuova riga per scambiare gesture (riga nuova gesture &lt;-&gt; riga gesture corrente)">
 <!ENTITY customize.edfunctxt      "Clicca sulla funzione da essere assegnata a questa gesture predefinita">
+<!ENTITY customize.addCustomFun   "Add Custom Function">
+<!ENTITY customize.deleteCustomFun "Remove Custom Function">
 <!ENTITY customize.apply          "OK">
 
 <!ENTITY mousegest.label       "Mouse gesture: Preferenze">
@@ -96,11 +98,21 @@
 <!ENTITY aioAction.rockermode      "Gesture Rocker &amp; Rotellina di scorrimento: Permetti ripetizione per azioni che caricano pagine">
 
 <!ENTITY scriptBlocking.label  "Script blocking on web pages">
+<!ENTITY siteSpecific.action       "Action">
+<!ENTITY siteSpecific.url          "URL">
+<!ENTITY siteSpecificDialog.title  "Site Rule">
+<!ENTITY siteSpecificDialog.url    "URL (wildcard characters * are allowed)">
+<!ENTITY siteSpecificDialog.insertSite "Insert rule for recently viewed site">
+<!ENTITY siteSpecificDialog.insertPage "Insert rule for recently viewed page">
 <!ENTITY siteSpecific.label        "Site specific behavior">
 <!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
 
 <!ENTITY aioTabscroll.label    "Scorrimento delle schede">
 <!ENTITY aioTabscroll.revScroll    "Scorri le schede a sinistra quando la rotellina viene ruotata all'indietro">
+
+<!ENTITY aioAddRule.label "Add Rule">
+<!ENTITY aioEditRule.label "Edit Rule">
+<!ENTITY aioDeleteRule.label "Delete">
 
 <!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">

@@ -218,7 +218,6 @@
        <button label="&customize.add;" id="addId" hidden="true" /><!-- dummy button only for getting label by js -->
        <button label="&customize.edfunc;" id="edfuncId" oncommand="editFunction();" />
        <button label="&customize.undo;" id="undoId" oncommand="performUndo();" />
-       <button label="&customize.restore;" id="restoreId" oncommand="restoreDefaultGestures();" />
      </hbox>
    </vbox>
    <vbox>
@@ -232,6 +231,7 @@
        <hbox id="customGesturesControl" flex="1" pack="center">
         <button label="&customize.addCustomFun;" id="addCustom" oncommand="addCustomFunction();" />
         <button label="&customize.deleteCustomFun;" id="removeCustom" oncommand="removeCustomFunctions();" />
+        <button label="&customize.restore;" id="restoreId" oncommand="restoreDefaultGestures();" style="margin-left: 5em"/>
        </hbox>
  <!--  <vbox id="customEdit" flex="1">
          <hbox align="center" flex="1">

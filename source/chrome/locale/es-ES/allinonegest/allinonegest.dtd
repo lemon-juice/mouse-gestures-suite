@@ -13,6 +13,12 @@
 
 <!ENTITY scriptBlocking.label  "Script blocking on web pages">
 <!ENTITY siteSpecific.label        "Site specific behavior">
+<!ENTITY siteSpecific.action       "Action">
+<!ENTITY siteSpecific.url          "URL">
+<!ENTITY siteSpecificDialog.title  "Site Rule">
+<!ENTITY siteSpecificDialog.url    "URL (wildcard characters * are allowed)">
+<!ENTITY siteSpecificDialog.insertSite "Insert rule for recently viewed site">
+<!ENTITY siteSpecificDialog.insertPage "Insert rule for recently viewed page">
 <!ENTITY scriptBlocking.disableClickHeat "Disable ClickHeat scripts, which cause delays and gesture detection problems on web pages">
 
 <!ENTITY aioAction.singlewindow "'Abrir enlaces en ventanas': Una única ventana nueva con pestañas">
@@ -33,6 +39,10 @@
 <!ENTITY aioTabscroll.label "Desplazamiento en pestañas">
 <!ENTITY aioTabscroll.revScroll "Desplazarse hacia la izquierda en las pestañas cuando la rueda se mueve en sentido contrario">
 
+<!ENTITY aioAddRule.label "Add Rule">
+<!ENTITY aioEditRule.label "Edit Rule">
+<!ENTITY aioDeleteRule.label "Delete">
+
 <!ENTITY aioManageSettings.label "Settings Management">
 <!ENTITY aioImport.label "Import Settings">
 <!ENTITY aioExport.label "Export Settings">
@@ -45,6 +55,8 @@
 <!ENTITY autoscroll.label "Desplazamiento con botón central">
 <!ENTITY autoscroll.native "Desplazamiento automático nativo">
 <!ENTITY customize.add "Añadir gesto">
+<!ENTITY customize.addCustomFun   "Add Custom Function">
+<!ENTITY customize.deleteCustomFun "Remove Custom Function">
 <!ENTITY customize.apply "OK">
 <!ENTITY customize.clear "Borrar gesto">
 <!ENTITY customize.draw "Dibujar">
