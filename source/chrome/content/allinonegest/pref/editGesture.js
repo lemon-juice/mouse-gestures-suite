@@ -104,8 +104,6 @@ var gprop = {
         scriptScope.selectedItem = scriptScope.querySelector("radio[id=chrome]");
       }
       
-      this.changeScriptScope();
-      
       gprop.firstActivateEvent = true;
       
       window.addEventListener("activate", function() {
@@ -164,7 +162,12 @@ var gprop = {
             return false;
           }
           
-          data.menuId = selectedMenu ? selectedMenu.value : null;
+          data.menuId = gprop.customData.menuId; // previous value in case the menu is not visible
+          
+          if (selectedMenu) {
+            data.menuId = selectedMenu.value;
+          }
+          
           break;
         
         case 1:  // script
@@ -201,7 +204,9 @@ var gprop = {
       if (document.getElementById("scope-mailcompose").checked) {
         data.winTypes.push("mailcompose");
       }
+      
     }
+    //alert(JSON.stringify(data, null, ' '));
     
     if (this.isNew) {
       window.opener.insertNewCustomFunction(data);
@@ -244,6 +249,7 @@ var gprop = {
         this.resizeWindow();
         break;
     }
+    gprop.changeScriptScope();
   },
   
   /**
@@ -251,8 +257,9 @@ var gprop = {
    */
   changeScriptScope: function() {
     var scope = document.getElementById("scriptScope").selectedItem.id;
+    var selectedActionType = document.getElementById("actionTypeSelect").selectedIndex;
     
-    document.getElementById("winTypesBox").hidden = (scope == "content");
+    document.getElementById("winTypesBox").hidden = (scope == "content" && selectedActionType == 1);
   },
   
   selectTab: function() {

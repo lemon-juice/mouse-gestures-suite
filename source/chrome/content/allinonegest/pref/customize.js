@@ -158,6 +158,9 @@ gestCustomizeTreeView.prototype = {
   },
   changeRowMetaData: function(row, key, val) {
     this.data[row].metaData[key] = val;
+  },
+  deleteRowMetaData: function(row, key) {
+    delete this.data[row].metaData[key];
   }
 };
 
@@ -425,7 +428,7 @@ function getCustomGestures() {
       gestures.push(data);
     }
   }
-  
+  //alert(JSON.stringify(gestures, null, ' '));
   return gestures;
 }
 
@@ -1224,21 +1227,35 @@ function changeGestureData(currRow, data) {
     if (data.name) {
       gestView.setCellText(currRow, functionCol, data.name);
     }
+    
     if (data.id) {
       gestView.changeRowMetaData(currRow, "id", data.id);
     }
-     if (data.menuId) {
+    
+    if (data.menuId) {
       gestView.changeRowMetaData(currRow, "menuId", data.menuId);
+    } else {
+      gestView.deleteRowMetaData(currRow, "menuId");
     }
+    
     if (data.winTypes) {
       gestView.changeRowMetaData(currRow, "winTypes", data.winTypes);
+    } else {
+      gestView.deleteRowMetaData(currRow, "winTypes");
     }
+
     if (data.script) {
       gestView.changeRowMetaData(currRow, "script", data.script);
+    } else {
+      gestView.deleteRowMetaData(currRow, "script");
     }
+
     if (data.scope) {
       gestView.changeRowMetaData(currRow, "scope", data.scope);
+    } else {
+      gestView.deleteRowMetaData(currRow, "scope");
     }
+
    
     gestureTree.setAttribute("seltype", "multiple");
     buttEnable(["clearId", "swapId", "edfuncId", "undoId", "addCustom", "removeCustom"], [true, true, isDuplicable(currRow), true, true, (rowType == "custom")]);
