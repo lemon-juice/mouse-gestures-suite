@@ -689,7 +689,9 @@ mgsuite.overlay = {
           if (rFunc.charAt(0) == 'c') {
             // custom function
             var custGestEntry = mgsuite.overlay.getCustomGestureById(rFunc.substr(1));
-            mgsuite.overlay.aioRockerAction[i] = mgsuite.imp.getCustomFunctionCallback(custGestEntry);;
+            mgsuite.overlay.aioRockerAction[i] = custGestEntry
+              ? mgsuite.imp.getCustomFunctionCallback(custGestEntry)
+              : function() {};
             mgsuite.overlay.aioRockMultiple[i] = "2";
             
           } else {

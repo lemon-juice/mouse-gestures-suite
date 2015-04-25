@@ -1029,7 +1029,7 @@ function addCustomFunction() {
 function removeCustomFunctions() {
   var sels = getSelections();
   
-  for (var i=0; i<sels.length; i++) {
+  for (var i=sels.length-1; i>=0; i--) {
     _removeRow(sels[i]);
   }
   
