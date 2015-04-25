@@ -17,6 +17,7 @@
       buttons="accept, cancel, help"
       onload="init();"
       ondialogaccept="return savePrefs();"
+      ondialogcancel="saveGesturesTableScroll()"
       ondialoghelp="openHelp();"
       persist="width height screenX screenY">
 

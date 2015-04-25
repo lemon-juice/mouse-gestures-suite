@@ -68,12 +68,23 @@ function init() {
        document.getElementById("versId").value += " " + addon.version;
     });
   
+  // restore last selected panel
   restoreLastSelectedPanel();
   
   var tabpanels = document.getElementsByTagName('tabpanels');
   
   for (var i=0; i<tabpanels.length; i++) {
     tabpanels[i].addEventListener("select", rememberSelectedPanel);
+  }
+  
+  // restore scroll position
+  var boxObject = document.getElementById("gesttree").treeBoxObject;
+  var scrollPos = Application.storage.get("aioOptionsScrollPos", null);
+  
+  if (scrollPos) {
+    setTimeout(function() {
+       boxObject.scrollToRow(scrollPos);
+    }, 0);
   }
 }
 
@@ -212,7 +223,16 @@ function savePrefs() {
   str.data = JSON.stringify(prefList);
   pref.setComplexValue("allinonegest.sitesList", Components.interfaces.nsISupportsString, str);
   
+  saveGesturesTableScroll();
   return true;
+}
+
+/**
+ * Save scroll position of gesture table
+ */
+function saveGesturesTableScroll() {
+  var boxObject = document.getElementById("gesttree").treeBoxObject;
+  Application.storage.set("aioOptionsScrollPos", boxObject.getFirstVisibleRow());
 }
 
 function deleteUnusedScriptFiles(customGestures) {
