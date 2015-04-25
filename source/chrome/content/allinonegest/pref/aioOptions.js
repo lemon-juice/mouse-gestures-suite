@@ -281,7 +281,9 @@ function restoreDefaultGestures() {
   pref.setCharPref("allinonegest.gestureString", mgsuite.default.gestureString);
   pref.setCharPref("allinonegest.functionString", mgsuite.default.functionString);
   pref.setCharPref("allinonegest.rockerString", mgsuite.default.rockerString);
+  pref.setCharPref("allinonegest.customGestures", "[]");
   
+  deleteUnusedScriptFiles([]);
   reopenPrefWindow();
 }
 
@@ -635,6 +637,7 @@ function restoreDefaultSettings() {
     aioPref.clearUserPref(name);
   }
   
+  deleteUnusedScriptFiles([]);
   reopenPrefWindow();
 }
 
