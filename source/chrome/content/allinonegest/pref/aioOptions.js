@@ -13,7 +13,8 @@ function init() {
   initEditRuleConst();
   var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
-                     "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
+                     "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
+                     "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
                      "goUpId", "crispResizeId", "disableClickHeatId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
@@ -120,7 +121,8 @@ function doEnabling() {
                  ["autoscrollOptions3", c9, a1], ["refreshrateId", c9c, a1], ["scrollrateOptions", c9c, a1],
                  ["scrollrate0", c9c, a1], ["scrollrate1", c9c, a1], ["scrollrate2", c9c, a1],
                  ["tabBar", c14, a1], ["panningId", c9a, a1], ["reverseId", c15, a1],
-                 ["evenOnLinkId", c9b, a1], ["openlinksId", c1, a1], ["openLinkInNewId", c1, a1], ["grabHorizId", c9d, a1],
+                 ["evenOnLinkId", c9b, a1], ["openlinksId", c1, a1], ["openLinkInNewId", c1, a1],
+                 ["blankTabNextToCurrentId", c1, a1], ["grabHorizId", c9d, a1],
                  ["grabModeId", c9d, a1], ["leftlabelId", c12, a1], ["goUpId", c1, a1],
                  ["crispResizeId", c1, a1], ["nextprevId", c1, a1], ["nextlinkId", c1, a1],
                  ["prevlinkId", c1, a1], ["nextsStringId", c1, a1], ["prevsStringId", c1, a1]];
@@ -153,7 +155,8 @@ function populateSiteList(prefStr) {
 function savePrefs() {
   var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
-                     "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId", "tabBar", "evenOnLinkId",
+                     "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
+                     "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
                      "goUpId", "crispResizeId", "disableClickHeatId"];
   var radiogroups = ["wheelScrollOptions", "mousebuttOptions", "autoscrollOptions",
@@ -623,6 +626,7 @@ function getPrefsForImportExport() {
     ['autoscrollRate', 'int'],
     ['autoscrolling2', 'bool'],
     ['autoscrollpref', 'int'],
+    ['blankTabNextToCurrent', 'bool'],
     ['crispResize', 'bool'],
     ['customGestures', 'char'],
     ['disableClickHeat', 'bool'],

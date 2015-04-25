@@ -85,6 +85,7 @@
 <!ENTITY aioAction.label "マウスジェスチャの実行">
 <!ENTITY aioAction.singlewindow "'ページのリンクを新しいウィンドウで開く': 新しいウィンドウ一つにタブで開く">
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
+<!ENTITY aioAction.blankTabNextToCurrent "Open new blank tab next to current one">
 <!ENTITY aioAction.neverwarn "'他のタブを閉じる': 警告せず閉じるようにする">
 <!ENTITY aioAction.goUpAction "'上位階層へ移動' / 'ホームページを表示': 新しいタブで開く">
 <!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">

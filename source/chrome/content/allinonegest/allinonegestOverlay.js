@@ -465,7 +465,8 @@ mgsuite.overlay = {
      [function(){mgsuite.overlay.aioTrustAutoSelect=mgsuite.overlay.aioPref.getBoolPref("trustAutoSelect");}, function(){mgsuite.overlay.aioPref.setBoolPref("trustAutoSelect",false);}, function(){return false;}],
      [function(){mgsuite.overlay.aioPanToAS=mgsuite.overlay.aioPref.getBoolPref("panning");}, function(){mgsuite.overlay.aioPref.setBoolPref("panning",false);}, function(){return false;}],
      [function(){mgsuite.overlay.aioDisableClickHeat=mgsuite.overlay.aioPref.getBoolPref("disableClickHeat");}, function(){mgsuite.overlay.aioPref.setBoolPref("disableClickHeat",false);}, function(){return false;}],
-     [function(){mgsuite.overlay.aioCrispResize=mgsuite.overlay.aioPref.getBoolPref("crispResize");}, function(){mgsuite.overlay.aioPref.setBoolPref("crispResize",false);}, function(){return false;}]
+     [function(){mgsuite.overlay.aioCrispResize=mgsuite.overlay.aioPref.getBoolPref("crispResize");}, function(){mgsuite.overlay.aioPref.setBoolPref("crispResize",false);}, function(){return false;}],
+     [function(){mgsuite.overlay.aioPref.getBoolPref("blankTabNextToCurrent");}, function(){mgsuite.overlay.aioPref.setBoolPref("blankTabNextToCurrent",false);}, function(){return false;}]
     ];
 
     mgsuite.overlay.aioPrefObserverDisabled = true;

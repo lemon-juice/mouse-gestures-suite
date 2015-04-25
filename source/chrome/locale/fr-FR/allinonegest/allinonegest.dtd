@@ -85,6 +85,7 @@
 <!ENTITY aioAction.label       "Actions des Gestes de souris">
 <!ENTITY aioAction.singlewindow    "'Ouvrir les liens dans des fenêtres': une seule nouvelle fenêtre avec des onglets">
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
+<!ENTITY aioAction.blankTabNextToCurrent "Open new blank tab next to current one">
 <!ENTITY aioAction.neverwarn       "'Fermer tous les autres onglets': Ne jamais avertir">
 <!ENTITY aioAction.goUpAction      "'Aller au répertoire parent ...' / 'Charger la page d'accueil': Ouvrir dans un nouvel onglet">
 <!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">

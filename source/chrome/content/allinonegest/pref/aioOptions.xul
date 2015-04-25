@@ -281,6 +281,8 @@
            prefstring="allinonegest.singleWindow" label="&aioAction.singlewindow;" />
        <checkbox id="openLinkInNewId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.openLinkInNew" label="&aioAction.openLinkInNew;" />
+       <checkbox id="blankTabNextToCurrentId" type="checkbox" pref="true" preftype="bool"
+           prefstring="allinonegest.blankTabNextToCurrent" label="&aioAction.blankTabNextToCurrent;" />
        <checkbox id="goUpId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.goUpInNewTab" label="&aioAction.goUpAction;" />
        <checkbox id="crispResizeId" type="checkbox" pref="true" preftype="bool"

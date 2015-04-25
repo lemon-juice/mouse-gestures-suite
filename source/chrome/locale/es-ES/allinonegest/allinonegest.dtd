@@ -23,6 +23,7 @@
 
 <!ENTITY aioAction.singlewindow "'Abrir enlaces en ventanas': Una única ventana nueva con pestañas">
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
+<!ENTITY aioAction.blankTabNextToCurrent "Open new blank tab next to current one">
 <!ENTITY aioMMB.cursor "Autodesplazamiento: Mostrar cursor especial">
 <!ENTITY aioMMB.evenOnLink "Comenzar el desplazamiento al pulsar con el botón central en un enlace">
 <!ENTITY aioMMB.fast "Rápido">

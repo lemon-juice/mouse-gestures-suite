@@ -89,6 +89,7 @@
 <!ENTITY aioAction.label       "Azioni Mouse Gesture">
 <!ENTITY aioAction.singlewindow    "'Apri collegamenti in finestre': Nuove finestre singole con schede">
 <!ENTITY aioAction.openLinkInNew   "'Open new Tab/Window' opens link under performed gesture">
+<!ENTITY aioAction.blankTabNextToCurrent "Open new blank tab next to current one">
 <!ENTITY aioAction.neverwarn       "'Chiudi le altre schede': Non mostrare avvertimento">
 <!ENTITY aioAction.goUpAction      "'Vai alla cartella superiore ...' / 'Carica pagina iniziale': Apri in una nuova scheda">
 <!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">
