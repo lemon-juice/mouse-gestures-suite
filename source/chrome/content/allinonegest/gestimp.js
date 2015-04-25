@@ -15,11 +15,15 @@ if (typeof mgsuite == 'undefined') {
 mgsuite.imp = {
   aioGestTable: null,
   
-// mgsuite.imp.aioActionTable's 3rd column denotes rocker multiple operations. 0: Not allowed, 1: Allowed 2: Conditional
-// 4th column denotes the buddy action if any
-// 5th column denotes in what window types action is allowed to be performed:
-//  - array of: browser, source, messenger, mailcompose
-//  - or null for all window types
+  /* Action Table, indexes:
+   * 0: function that executes action
+   * 1: string name of gesture name
+   * 2: rocker multiple operations - 0: Not allowed, 1: Allowed 2: Conditional
+   * 3: index of buddy action, if any
+   * 4: what window types action is allowed to be performed:
+   *    array of elements: browser, source, messenger, mailcompose
+   *    or null for all window types
+   */
   aioActionTable: [
       [function(){mgsuite.imp.aioBackForward(true);}, "g.browserBack", 2, "1", ["browser", "source", "messenger"]], // 0
       [function(){mgsuite.imp.aioBackForward(false);}, "g.browserForward", 2, "0", ["browser", "source", "messenger"]], // 1
@@ -350,170 +354,181 @@ mgsuite.imp = {
     }
     
     if (retObj.type == "custom") {
-      // create callback for custom action execution
-      // The callback may return error msg in object key 'mouseGestureFuncError'
+      retObj.callback = mgsuite.imp.getCustomFunctionCallback(custGestEntry);
+    }
+    
+    return retObj.type ? retObj : null;
+  },
+  
+  /**
+   * Get callback for custom action execution.
+   * The callback may return error msg in object key 'mouseGestureFuncError'.
+   * @param {Object} Single custom function entry from customGestures pref.
+   * @returns {Function|null} null may be returned in case of corrupt pref setting.
+   */
+  getCustomFunctionCallback: function(custGestEntry) {
+    var callback;
+    
+    if (custGestEntry.menuId) {
+       // execute menu item action
+      var item = document.getElementById(custGestEntry.menuId);
       
-      if (custGestEntry.menuId) {
-         // execute menu item action
-        var item = document.getElementById(custGestEntry.menuId);
+      if (!item) {
+        var matches = custGestEntry.menuId.match(/([^>]+)\>(.+)/);
         
-        if (!item) {
-          var matches = custGestEntry.menuId.match(/([^>]+)\>(.+)/);
-          
-          if (matches) {
-            // this menu item has no id and is defined as "menuId>Label"
-            // where Label should be a child of menuId
-            let menuId = matches[1];
-            let label = matches[2].replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-            item = document.getElementById(menuId).querySelector('menuitem[label="' + label + '"]')
-          }
+        if (matches) {
+          // this menu item has no id and is defined as "menuId>Label"
+          // where Label should be a child of menuId
+          let menuId = matches[1];
+          let label = matches[2].replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          item = document.getElementById(menuId).querySelector('menuitem[label="' + label + '"]')
         }
-        
-        
-        var command; // command element
-        
-        if (item && item.command) {
-          command = document.getElementById(item.command);
-        }
+      }
+      
+      
+      var command; // command element
+      
+      if (item && item.command) {
+        command = document.getElementById(item.command);
+      }
 
-        retObj.callback = function() {
-          if (!item) {
-            return {
-              mouseGestureFuncError: "Menu item not found"
-            };
-          }
+      callback = function() {
+        if (!item) {
+          return {
+            mouseGestureFuncError: "Menu item not found"
+          };
+        }
+        
+        var itemType = item.getAttribute("type");
+        var executed = false;
+        
+        if (command) {
+          // invoke command on corresponding <command> element
+          var controller = document.commandDispatcher.getControllerForCommand(item.command);
           
-          var itemType = item.getAttribute("type");
-          var executed = false;
-          
-          if (command) {
-            // invoke command on corresponding <command> element
-            var controller = document.commandDispatcher.getControllerForCommand(item.command);
-            
-            if (controller) {
-              if (controller.isCommandEnabled(item.command)) {
-                controller.doCommand(item.command);
-                executed = true;
-              }
-            } else {
-              // controller not found - run manually
-              // this happens for some actions for obscure reasons
-              if (command.getAttribute("disabled") != "true" && command.getAttribute("hidden") != "true"
-                  && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
-                command.doCommand();
-                executed = true;
-              }
-            }
-          
-          } else {
-            // no command attribute found - try to act on the oncommand
-            if (item.getAttribute("oncommand") && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
-              item.doCommand();
+          if (controller) {
+            if (controller.isCommandEnabled(item.command)) {
+              controller.doCommand(item.command);
               executed = true;
-              
-            } else if (item.nodeName == "menuitem") {
-              // last resort - send click
-              // we use timeout because without it the gesture is fired twice for some reason
-              // after calling click()
-              setTimeout(function() {
-                item.click();
-                executed = true;
-              }, 0);
+            }
+          } else {
+            // controller not found - run manually
+            // this happens for some actions for obscure reasons
+            if (command.getAttribute("disabled") != "true" && command.getAttribute("hidden") != "true"
+                && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
+              command.doCommand();
+              executed = true;
             }
           }
-          
-          if (!executed) {
-            return {
-              mouseGestureFuncError: "No action found to execute"
-            };
+        
+        } else {
+          // no command attribute found - try to act on the oncommand
+          if (item.getAttribute("oncommand") && item.getAttribute("disabled") != "true" && item.getAttribute("hidden") != "true") {
+            item.doCommand();
+            executed = true;
+            
+          } else if (item.nodeName == "menuitem") {
+            // last resort - send click
+            // we use timeout because without it the gesture is fired twice for some reason
+            // after calling click()
+            setTimeout(function() {
+              item.click();
+              executed = true;
+            }, 0);
           }
-          
-          return true;
-        };
+        }
         
-      } else if (custGestEntry.script) {
-        // execute user script
-        var js = mgsuite.imp.readScriptFile(custGestEntry.script);
+        if (!executed) {
+          return {
+            mouseGestureFuncError: "No action found to execute"
+          };
+        }
         
-        switch (custGestEntry.scope) {
-          case "chrome":
-            retObj.callback = function() {
-              if (js === null) {
-                return {
-                  mouseGestureFuncError: "Script not found"
-                };
-              }
-              
-              try {
-                (new Function("event"
-                              , "links"
-                              , "linksUrls"
-                              , "img"
-                              , "imgUrl"
-                              , "frame"
-                              , "tab"
-                              , js))
-                (
-                  mgsuite.overlay.aioSrcEvent,
-                  mgsuite.util.collectedLinks,
-                  mgsuite.util.collectedLinksUrls,
-                  mgsuite.util.collectedImg,
-                  mgsuite.util.collectedImgUrl,
-                  mgsuite.util.collectedFrame,
-                  mgsuite.overlay.aioGestureTab
-                );
-              }
-              catch(ex) {
-                return {
-                  mouseGestureFuncError: ex
-                };
-              }
-              return null;
+        return true;
+      };
+      
+    } else if (custGestEntry.script) {
+      // execute user script
+      var js = mgsuite.imp.readScriptFile(custGestEntry.script);
+      
+      switch (custGestEntry.scope) {
+        case "chrome":
+          callback = function() {
+            // run user script in chrome scope
+            if (js === null) {
+              return {
+                mouseGestureFuncError: "Script not found"
+              };
             }
-            break;
-          
-          case "content":
-            retObj.callback = function() {
-              if (js === null) {
-                return {
-                  mouseGestureFuncError: "Script not found"
-                };
-              }
+            
+            try {
+              (new Function("event"
+                            , "links"
+                            , "linksUrls"
+                            , "img"
+                            , "imgUrl"
+                            , "frame"
+                            , "tab"
+                            , js))
+              (
+                mgsuite.overlay.aioSrcEvent,
+                mgsuite.util.collectedLinks,
+                mgsuite.util.collectedLinksUrls,
+                mgsuite.util.collectedImg,
+                mgsuite.util.collectedImgUrl,
+                mgsuite.util.collectedFrame,
+                mgsuite.overlay.aioGestureTab
+              );
+            }
+            catch(ex) {
+              return {
+                mouseGestureFuncError: ex
+              };
+            }
+            return null;
+          }
+          break;
+        
+        case "content":
+          callback = function() {
+            if (js === null) {
+              return {
+                mouseGestureFuncError: "Script not found"
+              };
+            }
+            
+            if (mgsuite.overlay.aioGestureTab
+                && mgsuite.overlay.aioGestureTab != mgsuite.overlay.aioContent.mCurrentTab) {
+              // don't run on tabs other than current
+              return {
+                mouseGestureFuncError: mgsuite.overlay.aioGetStr("g.aborted")
+              };
+            }
+            
+            if (!mgsuite.overlay.aioGestureTab) {
+              // don't run if gesture started not on tab and outside page document
+              // e.g. on tab bar
+              var tg = mgsuite.overlay.aioSrcEvent.originalTarget;
               
-              if (mgsuite.overlay.aioGestureTab
-                  && mgsuite.overlay.aioGestureTab != mgsuite.overlay.aioContent.mCurrentTab) {
-                // don't run on tabs other than current
+              if (tg.ownerDocument instanceof XULDocument 
+                   && tg.localName != "browser" // exclude content in e10s
+                  ) {
                 return {
                   mouseGestureFuncError: mgsuite.overlay.aioGetStr("g.aborted")
                 };
               }
-              
-              if (!mgsuite.overlay.aioGestureTab) {
-                // don't run if gesture started not on tab and outside page document
-                // e.g. on tab bar
-                var tg = mgsuite.overlay.aioSrcEvent.originalTarget;
-                
-                if (tg.ownerDocument instanceof XULDocument 
-                     && tg.localName != "browser" // exclude content in e10s
-                    ) {
-                  return {
-                    mouseGestureFuncError: mgsuite.overlay.aioGetStr("g.aborted")
-                  };
-                }
-              }
-              
-              mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:runUserScript", {
-                js: js,
-                onTab: !!mgsuite.overlay.aioGestureTab
-              });
-              return null;
             }
-            break;
-        }
+            
+            mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:runUserScript", {
+              js: js,
+              onTab: !!mgsuite.overlay.aioGestureTab
+            });
+            return null;
+          }
+          break;
       }
     }
-    
-    return retObj.type ? retObj : null;
+    return callback;
   },
   
   readScriptFile: function(filename) {

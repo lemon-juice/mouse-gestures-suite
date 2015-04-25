@@ -767,8 +767,8 @@ var mgsuiteFr = {
   runUserScript: function(msg) {
     var event = content.top.mgsuiteMouseDownEvent;
     
-    if (msg.data.onTab) {
-      // gesture started on tab
+    if (msg.data.onTab || !event) {
+      // gesture started on tab or some other case where event is not available
       var doc = content.document;
       
     } else {
@@ -781,14 +781,16 @@ var mgsuiteFr = {
       return;
     }
     
-    var funcParams;
+    var funcParams, node;
 
     if (msg.data.onTab) {
       funcParams = "document.documentElement, null, true";
       
     } else {
-      var node = event.target;
-      node.setAttribute('data-mgsuite-mousedown-tmp-node', 'dummy');
+      if (event) {
+        node = event.target;
+        node.setAttribute('data-mgsuite-mousedown-tmp-node', 'dummy');
+      }
       
       if (this.firstLink) {
         this.firstLink.node.setAttribute('data-mgsuite-mousedown-tmp-link', 'dummy');
@@ -809,7 +811,7 @@ var mgsuiteFr = {
     doc.head.appendChild(script);
     doc.head.removeChild(script);
     
-    if (!msg.data.onTab) {
+    if (!msg.data.onTab && node) {
       node.removeAttribute('data-mgsuite-mousedown-tmp-node');
       
       if (this.firstLink) {

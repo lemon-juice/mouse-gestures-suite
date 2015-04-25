@@ -430,6 +430,23 @@ function getCustomGestures() {
 }
 
 /**
+ * Generate new auto-increment id for custom gesture
+ * @returns {Number}
+ */
+function generateNewCustomGestureId() {
+  var gestures = getCustomGestures();
+  var id = 0;
+  
+  for (var i=0; i<gestures.length; i++) {
+    if (gestures[i].id && gestures[i].id > id) {
+      id = gestures[i].id;
+    }
+  }
+  
+  return id + 1;
+}
+
+/**
  * @param {string} aGesturesString
  * @param {string} aFuncsString
  * @param {string} aRockerString rockerString pref
@@ -536,9 +553,10 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
     rowCount++;
   }
 
-  // custom gestures
+  // populate custom gestures
   for (var i=0; i<customGestures.length; i++) {
     let rowData = {
+      "id": customGestures[i].id,
       "menuId": customGestures[i].menuId,
       "script": customGestures[i].script,
       "scope": customGestures[i].scope,
@@ -705,8 +723,9 @@ function isDuplicable(row) {
 }
 
 function getRowFromRowId(aNb) {
-   for (var i = 0; i < totalCount; ++i)
+   for (var i = 0; i < totalCount; ++i) {
       if (aNb == rowIdTable[i]) return i;
+   }
    dump("AiOGest:" + aNb + " not found in getRow...\n");
    return -1;
 }
@@ -715,7 +734,10 @@ function setFunctionText(fVal, aRow) {
   treeBox.focused = true;
   selectRow(aRow);
   funcNbTable[aRow] = fVal;
-  gestView.setCellText(aRow, functionCol, gestActionTable[fVal - 0]);
+  var label = (fVal.substr(0,1) == "c") ? fVal : gestActionTable[fVal - 0];
+  dump("label=" + label + "\n");
+  
+  gestView.setCellText(aRow, functionCol, label);
   treeBox.invalidateRow(aRow);
 }  
 
@@ -731,8 +753,10 @@ function mouseUpInTree(e) {
   gestureTree.removeEventListener("mouseup", mouseUpInTree, true);
   setTimeout(function() {gestureTree.setAttribute("seltype", "multiple");}, 500);
   if (rockerRow != -1) {
-     setTimeout(function(a, b){setFunctionText(a, b);}, 100, funcVal, rockerRow);
-     rockerRow = -1;
+    setTimeout(function(a, b){
+      setFunctionText(a, b);
+    }, 100, funcVal, rockerRow);
+    rockerRow = -1;
   }
 }
 
@@ -883,14 +907,24 @@ function selectionInTree() {
      else { // funcEditing
         funcEditing = false;
         funcArea.setAttribute("hidden", "true");
+        
         rockerRow = getRowFromRowId(undoFunc[undoFunc.length - 1]);
-        funcVal = funcNbTable[currRow];
-        if (currRow == rowCount) {
-          undoFunc.pop();
-          undoVal.pop();
-          undoId.pop();
-          swapFunc.pop();
-          funcVal = funcNbTable[rockerRow];
+        var metaData = gestView.getRowMetaData(currRow);
+        
+        if (metaData && metaData.id) {
+          // custom function - value is "c" + custom function id
+          funcVal = "c" + metaData.id;
+          
+        } else {
+          // built-in function - value is function index in gestActionTableTokens
+          funcVal = funcNbTable[currRow];
+          if (currRow == rowCount) {
+            undoFunc.pop();
+            undoVal.pop();
+            undoId.pop();
+            swapFunc.pop();
+            funcVal = funcNbTable[rockerRow];
+          }
         }
      }
      gestureTree.addEventListener("mouseup", mouseUpInTree, true);
@@ -1021,6 +1055,7 @@ function insertNewCustomFunction(data) {
   }
   
   var metaData = {
+    "id": generateNewCustomGestureId(),
     "menuId": data.menuId,
     "winTypes": data.winTypes,
     "script": data.script,
@@ -1144,7 +1179,6 @@ function changeGestureData(currRow, data) {
     }
   }
   if (isCorrect) {
-    //editArea.setAttribute("hidden", "true");
     if (!addingGest) ++gUndoId;
     saveForUndo(currRow, gUndoId);
     setGestureText(currRow, t);
@@ -1152,7 +1186,10 @@ function changeGestureData(currRow, data) {
     if (data.name) {
       gestView.setCellText(currRow, functionCol, data.name);
     }
-    if (data.menuId) {
+    if (data.id) {
+      gestView.changeRowMetaData(currRow, "id", data.id);
+    }
+     if (data.menuId) {
       gestView.changeRowMetaData(currRow, "menuId", data.menuId);
     }
     if (data.winTypes) {

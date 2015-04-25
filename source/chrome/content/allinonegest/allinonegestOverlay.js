@@ -673,23 +673,42 @@ mgsuite.overlay = {
     }
 
     if (mgsuite.overlay.aioGesturesEnabled) {
-    mgsuite.imp.aioInitGestTable();
-
-    var rockerFuncs = mgsuite.overlay.aioRockerString.split("|");
-    var rFunc;
-    for (var i = 0; i < rockerFuncs.length; ++i)
-      if (rockerFuncs[i].charAt(0) == "/") {
-       mgsuite.overlay.aioRockerAction[i] = function(){void(0);};
-       mgsuite.overlay.aioRockMultiple[i] = 0;
+      mgsuite.imp.aioInitGestTable();
+  
+      var rockerFuncs = mgsuite.overlay.aioRockerString.split("|");
+      var rFunc;
+      for (var i = 0; i < rockerFuncs.length; ++i) {
+        if (rockerFuncs[i].charAt(0) == "/") {
+          // disabled gesture
+          mgsuite.overlay.aioRockerAction[i] = function(){void(0);};
+          mgsuite.overlay.aioRockMultiple[i] = 0;
+        }
+        else {
+          rFunc = rockerFuncs[i];
+           
+          if (rFunc.charAt(0) == 'c') {
+            // custom function
+            var custGestEntry = mgsuite.overlay.getCustomGestureById(rFunc.substr(1));
+            mgsuite.overlay.aioRockerAction[i] = mgsuite.imp.getCustomFunctionCallback(custGestEntry);;
+            mgsuite.overlay.aioRockMultiple[i] = "2";
+            
+          } else {
+            // built-in function
+            rFunc = rFunc - 0;
+            
+            if (rFunc < 0 || rFunc >= mgsuite.imp.aioActionTable.length) {
+              rockerFuncs[i] = "0";
+              rFunc = 0;
+            }
+            
+            mgsuite.overlay.aioRockerAction[i] = mgsuite.imp.aioActionTable[rFunc][0];
+            mgsuite.overlay.aioRockMultiple[i] = mgsuite.imp.aioActionTable[rFunc][2];
+          }
+        }
       }
-      else {
-      rFunc = rockerFuncs[i] - 0;
-      if (rFunc < 0 || rFunc >= mgsuite.imp.aioActionTable.length) {rockerFuncs[i] = "0"; rFunc = 0;}
-      mgsuite.overlay.aioRockerAction[i] = mgsuite.imp.aioActionTable[rFunc][0];
-      mgsuite.overlay.aioRockMultiple[i] = mgsuite.imp.aioActionTable[rFunc][2];
-      }
-    mgsuite.overlay.aioWheelBothWays = rockerFuncs[2].charAt(0) != "/" && rockerFuncs[3].charAt(0) != "/" && 
-       (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == mgsuite.imp.aioActionTable[rockerFuncs[3] - 0][3]);
+      
+      mgsuite.overlay.aioWheelBothWays = rockerFuncs[2].charAt(0) != "/" && rockerFuncs[3].charAt(0) != "/" && 
+         (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == mgsuite.imp.aioActionTable[rockerFuncs[3] - 0][3]);
     }
 
     mgsuite.overlay.aioTitleDelay = delayTable[titleDelay];
@@ -2187,6 +2206,20 @@ mgsuite.overlay = {
     }
     return null;
   },
+  
+  /**
+   * Get custom gesture entry from customGestures pref.
+   * @param {String} id
+   * @returns {Object}
+   */
+  getCustomGestureById: function(id) {
+    for (var i=0; i<mgsuite.overlay.customGestures.length; i++) {
+      if (mgsuite.overlay.customGestures[i].id == id) {
+        return mgsuite.overlay.customGestures[i];
+      }
+    }
+    return null;
+  }
 }
 
 
