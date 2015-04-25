@@ -590,19 +590,38 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
   
   // rocker gestures
   j = rowCount + 1;
+  var label;
+  
   for (i = 0; i < rockerCount; ++i, ++j) {
-     if (rockFuncTable[i].charAt(0) == "/") {
-        rockFuncTable[i] = rockFuncTable[i].substr(1);
-        isEnabledTable[j] = "/";
-     }
-     else isEnabledTable[j] = "";
-     func = rockFuncTable[i] - 0;
-     if (func < 0 || func >= maxActions) rockFuncTable[i] = "0";
-     gestView.addRow(["", gestActionTable[rockFuncTable[i] - 0], "", rockerGestName[i]], "rocker", null);
-     abbrTable[j] = "?";
-     funcNbTable[j] = rockFuncTable[i];
-     rowIdTable[j] = j + "";
+    if (rockFuncTable[i].charAt(0) == "/") {
+      rockFuncTable[i] = rockFuncTable[i].substr(1);
+      isEnabledTable[j] = "/";
+    }
+     else {
+      isEnabledTable[j] = "";
+    }
+    func = rockFuncTable[i];
+    
+    if (func.charAt(0) == 'c') {
+      // custom function
+      label = getCustomFunctionNameById(func.substr(1));
+      
+    } else {
+      // built-in function
+      func = func - 0;
+      if (func < 0 || func >= maxActions) {
+        rockFuncTable[i] = "0";
+      }
+      
+      label = gestActionTable[rockFuncTable[i] - 0];
+    }
+    
+    gestView.addRow(["", label, "", rockerGestName[i]], "rocker", null);
+    abbrTable[j] = "?";
+    funcNbTable[j] = rockFuncTable[i];
+    rowIdTable[j] = j + "";
   }
+  
   uniqueRowId = totalCount;
   clearSelectionTable();
   setTimeout(function(){selectRow(0);}, 0); // some sync
@@ -730,12 +749,31 @@ function getRowFromRowId(aNb) {
    return -1;
 }
 
+/**
+ * Get custom function name from rendered tree view
+ * @returns {String}
+ */
+function getCustomFunctionNameById(id) {
+  var rowCount = gestView.rowCount;
+  
+  for (var row=0; row<rowCount; row++) {
+    var meta = gestView.getRowMetaData(row);
+    
+    if (meta && meta.id && meta.id == id) {
+      return gestView.getCellText(row, functionCol);
+    }
+  }
+  
+  return null;
+}
+
 function setFunctionText(fVal, aRow) {
   treeBox.focused = true;
   selectRow(aRow);
   funcNbTable[aRow] = fVal;
-  var label = (fVal.substr(0,1) == "c") ? fVal : gestActionTable[fVal - 0];
-  dump("label=" + label + "\n");
+  var label = (fVal.substr(0,1) == "c")
+    ? getCustomFunctionNameById(fVal.substr(1))
+    : gestActionTable[fVal - 0];
   
   gestView.setCellText(aRow, functionCol, label);
   treeBox.invalidateRow(aRow);

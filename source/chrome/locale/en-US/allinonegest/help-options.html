@@ -174,8 +174,8 @@
     <table class="gestlist">
       <thead>
         <tr>
-          <th style="width: 203.067px;">Function</th>
-          <th style="width: 53.9333px;">Current<br>
+          <th>Function</th>
+          <th>Current<br>
             Gesture</th>
           <th>Available in</th>
           <th>Description</th>
@@ -1175,37 +1175,11 @@
       </tbody>
     </table>
     <h2 id="tab3">Custom Functions</h2>
-    <h3>Menu Item Actions</h3>
-    <h3>User Scripts</h3>
-    <p>Scripts are run inside a javascript function in one of the two scopes:</p>
-    <h4>ChromeWindow</h4>
-    <p>Script is run within native browser environment (<em>chrome</em>) with
-      full privileges given to extensions and browser code. The <em>window</em>
-      global object refers to the <em>ChromeWindow</em> object.</p>
-    <p>Available variables passed to the script function that can be used by the
-      user script:</p>
-    <ul>
-      <li><strong>event</strong> – the mousedown event of the performed gesture</li>
-      <li><strong>MG</strong> – object with the following properties:</li>
-      <ul>
-        <li><strong>links</strong> – array of link elements that were found
-          under peformed gesture. Use MG.collectedLinks[0] to get reference to
-          the first link.</li>
-        <li><strong>linksUrls</strong> – array of URLs of links that were found
-          under peformed gesture.</li>
-        <li><strong>img</strong> – image element found on mousedown event.</li>
-        <li><strong>imgUrl</strong> – URL of image found on mousedown event.
-          This will also find background image.</li>
-        <li><strong>frame</strong> – the <em>window</em> object of a frame or
-          iframe found on mousedown event. If no frame was found then it
-          contains the top window object.</li>
-      </ul>
-    </ul>
-    <p>In multi-process browser the ChromeWindow script will run in the main
-      process and the mousedown event target will not point to web page DOM elements
-      but only to the browser XUL element. Also, any web page DOM elements
-      passed in the <em>MG</em> object will be wrapped in a CPOW (Cross Process
-      Object Wrapper).</p>
+    Apart from running one of the built-in functions you can create your own
+    functions to be executed with mouse gestures — use the Add Custom Function
+    button for this. You can use custom function to either invoke a menu item in
+    the browser or mail component, or to run your own script. Detailed
+    description of how custom functions work can be found here.<br>
     <h2 id="tab3">Advanced Prefs #1</h2>
     <p><strong>Trigger button</strong> - choose which mouse button will be used
       for mouse gestures and scroll wheel navigation.</p>
@@ -1328,11 +1302,12 @@
     </ul>
     <h2 id="exp-imp">Exporting, importing Mouse Gesture preferences &amp;
       restoring defaults</h2>
-    Use the buttons in the <em>Settings Management</em> group in Advanced Prefs #2.
-    These operations will apply to all mouse gesture settings including your
-    gesture definitions and custom functions and scripts. Only the option "Middle-click pastes in text boxes"
-    will not be exported because it's not really a Mouse Gestures Suite option,
-    it's the built-in option of the browser (controlled by the hidden pref <em>middlemouse.paste</em>).<br>
+    Use the buttons in the <em>Settings Management</em> group in Advanced Prefs
+    #2. These operations will apply to all mouse gesture settings including your
+    gesture definitions and custom functions and scripts. Only the option
+    "Middle-click pastes in text boxes" will not be exported because it's not
+    really a Mouse Gestures Suite option, it's the built-in option of the
+    browser (controlled by the hidden pref <em>middlemouse.paste</em>).<br>
     <br>
   </body>
 </html>
