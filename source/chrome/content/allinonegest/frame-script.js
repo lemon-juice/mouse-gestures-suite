@@ -83,7 +83,7 @@ var mgsuiteFr = {
     
     if (e.type == 'mousedown') {
       sendAsyncMessage("MouseGesturesSuite:CollectFrame", {}, {frame: e.target.ownerDocument.defaultView});
-      
+            
       this.firstLink = null;
       
       // save mousedown element e.g. for scrolling actions
@@ -192,6 +192,7 @@ var mgsuiteFr = {
           url.getStringValue() : null;
   },
   
+  // invoked when mousedown happens in chrome scope
   startMouseMove: function() {
     addEventListener("mousemove", this);
     this.collectElementsData = true;
@@ -766,24 +767,41 @@ var mgsuiteFr = {
   runUserScript: function(msg) {
     var event = content.top.mgsuiteMouseDownEvent;
     
-    // the document can be a frame, that's why we get it from event
-    var doc = event.target.ownerDocument.defaultView.document;
+    if (msg.data.onTab) {
+      // gesture started on tab
+      var doc = content.document;
+      
+    } else {
+      // the document can be a frame, that's why we get it from event
+      var doc = event.target.ownerDocument.defaultView.document;
+    }
     
     if (!doc.body) {
       // probably a non-html document is loaded, like XML
       return;
     }
-
-    var node = content.top.mgsuiteMouseDownEvent.target;
-    node.setAttribute('data-mgsuite-mousedown-tmp-node', 'dummy');
     
-    if (this.firstLink) {
-      this.firstLink.node.setAttribute('data-mgsuite-mousedown-tmp-link', 'dummy');
+    var funcParams;
+
+    if (msg.data.onTab) {
+      funcParams = "document.documentElement, null, true";
+      
+    } else {
+      var node = event.target;
+      node.setAttribute('data-mgsuite-mousedown-tmp-node', 'dummy');
+      
+      if (this.firstLink) {
+        this.firstLink.node.setAttribute('data-mgsuite-mousedown-tmp-link', 'dummy');
+      }
+      
+      funcParams = "document.querySelector('*[data-mgsuite-mousedown-tmp-node]')"
+      + ", document.querySelector('*[data-mgsuite-mousedown-tmp-link]')"
+      + ", false";
     }
     
-    var str = "(function(node, link) { " + msg.data.js + " })("
-      +   "document.querySelector('*[data-mgsuite-mousedown-tmp-node]')"
-      + ", document.querySelector('*[data-mgsuite-mousedown-tmp-link]')"
+    // inject and run user script in target page or frame
+    var str = "(function(node, link, onTab) { " + msg.data.js + " })("
+      + funcParams
       + ");";
     
     var script = doc.createElement("script");
@@ -791,9 +809,12 @@ var mgsuiteFr = {
     doc.head.appendChild(script);
     doc.head.removeChild(script);
     
-    node.removeAttribute('data-mgsuite-mousedown-tmp-node');
-    if (this.firstLink) {
-      this.firstLink.node.removeAttribute('data-mgsuite-mousedown-tmp-link', 'dummy');
+    if (!msg.data.onTab) {
+      node.removeAttribute('data-mgsuite-mousedown-tmp-node');
+      
+      if (this.firstLink) {
+        this.firstLink.node.removeAttribute('data-mgsuite-mousedown-tmp-link', 'dummy');
+      }
     }
   }
 }

@@ -480,14 +480,32 @@ mgsuite.imp = {
                 };
               }
               
-              if (mgsuite.overlay.aioGestureTab) {
-                // don't run on tab
+              if (mgsuite.overlay.aioGestureTab
+                  && mgsuite.overlay.aioGestureTab != mgsuite.overlay.aioContent.mCurrentTab) {
+                // don't run on tabs other than current
                 return {
                   mouseGestureFuncError: mgsuite.overlay.aioGetStr("g.aborted")
                 };
               }
               
-              mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:runUserScript", {js: js});
+              if (!mgsuite.overlay.aioGestureTab) {
+                // don't run if gesture started not on tab and outside page document
+                // e.g. on tab bar
+                var tg = mgsuite.overlay.aioSrcEvent.originalTarget;
+                
+                if (tg.ownerDocument instanceof XULDocument 
+                     && tg.localName != "browser" // exclude content in e10s
+                    ) {
+                  return {
+                    mouseGestureFuncError: mgsuite.overlay.aioGetStr("g.aborted")
+                  };
+                }
+              }
+              
+              mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:runUserScript", {
+                js: js,
+                onTab: !!mgsuite.overlay.aioGestureTab
+              });
               return null;
             }
             break;
