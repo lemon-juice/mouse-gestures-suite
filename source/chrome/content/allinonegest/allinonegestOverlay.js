@@ -1083,20 +1083,26 @@ mgsuite.overlay = {
 	}
 
     if (gesturesEnabled && e.button == mgsuite.const.aioOpp[mgsuite.overlay.aioDownButton] && mgsuite.overlay.aioRockEnabled) {
-	  // rocker gestures
+	  // rocker gesture - second click
 	  var func;
 	  
       if (e.button == mgsuite.const.RMB) {
+        if (window.gBrowser && gBrowser.selectedBrowser) {
+          var sel = mgsuite.util.getContentWindow(gBrowser.selectedBrowser).getSelection();
+          sel.removeAllRanges();
+        }
+        
         func = 1;
         mgsuite.overlay.aioSrcEvent = e;
         setTimeout(function(){mgsuite.overlay.aioPerformRockerFunction(1);}, 0);
       }
        else {
+        e.preventDefault();
+        
 		func = 0;
 		mgsuite.overlay.aioSrcEvent = e;
 		mgsuite.overlay.aioPerformRockerFunction(0);
       }
-	  //dump("rocker:" + func + "\n");
 	  
 	  mgsuite.overlay.blockMouseEventsForRocker();
 	  mgsuite.overlay.rockerButtonsPressed = 2;
@@ -1260,8 +1266,8 @@ mgsuite.overlay = {
 	if (mgsuite.overlay.rockerButtonsPressed > 0) {
 	  if (mgsuite.overlay.rockerButtonsPressed == 1 && window.gBrowser) {
 		mgsuite.overlay.aioNukeEvent(e);
-		var sel = mgsuite.util.getContentWindow(gBrowser.selectedBrowser).getSelection();
-		sel.removeAllRanges();
+		//var sel = mgsuite.util.getContentWindow(gBrowser.selectedBrowser).getSelection();
+		//sel.removeAllRanges();
 	  }
 	  
 	  mgsuite.overlay.rockerButtonsPressed--;
