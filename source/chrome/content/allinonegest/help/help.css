@@ -3,6 +3,7 @@ body {
   font-family: tahoma, Sans-Serif;
   font-size: 80%;
   padding-bottom: 100px;
+  margin-top: 15px;
 }
 code {
   font-size: 115%;
@@ -20,6 +21,19 @@ ul li {
   background-color: #fffbd8;
   border-top: 1px solid #aaa;
   border-bottom: 1px solid #aaa;
+}
+header {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #ccc;
+  text-align: center;
+  border-top: 1px solid #000;
+  padding: 2px 0;
+}
+header a {
+  color: blue;
 }
 table {
   border-spacing: 0;
