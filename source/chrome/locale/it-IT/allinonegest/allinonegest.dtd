@@ -62,8 +62,8 @@
 
 <!ENTITY about.label           "Informazioni">
 <!ENTITY about.version             "Versione">
-<!ENTITY about.provider1           "Fornita da M. Boullet, Optimoz, Joe4711, Skidooer &amp; tutti gli altri;">
-<!ENTITY about.provider2           "Fusione ed ulteriore sviluppo da parte di MK">
+<!ENTITY about.provider1           "Originally based on All-in-One Gestures by M. Boullet">
+<!ENTITY about.provider2           "Modified and further developed by Lemon Juice">
 
 <!ENTITY mousebutton.label     "Pulsante utilizzato per Mouse Gesture e Navigazione con rotellina di scorrimento">
 <!ENTITY mousebutton.left          "Sinistro">

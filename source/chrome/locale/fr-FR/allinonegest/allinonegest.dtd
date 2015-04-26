@@ -58,8 +58,8 @@
 
 <!ENTITY about.label           "A propos">
 <!ENTITY about.version             "Version">
-<!ENTITY about.provider1           "Initialement: M. Boullet, Optimoz, Joe4711, Skidooer &amp; les autres;">
-<!ENTITY about.provider2           "Fusionné et developpé par MK">
+<!ENTITY about.provider1           "Originally based on All-in-One Gestures by M. Boullet">
+<!ENTITY about.provider2           "Modified and further developed by Lemon Juice">
 
 <!ENTITY mousebutton.label     "Bouton déclenchant les Gestes de Souris et la Navigation à la molette">
 <!ENTITY mousebutton.left          "Gauche">

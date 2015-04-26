@@ -58,8 +58,8 @@
 
 <!ENTITY about.label "О Mouse Gestures Suite">
 <!ENTITY about.version "Версия">
-<!ENTITY about.provider1 "Оригинальные расширения M. Boullet, Optimoz, Joe4711, Skidooer &amp; all;">
-<!ENTITY about.provider2 "Объединение и дальнейшая разработка MK">
+<!ENTITY about.provider1           "Originally based on All-in-One Gestures by M. Boullet">
+<!ENTITY about.provider2           "Modified and further developed by Lemon Juice">
 
 <!ENTITY mousebutton.label "Начинать жесты мышью и навигацию колесом прокрутки при нажатии:">
 <!ENTITY mousebutton.left "левой кнопки">

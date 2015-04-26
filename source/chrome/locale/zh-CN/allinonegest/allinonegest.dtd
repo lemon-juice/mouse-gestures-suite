@@ -58,8 +58,8 @@
 
 <!ENTITY about.label           "关于">
 <!ENTITY about.version             "版本">
-<!ENTITY about.provider1           "提供: M. Boullet, Optimoz, Joe4711, Skidooer &amp; all;">
-<!ENTITY about.provider2           "合并及再开发: MK">
+<!ENTITY about.provider1           "Originally based on All-in-One Gestures by M. Boullet">
+<!ENTITY about.provider2           "Modified and further developed by Lemon Juice">
 
 <!ENTITY mousebutton.label     "鼠标手势及滚轮导航触发键">
 <!ENTITY mousebutton.left          "左键">

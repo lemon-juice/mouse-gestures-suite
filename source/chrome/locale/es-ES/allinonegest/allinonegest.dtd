@@ -1,6 +1,6 @@
 <!ENTITY about.label "Acerca de">
-<!ENTITY about.provider1 "Creada por M. Boullet, Optimoz, Joe4711, Skidooer &amp; otros;">
-<!ENTITY about.provider2 "Futuro desarrollo por MK">
+<!ENTITY about.provider1           "Originally based on All-in-One Gestures by M. Boullet">
+<!ENTITY about.provider2           "Modified and further developed by Lemon Juice">
 <!ENTITY about.version "Versión">
 <!ENTITY aioAction.goUpAction "'Ir a la carpeta superior'/'Cargar página de inicio': Abrir en una nueva pestaña">
 <!ENTITY aioAction.crispResize     "Turn off smoothing when resizing images">

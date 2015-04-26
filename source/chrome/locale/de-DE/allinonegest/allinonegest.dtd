@@ -58,8 +58,8 @@
 
 <!ENTITY about.label           "Über">
 <!ENTITY about.version             "Version">
-<!ENTITY about.provider1           "Original von M. Boullet, Optimoz, Joe4711, Skidooer; Zusammenstellung von Marc Boullet">
-<!ENTITY about.provider2           "Deutsche Übersetzung von Armin C. Schneider">
+<!ENTITY about.provider1           "Originally based on All-in-One Gestures by M. Boullet">
+<!ENTITY about.provider2           "Modified and further developed by Lemon Juice">
 
 <!ENTITY mousebutton.label     "Auslösetaste für Mausgesten und Mausrad-Navigation">
 <!ENTITY mousebutton.left          "Links">
