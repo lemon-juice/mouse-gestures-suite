@@ -35,10 +35,18 @@
  .menuitem-iconic[aioUnderline] {
    text-decoration: underline;
  }
- #aioWheelPopup menuitem[_moz-menuactive] {
-   color: -moz-menuhovertext;
-   background-color: Highlight;
+ #aioWheelPopup > menuitem {
+   -moz-appearance: none !important;
+   background: #eee;
  }
+ #aioWheelPopup > menuitem[_moz-menuactive="true"] {
+   color: white !important;
+   background: #067cff !important;
+ }
+ #aioWheelPopup > menuitem.history[_moz-menuactive="true"] {
+   background: #444 !important;
+ }
+ 
  .aioTrail {
    height: 1px;
    width: 1px;

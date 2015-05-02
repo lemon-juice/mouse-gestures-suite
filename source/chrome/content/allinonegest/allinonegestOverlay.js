@@ -1445,7 +1445,7 @@ mgsuite.overlay = {
     this.scrollerNode = null;
   },
 
-  _aioCreatePU: function(arg1, arg2, arg3) {
+  _aioCreatePU: function(arg1, arg2, arg3, menuClass) {
     var popupElem, label, img;
     if (this.closeFunc) window.addEventListener("mouseup", this.closeFunc, true);
     if (this.popupType == "popup") {
@@ -1462,14 +1462,21 @@ mgsuite.overlay = {
            label = getWebNavigation().sessionHistory.getEntryAtIndex(i, false).title;
         }
         else {
-      if (mgsuite.overlay.aioContent.mTabContainer.childNodes[i]) {
-        label = mgsuite.overlay.aioContent.mTabContainer.childNodes[i].label;
-      } else {
-        label = mgsuite.overlay.aioContent.ownerDocument.title;
-      }
-      }
-
-        popupElem.setAttribute("class", "menuitem-iconic");
+          if (mgsuite.overlay.aioContent.mTabContainer.childNodes[i]) {
+            label = mgsuite.overlay.aioContent.mTabContainer.childNodes[i].label;
+          } else {
+            label = mgsuite.overlay.aioContent.ownerDocument.title;
+          }
+        }
+        
+        var className = "menuitem-iconic";
+        
+        if (menuClass) {
+          // additional styling
+          className += " " + menuClass;
+        }
+      
+        popupElem.setAttribute("class", className);
         popupElem.setAttribute("style", "max-width:40em;");
         popupElem.setAttribute("label", label);
         if (arg1) {
@@ -1477,9 +1484,9 @@ mgsuite.overlay = {
                   mgsuite.overlay.aioContent.mTabContainer.childNodes[mgsuite.overlay.aioContent.mTabContainer.selectedIndex].getAttribute("image") : mgsuite.const.aioNextURL;
       } else {
 
-      if (mgsuite.overlay.aioContent.mTabContainer.childNodes[i]) {
-        img = mgsuite.overlay.aioContent.mTabContainer.childNodes[i].getAttribute("image");
-      }
+        if (mgsuite.overlay.aioContent.mTabContainer.childNodes[i]) {
+          img = mgsuite.overlay.aioContent.mTabContainer.childNodes[i].getAttribute("image");
+        }
       }
         if (img) popupElem.setAttribute("image", img);
 
@@ -1624,7 +1631,7 @@ mgsuite.overlay = {
 
     mgsuite.overlay.aioHistPU = new mgsuite.overlay.aioPopUp(sessionH.index, start, count, true, "popup", mgsuite.overlay.aioOldX + 2, mgsuite.overlay.aioOldY + 2,
                              false, mgsuite.overlay.aioHistWheelEnd, mgsuite.overlay.aioHistPopping, mgsuite.overlay.aioHistWheeling);
-    mgsuite.overlay.aioHistPU.createPopup(1, "", "");
+    mgsuite.overlay.aioHistPU.createPopup(1, "", "", "history");
   },
 
   aioHistPopping: function() {
