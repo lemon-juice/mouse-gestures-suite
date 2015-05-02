@@ -53,7 +53,6 @@ mgsuite.overlay = {
   aioSmoothTrail: null,
   aioWheelEnabled: null,
   aioScrollEnabled: null,
-  noTabScrollPopup: false,
   aioNoScrollMarker: null,
   aioStartOnLinks: null,
   aioWhatAS: null,
@@ -1563,7 +1562,7 @@ mgsuite.overlay = {
     }
     // Create and Display the popup menu
     mgsuite.overlay.aioTabPU = new mgsuite.overlay.aioPopUp(activeTab, 0, mgsuite.overlay.aioTabCount, false, "popup", mgsuite.overlay.aioOldX + 2, mgsuite.overlay.aioOldY + 2,
-                            mgsuite.overlay.aioReverseScroll && mgsuite.overlay.noTabScrollPopup, mgsuite.overlay.aioTabWheelEnd, mgsuite.overlay.aioTabPopping, mgsuite.overlay.aioTabWheeling);
+                            mgsuite.overlay.aioReverseScroll && !mgsuite.overlay.showTabsPopup, mgsuite.overlay.aioTabWheelEnd, mgsuite.overlay.aioTabPopping, mgsuite.overlay.aioTabWheeling);
     mgsuite.overlay.aioTabPU.createPopup(0, "", "");
 	
 	var prevIndex = mgsuite.overlay.getPreviousSelectedTab(true);
@@ -1578,7 +1577,7 @@ mgsuite.overlay = {
   },
 
   aioTabPopping: function(e) {
-	if (mgsuite.overlay.noTabScrollPopup) {
+	if (!mgsuite.overlay.showTabsPopup) {
 	  e.preventDefault(); //no popup
 	  if (mgsuite.overlay.aioWheelMode == 2) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(mgsuite.overlay.aioCCW != mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
 	}
@@ -1587,11 +1586,11 @@ mgsuite.overlay = {
   aioTabWheeling: function(e) {
     mgsuite.overlay.aioTabPU.scrollPopup(e);
 	
-    if (mgsuite.overlay.noTabScrollPopup) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
+    if (!mgsuite.overlay.showTabsPopup) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
   },
 
   aioTabWheelEnd: function(e) {
-	if (mgsuite.overlay.noTabScrollPopup) {
+	if (!mgsuite.overlay.showTabsPopup) {
 	  mgsuite.overlay.aioTabPU.closePopup(0);
 	  mgsuite.overlay.aioRestoreListeners();
 	  return;
