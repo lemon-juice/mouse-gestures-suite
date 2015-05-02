@@ -625,13 +625,13 @@ mgsuite.overlay = {
   
 		case 'messenger':
 		  mgsuite.overlay.aioContent = document.getElementById("messagepane");
-		  mgsuite.overlay.aioRendering = document.getElementById("messagepane");
+		  mgsuite.overlay.aioRendering = document.getElementById("messagepanebox");
 		  mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
 		break;
   
 		case 'mailcompose':
 		  mgsuite.overlay.aioContent = document.getElementById("appcontent");
-		  mgsuite.overlay.aioRendering = document.getElementById("content-frame");
+		  mgsuite.overlay.aioRendering = document.getElementById("sidebar-parent");
 		  mgsuite.overlay.aioStatusBar = document.getElementById("statusText");
 		break;
   

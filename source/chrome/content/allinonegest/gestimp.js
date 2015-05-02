@@ -119,7 +119,7 @@ mgsuite.imp = {
       [function(){mgsuite.imp.aioDetachTab();}, "g.detachTab", 0, "", ["browser"]], //91
       [function(){mgsuite.imp.aioDetachTabAndDoubleStack();}, "g.detachTabAndDoubleStack", 0, "", ["browser"]], //92
       [function(){mgsuite.imp.aioDoubleStackWindows();}, "g.doubleStack2Windows", 0, "", null], //93
-      [function(){mgsuite.imp.aioToggleSidebar();}, "g.toggleSidebar", 0, "", ["browser", "messenger"]], //94
+      [function(){mgsuite.imp.aioToggleSidebar();}, "g.toggleSidebar", 0, "", ["browser", "messenger", "mailcompose"]], //94
       [function(shiftKey){mgsuite.imp.aioOpenNewWindow(null, shiftKey, false, true);}, "g.openPrivateWindow", 0, "", null], //95
       [function(){mgsuite.imp.aioToggleBookmarksToolbar();}, "g.toggleBookmarksToolbar", 0, "", ["browser"]], //96
       [function(){mgsuite.imp.aioCloseRightTabs();}, "g.closeTabsToTheRight", 0, "", ["browser"]], // 97
@@ -2394,6 +2394,7 @@ mgsuite.imp = {
   aioToggleSidebar: function() {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
+      case "mailcompose":
         if (mgsuite.overlay.aioIsFx) {
           toggleSidebar('viewBookmarksSidebar');
         } else {
