@@ -11,7 +11,7 @@ function getBrowserWindow() {
 
 function init() {
   initEditRuleConst();
-  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
+  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
                      "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
@@ -97,6 +97,7 @@ function doEnabling() {
   var c3 = document.getElementById("rocker").checked;
   var c4 = c1 && document.getElementById("trailId").checked;
   var c5 = c2 && wheelEl.value == 3;
+  var c5a = c2 && (wheelEl.value == 2 || wheelEl.value == 3);
   var c6 = c4 && trailSize < 12;
   var c7 = c4 && trailSize > 1;
   var c8 = !c1or2 || document.getElementById("mousebuttOptions").value != 1;
@@ -119,10 +120,14 @@ function doEnabling() {
   var idTable = [["trailId", c1, a1], ["trailColorId", c4, a1], ["trailPickerId", c4, a2],
                  ["trailSizeId", c4, a1], ["smoothId", c4, a1],
                  ["plusId", c6, a1], ["minusId", c7, a1],
-                 ["wheelScrollOptions", c2, a1], ["wheelScrollOptions0", c2, a1],
-                 ["wheelScrollOptions1", c2, a1], ["wheelScrollOptions2", c2, a1],
+                 ["wheelScrollOptions", c2, a1],
+                 ["wheelScrollOptions0", c2, a1],
+                 ["wheelScrollOptions1", c2, a1],
+                 ["wheelScrollOptions2", c2, a1],
                  ["wheelScrollOptions3", c2, a1],
-                 ["wheelDirection", c5, a1], ["rockerModeId", c3, a1],
+                 ["wheelDirection", c5, a1],
+                 ["showTabsPopup", c5a, a1],
+                 ["rockerModeId", c3, a1],
                  ["tooltipShiftId", c16, a1], ["tooltipDelayId", c17, a1], ["delaydropdownId", c17, a1],
                  ["tooltipDisplayId", c16, a1], ["durationdropdownId", c16, a1], ["mousebuttOptions", c1or2, a1],
                  ["mousebutt0", c1or2, a1],  ["mousebutt1", c1or2, a1], ["mousebutt2", c1or2, a1],
@@ -164,7 +169,7 @@ function populateSiteList(prefStr) {
 }
 
 function savePrefs() {
-  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection",
+  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
                      "markerId", "cursorId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
                      "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
@@ -677,6 +682,7 @@ function getPrefsForImportExport() {
     ['shiftForTitle', 'bool'],
     ['sitesList', 'char'],
     ['showLinkTooltip', 'bool'],
+    ['showTabsPopup', 'bool'],
     ['singleWindow', 'bool'],
     ['smoothTrail', 'bool'],
     ['tabBar', 'bool'],

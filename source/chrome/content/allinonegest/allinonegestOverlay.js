@@ -446,6 +446,7 @@ mgsuite.overlay = {
      [function(){mgsuite.overlay.aioNoScrollMarker=mgsuite.overlay.aioPref.getBoolPref("autoscrollNoMarker");}, function(){mgsuite.overlay.aioPref.setBoolPref("autoscrollNoMarker",false);}, function(){return false;}],
      [function(){mgsuite.overlay.aioWheelMode=mgsuite.overlay.aioPref.getIntPref("wheelpref2");}, function(){mgsuite.overlay.aioPref.setIntPref("wheelpref2",0);}, function(){return mgsuite.overlay.aioWheelMode<0||mgsuite.overlay.aioWheelMode>3;}],
      [function(){mgsuite.overlay.aioHistIfDown=mgsuite.overlay.aioPref.getBoolPref("wheelHistoryIfCw");}, function(){mgsuite.overlay.aioPref.setBoolPref("wheelHistoryIfCw",true);}, function(){return false;}],
+     [function(){mgsuite.overlay.showTabsPopup=mgsuite.overlay.aioPref.getBoolPref("showTabsPopup");}, function(){mgsuite.overlay.aioPref.setBoolPref("showTabsPopup",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioRockMode=mgsuite.overlay.aioPref.getIntPref("rockertypepref");}, function(){mgsuite.overlay.aioPref.setIntPref("rockertypepref",1);}, function(){return mgsuite.overlay.aioRockMode<0||mgsuite.overlay.aioRockMode>1;}],
      [function(){mgsuite.overlay.aioSpecialCursor=mgsuite.overlay.aioPref.getBoolPref("autoscrollCursor");}, function(){mgsuite.overlay.aioPref.setBoolPref("autoscrollCursor",false);}, function(){return false;}],
      [function(){mgsuite.overlay.aioNoAltWithGest=mgsuite.overlay.aioPref.getBoolPref("noAltGest");}, function(){mgsuite.overlay.aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
