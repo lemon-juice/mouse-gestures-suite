@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav              "Navigate through Tabs">
 <!ENTITY wheel.historyOrTab        "History / Tabs based on initial rotation">
 <!ENTITY wheel.historyIfCw         "Backward (toward the user): History">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label      "Middle Button Scrolling: Select">
 <!ENTITY autoscroll.AiO            "Mouse Gestures autoscroll">

@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav              "以分頁導覽">
 <!ENTITY wheel.historyOrTab        "以滾動方向決定歷史記錄或分頁導覽">
 <!ENTITY wheel.historyIfCw         "向後滾動（向使用者方向滾動）：歷史紀錄">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label      "中鍵捲動：選擇">
 <!ENTITY autoscroll.AiO            "Mouse Gestures 的自動捲動">

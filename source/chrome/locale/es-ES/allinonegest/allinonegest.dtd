@@ -104,6 +104,7 @@
 <!ENTITY trails.smooth "Smooth (slower on old hardware)">
 <!ENTITY wheel.gestures "Realizar acción del gesto">
 <!ENTITY wheel.historyIfCw "Volver: Historial">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 <!ENTITY wheel.historyNav "Navegar en el historial">
 <!ENTITY wheel.historyOrTab "Historial/Pestañas basado en la rotación inicial">
 <!ENTITY wheel.label "Desplazamiento con la rueda">

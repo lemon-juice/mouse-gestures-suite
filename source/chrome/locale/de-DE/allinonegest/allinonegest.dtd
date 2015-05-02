@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav              "Tabs durchblättern">
 <!ENTITY wheel.historyOrTab        "Chronik / Tabs je nach Drehrichtung">
 <!ENTITY wheel.historyIfCw         "Nach unten drehen: Chronik">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label      "Bildlauf mit mittlerer Maustaste">
 <!ENTITY autoscroll.AiO            "Mouse Gestures Bildlauf">

@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav              "控制标签页浏览">
 <!ENTITY wheel.historyOrTab        "由滚动方向决定历史记录或标签">
 <!ENTITY wheel.historyIfCw         "向后滚动(向用户方向滚动):历史纪录">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label      "中键滚动:选择">
 <!ENTITY autoscroll.AiO            "Mouse Gestures式自动滚动">

@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav             "탭 이동">
 <!ENTITY wheel.historyOrTab       "회전 방향에 따라 결정">
 <!ENTITY wheel.historyIfCw        "역으로(사용자 쪽으로): 탐색 기록">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label         "가운데 버튼 스크롤: 선택">
 <!ENTITY autoscroll.AiO           "Mouse Gestures 자동 스크롤">

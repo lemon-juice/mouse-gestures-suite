@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav "タブを切り替える">
 <!ENTITY wheel.historyOrTab "両方 (上で履歴、下でタブ切り替えモードに)">
 <!ENTITY wheel.historyIfCw "上下を逆に">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label "オートスクロール">
 <!ENTITY autoscroll.AiO "Mouse Gesturesのものを使用">

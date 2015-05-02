@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav              "Naviga attraverso le schede">
 <!ENTITY wheel.historyOrTab        "Cronologia / Schede basate su rotazione iniziale">
 <!ENTITY wheel.historyIfCw         "All'indietro (verso l'utente): Cronologia">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label      "Scorrimento con pulsante centrale: Seleziona">
 <!ENTITY autoscroll.AiO            "Autoscorrimento Mouse Gestures">

@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav              "Naviguer dans les onglets">
 <!ENTITY wheel.historyOrTab        "Historique / Onglets suivant la rotation initiale">
 <!ENTITY wheel.historyIfCw         "Arrière (vers la main): Historique">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label      "Défilement avec le bouton du milieu: Choisir">
 <!ENTITY autoscroll.AiO            "Auto-défilement de Gestes Tout-en-Un">

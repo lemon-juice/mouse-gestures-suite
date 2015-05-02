@@ -145,7 +145,7 @@
         <checkbox id="wheelDirection" class="indent" type="checkbox" pref="true" preftype="bool"
         prefstring="allinonegest.wheelHistoryIfCw" label="&wheel.historyIfCw;" />
         <checkbox id="showTabsPopup" type="checkbox" pref="true" preftype="bool"
-        prefstring="allinonegest.showTabsPopup" label="Show tab list in popup" />
+        prefstring="allinonegest.showTabsPopup" label="&wheel.showTabsPopup;" />
       </vbox>
      </groupbox>
      <groupbox orient="horizontal" flex="1">

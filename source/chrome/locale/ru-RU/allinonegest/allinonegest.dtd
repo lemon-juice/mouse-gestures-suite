@@ -49,6 +49,7 @@
 <!ENTITY wheel.tabNav "Навигация по Вкладкам">
 <!ENTITY wheel.historyOrTab "История/Вкладки зависит от начального вращения">
 <!ENTITY wheel.historyIfCw "Наоборот (на себя): История">
+<!ENTITY wheel.showTabsPopup       "Show tab list in popup">
 
 <!ENTITY autoscroll.label "Прокручивание средней кнопкой:">
 <!ENTITY autoscroll.AiO "Mouse Gestures автопрокрутка">
