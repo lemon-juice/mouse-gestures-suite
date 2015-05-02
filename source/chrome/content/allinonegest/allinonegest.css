@@ -35,9 +35,14 @@
  .menuitem-iconic[aioUnderline] {
    text-decoration: underline;
  }
+ #aioWheelPopup {
+   border: 1px solid #888;
+   padding: 2px;
+ }
  #aioWheelPopup > menuitem {
    -moz-appearance: none !important;
    background: #eee;
+   padding: 2px 5px;
  }
  #aioWheelPopup > menuitem[_moz-menuactive="true"] {
    color: white !important;
