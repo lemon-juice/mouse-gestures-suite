@@ -43,9 +43,9 @@
  <tabpanels flex="1" id="tabpanId">
   <tabpanel orient="vertical">
    <spacer flex="1"/>
-   <hbox flex="1">
+   <hbox>
    <spacer flex="1"/>
-   <vbox flex="1">
+   <vbox>
    <groupbox orient="horizontal">
      <caption label="&enable.label;"/>
      <vbox>
@@ -56,7 +56,6 @@
        <checkbox id="tabBar" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.tabBar" label="&enable.tabbarscroll;" oncommand="doEnabling();"/>
      </vbox>
-     <spring flex="1"/>
      <vbox>
        <checkbox id="wheelscroll" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.wheelscrolling" label="&enable.wheelscroll;" oncommand="doEnabling();"/>
@@ -66,7 +65,6 @@
            prefstring="allinonegest.showLinkTooltip" label="&enable.linkTooltip;" oncommand="doEnabling();"/>
      </vbox>
    </groupbox>
-   <spring flex="1"/>
    <hbox>
      <groupbox orient="horizontal" flex="1">
       <caption label="&mousegest.label;"/>
@@ -130,7 +128,6 @@
       </vbox>
      </groupbox>
    </hbox>
-   <spring flex="1"/>
    <hbox>
      <groupbox orient="horizontal" flex="1">
       <caption label="&wheel.label;"/>
@@ -165,7 +162,6 @@
       </vbox>
      </groupbox>
    </hbox>
-   <spring flex="1"/>
    <groupbox>
      <caption label="&about.label;"/>
      <hbox flex="1" align="center">
@@ -180,11 +176,10 @@
         </vbox>
      </hbox>
    </groupbox>
-   <spring flex="1"/>
    </vbox>
    <spacer flex="1"/>
    </hbox>
-   <spacer flex="1"/>
+   <spacer flex="10"/>
   </tabpanel>
 
   <tabpanel orient="vertical">
