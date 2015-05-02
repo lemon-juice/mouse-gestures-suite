@@ -519,4 +519,13 @@ var gprop = {
                      .getService(Components.interfaces.nsIWindowMediator);
     return wm.getMostRecentWindow(map[winType]);
   },
- }
+  
+  openHelp: function() {
+    var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                           .getService(Components.interfaces.nsIPrefService);
+    var browserUrl = prefs.getBranch("").getCharPref('browser.chromeURL');
+    
+    var win = window.openDialog(browserUrl, "MGSEditGestureHelp", "chrome,all,dialog=no,width=900,height=720", "http://lemon-juice.github.io/mouse-gestures-suite/custom-functions.html");
+    win.focus(); 
+  }
+}

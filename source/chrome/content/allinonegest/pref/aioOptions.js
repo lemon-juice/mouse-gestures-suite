@@ -306,18 +306,13 @@ function openHelp(tabIndex) {
       url += "#tab"+(tabIndex+1);
     }
   }
+
+  var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                         .getService(Components.interfaces.nsIPrefService);
+  var prefBranch = prefs.getBranch("");
+  var browserUrl = prefBranch.getCharPref('browser.chromeURL');
   
-  try {
-    var win = window.open("chrome://" + url, "mousegesturessuiteoptions", "chrome=no,scrollbars=yes,resizable=yes,width=850,height=660");
-  
-  } catch (err) {
-    var prefs = Components.classes["@mozilla.org/preferences-service;1"]
-                           .getService(Components.interfaces.nsIPrefService);
-    var prefBranch = prefs.getBranch("");
-    var browserUrl = prefBranch.getCharPref('browser.chromeURL');
-    
-    var win = window.openDialog(browserUrl, "mousegesturessuiteoptions", "chrome,all,dialog=no,width=850,height=660", "chrome://" + url);
-  }
+  var win = window.openDialog(browserUrl, "mousegesturessuiteoptions", "chrome,all,dialog=no,width=900,height=720", "chrome://" + url);
   win.focus();
 }
 

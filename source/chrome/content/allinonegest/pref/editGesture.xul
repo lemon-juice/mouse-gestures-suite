@@ -16,6 +16,7 @@
       buttons="accept, cancel, help"
       onload="gprop.init(); initPlayGesture();"
       ondialogaccept="return gprop.saveGesture();"
+      ondialoghelp="gprop.openHelp()"
       persist="width screenX screenY">
 
 <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>
