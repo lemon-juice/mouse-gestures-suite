@@ -259,7 +259,16 @@ var gprop = {
     var scope = document.getElementById("scriptScope").selectedItem.id;
     var selectedActionType = document.getElementById("actionTypeSelect").selectedIndex;
     
-    document.getElementById("winTypesBox").hidden = (scope == "content" && selectedActionType == 1);
+    if (scope == "content" && selectedActionType == 1) {
+      // only browser
+      document.getElementById("winTypesCheckboxes").hidden = true;
+      document.getElementById("winTypesBrowserOnly").hidden = false;
+    } else {
+      // window type choice
+      document.getElementById("winTypesCheckboxes").hidden = false;
+      document.getElementById("winTypesBrowserOnly").hidden = true;
+    }
+    //document.getElementById("winTypesBox").hidden = (scope == "content" && selectedActionType == 1);
   },
   
   selectTab: function() {

@@ -73,16 +73,21 @@
         <label value="Script scope:" />
         <radiogroup id="scriptScope" orient="horizontal" oncommand="gprop.changeScriptScope()">
           <radio id="chrome" label="Native (ChromeWindow)" />
-          <radio id="content" label="Web page content" />
+          <radio id="content" label="Web page" />
         </radiogroup>
       </bbox>
       
-      <bbox id="winTypesBox">
+      <bbox>
         <label value="Execute in:" />
-        <checkbox id="scope-browser" label="Browser" />
-        <checkbox id="scope-source" label="Page Source" />
-        <checkbox id="scope-messenger" label="Mail" />
-        <checkbox id="scope-mailcompose" label="Mail Compose" />
+        <hbox id="winTypesCheckboxes">
+          <checkbox id="scope-browser" label="Browser" />
+          <checkbox id="scope-source" label="Page Source" />
+          <checkbox id="scope-messenger" label="Mail" />
+          <checkbox id="scope-mailcompose" label="Mail Compose" />
+        </hbox>
+        <hbox id="winTypesBrowserOnly" hidden="true">
+          <checkbox label="Browser" checked="true" disabled="true" />
+        </hbox>
       </bbox>
     </vbox>
     
