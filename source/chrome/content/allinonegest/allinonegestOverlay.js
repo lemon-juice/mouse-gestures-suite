@@ -943,17 +943,6 @@ mgsuite.overlay = {
     catch(err) {return null;}
   },
 
-  aioIsAreaOK: function(e, isAutoScroll) {
-	return true;
-    if (isAutoScroll && e.target.ownerDocument == mgsuite.overlay.aioContent.ownerDocument) return false;      
-    var tag = e.target.nodeName.toLowerCase();
-    try { var xtag = e.originalTarget.localName.toLowerCase(); } catch (err) {}
-
-    return xtag != "slider" && xtag != "thumb" && xtag != "scrollbarbutton" &&
-     (((tag != "input" || mgsuite.overlay.aioGestButton == mgsuite.const.RMB) && (tag != "textarea" || mgsuite.overlay.aioGestButton == mgsuite.const.RMB)
-     && tag != "option" && tag != "select" && tag != "textarea" && tag != "textbox" && tag != "menu") || isAutoScroll);
-  },
-
   aioIsPastable: function(targetNode) {
     var tag = targetNode.nodeName.toLowerCase();
     return tag == "input" || tag == "textarea" || tag == "textbox";
