@@ -361,6 +361,40 @@ mgsuite.util = {
     } else {
       return browser.contentWindow;
     }
+  },
+  
+  getClosestParent: function(elem, targetName) {
+    do {
+      elem = elem.parentNode;
+      
+      if (!elem) {
+        return null;
+      }
+      
+    } while (elem.localName != targetName);
+    
+    return elem;
+  },
+  
+  getLinkFromSideBar: function(e) {
+    if (e.originalTarget.localName == "treechildren") {
+      var tree = mgsuite.util.getClosestParent(e.originalTarget, "tree");
+      
+      if (!tree) {
+        return null;
+      }
+      
+      var treeBoxObj = tree.treeBoxObject;
+      var cell = treeBoxObj.getCellAt(e.clientX, e.clientY);
+     
+      if (cell.row >= 0) {
+        var node = tree.view.nodeForTreeIndex(cell.row);
+        
+        if (PlacesUtils.nodeIsURI(node)) {
+          return node.uri;
+        }
+      }
+    }
+    return null;
   }
-
 }

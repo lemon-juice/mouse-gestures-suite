@@ -1440,10 +1440,18 @@ mgsuite.imp = {
       openLink = false;
     }
     
-    if (openLink && mgsuite.util.collectedLinksUrls.length) {
+    var link = mgsuite.util.collectedLinksUrls.length ? mgsuite.util.collectedLinksUrls[0] : null;
+    
+    var e = mgsuite.overlay.aioSrcEvent;
+    
+    if (e && !link) {
+      link = mgsuite.util.getLinkFromSideBar(e);
+    }
+    
+    if (openLink && link) {
       // open link in new tab
-      var referrer = mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]);
-      mgsuite.imp.aioLinkInTab(mgsuite.util.collectedLinksUrls[0], false, bg, false, referrer);
+      var referrer = mgsuite.imp.aioGetReferrer(link);
+      mgsuite.imp.aioLinkInTab(link, false, bg, false, referrer);
     }
     else {
       if (mgsuite.overlay.aioWindowType == "browser") {
@@ -1625,14 +1633,20 @@ mgsuite.imp = {
     }
     
     var referrer;
+    var e = mgsuite.overlay.aioSrcEvent;
     
     if (url === null) {
-      if (mgsuite.overlay.aioOpenLinkInNew && mgsuite.util.collectedLinksUrls.length) {
-         url = mgsuite.util.collectedLinksUrls[0];
-         referrer = mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]);
+      if (mgsuite.overlay.aioOpenLinkInNew) {
+        if (mgsuite.util.collectedLinksUrls.length) {
+          url = mgsuite.util.collectedLinksUrls[0];
+          referrer = mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]);
+          
+        } else if (e) {
+          url = mgsuite.util.getLinkFromSideBar(e);
+        }
       }
       else {
-         url = "";
+        url = "";
       }    
     }
     

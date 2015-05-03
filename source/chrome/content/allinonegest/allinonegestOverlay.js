@@ -567,7 +567,7 @@ mgsuite.overlay = {
 	  switch (mgsuite.overlay.aioWindowType) {
 		case 'browser':
 		mgsuite.overlay.aioContent = document.getElementById("content");
-		mgsuite.overlay.aioRendering = mgsuite.overlay.aioContent;
+		mgsuite.overlay.aioRendering = document.getElementById("sidebar-box").parentNode;  // hbox
 		mgsuite.overlay.aioTabRendering = document.getElementById("TabsToolbar"); // Fx
 		mgsuite.overlay.aioStatusBar = document.getElementById("statusbar-display");
 		if (!mgsuite.overlay.aioStatusBar) {
@@ -839,6 +839,8 @@ mgsuite.overlay = {
 		|| (mgsuite.overlay.aioIsFx && id == "toolbar-context-menu") // Fx
 		|| id == "tabContextMenu" // Fx
 		|| e.originalTarget.getAttribute('anonid') == "tabContextMenu" // SM
+        || id == "placesContext"  // sidebar
+        || id == "sidebarPopup"
 	  ) {
 		
 		e.preventDefault(); e.stopPropagation();
