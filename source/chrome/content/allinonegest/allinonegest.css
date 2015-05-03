@@ -42,7 +42,10 @@
  #aioWheelPopup > menuitem {
    -moz-appearance: none !important;
    background: #eee;
-   padding: 2px 5px;
+   height: 1.8em;
+   padding: 0;
+   margin: 0;
+   padding: 0 5px;
  }
  #aioWheelPopup > menuitem[_moz-menuactive="true"] {
    color: white !important;
