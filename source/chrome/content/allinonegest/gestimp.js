@@ -1440,7 +1440,12 @@ mgsuite.imp = {
       openLink = false;
     }
     
-    var link = mgsuite.util.collectedLinksUrls.length ? mgsuite.util.collectedLinksUrls[0] : null;
+    var link, referrer = undefined;
+    
+    if (mgsuite.util.collectedLinksUrls.length) {
+      link = mgsuite.util.collectedLinksUrls[0];
+      referrer = mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[0]);
+    }
     
     var e = mgsuite.overlay.aioSrcEvent;
     
@@ -1450,7 +1455,6 @@ mgsuite.imp = {
     
     if (openLink && link) {
       // open link in new tab
-      var referrer = mgsuite.imp.aioGetReferrer(link);
       mgsuite.imp.aioLinkInTab(link, false, bg, false, referrer);
     }
     else {
