@@ -1632,7 +1632,7 @@ mgsuite.imp = {
       flags += ",private";
     }
     
-    var referrer;
+    var referrer = undefined;
     var e = mgsuite.overlay.aioSrcEvent;
     
     if (url === null) {

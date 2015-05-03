@@ -381,7 +381,7 @@ mgsuite.util = {
       var tree = mgsuite.util.getClosestParent(e.originalTarget, "tree");
       
       if (!tree) {
-        return null;
+        return "";
       }
       
       var treeBoxObj = tree.treeBoxObject;
@@ -395,6 +395,6 @@ mgsuite.util = {
         }
       }
     }
-    return null;
+    return "";
   }
 }
