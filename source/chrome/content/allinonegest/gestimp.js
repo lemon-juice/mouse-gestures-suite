@@ -1434,13 +1434,14 @@ mgsuite.imp = {
    */
   aioOpenInNewTab: function(bg) {
     var openLink = mgsuite.overlay.aioOpenLinkInNew;
+    var blankTabNextToCurrentPref = mgsuite.overlay.aioPref.getBoolPref("blankTabNextToCurrent");
     
     if (mgsuite.overlay.aioGestureTab) {
       // always open blank tab when gesture initiated on tab
       openLink = false;
     }
     
-    var link, referrer = undefined;
+    var link, fromSideBar = false, referrer = undefined;
     
     if (mgsuite.util.collectedLinksUrls.length) {
       link = mgsuite.util.collectedLinksUrls[0];
@@ -1451,11 +1452,29 @@ mgsuite.imp = {
     
     if (e && !link) {
       link = mgsuite.util.getLinkFromSideBar(e);
+      if (link) {
+        fromSideBar = true;
+      }
     }
     
     if (openLink && link) {
       // open link in new tab
+      var forceNextToCurrent = (mgsuite.overlay.aioWindowType == "browser"
+            && fromSideBar && blankTabNextToCurrentPref);
+      
+      if (forceNextToCurrent) {
+        // normally links from sidebar are opened at the end -
+        // move to after current tab
+        var selectedTabPos = mgsuite.overlay.aioContent.getTabIndex ? mgsuite.overlay.aioContent.getTabIndex(mgsuite.overlay.aioContent.mCurrentTab) : mgsuite.overlay.aioContent.mCurrentTab._tPos;
+      }
+      
       mgsuite.imp.aioLinkInTab(link, false, bg, false, referrer);
+      
+      if (forceNextToCurrent) {
+        // normally links from sidebar are opened at the end -
+        // move to after current tab
+        mgsuite.overlay.aioContent.moveTabTo(mgsuite.overlay.aioContent.mCurrentTab, selectedTabPos + 1);
+      }
     }
     else {
       if (mgsuite.overlay.aioWindowType == "browser") {
@@ -1501,7 +1520,7 @@ mgsuite.imp = {
           if (mgsuite.overlay.aioGestureTab) {
             mgsuite.overlay.aioContent.moveTabTo(newTab, selectedTabPos + newTabPosShift);
             
-          } else if (mgsuite.overlay.aioPref.getBoolPref("blankTabNextToCurrent")) {
+          } else if (blankTabNextToCurrentPref) {
             mgsuite.overlay.aioContent.moveTabTo(newTab, selectedTabPos + 1);
           }
         }
