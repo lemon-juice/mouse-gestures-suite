@@ -72,7 +72,7 @@
       <bbox id="scriptScopeBox">
         <label value="Script scope:" />
         <radiogroup id="scriptScope" orient="horizontal" oncommand="gprop.changeScriptScope()">
-          <radio id="chrome" label="ChromeWindow (privileged code)" />
+          <radio id="chrome" label="Native (ChromeWindow)" />
           <radio id="content" label="Web page content" />
         </radiogroup>
       </bbox>
