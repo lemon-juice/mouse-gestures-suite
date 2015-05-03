@@ -1464,11 +1464,17 @@ mgsuite.imp = {
       
       if (forceNextToCurrent) {
         // normally links from sidebar are opened at the end -
-        // move to after current tab
+        // but we move it to after current tab
         var selectedTabPos = mgsuite.overlay.aioContent.getTabIndex ? mgsuite.overlay.aioContent.getTabIndex(mgsuite.overlay.aioContent.mCurrentTab) : mgsuite.overlay.aioContent.mCurrentTab._tPos;
       }
       
-      mgsuite.imp.aioLinkInTab(link, false, bg, false, referrer);
+      if (mgsuite.overlay.aioWindowType == "messenger" && mgsuite.util.collectedLinks.length) {
+        // we do this so that mail links open next to current tab
+        openNewTabWindowOrExistingWith(kNewTab, link, mgsuite.util.collectedLinks[0], bg);
+      } else {
+        mgsuite.imp.aioLinkInTab(link, false, bg, false, referrer);
+      }
+      
       
       if (forceNextToCurrent) {
         // normally links from sidebar are opened at the end -
