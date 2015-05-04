@@ -1378,7 +1378,21 @@ mgsuite.imp = {
     url = mgsuite.imp.aioSanitizeUrl(url);
     
     if (mgsuite.overlay.aioWindowType == "browser") {
-      var tab = mgsuite.overlay.aioContent.addTab(url, referrer);
+      if (typeof openNewTabWindowOrExistingWith == "function") {
+        // SM - we use this because when addTab() is used then after closing
+        // the tab the user is not switched back to the original tab
+        // like in Fx
+        var tab = openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg,
+                  null, false, referrer);
+       
+      } else {
+        // Fx
+        var tab = mgsuite.overlay.aioContent.addTab(url, {
+          referrerURI: referrer,
+          relatedToCurrent: true
+        });
+      }
+      
       var loadInBg = (usePref && (mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.loadInBackground") != bg)) || (!usePref && bg);
       
       if (reverseBg) {
@@ -1483,8 +1497,9 @@ mgsuite.imp = {
       }
     }
     else {
+      // ****** Open blank tab ******
+      
       if (mgsuite.overlay.aioWindowType == "browser") {
-        // open blank tab
         var selectedTabPos;
         
         if (mgsuite.overlay.aioGestureTab) {
