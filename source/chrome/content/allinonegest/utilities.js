@@ -65,8 +65,6 @@ mgsuite.util = {
     }
     
     var callSegm = msg.data.callback.split('.');
-    //dump("param=" + param + "\n");
-    //dump("param.nodeToScroll=" + param.nodeToScroll + "\n");
     
     switch (callSegm[0]) {
       case 'imp':
@@ -88,8 +86,11 @@ mgsuite.util = {
   },
   
   getSelectedText: function() {
-    let [element, focusedWindow] = BrowserUtils.getFocusSync(document);
-    var selection = focusedWindow.getSelection().toString();
+    let win = mgsuite.util.collectedFrame
+      ? mgsuite.util.collectedFrame
+      : mgsuite.util.getContentWindow(gBrowser.selectedBrowser);
+     
+    var selection = win.getSelection().toString();
     
     if (!selection) {
       var isOnTextInput = function isOnTextInput(elem) {
@@ -98,10 +99,12 @@ mgsuite.util = {
         return elem instanceof HTMLTextAreaElement ||
                (elem instanceof HTMLInputElement && elem.mozIsTextField(true));
       };
+      
+      var element = win.document.activeElement;
   
-      if (isOnTextInput(element)) {
+      if (element && isOnTextInput(element)) {
         selection = element.QueryInterface(Components.interfaces.nsIDOMNSEditableElement)
-                          .editor.selection.toString();
+                    .editor.selection.toString();
       }
     }
     
