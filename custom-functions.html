@@ -3,7 +3,7 @@
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Mouse Gestures Suite :: Mouse gestures for SeaMonkey and Firefox</title>
+    <title>Custom Functions in Mouse Gestures Suite</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   </head>
   <body>
-<!--    <div id="header">
+    <div id="header">
       <nav>
         <ul class="sections">
           <li><a href="./">Overview</a></li>
@@ -22,22 +22,64 @@
         <ul class="downloads">
           <li class="fork"><a href="https://github.com/lemon-juice/mouse-gestures-suite">View
               On GitHub</a></li>
-          <li class="downloads"><a href="https://addons.mozilla.org/addon/mouse-gestures-suite/">DOWNLOAD</a></li>
+          <li class="downloads"><a href="download.html">DOWNLOAD</a></li>
         </ul>
       </nav>
     </div>
+    <!-- end header -->
     <div class="wrapper">
       <section>
         <div id="title">
           <h1>Mouse Gestures Suite</h1>
           <hr> </div>
         <h2>Custom Functions</h2>
-        <em>Note: Custom functions and user scripts are available since version
-          2.0.0.<br>
-          <br>
-          <br>
-        </em> </section>
-    </div> -->
+        <p> <em>Note: Custom functions and user scripts are available since
+            version 2.0.0.</em></p>
+        <p><em></em></p>
+        <em></em>
+        <p>Apart from a list of predefined functions to be used with mouse
+          gestures you can define your own custom functions and get them to
+          execute when you perform gestures. To create a custom function press <em>Add
+            Custom Function</em> button in the <em>Gestures Customization</em>
+          tab in options.</p>
+        <p>Custom functions can be used to execute one of the two types of
+          actions:</p>
+        <ol>
+          <li>Menu Item Actions — execute any menu item action that is available
+            in the main menu. The actions are available even if the menu is
+            hidden (Firefox default).</li>
+          <li>Scripts — this is used to execute any JavaScript code. You can
+            either run internal browser commands or inject the script into a web
+            page and run it as if it were part of the page.</li>
+        </ol>
+        <img alt="Custom Function Editing" src="screens/custom-menu-function.png">
+        <p><br>
+        </p>
+        <p>Custom functions can be configured to execute only in certain window
+          types like Browser, Page Source, Mail or Mail Compose (the last two
+          are applicable only to SeaMonkey). Also, contrary to the built-in
+          functions you are allowed to define multiple custom functions with the
+          same mouse gesture. This allows you to configure the same gesture to
+          execute different actions in different window types.</p>
+        <h2>Menu Item Actions</h2>
+        <p>You can execute almost any menu action with mouse gestures as if you
+          have selected this action in the menu itself. All available menus from
+          the main menu bar are available: File, Edit, View, History, etc. You
+          can also use menu items provided by other extension.</p>
+        <p> Please not that not all menu items can be executed in this way –
+          especially dynamically created menus are not available for gestures
+          and some may even work not as expected, for example don't try to
+          configure gestures for copying or moving messages between folders in
+          SeaMonkey. Test each new menu action to be sure if it will work
+          properly.<br>
+        </p>
+        <ol>
+        </ol>
+        <h2>Scripts</h2>
+        <p>See the <a href="scripts.html">section about scripts</a> for
+          detailed description.</p>
+        </section>
+    </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
   </body>
 </html>
