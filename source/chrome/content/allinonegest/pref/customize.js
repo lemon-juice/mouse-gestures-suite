@@ -160,7 +160,9 @@ gestCustomizeTreeView.prototype = {
     this.data[row].metaData[key] = val;
   },
   deleteRowMetaData: function(row, key) {
-    delete this.data[row].metaData[key];
+    if (this.data[row] && this.data[row].metaData) {
+      delete this.data[row].metaData[key];
+    }
   }
 };
 
