@@ -3,7 +3,7 @@
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Mouse Gestures Suite :: Mouse gestures for SeaMonkey and Firefox</title>
+    <title>Scripts in Mouse Gestures for Firefox and SeaMonkey</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -126,12 +126,12 @@
             Closed Tabs Button</a>. Install this extension and place its button
           (by using <em>Customize</em>) in a visible place somewhere in your
           browser and use this script:</p>
-        <pre><code><span style="font-family: &quot;OpenSansRegular&quot;,&quot;Helvetica Neue&quot;,Helvetica,Arial,sans-serif;">var button = document.getElementById("uctb-toolbar-button");
+        <pre><code>var button = document.getElementById("uctb-toolbar-button");
 if (button) {
   undoClosedButt.rightClickMenu(button, event);
   var popup = document.getElementById("uctb-menu");
   popup.moveTo(event.screenX, event.screenY);
-}</span></code></pre>
+}</code></pre>
         <h2>Web Page Scope</h2>
         <p>Use this scope if you want your gesture to perform certain actions in
           the web page or access some information in the page. Your script will
