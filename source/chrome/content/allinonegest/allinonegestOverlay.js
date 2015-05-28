@@ -198,7 +198,7 @@ mgsuite.overlay = {
     }
     catch(err) {
       isActive = false;
-    prefNotExisting = true;
+      prefNotExisting = true;
     }
 
     try {
@@ -326,11 +326,16 @@ mgsuite.overlay = {
     mgsuite.overlay.aioIgnoreStdPrefListener = true; // prevent infinite loop
 
     try {
-      if (mgsuite.overlay.aioPrefRoot.getBoolPref("general.autoScroll") != (mgsuite.overlay.aioASEnabled && mgsuite.overlay.aioWhatAS == 1)) {
-          mgsuite.overlay.aioPrefRoot.setBoolPref("general.autoScroll", mgsuite.overlay.aioASEnabled && mgsuite.overlay.aioWhatAS == 1);
-        }
+      if (mgsuite.overlay.aioGestButton == mgsuite.const.MMB) {
+        // always disable native autoscroll when middle button gestures
+        mgsuite.overlay.aioPrefRoot.setBoolPref("general.autoScroll", false);
+        
+      } else if (mgsuite.overlay.aioPrefRoot.getBoolPref("general.autoScroll") != (mgsuite.overlay.aioASEnabled && mgsuite.overlay.aioWhatAS == 1)) {
+        mgsuite.overlay.aioPrefRoot.setBoolPref("general.autoScroll", mgsuite.overlay.aioASEnabled && mgsuite.overlay.aioWhatAS == 1);
+      }
     }
     catch(err) {}
+    
     try {
       mgsuite.overlay.aioSmoothScroll = mgsuite.overlay.aioPrefRoot.getBoolPref("general.smoothScroll");
     }
