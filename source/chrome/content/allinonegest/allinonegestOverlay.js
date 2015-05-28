@@ -25,7 +25,7 @@ mgsuite.overlay = {
   aioIsMac: null,
   aioIsNix: null,
   aioFirstInit: true,
-  aioGrid: 15, // minimal gesture has to be 'grid' pixels long
+  aioGrid: null, // minimal gesture has to be 'grid' pixels long
   aioDelay: 1000, // delay before aborting gesture
   aioDelayTO: null,
   aioGestInProgress: false,
@@ -436,6 +436,7 @@ mgsuite.overlay = {
      [function(){mgsuite.overlay.aioTrailColor=mgsuite.overlay.aioPref.getCharPref("trailColor");}, function(){mgsuite.overlay.aioPref.setCharPref("trailColor","#009900");}, function(){return false;}],
      [function(){mgsuite.overlay.aioTrailSize=mgsuite.overlay.aioPref.getIntPref("trailSize");}, function(){mgsuite.overlay.aioPref.setIntPref("trailSize",3);}, function(){return mgsuite.overlay.aioTrailSize<1||mgsuite.overlay.aioTrailSize>12;}],
      [function(){mgsuite.overlay.aioSmoothTrail=mgsuite.overlay.aioPref.getBoolPref("smoothTrail");}, function(){mgsuite.overlay.aioPref.setBoolPref("smoothTrail",true);}, function(){return false;}],
+     [function(){mgsuite.overlay.aioGrid=mgsuite.overlay.aioPref.getIntPref("grid");}, function(){mgsuite.overlay.aioPref.setIntPref("grid",14);}, function(){return mgsuite.overlay.aioGrid<3 || mgsuite.overlay.aioGrid>50;}],
      [function(){mgsuite.overlay.aioRockEnabled=mgsuite.overlay.aioPref.getBoolPref("rocking");}, function(){mgsuite.overlay.aioPref.setBoolPref("rocking",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioWheelEnabled=mgsuite.overlay.aioPref.getBoolPref("wheelscrolling");}, function(){mgsuite.overlay.aioPref.setBoolPref("wheelscrolling",true);}, function(){return false;}], // Scroll wheel navigation
      [function(){mgsuite.overlay.aioASEnabled=mgsuite.overlay.aioPref.getBoolPref("autoscrolling2");}, function(){mgsuite.overlay.aioPref.setBoolPref("autoscrolling2",true);}, function(){return false;}], // Middle button scrolling
@@ -891,7 +892,7 @@ mgsuite.overlay = {
     mgsuite.overlay.aioDelayTO = setTimeout(function() { mgsuite.trail.indicateGestureTimeout() }, mgsuite.overlay.aioDelay);
 
     mgsuite.trail.drawTrail(e);
-    var pente = absY <= 5 ? 100 : absX / absY; // 5 should be grid/tangent(60)
+    var pente = absY <= 2 ? 100 : absX / absY; // 5 (2?) should be grid/tangent(60)
     if (pente < 0.58 || pente > 1.73) { //between 30° & 60°, wait
       if (pente < 0.58) tempMove = y_dir > 0 ? "D" : "U";
        else tempMove = x_dir > 0 ? "R" : "L";

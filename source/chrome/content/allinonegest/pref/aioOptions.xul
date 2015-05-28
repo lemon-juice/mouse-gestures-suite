@@ -85,6 +85,10 @@
        </hbox>
        <checkbox id="smoothId" type="checkbox" pref="true" preftype="bool" label="&trails.smooth;"
           prefstring="allinonegest.smoothTrail" oncommand="doEnabling();" class="aio-indent"/>
+       <bbox>
+        <label id="gridLabelId" value="&mousegest.sensitivity;"/>
+        <textbox type="number" min="2" max="50" size="2" id="gridId" preftype="int" prefstring="allinonegest.grid" />
+       </bbox>
       </vbox>
      </groupbox>
      <groupbox orient="horizontal" flex="1">

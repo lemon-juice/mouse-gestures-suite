@@ -37,6 +37,7 @@
 <!ENTITY trails.color              "Trail Color">
 <!ENTITY trails.size               "Trail Size">
 <!ENTITY trails.smooth             "Smooth (slower on old hardware)">
+<!ENTITY mousegest.sensitivity     "Movement sensitivity (pixels):">
 
 <!ENTITY linktooltip.label     "Link Tooltip: Prefs">
 <!ENTITY linktooltip.shift         "Depress Shift key to show">

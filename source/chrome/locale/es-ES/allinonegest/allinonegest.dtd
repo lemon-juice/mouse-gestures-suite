@@ -102,6 +102,7 @@
 <!ENTITY trails.enable "Habilitar rastro de los gestos">
 <!ENTITY trails.size "Tamaño del rastro">
 <!ENTITY trails.smooth "Smooth (slower on old hardware)">
+<!ENTITY mousegest.sensitivity     "Movement sensitivity (pixels):">
 <!ENTITY wheel.gestures "Realizar acción del gesto">
 <!ENTITY wheel.historyIfCw "Volver: Historial">
 <!ENTITY wheel.showTabsPopup       "Show tab list in popup">

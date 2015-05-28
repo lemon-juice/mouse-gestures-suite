@@ -37,6 +37,7 @@
 <!ENTITY trails.color              "Colore traccia">
 <!ENTITY trails.size               "Dimensione traccia">
 <!ENTITY trails.smooth "Smooth (slower on old hardware)">
+<!ENTITY mousegest.sensitivity     "Movement sensitivity (pixels):">
 
 <!ENTITY linktooltip.label     "Descrizione link: Preferenze">
 <!ENTITY linktooltip.shift         "Tenere premuto tasto maiuscole per mostrare descrizione">
