@@ -690,7 +690,9 @@ mgsuite.overlay = {
       for (var i = 0; i < rockerFuncs.length; ++i) {
         if (rockerFuncs[i].charAt(0) == "/") {
           // disabled gesture
-          mgsuite.overlay.aioRockerAction[i] = function(){void(0);};
+          mgsuite.overlay.aioRockerAction[i] = {
+            callback: function(){void(0);}
+          };
           mgsuite.overlay.aioRockMultiple[i] = 0;
         }
         else {
@@ -699,9 +701,12 @@ mgsuite.overlay = {
           if (rFunc.charAt(0) == 'c') {
             // custom function
             var custGestEntry = mgsuite.overlay.getCustomGestureById(rFunc.substr(1));
-            mgsuite.overlay.aioRockerAction[i] = custGestEntry
-              ? mgsuite.imp.getCustomFunctionCallback(custGestEntry)
-              : function() {};
+            mgsuite.overlay.aioRockerAction[i] = {
+              callback: custGestEntry
+                ? mgsuite.imp.getCustomFunctionCallback(custGestEntry)
+                : function() {},
+              winTypes: custGestEntry.winTypes
+            };
             mgsuite.overlay.aioRockMultiple[i] = "2";
             
           } else {
@@ -713,7 +718,9 @@ mgsuite.overlay = {
               rFunc = 0;
             }
             
-            mgsuite.overlay.aioRockerAction[i] = mgsuite.imp.aioActionTable[rFunc][0];
+            mgsuite.overlay.aioRockerAction[i] = {
+              callback: mgsuite.imp.aioActionTable[rFunc][0]
+            };
             mgsuite.overlay.aioRockMultiple[i] = mgsuite.imp.aioActionTable[rFunc][2];
           }
         }
@@ -981,8 +988,17 @@ mgsuite.overlay = {
   },
 
   aioPerformRockerFunction: function(index) {
+    if (mgsuite.overlay.aioRockerAction[index].winTypes) {
+      // execute only in defined window types
+      if (mgsuite.overlay.aioRockerAction[index].winTypes.indexOf(mgsuite.overlay.aioWindowType) < 0) {
+        return;
+      }
+    }
+    
     mgsuite.overlay.aioIsRocker = true;
-    try {mgsuite.overlay.aioRockerAction[index]();}
+    try {
+      mgsuite.overlay.aioRockerAction[index].callback();
+    }
     catch(err) {}
     mgsuite.overlay.aioIsRocker = false;
   },
