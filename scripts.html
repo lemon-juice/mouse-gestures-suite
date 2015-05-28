@@ -64,14 +64,21 @@
           <tbody>
             <tr>
               <td><code>event</code></td>
-              <td>Event which started the gesture, typically this will be the
-                mousedown event. Please note that trying to determine which page
-                element the gesture was started on is not always reliable using
-                this event — in multi-process Firefox event.target will point to
-                a browser's XUL element, not the HTML element within the page.
-                Use other parameters for this purpose (below) or use web page
-                scope mode.<br>
+              <td>Event which started the gesture&nbsp;– this will be the <em>mousedown</em>
+                event for mouse and rocker gestures, or <a href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMMouseScroll"><em>DOMMouseScroll</em></a>
+                event for scroll wheel gestures. Please note that trying to
+                determine which page element the gesture was started on is not
+                always reliable using this event — in multi-process Firefox
+                event.target will point to a browser's XUL element, not the HTML
+                element within the page. Use other parameters for this purpose
+                (below) or use web page scope mode.<br>
               </td>
+            </tr>
+            <tr>
+              <td><code>upEvent</code></td>
+              <td>The <em>mouseup</em> event that ended the gesture. Not set (<code>null</code>)
+                for rocker gestures and scroll wheel gestures. <span style="font-style: italic;">[available
+                  since version 2.1.0]</span></td>
             </tr>
             <tr>
               <td><code>links</code></td>
