@@ -726,8 +726,15 @@ mgsuite.overlay = {
         }
       }
       
-      mgsuite.overlay.aioWheelBothWays = rockerFuncs[2].charAt(0) != "/" && rockerFuncs[3].charAt(0) != "/" && 
-         (rockerFuncs[2] == rockerFuncs[3] || rockerFuncs[2] == mgsuite.imp.aioActionTable[rockerFuncs[3] - 0][3]);
+      mgsuite.overlay.aioWheelBothWays = (
+           rockerFuncs[2].charAt(0) != "/"
+        && rockerFuncs[2].charAt(0) != "c"
+        && rockerFuncs[3].charAt(0) != "/"
+        && rockerFuncs[3].charAt(0) != "c"
+        && 
+         (rockerFuncs[2] == rockerFuncs[3]
+          || rockerFuncs[2] == mgsuite.imp.aioActionTable[rockerFuncs[3] - 0][3])
+      );
     }
 
     mgsuite.overlay.aioTitleDelay = delayTable[titleDelay];
