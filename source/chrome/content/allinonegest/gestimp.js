@@ -241,7 +241,7 @@ mgsuite.imp = {
    * @param {string} aGesture - gesture stroke sequence like R, RLU, etc.
    * @param {boolean} shiftKey
    */
-  aioFireGesture: function(aGesture, shiftKey) {
+  aioFireGesture: function(aGesture, e) {
     var action = mgsuite.imp.getActionData(aGesture, mgsuite.overlay.aioWindowType);
     
     if (!action) {
@@ -256,7 +256,7 @@ mgsuite.imp = {
     } else {
       try {
         mgsuite.imp.aioStatusMessage(action.name, 2000);
-        var result = action.callback(shiftKey);
+        var result = action.callback(e.shiftKey, e);
         
         if (result && result.mouseGestureFuncError) {
           // action was not run
@@ -453,7 +453,7 @@ mgsuite.imp = {
       
       switch (custGestEntry.scope) {
         case "chrome":
-          callback = function() {
+          callback = function(shiftKey, upEvent) {
             // run user script in chrome scope
             if (js === null) {
               return {
@@ -463,6 +463,7 @@ mgsuite.imp = {
             
             try {
               (new Function("event"
+                            , "upEvent"
                             , "links"
                             , "linksUrls"
                             , "img"
@@ -472,6 +473,7 @@ mgsuite.imp = {
                             , js))
               (
                 mgsuite.overlay.aioSrcEvent,
+                upEvent,
                 mgsuite.util.collectedLinks,
                 mgsuite.util.collectedLinksUrls,
                 mgsuite.util.collectedImg,

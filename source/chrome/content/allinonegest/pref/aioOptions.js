@@ -232,7 +232,33 @@ function savePrefs() {
   pref.setComplexValue("allinonegest.sitesList", Components.interfaces.nsISupportsString, str);
   
   saveGesturesTableScroll();
+  
+  // run init in all windows explicitely because pref observer will not catch all cases like user scripts
+  reInitAllWindows();
+  
   return true;
+}
+
+function reInitAllWindows() {
+  var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                   .getService(Components.interfaces.nsIWindowMediator);
+  var windows = wm.getEnumerator(null);
+  var win, winType;
+  
+  while (windows.hasMoreElements()) {
+    win = windows.getNext().QueryInterface(Components.interfaces.nsIDOMWindow);
+    winType = win.document.documentElement.getAttribute("windowtype");
+    
+    if (winType == "navigator:browser"
+        || winType == "navigator:view-source"
+        || winType == "mail:3pane"
+        || winType == "mail:messageWindow"
+        || winType == "msgcompose") {
+      try {
+        win.mgsuite.overlay.reInit();
+      } catch (err){};
+    }
+  }
 }
 
 /**

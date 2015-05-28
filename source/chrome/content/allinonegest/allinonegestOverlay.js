@@ -221,18 +221,21 @@ mgsuite.overlay = {
     domain: "allinonegest.",
     observe: function(subject, topic, prefName) { // when AiO pref was changed, reinit
       if (topic != "nsPref:changed" || mgsuite.overlay.aioPrefObserverDisabled) return;
-
-      // run mgsuite.overlay.aioInit() delayed and only once if the observer is fired multiple times
-      // in a short period
-      if (mgsuite.overlay.aioPrefObserverTimeout) {
-        clearTimeout(mgsuite.overlay.aioPrefObserverTimeout);
-      }
-
-      mgsuite.overlay.aioPrefObserverTimeout = setTimeout(function() {
-        //dump("Observer runs mgsuite.overlay.aioInit()\n");
-        mgsuite.overlay.aioInit();
-      }, 300);
+      mgsuite.overlay.reInit();
     }
+  },
+  
+  reInit: function() {
+    // run mgsuite.overlay.aioInit() delayed and only once because it can be called
+    // multiple times in a short period by pref observer
+    if (mgsuite.overlay.aioPrefObserverTimeout) {
+      clearTimeout(mgsuite.overlay.aioPrefObserverTimeout);
+    }
+
+    mgsuite.overlay.aioPrefObserverTimeout = setTimeout(function() {
+      //dump("reInit runs mgsuite.overlay.aioInit()\n");
+      mgsuite.overlay.aioInit();
+    }, 300);
   },
   
   aioStdPrefListener: {
@@ -401,7 +404,7 @@ mgsuite.overlay = {
                   .getService(Components.interfaces.nsIXULAppInfo);
 
     if (XULAppInfo.ID != '{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}') {  // SM id
-    mgsuite.overlay.aioIsFx = true;  // if false, then SM
+      mgsuite.overlay.aioIsFx = true;  // if false, then SM
     }
 
     // detect window type
@@ -683,6 +686,7 @@ mgsuite.overlay = {
   
       var rockerFuncs = mgsuite.overlay.aioRockerString.split("|");
       var rFunc;
+    
       for (var i = 0; i < rockerFuncs.length; ++i) {
         if (rockerFuncs[i].charAt(0) == "/") {
           // disabled gesture
@@ -1325,10 +1329,9 @@ mgsuite.overlay = {
 
       if (lastgesture) {
         window.addEventListener("click", mgsuite.overlay.aioGestClickHandler, true);
-		var shiftKey = e.shiftKey;
 
 		if ((new Date() - mgsuite.overlay.aioLastEvtTime) < mgsuite.overlay.aioDelay) {
-		  setTimeout(function(a){mgsuite.imp.aioFireGesture(a, shiftKey);}, 0, lastgesture);
+		  setTimeout(function(a){mgsuite.imp.aioFireGesture(a, e);}, 0, lastgesture);
 		  setTimeout(function(){mgsuite.overlay.aioGestClickEnd();}, 200);
 		  return;
 		}
