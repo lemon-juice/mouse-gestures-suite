@@ -87,7 +87,7 @@
           prefstring="allinonegest.smoothTrail" oncommand="doEnabling();" class="aio-indent"/>
        <bbox>
         <label id="gridLabelId" value="&mousegest.sensitivity;"/>
-        <textbox type="number" min="2" max="50" size="2" id="gridId" preftype="int" prefstring="allinonegest.grid" />
+        <textbox type="number" min="3" max="50" size="2" id="gridId" preftype="int" prefstring="allinonegest.grid" />
        </bbox>
       </vbox>
      </groupbox>
