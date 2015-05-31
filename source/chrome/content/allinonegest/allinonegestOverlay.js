@@ -669,7 +669,7 @@ mgsuite.overlay = {
 		}, true);
 	  }
   
-	  window.addEventListener("dragend", mgsuite.overlay.cancelGestureOnDrag, true);
+	  window.addEventListener("dragstart", mgsuite.overlay.cancelGestureOnDrag, true);
 	  window.addEventListener("unload", mgsuite.overlay.aioWindowUnload, false);
 	  window.addEventListener("keydown", mgsuite.overlay.aioKeyPressed, true);
   
