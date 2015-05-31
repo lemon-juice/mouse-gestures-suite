@@ -139,6 +139,10 @@ if (button) {
   var popup = document.getElementById("uctb-menu");
   popup.moveTo(event.screenX, event.screenY);
 }</code></pre>
+        <p><span style="color: #e8e8e8;"><span style="font-family: 'OpenSansRegular',&quot;Helvetica Neue&quot;,Helvetica,Arial,sans-serif;">Pin/unpin
+              tab. This will also work on any tab by starting a gesture on that
+              tab:</span></span></p>
+        <pre><code>var curTab = tab || gBrowser.selectedTab;<br><br>if(curTab.pinned)<br>&nbsp; gBrowser.unpinTab(curTab);<br>else<br>&nbsp; gBrowser.pinTab(curTab);</code></pre>
         <h2>Web Page Scope</h2>
         <p>Use this scope if you want your gesture to perform certain actions in
           the web page or access some information in the page. Your script will
