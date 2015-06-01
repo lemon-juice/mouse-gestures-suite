@@ -645,6 +645,8 @@ pre code {
 table {
   width: 100%;
   border-collapse: collapse;
+  border-top: 1px solid #666;
+  border-left: 1px solid #666;
 }
 
 th {
@@ -659,7 +661,8 @@ th {
 td {
   text-align: left;
   padding: 5px 10px;
-  border-bottom: 1px solid #434343;
+  border-bottom: 1px solid #666;
+  border-right: 1px solid #666;
 }
 
 hr {
@@ -778,8 +781,26 @@ section #title .credits.right {
 
 table.gestlist td {
 	vertical-align: top;
+}
+table.gestlist td .browser {
+	color: skyblue;
+	font-weight: bold;
 } 
-
+table.gestlist td .source {
+	color: #9933ff;
+	font-weight: bold;
+} 
+table.gestlist td .messenger {
+	color: green;
+	font-weight: bold;
+} 
+table.gestlist td .mailcompose {
+	color: #999900;
+	font-weight: bold;
+} 
+table.gestlist tr td:first-child {
+	font-weight: bold;
+} 
 
 @media print, screen and (max-width: 720px) {
   #title .credits {

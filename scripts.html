@@ -32,7 +32,7 @@
         <div id="title">
           <h1>Mouse Gestures Suite</h1>
           <hr> </div>
-        <h2> User Scripts</h2>
+        <h2>User Scripts</h2>
         <p><em>Note: Custom functions and user scripts are available since
             version 2.0.0.</em></p>
         <p>Mouse Gestures Suite allows you to create your own functions so you
@@ -40,7 +40,7 @@
           be executed when you perform a gesture. Scripts are written in
           JavaScript and can be run in one of the two scopes:</p>
         <ul>
-          <li>&nbsp;Native (ChromeWindow) scope</li>
+          <li>Native (ChromeWindow) scope</li>
           <li>Web page scope</li>
         </ul>
         <img alt="User Script setup" src="screens/user-script.png">
@@ -60,7 +60,7 @@
         <p>If there is an error during script execution it will be displayed as
           a gesture status message in the lower left corner of the browser.</p>
         <p>Parameters passed to the script in Native scope mode:</p>
-        <table style="width: 100%" border="1">
+        <table style="width: 100%">
           <tbody>
             <tr>
               <td><code>event</code></td>
@@ -139,9 +139,9 @@ if (button) {
   var popup = document.getElementById("uctb-menu");
   popup.moveTo(event.screenX, event.screenY);
 }</code></pre>
-        <p><span style="color: #e8e8e8;"><span style="font-family: 'OpenSansRegular',&quot;Helvetica Neue&quot;,Helvetica,Arial,sans-serif;">Pin/unpin
+        <p>Pin/unpin
               tab. This will also work on any tab by starting a gesture on that
-              tab:</span></span></p>
+              tab:</p>
         <pre><code>var curTab = tab || gBrowser.selectedTab;<br><br>if(curTab.pinned)<br>&nbsp; gBrowser.unpinTab(curTab);<br>else<br>&nbsp; gBrowser.pinTab(curTab);</code></pre>
         <h2>Web Page Scope</h2>
         <p>Use this scope if you want your gesture to perform certain actions in
@@ -155,7 +155,7 @@ if (button) {
         <p>If there is an error during script execution you can see it in the
           browser's standard JavaScript console or web console.</p>
         <p>Parameters passed to the script in web page scope mode:</p>
-        <table style="width: 100%" border="1">
+        <table style="width: 100%">
           <tbody>
             <tr>
               <td><code>node</code></td>
