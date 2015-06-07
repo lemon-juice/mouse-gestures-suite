@@ -1777,6 +1777,8 @@ mgsuite.overlay = {
   },
   
   aioLogDist: function(aDist) {
+    aDist *= 1.25;
+    
     var absDist = Math.abs(aDist);
     for (var i = 1; i < mgsuite.const.aioDist.length; ++i)
        if (absDist < mgsuite.const.aioDist[i]) {
@@ -1796,7 +1798,8 @@ mgsuite.overlay = {
               tabDist[0] = (aDist < 0) ? -roundQuart : roundQuart;
               tabDist[2] = tabDist[0];
               tabDist[1] = (aDist < 0) ? -quarter : quarter;
-              tabDist[3] = absDist - quarter - roundQuart - roundQuart; if (aDist < 0) tabDist[3] = -tabDist[3];
+              tabDist[3] = absDist - quarter - roundQuart - roundQuart;
+              if (aDist < 0) tabDist[3] = -tabDist[3];
     }
     return tabDist;
   },
@@ -1827,7 +1830,7 @@ mgsuite.overlay = {
     switch (e.keyCode) {
       case VK_DOWN :
       case VK_UP   : if (mgsuite.overlay.aioScroll.scrollType < 2) {
-                        var inc = e.keyCode == VK_UP ? -20 : 20 ;
+                        var inc = e.keyCode == VK_UP ? -16 : 16 ;
                         if (mgsuite.overlay.aioMarker) {
               mgsuite.overlay.aioMarker.moveBy(0, inc);
                         }
@@ -1839,7 +1842,7 @@ mgsuite.overlay = {
                      break;
       case VK_LEFT :
       case VK_RIGHT: if (!(mgsuite.overlay.aioScroll.scrollType & 1)) {
-                        inc = e.keyCode == VK_LEFT ? -20 : 20 ;
+                        inc = e.keyCode == VK_LEFT ? -16 : 16 ;
                         if (mgsuite.overlay.aioMarker) {
                           mgsuite.overlay.aioMarker.moveBy(inc, 0);
                         }
