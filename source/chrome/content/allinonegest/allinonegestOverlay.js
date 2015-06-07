@@ -1712,25 +1712,27 @@ mgsuite.overlay = {
   aioScrollWindow: function() {
     var moveX = mgsuite.overlay.aioDistX[mgsuite.overlay.aioScrollCount];
     var moveY = mgsuite.overlay.aioDistY[mgsuite.overlay.aioScrollCount];
-    mgsuite.overlay.aioScroll.clientFrame.scrollBy(moveX, moveY);
-    if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
     
     if (moveX != 0 || moveY != 0) {
+      mgsuite.overlay.aioScroll.clientFrame.scrollBy(moveX, moveY);
       mgsuite.overlay.autoScrollMoved = true;
     }
+    
+    if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
   },
 
   aioScrollElem: function() {
     var moveX = mgsuite.overlay.aioDistX[mgsuite.overlay.aioScrollCount];
     var moveY = mgsuite.overlay.aioDistY[mgsuite.overlay.aioScrollCount];
-    mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += moveX;
-    mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += moveY;
-    if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
     
     if (moveX != 0 || moveY != 0) {
+      mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += moveX;
+      mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += moveY;
       mgsuite.overlay.autoScrollMoved = true;
     }
-  },
+    
+    if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
+ },
 
   aioAutoScrollStart: function() {
     window.addEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
