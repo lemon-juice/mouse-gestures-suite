@@ -215,7 +215,7 @@ mgsuite.util = {
     }
 
     let cacheKey = shEntry.cacheKey;
-    if (cacheKey && cacheKey instanceof Ci.nsISupportsPRUint32 &&
+    if (cacheKey && cacheKey instanceof Components.interfaces.nsISupportsPRUint32 &&
         cacheKey.data != 0) {
       // XXXbz would be better to have cache keys implement
       // nsISerializable or something.
@@ -274,7 +274,7 @@ mgsuite.util = {
       entry.structuredCloneVersion = shEntry.stateData.formatVersion;
     }
 
-    if (!(shEntry instanceof Ci.nsISHContainer)) {
+    if (!(shEntry instanceof Components.interfaces.nsISHContainer)) {
       return entry;
     }
 
@@ -315,20 +315,17 @@ mgsuite.util = {
       return null;
     }
     
-    const Cc = Components.classes;
-    const Ci = Components.interfaces;
-
-    let binaryStream = Cc["@mozilla.org/binaryoutputstream;1"].
-                       createInstance(Ci.nsIObjectOutputStream);
-    let pipe = Cc["@mozilla.org/pipe;1"].createInstance(Ci.nsIPipe);
+    let binaryStream = Components.classes["@mozilla.org/binaryoutputstream;1"].
+                       createInstance(Components.interfaces.nsIObjectOutputStream);
+    let pipe = Components.classes["@mozilla.org/pipe;1"].createInstance(Components.interfaces.nsIPipe);
     pipe.init(false, false, 0, 0xffffffff, null);
     binaryStream.setOutputStream(pipe.outputStream);
-    binaryStream.writeCompoundObject(shEntry.owner, Ci.nsISupports, true);
+    binaryStream.writeCompoundObject(shEntry.owner, Components.interfaces.nsISupports, true);
     binaryStream.close();
 
     // Now we want to read the data from the pipe's input end and encode it.
-    let scriptableStream = Cc["@mozilla.org/binaryinputstream;1"].
-                           createInstance(Ci.nsIBinaryInputStream);
+    let scriptableStream = Components.classes["@mozilla.org/binaryinputstream;1"].
+                           createInstance(Components.interfaces.nsIBinaryInputStream);
     scriptableStream.setInputStream(pipe.inputStream);
     let ownerBytes =
       scriptableStream.readByteArray(scriptableStream.available());
