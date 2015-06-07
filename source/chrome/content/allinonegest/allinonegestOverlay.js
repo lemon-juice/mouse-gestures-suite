@@ -129,7 +129,7 @@ mgsuite.overlay = {
   aioDistY: [0, 0, 0, 0],
   aioScrollFingerFree: null,
   aioAcceptASKeys: false,
-  aioIntervalID: null,
+  autoscrollInProgress: false,
   aioScroll: null,
   aioOverlay: null,
   aioMarker: null,
@@ -1747,10 +1747,31 @@ mgsuite.overlay = {
 	var result = mgsuite.overlay.aioAddMarker();
 
     switch (result) {
-      case 0: mgsuite.overlay.aioIntervalID = setInterval(function(){mgsuite.overlay.aioScrollElem();}, mgsuite.overlay.aioASPeriod);
-              break;
-      case 1: mgsuite.overlay.aioIntervalID = setInterval(function(){mgsuite.overlay.aioScrollWindow();}, mgsuite.overlay.aioASPeriod);
-              break;
+      case 0:
+      case 1:
+        mgsuite.overlay.autoscrollInProgress = true;
+        
+        // animate scrolling at certain interval
+        var ASIntervalFun = function() {
+          setTimeout(function() {
+            requestAnimationFrame(function() {
+              if (result == 0) {
+                mgsuite.overlay.aioScrollElem();
+              } else {
+                mgsuite.overlay.aioScrollWindow();
+              }
+              
+              if (mgsuite.overlay.autoscrollInProgress) {
+                ASIntervalFun();
+              }
+            });
+          }, mgsuite.overlay.aioASPeriod);
+        };
+
+        ASIntervalFun();
+        
+        break;
+      
       case 2: ;
     }
   },
@@ -1851,8 +1872,7 @@ mgsuite.overlay = {
         (!mgsuite.overlay.aioPanToAS || Math.abs(e.screenX - mgsuite.overlay.aioLastX) >= mgsuite.const.aioHalfMarker || Math.abs(e.screenY - mgsuite.overlay.aioLastY) >= mgsuite.const.aioHalfMarker))
       ) {
       
-	  if (mgsuite.overlay.aioIntervalID) window.clearInterval(mgsuite.overlay.aioIntervalID);
-	  mgsuite.overlay.aioIntervalID = null;
+	  mgsuite.overlay.autoscrollInProgress = false;
 	  mgsuite.overlay.aioNukeEvent(e);
   
 	  if (e.type == "mousedown") {
