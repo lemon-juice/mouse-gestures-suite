@@ -377,23 +377,28 @@ mgsuite.util = {
   },
   
   getLinkFromSideBar: function(e) {
-    if (e.originalTarget.localName == "treechildren") {
-      var tree = mgsuite.util.getClosestParent(e.originalTarget, "tree");
-      
-      if (!tree) {
-        return "";
-      }
-      
-      var treeBoxObj = tree.treeBoxObject;
-      var cell = treeBoxObj.getCellAt(e.clientX, e.clientY);
-     
-      if (cell.row >= 0) {
-        var node = tree.view.nodeForTreeIndex(cell.row);
+    try {
+      if (e.originalTarget.localName == "treechildren") {
+        var tree = mgsuite.util.getClosestParent(e.originalTarget, "tree");
         
-        if (PlacesUtils.nodeIsURI(node)) {
-          return node.uri;
+        if (!tree) {
+          return "";
+        }
+        
+        var treeBoxObj = tree.treeBoxObject;
+        var cell = treeBoxObj.getCellAt(e.clientX, e.clientY);
+       
+        if (cell.row >= 0) {
+          var node = tree.view.nodeForTreeIndex(cell.row);
+          
+          if (PlacesUtils.nodeIsURI(node)) {
+            return node.uri;
+          }
         }
       }
+    } catch (err) {
+      // error can happen on some elements in address book or livehttpheaders sidebar:
+      // "tree.view.nodeForTreeIndex is not a function"
     }
     return "";
   }

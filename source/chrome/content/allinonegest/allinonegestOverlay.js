@@ -856,15 +856,16 @@ mgsuite.overlay = {
     if (!mgsuite.overlay.aioShowContextMenu && (e.originalTarget.nodeName == "menupopup" || e.originalTarget.nodeName == "xul:menupopup")) {
 
 	  var id = e.originalTarget.id ? e.originalTarget.id : null;
+      var explicit = e.explicitOriginalTarget;
   
 	  if (id == "contentAreaContextMenu"
-		|| (id == "mailContext" && e.explicitOriginalTarget.nodeName != "treechildren")
+		|| (id == "mailContext" && explicit.nodeName != "treechildren")
 		|| id == "viewSourceContextMenu"
 		|| id == "addonitem-popup"
 		|| (mgsuite.overlay.aioIsFx && id == "toolbar-context-menu") // Fx
 		|| id == "tabContextMenu" // Fx
 		|| e.originalTarget.getAttribute('anonid') == "tabContextMenu" // SM
-        || id == "placesContext"  // sidebar
+        || (id == "placesContext" && explicit.nodeName == "treechildren" && explicit.className == "sidebar-placesTreechildren")  // sidebar
         || id == "sidebarPopup"
 	  ) {
 		
