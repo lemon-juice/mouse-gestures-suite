@@ -1713,13 +1713,14 @@ mgsuite.overlay = {
   /**
    * Scroll element or window (used by auto scroll)
    * @param {Number} whatToScroll 0=element; 1=window
+   * @param {Boolean} immediately
    */
-  scrollWinOrElem: function(whatToScroll) {
+  scrollWinOrElem: function(whatToScroll, immediately) {
     var moveX = mgsuite.overlay.aioDistX[mgsuite.overlay.aioScrollCount];
     var moveY = mgsuite.overlay.aioDistY[mgsuite.overlay.aioScrollCount];
     
     if (moveX != 0 || moveY != 0) {
-      requestAnimationFrame(function() {
+      var scrollNow = function() {
         if (whatToScroll == 0) {
           mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += moveX;
           mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += moveY;
@@ -1727,7 +1728,15 @@ mgsuite.overlay = {
         } else if (whatToScroll == 1) {
           mgsuite.overlay.aioScroll.clientFrame.scrollBy(moveX, moveY);
         }
-      });
+      }
+      
+      if (immediately) {
+        scrollNow();
+      } else {
+        requestAnimationFrame(function() {
+          setTimeout(scrollNow, 0);
+        });
+      }
       
       mgsuite.overlay.autoScrollMoved = true;
     }
@@ -1755,7 +1764,6 @@ mgsuite.overlay = {
         mgsuite.overlay.autoscrollInterval = setInterval(function() {
           mgsuite.overlay.scrollWinOrElem(result);
         }, mgsuite.overlay.aioASPeriod);
-        
         break;
       
       case 2: ;
@@ -2206,8 +2214,8 @@ mgsuite.overlay = {
     mgsuite.overlay.aioDistX[0] = mgsuite.overlay.aioNoHorizScroll ? 0 : Math.ceil((e.screenX - mgsuite.overlay.aioLastX) * mgsuite.overlay.aioScroll.ratioX);
     mgsuite.overlay.aioDistY[0] = Math.ceil((e.screenY - mgsuite.overlay.aioLastY) * mgsuite.overlay.aioScroll.ratioY);
     mgsuite.overlay.aioLastX = e.screenX; mgsuite.overlay.aioLastY = e.screenY;
-    if (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) mgsuite.overlay.scrollWinOrElem(1);
-    else mgsuite.overlay.scrollWinOrElem(0);
+    if (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) mgsuite.overlay.scrollWinOrElem(1, true);
+    else mgsuite.overlay.scrollWinOrElem(0, true);
   },
 
   aioGrabNDragMouseUp: function(e) {
