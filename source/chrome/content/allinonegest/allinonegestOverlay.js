@@ -129,7 +129,7 @@ mgsuite.overlay = {
   aioDistY: [0, 0, 0, 0],
   aioScrollFingerFree: null,
   aioAcceptASKeys: false,
-  autoscrollInProgress: false,
+  autoscrollInterval: null,
   aioScroll: null,
   aioOverlay: null,
   aioMarker: null,
@@ -1709,30 +1709,30 @@ mgsuite.overlay = {
     }
   },
 
-  aioScrollWindow: function() {
+  /**
+   * Scroll element or window (used by auto scroll)
+   * @param {Number} whatToScroll 0=element; 1=window
+   */
+  scrollWinOrElem: function(whatToScroll) {
     var moveX = mgsuite.overlay.aioDistX[mgsuite.overlay.aioScrollCount];
     var moveY = mgsuite.overlay.aioDistY[mgsuite.overlay.aioScrollCount];
     
     if (moveX != 0 || moveY != 0) {
-      mgsuite.overlay.aioScroll.clientFrame.scrollBy(moveX, moveY);
+      requestAnimationFrame(function() {
+        if (whatToScroll == 0) {
+          mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += moveX;
+          mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += moveY;
+          
+        } else if (whatToScroll == 1) {
+          mgsuite.overlay.aioScroll.clientFrame.scrollBy(moveX, moveY);
+        }
+      });
+      
       mgsuite.overlay.autoScrollMoved = true;
     }
     
     if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
   },
-
-  aioScrollElem: function() {
-    var moveX = mgsuite.overlay.aioDistX[mgsuite.overlay.aioScrollCount];
-    var moveY = mgsuite.overlay.aioDistY[mgsuite.overlay.aioScrollCount];
-    
-    if (moveX != 0 || moveY != 0) {
-      mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += moveX;
-      mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += moveY;
-      mgsuite.overlay.autoScrollMoved = true;
-    }
-    
-    if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
- },
 
   aioAutoScrollStart: function() {
     window.addEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
@@ -1751,26 +1751,9 @@ mgsuite.overlay = {
     switch (result) {
       case 0:
       case 1:
-        mgsuite.overlay.autoscrollInProgress = true;
-        
-        // animate scrolling at certain interval
-        var ASIntervalFun = function() {
-          setTimeout(function() {
-            requestAnimationFrame(function() {
-              if (result == 0) {
-                mgsuite.overlay.aioScrollElem();
-              } else {
-                mgsuite.overlay.aioScrollWindow();
-              }
-              
-              if (mgsuite.overlay.autoscrollInProgress) {
-                ASIntervalFun();
-              }
-            });
-          }, mgsuite.overlay.aioASPeriod);
-        };
-
-        ASIntervalFun();
+        mgsuite.overlay.autoscrollInterval = setInterval(function() {
+          mgsuite.overlay.scrollWinOrElem(result);
+        }, mgsuite.overlay.aioASPeriod);
         
         break;
       
@@ -1877,12 +1860,16 @@ mgsuite.overlay = {
         (!mgsuite.overlay.aioPanToAS || Math.abs(e.screenX - mgsuite.overlay.aioLastX) >= mgsuite.const.aioHalfMarker || Math.abs(e.screenY - mgsuite.overlay.aioLastY) >= mgsuite.const.aioHalfMarker))
       ) {
       
-	  mgsuite.overlay.autoscrollInProgress = false;
+	  if (mgsuite.overlay.autoscrollInterval) {
+        clearInterval(mgsuite.overlay.autoscrollInterval);
+        mgsuite.overlay.autoscrollInterval = null;
+      }
+      
 	  mgsuite.overlay.aioNukeEvent(e);
   
 	  if (e.type == "mousedown") {
-		 mgsuite.overlay.aioRemoveMarker();
-		 window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
+		mgsuite.overlay.aioRemoveMarker();
+		window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
 	  }
       else {
 		mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
@@ -2218,8 +2205,8 @@ mgsuite.overlay = {
     mgsuite.overlay.aioDistX[0] = mgsuite.overlay.aioNoHorizScroll ? 0 : Math.ceil((e.screenX - mgsuite.overlay.aioLastX) * mgsuite.overlay.aioScroll.ratioX);
     mgsuite.overlay.aioDistY[0] = Math.ceil((e.screenY - mgsuite.overlay.aioLastY) * mgsuite.overlay.aioScroll.ratioY);
     mgsuite.overlay.aioLastX = e.screenX; mgsuite.overlay.aioLastY = e.screenY;
-    if (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) mgsuite.overlay.aioScrollWindow();
-    else mgsuite.overlay.aioScrollElem();
+    if (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) mgsuite.overlay.scrollWinOrElem(1);
+    else mgsuite.overlay.scrollWinOrElem(0);
   },
 
   aioGrabNDragMouseUp: function(e) {
