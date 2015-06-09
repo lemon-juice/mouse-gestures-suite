@@ -1722,17 +1722,32 @@ mgsuite.overlay = {
     if (moveX != 0 || moveY != 0) {
       var scrollNow = function() {
         if (whatToScroll == 0) {
-          mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += moveX;
-          mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += moveY;
+          if (mgsuite.overlay.scrollByXStack) {
+            mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += mgsuite.overlay.scrollByXStack;
+          }
+          if (mgsuite.overlay.scrollByYStack) {
+            mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += mgsuite.overlay.scrollByYStack;
+          }
           
         } else if (whatToScroll == 1) {
-          mgsuite.overlay.aioScroll.clientFrame.scrollBy(moveX, moveY);
+          mgsuite.overlay.aioScroll.clientFrame.scrollBy(mgsuite.overlay.scrollByXStack, mgsuite.overlay.scrollByYStack);
         }
+        mgsuite.overlay.scrollByXStack = 0;
+        mgsuite.overlay.scrollByYStack = 0;
       }
       
       if (immediately) {
+        mgsuite.overlay.scrollByXStack = moveX;
+        mgsuite.overlay.scrollByYStack = moveY;
         scrollNow();
+        
       } else {
+        // We accumulate amount of pixels to scroll in 'stack' variables
+        // so that scrolling can catch up in case of delays. This improves
+        // scroll smoothness and speed stablity.
+        mgsuite.overlay.scrollByXStack += moveX;
+        mgsuite.overlay.scrollByYStack += moveY;
+        
         requestAnimationFrame(function() {
           setTimeout(scrollNow, 0);
         });
@@ -1757,10 +1772,14 @@ mgsuite.overlay = {
     mgsuite.overlay.autoScrollMoved = false;
 	
 	var result = mgsuite.overlay.aioAddMarker();
+    
 
     switch (result) {
       case 0:
       case 1:
+        mgsuite.overlay.scrollByXStack = 0;
+        mgsuite.overlay.scrollByYStack = 0;
+        
         mgsuite.overlay.autoscrollInterval = setInterval(function() {
           mgsuite.overlay.scrollWinOrElem(result);
         }, mgsuite.overlay.aioASPeriod);
@@ -2214,8 +2233,12 @@ mgsuite.overlay = {
     mgsuite.overlay.aioDistX[0] = mgsuite.overlay.aioNoHorizScroll ? 0 : Math.ceil((e.screenX - mgsuite.overlay.aioLastX) * mgsuite.overlay.aioScroll.ratioX);
     mgsuite.overlay.aioDistY[0] = Math.ceil((e.screenY - mgsuite.overlay.aioLastY) * mgsuite.overlay.aioScroll.ratioY);
     mgsuite.overlay.aioLastX = e.screenX; mgsuite.overlay.aioLastY = e.screenY;
-    if (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) mgsuite.overlay.scrollWinOrElem(1, true);
-    else mgsuite.overlay.scrollWinOrElem(0, true);
+    if (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) {
+      mgsuite.overlay.scrollWinOrElem(1, true);
+    }
+    else {
+      mgsuite.overlay.scrollWinOrElem(0, true);
+    }
   },
 
   aioGrabNDragMouseUp: function(e) {
