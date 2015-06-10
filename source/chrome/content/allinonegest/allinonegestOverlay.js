@@ -58,7 +58,6 @@ mgsuite.overlay = {
   aioWhatAS: null,
   aioASEnabled: null,
   aioTabSwitching: null,
-  aioSmoothScroll: null,
   aioRockMode: null,
   aioWheelMode: null,
   aioHistIfDown: null,
@@ -136,9 +135,6 @@ mgsuite.overlay = {
   aioMarkerX: null,
   aioMarkerY: null,
   aioInitStarted: false,
-  aioSmoothInc: null,
-  aioSmooth: null,
-  aioSmoothInterval: null,
   aioGrabTarget: null,
   aioScrollMode: null,
   aioBeingUninstalled: false,
@@ -172,7 +168,6 @@ mgsuite.overlay = {
     mgsuite.const.aioScrollLoop = [1, 2, 4];
     mgsuite.const.aioCursors = ["move", "n-resize", "e-resize"];
     mgsuite.const.aioASBasicPeriod = 40;
-    mgsuite.const.aioSmoothPeriod = 20;
 
     
 
@@ -340,19 +335,9 @@ mgsuite.overlay = {
     catch(err) {}
     
     try {
-      mgsuite.overlay.aioSmoothScroll = mgsuite.overlay.aioPrefRoot.getBoolPref("general.smoothScroll");
-    }
-    catch(err) {mgsuite.overlay.aioSmoothScroll = false;}
-    try {
       mgsuite.overlay.aioPreferPaste = mgsuite.overlay.aioPrefRoot.getBoolPref("middlemouse.paste");
     }
     catch(err) {mgsuite.overlay.aioPreferPaste = false;}
-    try {
-      if (!mgsuite.overlay.aioPrefRoot.getBoolPref("mousewheel.withnokey.sysnumlines"))
-          mgsuite.overlay.aioSmoothInc = mgsuite.overlay.aioPrefRoot.getIntPref("mousewheel.withnokey.numlines") * 19;
-      else mgsuite.overlay.aioSmoothInc = 60;
-    }
-    catch(err) {mgsuite.overlay.aioSmoothInc = 60;}
 
     mgsuite.overlay.aioIgnoreStdPrefListener = false;
   },
@@ -747,8 +732,6 @@ mgsuite.overlay = {
 	
     if (mgsuite.overlay.aioShowTitletip && mgsuite.overlay.aioTTHover) mgsuite.overlay.aioRendering.addEventListener("mousemove", mgsuite.tooltip.aioShowTitle, true);
     else mgsuite.overlay.aioRendering.removeEventListener("mousemove", mgsuite.tooltip.aioShowTitle, true);
-
-    mgsuite.overlay.aioRendering.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelScroll, false);
 
     if (mgsuite.overlay.aioWindowType == "browser") {
       if (mgsuite.overlay.aioTabSwitching) {
@@ -2162,45 +2145,6 @@ mgsuite.overlay = {
     }
   },
 
-  aioWheelScroll: function(e) {
-    if (typeof(sw_EnableThisExtension) == "boolean") return; // if smoothWheel is present, use it
-    var scrollObj = mgsuite.overlay.aioFindNodeToScroll(e.target);
-    if (scrollObj.scrollType == 3 || scrollObj.isXML || (scrollObj.isBody && !(scrollObj.isFrame &&
-        scrollObj.clientFrame.frameElement.nodeName.toLowerCase() == "iframe") && scrollObj.scrollType != 2)) return; // Moz scrolling
-    mgsuite.overlay.aioNukeEvent(e);
-    var inc = (e.detail > 0) ? mgsuite.overlay.aioSmoothInc : -mgsuite.overlay.aioSmoothInc;
-    if (mgsuite.overlay.aioSmoothScroll)
-       if (mgsuite.overlay.aioSmooth) { //we're currently scrolling
-          var directionChanged = (mgsuite.overlay.aioSmooth.smoothScrollBy < 0) != (inc < 0)
-          if (directionChanged || mgsuite.overlay.aioSmooth.node != scrollObj.nodeToScroll) {
-             mgsuite.overlay.aioSmooth.totalToScroll = directionChanged ? -inc : 0;
-             mgsuite.overlay.aioSmooth.scrolledSoFar = 0;
-             mgsuite.overlay.aioSmooth.node = scrollObj.nodeToScroll; mgsuite.overlay.aioSmooth.scrollHz = scrollObj.scrollType == 2;
-          }
-          mgsuite.overlay.aioSmooth.totalToScroll += inc;
-          mgsuite.overlay.aioSmooth.smoothScrollBy = Math.ceil((mgsuite.overlay.aioSmooth.totalToScroll - mgsuite.overlay.aioSmooth.scrolledSoFar) / 10);    
-       }
-       else {
-          mgsuite.overlay.aioSmooth = {node: scrollObj.nodeToScroll, totalToScroll: inc, smoothScrollBy: inc / 10,
-                       scrolledSoFar: 0, scrollHz: scrollObj.scrollType == 2};
-          mgsuite.overlay.aioSmoothInterval = setInterval(function(){mgsuite.overlay.aioSmoothLoop();}, mgsuite.const.aioSmoothPeriod);
-       }
-    else
-       if (scrollObj.scrollType != 2) scrollObj.nodeToScroll.scrollTop += inc;
-       else scrollObj.nodeToScroll.scrollLeft += inc;
-  },
-
-  aioSmoothLoop: function() {
-    if (mgsuite.overlay.aioSmooth.scrollHz) mgsuite.overlay.aioSmooth.node.scrollLeft += mgsuite.overlay.aioSmooth.smoothScrollBy;
-    else mgsuite.overlay.aioSmooth.node.scrollTop += mgsuite.overlay.aioSmooth.smoothScrollBy;
-    mgsuite.overlay.aioSmooth.scrolledSoFar += mgsuite.overlay.aioSmooth.smoothScrollBy;
-    if ((mgsuite.overlay.aioSmooth.scrolledSoFar >= mgsuite.overlay.aioSmooth.totalToScroll && mgsuite.overlay.aioSmooth.smoothScrollBy >= 0) ||
-        (mgsuite.overlay.aioSmooth.scrolledSoFar <= mgsuite.overlay.aioSmooth.totalToScroll && mgsuite.overlay.aioSmooth.smoothScrollBy <= 0)) {
-       if (mgsuite.overlay.aioSmoothInterval) window.clearInterval(mgsuite.overlay.aioSmoothInterval);
-       mgsuite.overlay.aioSmooth = null;
-    }
-  },
-
   aioGrabMaybe: function(e) {
     if (Math.abs(e.screenX - mgsuite.overlay.aioLastX) < 3 && Math.abs(e.screenY - mgsuite.overlay.aioLastY) < 3) return;
     mgsuite.overlay.aioRendering.removeEventListener("mouseup", mgsuite.overlay.aioStartAS, true);
@@ -2219,6 +2163,7 @@ mgsuite.overlay = {
     mgsuite.overlay.aioScrollMode = 2;
     window.addEventListener("mouseup", mgsuite.overlay.aioGrabNDragMouseUp, true);
     mgsuite.overlay.aioScroll = mgsuite.overlay.aioFindNodeToScroll(target);
+    
     if (mgsuite.overlay.aioScroll.scrollType == 3) return; // nothing to scroll
     if (!mgsuite.overlay.aioScroll.isXML && mgsuite.overlay.aioScroll.nodeToScroll.nodeName.toLowerCase() != "select") {
        mgsuite.overlay.aioScroll.cursorChangeable = true;
