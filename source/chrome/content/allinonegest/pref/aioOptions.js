@@ -12,7 +12,7 @@ function getBrowserWindow() {
 function init() {
   initEditRuleConst();
   var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
-                     "markerId", "cursorId", "panningId", "pasteId", "reverseId",
+                     "markerId", "cursorId", "autoscrollContinueId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
                      "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
@@ -37,6 +37,8 @@ function init() {
   document.getElementById("prevsStringId").value = pref.getComplexValue("allinonegest.prevsString", Components.interfaces.nsISupportsString).data;
   trailSize = pref.getIntPref("allinonegest.trailSize");
   document.getElementById("gridId").value = pref.getIntPref("allinonegest.grid");
+  document.getElementById("autoscrollSpeedId").value = pref.getCharPref("allinonegest.autoscrollSpeed");
+
   changeTrace(0);
   doEnabling();
   
@@ -134,10 +136,12 @@ function doEnabling() {
                  ["tooltipDisplayId", c16, a1], ["durationdropdownId", c16, a1], ["mousebuttOptions", c1or2, a1],
                  ["mousebutt0", c1or2, a1],  ["mousebutt1", c1or2, a1], ["mousebutt2", c1or2, a1],
                  ["autoscroll", c8, a1], ["markerId", c9c, a1], ["cursorId", c10, a1],
+                 ["autoscrollContinueId", c9a, a1],
                  ["noAltGestId", c1, a1], ["leftdefaultId", c12, a1], ["autoscrollOptions", c9, a1],
                  ["autoscrollOptions0", c9, a1], ["autoscrollOptions1", c9, a1], ["autoscrollOptions2", c9, a1],
                  ["autoscrollOptions3", c9, a1], ["refreshrateId", c9c, a1], ["scrollrateOptions", c9c, a1],
                  ["scrollrate0", c9c, a1], ["scrollrate1", c9c, a1], ["scrollrate2", c9c, a1],
+                 ["autoscrollSpeedId", c9c, a1],
                  ["tabBar", c14, a1], ["panningId", c9a, a1], ["reverseId", c15, a1],
                  ["evenOnLinkId", c9b, a1], ["openlinksId", c1, a1], ["openLinkInNewId", c1, a1],
                  ["blankTabNextToCurrentId", c1, a1], ["grabHorizId", c9d, a1],
@@ -172,7 +176,7 @@ function populateSiteList(prefStr) {
 
 function savePrefs() {
   var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
-                     "markerId", "cursorId", "panningId", "pasteId", "reverseId",
+                     "markerId", "cursorId", "autoscrollContinueId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
                      "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
                      "linkTooltip", "tooltipShiftId", "grabHorizId", "grabModeId",
@@ -199,6 +203,7 @@ function savePrefs() {
   pref.setCharPref("allinonegest.gestureString", returnCustomizedString(0));
   pref.setCharPref("allinonegest.functionString", returnCustomizedString(1));
   pref.setCharPref("allinonegest.rockerString", returnCustomizedString(2));
+  pref.setCharPref("allinonegest.autoscrollSpeed", document.getElementById("autoscrollSpeedId").value);
   
   // save custom gestures
   var customGestures = getCustomGestures();
@@ -673,11 +678,13 @@ function restoreDefaultSettings() {
 function getPrefsForImportExport() {
   return [
     ['TTHover', 'bool'],
+    ['autoscrollContinue', 'bool'],
     ['autoscrollCursor', 'bool'],
     ['autoscrollNoMarker', 'bool'],
     ['autoscrollRate', 'int'],
     ['autoscrolling2', 'bool'],
     ['autoscrollpref', 'int'],
+    ['autoscrollSpeed', 'char'],
     ['blankTabNextToCurrent', 'bool'],
     ['crispResize', 'bool'],
     ['customGestures', 'char'],

@@ -354,6 +354,8 @@
            prefstring="allinonegest.autoscrollNoMarker" label="&aioMMB.marker;" oncommand="doEnabling();" />
        <checkbox id="cursorId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.autoscrollCursor" label="&aioMMB.cursor;" />
+       <checkbox id="autoscrollContinueId" type="checkbox" pref="true" preftype="bool"
+           prefstring="allinonegest.autoscrollContinue" label="Autoscroll: keep scrolling after releasing middle button" />
        <checkbox id="panningId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.panning" label="&aioMMB.panning;" />
        <checkbox id="pasteId" type="checkbox" pref="true" preftype="bool"
@@ -363,16 +365,31 @@
        <checkbox id="grabModeId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.dragAlaAcrobat" label="&aioMMB.grabNdragmode;" />
       <separator orient="horizontal" />
-      <label id="refreshrateId" value="&aioMMB.refreshrate;" />
-      <hbox pack="center">
-      <vbox>
-        <radiogroup id="scrollrateOptions" prefstring="allinonegest.autoscrollRate" orient="horizontal">
-         <radio minwidth="115" id="scrollrate0" value="0" label="&aioMMB.normal;" />
-         <radio minwidth="115" id="scrollrate1" value="1" label="&aioMMB.fast;" />
-         <radio id="scrollrate2" value="2" label="&aioMMB.superfast;" />
-        </radiogroup>
-      </vbox>
-      </hbox>
+      <bbox>
+        <label id="refreshrateId" value="&aioMMB.refreshrate;" />
+        <vbox>
+          <radiogroup id="scrollrateOptions" prefstring="allinonegest.autoscrollRate" orient="horizontal">
+           <radio id="scrollrate0" value="0" label="&aioMMB.normal;" />
+           <radio id="scrollrate1" value="1" label="&aioMMB.fast;" />
+           <radio id="scrollrate2" value="2" label="&aioMMB.superfast;" />
+          </radiogroup>
+        </vbox>
+      </bbox>
+      <bbox>
+        <label value="Autoscroll Speed:" />
+        <menulist id="autoscrollSpeedId">
+           <menupopup>
+              <menuitem label="1/16" value="0.0625" />
+              <menuitem label="1/8" value="0.125" />
+              <menuitem label="1/4" value="0.25" />
+              <menuitem label="1/2" value="0.5" />
+              <menuitem label="x1" value="1" />
+              <menuitem label="x2" value="2" />
+              <menuitem label="x4" value="4" />
+              <menuitem label="x8" value="8" />
+           </menupopup>
+        </menulist>
+      </bbox>
      </vbox>
    </groupbox>
    

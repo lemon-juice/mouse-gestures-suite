@@ -442,6 +442,8 @@ mgsuite.overlay = {
      [function(){mgsuite.overlay.showTabsPopup=mgsuite.overlay.aioPref.getBoolPref("showTabsPopup");}, function(){mgsuite.overlay.aioPref.setBoolPref("showTabsPopup",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioRockMode=mgsuite.overlay.aioPref.getIntPref("rockertypepref");}, function(){mgsuite.overlay.aioPref.setIntPref("rockertypepref",1);}, function(){return mgsuite.overlay.aioRockMode<0||mgsuite.overlay.aioRockMode>1;}],
      [function(){mgsuite.overlay.aioSpecialCursor=mgsuite.overlay.aioPref.getBoolPref("autoscrollCursor");}, function(){mgsuite.overlay.aioPref.setBoolPref("autoscrollCursor",false);}, function(){return false;}],
+     [function(){mgsuite.overlay.autoscrollContinue=mgsuite.overlay.aioPref.getBoolPref("autoscrollContinue");}, function(){mgsuite.overlay.aioPref.setBoolPref("autoscrollContinue",false);}, function(){return false;}],
+     [function(){mgsuite.overlay.autoscrollSpeed=parseFloat(mgsuite.overlay.aioPref.getCharPref("autoscrollSpeed"));}, function(){mgsuite.overlay.aioPref.setCharPref("autoscrollSpeed",1);}, function(){return isNaN(mgsuite.overlay.autoscrollSpeed);}],
      [function(){mgsuite.overlay.aioNoAltWithGest=mgsuite.overlay.aioPref.getBoolPref("noAltGest");}, function(){mgsuite.overlay.aioPref.setBoolPref("noAltGest",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioLeftDefault=mgsuite.overlay.aioPref.getBoolPref("leftDefault");}, function(){mgsuite.overlay.aioPref.setBoolPref("leftDefault",false);}, function(){return false;}],
      [function(){mgsuite.overlay.aioSingleNewWindow=mgsuite.overlay.aioPref.getBoolPref("singleWindow");}, function(){mgsuite.overlay.aioPref.setBoolPref("singleWindow",false);}, function(){return false;}],
@@ -1206,7 +1208,6 @@ mgsuite.overlay = {
   /* This is invoked by middle mousedown from frame script */
   middleButtonDown: function(nodeToScroll, mouseTarget) {
 	mgsuite.overlay.aioScroll = nodeToScroll;
-    dump("middleButtonDown scrollType=" + mgsuite.overlay.aioScroll.scrollType + "\n");
 	mgsuite.overlay.middleButtonTarget = mouseTarget;
 	
 	if (mgsuite.overlay.prevDownButton == mgsuite.const.NoB &&
@@ -1705,6 +1706,13 @@ mgsuite.overlay = {
     
     if (moveX != 0 || moveY != 0) {
       var scrollNow = function() {
+        var absScrollX = Math.abs(mgsuite.overlay.scrollByXStack);
+        var absScrollY = Math.abs(mgsuite.overlay.scrollByYStack);
+        
+        if (absScrollX < 1 && absScrollY < 1) {
+          return;
+        }
+        
         if (whatToScroll == 0) {
           if (mgsuite.overlay.scrollByXStack) {
             mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += mgsuite.overlay.scrollByXStack;
@@ -1716,8 +1724,10 @@ mgsuite.overlay = {
         } else if (whatToScroll == 1) {
           mgsuite.overlay.aioScroll.clientFrame.scrollBy(mgsuite.overlay.scrollByXStack, mgsuite.overlay.scrollByYStack);
         }
-        mgsuite.overlay.scrollByXStack = 0;
-        mgsuite.overlay.scrollByYStack = 0;
+        
+        // subtract and leave only fractions below 1
+        mgsuite.overlay.scrollByXStack -= Math.floor(absScrollX) * Math.sign(mgsuite.overlay.scrollByXStack);
+        mgsuite.overlay.scrollByYStack -= Math.floor(absScrollY) * Math.sign(mgsuite.overlay.scrollByYStack);
       }
       
       if (immediately) {
@@ -1774,7 +1784,7 @@ mgsuite.overlay = {
   },
   
   aioLogDist: function(aDist) {
-    aDist *= 1.25;
+    aDist *= 1.25;  // adjust autoscroll step distance
     
     var absDist = Math.abs(aDist);
     for (var i = 1; i < mgsuite.const.aioDist.length; ++i)
@@ -1798,6 +1808,13 @@ mgsuite.overlay = {
               tabDist[3] = absDist - quarter - roundQuart - roundQuart;
               if (aDist < 0) tabDist[3] = -tabDist[3];
     }
+    
+    var factor = mgsuite.overlay.autoscrollSpeed;
+    tabDist[0] *= factor;
+    tabDist[1] *= factor;
+    tabDist[2] *= factor;
+    tabDist[3] *= factor;
+   
     return tabDist;
   },
 
@@ -1868,10 +1885,13 @@ mgsuite.overlay = {
 
   aioAutoScrollUp: function(e) {
     if (mgsuite.overlay.aioScrollFingerFree || (
-        ((new Date() - mgsuite.overlay.aioLastEvtTime) > 1000 || mgsuite.overlay.autoScrollMoved) &&
-        (!mgsuite.overlay.aioPanToAS || Math.abs(e.screenX - mgsuite.overlay.aioLastX) >= mgsuite.const.aioHalfMarker || Math.abs(e.screenY - mgsuite.overlay.aioLastY) >= mgsuite.const.aioHalfMarker))
+        ((new Date() - mgsuite.overlay.aioLastEvtTime) > 1000
+          || (mgsuite.overlay.autoScrollMoved && !mgsuite.overlay.autoscrollContinue))
+        
+        && (!mgsuite.overlay.aioPanToAS || Math.abs(e.screenX - mgsuite.overlay.aioLastX) >= mgsuite.const.aioHalfMarker || Math.abs(e.screenY - mgsuite.overlay.aioLastY) >= mgsuite.const.aioHalfMarker))
       ) {
       
+      // stop autoscroll
 	  if (mgsuite.overlay.autoscrollInterval) {
         clearInterval(mgsuite.overlay.autoscrollInterval);
         mgsuite.overlay.autoscrollInterval = null;
