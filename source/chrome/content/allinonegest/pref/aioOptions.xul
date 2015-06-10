@@ -355,7 +355,7 @@
        <checkbox id="cursorId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.autoscrollCursor" label="&aioMMB.cursor;" />
        <checkbox id="autoscrollContinueId" type="checkbox" pref="true" preftype="bool"
-           prefstring="allinonegest.autoscrollContinue" label="Autoscroll: keep scrolling after releasing middle button" />
+           prefstring="allinonegest.autoscrollContinue" label="&aioMMB.continue;" />
        <checkbox id="panningId" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.panning" label="&aioMMB.panning;" />
        <checkbox id="pasteId" type="checkbox" pref="true" preftype="bool"
@@ -376,7 +376,7 @@
         </vbox>
       </bbox>
       <bbox>
-        <label value="Autoscroll Speed:" />
+        <label value="&aioMMB.speed;" />
         <menulist id="autoscrollSpeedId">
            <menupopup>
               <menuitem label="1/16" value="0.0625" />

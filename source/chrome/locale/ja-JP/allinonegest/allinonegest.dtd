@@ -83,6 +83,8 @@
 <!ENTITY aioMMB.normal "標準">
 <!ENTITY aioMMB.fast "高速">
 <!ENTITY aioMMB.superfast "最高速">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 
 <!ENTITY aioAction.label "マウスジェスチャの実行">
 <!ENTITY aioAction.singlewindow "'ページのリンクを新しいウィンドウで開く': 新しいウィンドウ一つにタブで開く">

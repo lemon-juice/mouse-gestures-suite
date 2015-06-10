@@ -83,6 +83,8 @@
 <!ENTITY aioMMB.normal             "normal">
 <!ENTITY aioMMB.fast               "schnell">
 <!ENTITY aioMMB.superfast          "sehr schnell">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 
 <!ENTITY aioAction.label       "Verschiedenes">
 <!ENTITY aioAction.singlewindow    "'Links in Fenstern öffnen': nur EIN neues Fenster mit mehreren Tabs öffnen">

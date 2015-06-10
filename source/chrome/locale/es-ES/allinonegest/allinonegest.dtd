@@ -35,6 +35,8 @@
 <!ENTITY aioMMB.paste "El botón central equivale a pegar en los cuadros de texto">
 <!ENTITY aioMMB.refreshrate "Frecuencia del autodesplazamiento">
 <!ENTITY aioMMB.superfast "Más rápido">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 <!ENTITY aioMMBScrolling.label "Desplazamiento con el botón central">
 
 <!ENTITY aioTabscroll.label "Desplazamiento en pestañas">

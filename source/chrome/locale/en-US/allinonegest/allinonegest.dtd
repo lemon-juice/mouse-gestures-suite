@@ -83,6 +83,8 @@
 <!ENTITY aioMMB.normal             "Normal">
 <!ENTITY aioMMB.fast               "Fast">
 <!ENTITY aioMMB.superfast          "Faster">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 
 <!ENTITY aioAction.label       "Mouse Gesture Actions">
 <!ENTITY aioAction.singlewindow    "'Open Links in Windows': Single new window with tabs">

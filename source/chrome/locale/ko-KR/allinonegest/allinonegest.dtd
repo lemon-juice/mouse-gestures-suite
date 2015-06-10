@@ -83,6 +83,8 @@
 <!ENTITY aioMMB.normal            "보통">
 <!ENTITY aioMMB.fast              "빠르게">
 <!ENTITY aioMMB.superfast         "매우 빠르게">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 
 <!ENTITY aioAction.label          "마우스 동작 지정">
 <!ENTITY aioAction.singlewindow   "'링크를 새 창으로 열기': 한 창에 여러 개의 탭으로 엽니다.">

@@ -87,6 +87,8 @@
 <!ENTITY aioMMB.normal             "標準">
 <!ENTITY aioMMB.fast               "快速">
 <!ENTITY aioMMB.superfast          "超快速">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 
 <!ENTITY aioAction.label       "滑鼠手勢動作">
 <!ENTITY aioAction.singlewindow    "『在新視窗中開啟連結』：開啟在單一新視窗內">

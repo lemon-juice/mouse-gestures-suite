@@ -87,6 +87,8 @@
 <!ENTITY aioMMB.normal             "Normale">
 <!ENTITY aioMMB.fast               "Veloce">
 <!ENTITY aioMMB.superfast          "Molto veloce">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 
 <!ENTITY aioAction.label       "Azioni Mouse Gesture">
 <!ENTITY aioAction.singlewindow    "'Apri collegamenti in finestre': Nuove finestre singole con schede">

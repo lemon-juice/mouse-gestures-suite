@@ -83,6 +83,8 @@
 <!ENTITY aioMMB.normal "Нормальная">
 <!ENTITY aioMMB.fast "Средняя">
 <!ENTITY aioMMB.superfast "Высокая">
+<!ENTITY aioMMB.continue           "Autoscroll: Keep scrolling after releasing middle button">
+<!ENTITY aioMMB.speed              "Autoscroll Speed:">
 
 <!ENTITY aioAction.label "Действия мышиных жестов">
 <!ENTITY aioAction.singlewindow "'Открыть ссылки в окнах': Новое окно с вкладками">
