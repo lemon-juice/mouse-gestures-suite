@@ -1206,6 +1206,7 @@ mgsuite.overlay = {
   /* This is invoked by middle mousedown from frame script */
   middleButtonDown: function(nodeToScroll, mouseTarget) {
 	mgsuite.overlay.aioScroll = nodeToScroll;
+    dump("middleButtonDown scrollType=" + mgsuite.overlay.aioScroll.scrollType + "\n");
 	mgsuite.overlay.middleButtonTarget = mouseTarget;
 	
 	if (mgsuite.overlay.prevDownButton == mgsuite.const.NoB &&
@@ -1898,156 +1899,6 @@ mgsuite.overlay = {
     else mgsuite.overlay.aioScrollFingerFree = true;
   },
 
-  aioFindNodeToScroll: function(initialNode) {
-
-    function getStyle(elem, aProp) {
-      var p = elem.ownerDocument.defaultView.getComputedStyle(elem, "").getPropertyValue(aProp);
-      var val = parseFloat(p);
-      if (!isNaN(val)) return Math.ceil(val);
-      if (p == "thin") return 1;
-      if (p == "medium") return 3;
-      if (p == "thick") return 5;
-      return 0;
-    }
-
-    const scrollingAllowed = ['scroll', 'auto'];
-    const defaultScrollBarSize = 16;
-    const twiceScrollBarSize = defaultScrollBarSize * 2;
-    var retObj = {scrollType: 3, isXML: false, nodeToScroll: null, dX: 0, dY: 0,
-                  docWidth: 0, docHeight: 0, clientFrame: null, isBody: false, isFrame: false,
-                  targetDoc: null, insertionNode: null, docBoxX: 0, docBoxY: 0, realHeight: 0,
-                  ratioX: -1, ratioY: -1, XMLPrettyPrint: false, cursorChangeable: false};
-    var realWidth, realHeight, nextNode, currNode;
-    var targetDoc = initialNode.ownerDocument;
-    var docEl = targetDoc.documentElement;
-    var clientFrame = targetDoc.defaultView;
-    retObj.insertionNode = (docEl) ? docEl : targetDoc;
-    retObj.XMLPrettyPrint = mgsuite.overlay.aioIsUnformattedXML(targetDoc);
-    var zoom = 1;
-
-    var domWindowUtils = clientFrame.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-                             .getInterface(Components.interfaces.nsIDOMWindowUtils);
-    zoom = domWindowUtils.fullZoom;
-
-    var insertBounds = retObj.insertionNode.getBoundingClientRect();
-    retObj.docBoxX = Math.floor((clientFrame.mozInnerScreenX + insertBounds.left) * zoom);
-    retObj.docBoxY = Math.floor((clientFrame.mozInnerScreenY + insertBounds.top) * zoom);
-
-    retObj.targetDoc = targetDoc; retObj.clientFrame = clientFrame;
-    if (docEl && docEl.nodeName.toLowerCase() == "html") { // walk the tree up looking for something to scroll
-	  if (clientFrame.frameElement) retObj.isFrame = true; else retObj.isFrame = false;
-	  var bodies = docEl.getElementsByTagName("body");
-	  if (!bodies || !bodies.length) return retObj;
-	  var bodyEl = bodies[0];
-	  if (initialNode == docEl) nextNode = bodyEl;
-	  else if (initialNode.nodeName.toLowerCase() == "select") nextNode = initialNode.parentNode;
-		   else nextNode = initialNode;
-	  
-	  do {
-		try {
-		  currNode = nextNode;
-		  if (!(currNode instanceof HTMLElement)) {
-			// some non-html element, e.g. svg
-			nextNode = currNode.parentNode;
-			continue;
-		  }
-
-		  if ((currNode instanceof HTMLHtmlElement) ||
-                (currNode instanceof HTMLBodyElement)) {
-            if (clientFrame.scrollMaxX > 0) {
-			  retObj.scrollType = clientFrame.scrollMaxY > 0 ? (clientFrame.scrollbars.visible ? 0 : 3) : 2;			 
-			} else {
-			  retObj.scrollType =  (clientFrame.scrollMaxY > 0 && clientFrame.scrollbars.visible) ? 1 : 3;
-			}
-          }
-		  else {
-			var overflowx = currNode.ownerDocument.defaultView
-								.getComputedStyle(currNode, '')
-								.getPropertyValue('overflow-x');
-			var overflowy = currNode.ownerDocument.defaultView
-								.getComputedStyle(currNode, '')
-								.getPropertyValue('overflow-y');
-
-			// Bug 212763 - overflow: visible on textarea isn't applied 
-			if (currNode instanceof HTMLTextAreaElement) {
-			  if (overflowx == "visible") overflowx = "scroll";
-			  if (overflowy == "visible") overflowy = "scroll";
-			}
-  
-			var scrollVert = currNode.clientHeight > 0 &&
-							 currNode.scrollHeight > currNode.clientHeight &&
-							 (currNode instanceof HTMLSelectElement ||
-							 scrollingAllowed.indexOf(overflowy) >= 0);
-  
-			// do not allow horizontal scrolling for select elements, it leads
-			// to visual artifacts and is not the expected behavior anyway
-			if (!(currNode instanceof HTMLSelectElement) &&
-				 currNode.clientWidth > 0 &&
-				 currNode.scrollWidth > currNode.clientWidth &&
-				 scrollingAllowed.indexOf(overflowx) >= 0) {
-			  retObj.scrollType = scrollVert ? 0 : 2;
-			}
-			else {
-			  retObj.scrollType = scrollVert ? 1 : 3;
-			}
-		  }
-
-		  if (retObj.scrollType != 3) {
-			retObj.nodeToScroll = currNode;
-			retObj.isBody = (currNode instanceof HTMLHtmlElement) || (currNode instanceof HTMLBodyElement);
-				
-			if (retObj.isBody) {
-			  retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
-			  retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
-			  realWidth = clientFrame.innerWidth;
-			  realHeight = clientFrame.innerHeight;
-			  retObj.realHeight = realHeight;
-			  realWidth *= zoom; realHeight *= zoom;
-			  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
-			  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
-			  retObj.ratioX = retObj.docWidth / realWidth;
-			  retObj.ratioY = retObj.docHeight / realHeight;
-			}
-			else {
-			  retObj.docWidth = docEl.scrollWidth; retObj.docHeight = docEl.scrollHeight;
-			  realWidth = currNode.clientWidth + getStyle(currNode, "border-left-width") + getStyle(currNode, "border-right-width");
-			  realHeight = currNode.clientHeight + getStyle(currNode, "border-top-width") + getStyle(currNode, "border-bottom-width");
-			  retObj.realHeight = realHeight;
-			  realWidth *= zoom; realHeight *= zoom;
-			  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
-			  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
-			  retObj.ratioX = currNode.scrollWidth / realWidth;
-			  retObj.ratioY = currNode.scrollHeight / realHeight;
-			}
-			return retObj;
-		  }
-		  nextNode = currNode.parentNode;
-		}
-	  catch(err) {return retObj;}
-	} while (nextNode && currNode != docEl);
-
-    // if we're in a frame, check embedding frame/window
-    if (retObj.isFrame) return mgsuite.overlay.aioFindNodeToScroll(clientFrame.frameElement.ownerDocument.documentElement);
-    }
-    else { // XML document; do our best
-      retObj.nodeToScroll = initialNode;
-      retObj.docWidth = clientFrame.innerWidth + clientFrame.scrollMaxX;
-      retObj.docHeight = clientFrame.innerHeight + clientFrame.scrollMaxY;
-      realWidth = clientFrame.innerWidth;
-      realHeight = clientFrame.innerHeight;
-      retObj.realHeight = realHeight;
-      realWidth *= zoom; realHeight *= zoom;
-      if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
-      if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
-      retObj.ratioX = retObj.docWidth / realWidth;
-      retObj.ratioY = retObj.docHeight / realHeight;
-      retObj.scrollType = 3 - (((clientFrame.scrollMaxY > 0) - 0) << 1) - ((clientFrame.scrollMaxX > 0) - 0);
-
-      retObj.isXML = true;
-    }
-    return retObj;
-  },
-
   /* Display autoscroll marker */
   aioAddMarker: function() {
     if (mgsuite.overlay.aioScroll.scrollType == 3) { // nothing to scroll
@@ -2162,8 +2013,8 @@ mgsuite.overlay = {
   aioGrabNDrag: function(target) {
     mgsuite.overlay.aioScrollMode = 2;
     window.addEventListener("mouseup", mgsuite.overlay.aioGrabNDragMouseUp, true);
-    mgsuite.overlay.aioScroll = mgsuite.overlay.aioFindNodeToScroll(target);
     
+    // mgsuite.overlay.aioScroll is set by middleButtonDown(), invoked by frame script
     if (mgsuite.overlay.aioScroll.scrollType == 3) return; // nothing to scroll
     if (!mgsuite.overlay.aioScroll.isXML && mgsuite.overlay.aioScroll.nodeToScroll.nodeName.toLowerCase() != "select") {
        mgsuite.overlay.aioScroll.cursorChangeable = true;
