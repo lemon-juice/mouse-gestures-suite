@@ -161,7 +161,9 @@ mgsuite.overlay = {
     mgsuite.const.aioMarkers = [mgsuite.const.CHROME_DIR + "autoscroll_all.png", mgsuite.const.CHROME_DIR + "autoscroll_v.png", mgsuite.const.CHROME_DIR + "autoscroll_h.png"];
     mgsuite.const.aioMarkerIds = ["aioscrollerNSEW", "aioscrollerNS", "aioscrollerEW"];
     mgsuite.const.aioDist =  [0, 20, 40, 60, 80, 100, 130, 180, 300, 5000];
-    mgsuite.const.aioRatio = [.0, .067, .083, .108, .145, .2, .3, .45, .65, .9];
+    //mgsuite.const.aioRatio = [.0, .067, .083, .108, .145, .2, .3, .45, .65, .9];
+    mgsuite.const.aioRatio = [.0, .067, .083, .108, .160, .24, .45, .85, 1.55, 2.2];
+    
     mgsuite.const.aioScrollLoop = [1, 2, 4];
     mgsuite.const.aioCursors = ["move", "n-resize", "e-resize"];
     mgsuite.const.aioASBasicPeriod = 40;
