@@ -551,7 +551,8 @@ var mgsuiteFr = {
 			  realWidth = clientFrame.innerWidth;
 			  realHeight = clientFrame.innerHeight;
 			  retObj.realHeight = realHeight;
-			  realWidth *= zoom; realHeight *= zoom;
+			  realWidth *= zoom;
+              realHeight *= zoom;
 			  if (realWidth > twiceScrollBarSize) realWidth -= twiceScrollBarSize;
 			  if (realHeight > twiceScrollBarSize) realHeight -= twiceScrollBarSize;
 			  retObj.ratioX = retObj.docWidth / realWidth;
@@ -572,11 +573,15 @@ var mgsuiteFr = {
 		  }
 		  nextNode = currNode.parentNode;
 		}
-	  catch(err) {return retObj;}
+	  catch(err) {
+        return retObj;
+      }
 	} while (nextNode && currNode != docEl);
 
-    // if we're in a frame, check embedding frame/window
-    if (retObj.isFrame) return this.findNodeToScroll(clientFrame.frameElement.ownerDocument.documentElement);
+      // if we're in a frame, check embedding frame/window
+      if (retObj.isFrame) {
+        return this.findNodeToScroll(clientFrame.frameElement.ownerDocument.documentElement);
+      }
     }
     else { // XML document; do our best
       retObj.nodeToScroll = initialNode;
@@ -684,7 +689,7 @@ var mgsuiteFr = {
           }
           
         } else if (whatToScroll == 'window') {
-          mgsuiteFr.mouseDownFrame.scrollBy(mgsuiteFr.scrollByXStack, mgsuiteFr.scrollByYStack);
+          mgsuiteFr.nodeToScroll.clientFrame.scrollBy(mgsuiteFr.scrollByXStack, mgsuiteFr.scrollByYStack);
         }
         
         // subtract and leave only fractions below 1
@@ -731,7 +736,7 @@ var mgsuiteFr = {
       }
       
     } else if (msg.data.whatToScroll == 'window') {
-      mgsuiteFr.mouseDownFrame.scrollBy(msg.data.moveX, msg.data.moveY);
+      mgsuiteFr.nodeToScroll.clientFrame.scrollBy(msg.data.moveX, msg.data.moveY);
     }
   },
   
