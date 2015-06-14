@@ -117,15 +117,12 @@ mgsuite.overlay = {
   aioTTShown: false,
   aioTTNode: null,
 
-  aioScrollCount: null,
   aioScrollRate: null,
   aioScrollMax: null,
   aioASPeriod: null,
   aioSofar: null,
   aioLastX: null,
   aioLastY: null,
-  aioDistX: [0, 0, 0, 0],
-  aioDistY: [0, 0, 0, 0],
   aioScrollFingerFree: null,
   aioAcceptASKeys: false,
   autoscrollInterval: null,
@@ -1695,92 +1692,37 @@ mgsuite.overlay = {
     }
   },
 
-  /**
-   * Scroll element or window (used by auto scroll)
-   * @param {Number} whatToScroll 0=element; 1=window
-   * @param {Boolean} immediately
-   */
-  scrollWinOrElem: function(whatToScroll, immediately) {
-    var moveX = mgsuite.overlay.aioDistX[mgsuite.overlay.aioScrollCount];
-    var moveY = mgsuite.overlay.aioDistY[mgsuite.overlay.aioScrollCount];
-    
-    if (moveX != 0 || moveY != 0) {
-      var scrollNow = function() {
-        var absScrollX = Math.abs(mgsuite.overlay.scrollByXStack);
-        var absScrollY = Math.abs(mgsuite.overlay.scrollByYStack);
-        
-        if (absScrollX < 1 && absScrollY < 1) {
-          return;
-        }
-        
-        if (whatToScroll == 0) {
-          if (mgsuite.overlay.scrollByXStack) {
-            mgsuite.overlay.aioScroll.nodeToScroll.scrollLeft += mgsuite.overlay.scrollByXStack;
-          }
-          if (mgsuite.overlay.scrollByYStack) {
-            mgsuite.overlay.aioScroll.nodeToScroll.scrollTop += mgsuite.overlay.scrollByYStack;
-          }
-          
-        } else if (whatToScroll == 1) {
-          mgsuite.overlay.aioScroll.clientFrame.scrollBy(mgsuite.overlay.scrollByXStack, mgsuite.overlay.scrollByYStack);
-        }
-        
-        // subtract and leave only fractions below 1
-        mgsuite.overlay.scrollByXStack -= Math.floor(absScrollX) * Math.sign(mgsuite.overlay.scrollByXStack);
-        mgsuite.overlay.scrollByYStack -= Math.floor(absScrollY) * Math.sign(mgsuite.overlay.scrollByYStack);
-      }
-      
-      if (immediately) {
-        mgsuite.overlay.scrollByXStack = moveX;
-        mgsuite.overlay.scrollByYStack = moveY;
-        scrollNow();
-        
-      } else {
-        // We accumulate amount of pixels to scroll in 'stack' variables
-        // so that scrolling can catch up in case of delays. This improves
-        // scroll smoothness and speed stablity.
-        mgsuite.overlay.scrollByXStack += moveX;
-        mgsuite.overlay.scrollByYStack += moveY;
-        
-        requestAnimationFrame(function() {
-          setTimeout(scrollNow, 0);
-        });
-      }
-      
-      mgsuite.overlay.autoScrollMoved = true;
-    }
-    
-    if (++mgsuite.overlay.aioScrollCount >= mgsuite.overlay.aioScrollMax) mgsuite.overlay.aioScrollCount = 0;
-  },
-
   aioAutoScrollStart: function() {
     window.addEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
     window.addEventListener("mouseup", mgsuite.overlay.aioAutoScrollUp, true);
     window.addEventListener("mousedown", mgsuite.overlay.aioAutoScrollUp, true);
     mgsuite.overlay.aioAcceptASKeys = true;
-    mgsuite.overlay.aioDistX = [0, 0, 0, 0];
-    mgsuite.overlay.aioDistY = [0, 0, 0, 0];
-    mgsuite.overlay.aioScrollCount = 0;
     mgsuite.overlay.aioScrollMode = 0;
     mgsuite.overlay.aioScrollFingerFree = false;
     mgsuite.overlay.autoScrollMoved = false;
 	
 	var result = mgsuite.overlay.aioAddMarker();
     
-
     switch (result) {
       case 0:
       case 1:
         mgsuite.overlay.scrollByXStack = 0;
         mgsuite.overlay.scrollByYStack = 0;
         
-        mgsuite.overlay.autoscrollInterval = setInterval(function() {
-          mgsuite.overlay.scrollWinOrElem(result);
-        }, mgsuite.overlay.aioASPeriod);
+        mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:startAutoScroll", {
+          whatToScroll: (result ? 'window' : 'element'),
+          interval: mgsuite.overlay.aioASPeriod,
+          scrollMax: mgsuite.overlay.aioScrollMax
+        });
         break;
       
       case 2: ;
     }
+  },
+  
+  /* Frame script notifies this thread */
+  setAutoScrollMoved: function() {
+    mgsuite.overlay.autoScrollMoved = true;
   },
   
   aioLogDist: function(aDist) {
@@ -1823,18 +1765,23 @@ mgsuite.overlay = {
     mgsuite.overlay.aioNukeEvent(e);
     mgsuite.overlay.aioScroll.dX = e.screenX - mgsuite.overlay.aioLastX;
     mgsuite.overlay.aioScroll.dY = e.screenY - mgsuite.overlay.aioLastY;
-    mgsuite.overlay.aioDistX = [0, 0, 0, 0];
-    mgsuite.overlay.aioDistY = [0, 0, 0, 0];
+    var distX = [0, 0, 0, 0];
+    var distY = [0, 0, 0, 0];
     
     switch (mgsuite.overlay.aioScroll.scrollType) {
       case 3: break;
-      case 0: if (Math.abs(mgsuite.overlay.aioScroll.dX) > Math.abs(mgsuite.overlay.aioScroll.dY)) mgsuite.overlay.aioDistX = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dX);
-              else mgsuite.overlay.aioDistY = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dY); // diagonal scrolling is jerky; don't do it
+      case 0: if (Math.abs(mgsuite.overlay.aioScroll.dX) > Math.abs(mgsuite.overlay.aioScroll.dY)) distX = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dX);
+              else distY = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dY); // diagonal scrolling is jerky; don't do it
               break;
-      case 1: mgsuite.overlay.aioDistY = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dY);
+      case 1: distY = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dY);
               break;
-      case 2: mgsuite.overlay.aioDistX = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dX);
+      case 2: distX = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dX);
     }
+    
+    mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:setAutoScrollDist", {
+      x: distX,
+      y: distY
+    });
   },
 
   aioAutoScrollKey: function(e) {
@@ -1851,7 +1798,11 @@ mgsuite.overlay = {
 
                         mgsuite.overlay.aioLastY -= inc;
                         mgsuite.overlay.aioScroll.dY += inc;
-                        mgsuite.overlay.aioDistY = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dY);
+                        mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:setAutoScrollDist", {
+                          x: null,
+                          y: mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dY)
+                        });
+
                      }
                      break;
       case VK_LEFT :
@@ -1863,8 +1814,10 @@ mgsuite.overlay = {
 
                         mgsuite.overlay.aioLastX -= inc;
                         mgsuite.overlay.aioScroll.dX += inc;
-                        mgsuite.overlay.aioDistX = mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dX);
-                     }
+                        mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:setAutoScrollDist", {
+                          x: mgsuite.overlay.aioLogDist(mgsuite.overlay.aioScroll.dX),
+                          y: null
+                        });                     }
                      break;
       default      : mgsuite.overlay.aioAutoScrollStop(e);
    }          
@@ -1892,11 +1845,7 @@ mgsuite.overlay = {
       ) {
       
       // stop autoscroll
-	  if (mgsuite.overlay.autoscrollInterval) {
-        clearInterval(mgsuite.overlay.autoscrollInterval);
-        mgsuite.overlay.autoscrollInterval = null;
-      }
-      
+      mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:stopAutoScroll");
 	  mgsuite.overlay.aioNukeEvent(e);
   
 	  if (e.type == "mousedown") {
@@ -2036,24 +1985,34 @@ mgsuite.overlay = {
     
     // mgsuite.overlay.aioScroll is set by middleButtonDown(), invoked by frame script
     if (mgsuite.overlay.aioScroll.scrollType == 3) return; // nothing to scroll
+    
     if (!mgsuite.overlay.aioScroll.isXML && mgsuite.overlay.aioScroll.nodeToScroll.nodeName.toLowerCase() != "select") {
        mgsuite.overlay.aioScroll.cursorChangeable = true;
        mgsuite.overlay.aioScroll.nodeToScroll.style.cursor = "url(chrome://mgsuite/content/allscroll.png), move";
     }
-    if (mgsuite.overlay.aioScrollAlaAcrobat) {mgsuite.overlay.aioScroll.ratioX = -1; mgsuite.overlay.aioScroll.ratioY = -1; }
+    if (mgsuite.overlay.aioScrollAlaAcrobat) {
+      mgsuite.overlay.aioScroll.ratioX = -1;
+      mgsuite.overlay.aioScroll.ratioY = -1;
+    }
   },
 
   aioGrabNDragMove: function(e) {
     if (mgsuite.overlay.aioScroll.scrollType == 3) return;
-    mgsuite.overlay.aioScrollCount = 0;
-    mgsuite.overlay.aioDistX[0] = mgsuite.overlay.aioNoHorizScroll ? 0 : Math.ceil((e.screenX - mgsuite.overlay.aioLastX) * mgsuite.overlay.aioScroll.ratioX);
-    mgsuite.overlay.aioDistY[0] = Math.ceil((e.screenY - mgsuite.overlay.aioLastY) * mgsuite.overlay.aioScroll.ratioY);
-    mgsuite.overlay.aioLastX = e.screenX; mgsuite.overlay.aioLastY = e.screenY;
-    if (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) {
-      mgsuite.overlay.scrollWinOrElem(1, true);
-    }
-    else {
-      mgsuite.overlay.scrollWinOrElem(0, true);
+    
+    var moveX = mgsuite.overlay.aioNoHorizScroll ? 0 : Math.ceil((e.screenX - mgsuite.overlay.aioLastX) * mgsuite.overlay.aioScroll.ratioX);
+    var moveY = Math.ceil((e.screenY - mgsuite.overlay.aioLastY) * mgsuite.overlay.aioScroll.ratioY);
+    
+    mgsuite.overlay.aioLastX = e.screenX;
+    mgsuite.overlay.aioLastY = e.screenY;
+    
+    var whatToScroll = (mgsuite.overlay.aioScroll.isXML || mgsuite.overlay.aioScroll.isBody) ? 'window' : 'element';
+    
+    if (moveX != 0 || moveY != 0) {
+      mgsuite.overlay.sendAsyncMessage("MouseGesturesSuite:scrollWinOrElem", {
+        whatToScroll: whatToScroll,
+        moveX: moveX,
+        moveY: moveY
+      });
     }
   },
 

@@ -22,6 +22,10 @@ var mgsuiteFr = {
     addMessageListener("MouseGesturesSuite:hideObject", this);
     addMessageListener("MouseGesturesSuite:undoHideObject", this);
     addMessageListener("MouseGesturesSuite:runUserScript", this);
+    addMessageListener("MouseGesturesSuite:startAutoScroll", this);
+    addMessageListener("MouseGesturesSuite:setAutoScrollDist", this);
+    addMessageListener("MouseGesturesSuite:stopAutoScroll", this);
+    addMessageListener("MouseGesturesSuite:scrollWinOrElem", this);
     addEventListener("mousedown", this, true);
     addEventListener("click", this, true);
   },
@@ -41,6 +45,10 @@ var mgsuiteFr = {
       case "MouseGesturesSuite:hideObject": this.hideObject(aMsg); break;
       case "MouseGesturesSuite:undoHideObject": this.undoHideObject(aMsg); break;
       case "MouseGesturesSuite:runUserScript": this.runUserScript(aMsg); break;
+      case "MouseGesturesSuite:startAutoScroll": this.startAutoScroll(aMsg); break;
+      case "MouseGesturesSuite:setAutoScrollDist": this.setAutoScrollDist(aMsg); break;
+      case "MouseGesturesSuite:stopAutoScroll": this.stopAutoScroll(aMsg); break;
+      case "MouseGesturesSuite:scrollWinOrElem": this.scrollWinOrElem(aMsg); break;
       //case "MouseGesturesSuite:test": this.test(aMsg); break;
     }
   },
@@ -70,19 +78,20 @@ var mgsuiteFr = {
       
       if (e.type == 'mousedown') {
         // possible start of middle button scrolling
-        var nodeToScroll = this.findNodeToScroll(e.target);
+        this.nodeToScroll = this.findNodeToScroll(e.target);
         
-        if (nodeToScroll && scrollEnabled
+        if (this.nodeToScroll && scrollEnabled
           && this.prefBranch.getIntPref("mousebuttonpref") != 1
           && (evenOnLink || !elemInfo.link)
         ) {
-          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.middleButtonDown'}, {param: [nodeToScroll, e.target]});
+          sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.middleButtonDown'}, {param: [this.nodeToScroll, e.target]});
         }
       }
     }
     
     if (e.type == 'mousedown') {
-      sendAsyncMessage("MouseGesturesSuite:CollectFrame", {}, {frame: e.target.ownerDocument.defaultView});
+      this.mouseDownFrame = e.target.ownerDocument.defaultView;
+      sendAsyncMessage("MouseGesturesSuite:CollectFrame", {}, {frame: this.mouseDownFrame});
             
       this.firstLink = null;
       
@@ -458,8 +467,6 @@ var mgsuiteFr = {
     retObj.insertionNode = (docEl) ? docEl : targetDoc;
     retObj.XMLPrettyPrint = isUnformattedXML(targetDoc);
     
-    //var zoom = 1;
-
     var domWindowUtils = clientFrame.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils);
     var zoom = domWindowUtils.fullZoom;
 
@@ -617,6 +624,116 @@ var mgsuiteFr = {
        else scrollObj.nodeToScroll.scrollTop = value;
   },
   
+  
+  startAutoScroll: function(msg) {
+    this.autoScrollMoved = false;
+    this.scrollCount = 0;
+    this.scrollByXStack = 0;
+    this.scrollByYStack = 0;
+    this.scrollMax = msg.data.scrollMax;
+    this.autoScrollDistX = [0, 0, 0, 0];
+    this.autoScrollDistY = [0, 0, 0, 0];
+    
+    this.autoScrollTimer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
+      
+    this.autoScrollTimer.initWithCallback(function() {
+      mgsuiteFr.scrollWinOrElemByInterval(msg.data.whatToScroll);
+      
+    }, msg.data.interval, Components.interfaces.nsITimer.TYPE_REPEATING_PRECISE);
+  },
+  
+  stopAutoScroll: function() {
+    if (this.autoScrollTimer) {
+      this.autoScrollTimer.cancel();
+      this.autoScrollTimer = null;
+    }
+  },
+  
+  setAutoScrollDist: function(msg) {
+    if (msg.data.x !== null) {
+      this.autoScrollDistX = msg.data.x;
+    }
+    if (msg.data.y !== null) {
+      this.autoScrollDistY = msg.data.y;
+    }
+  },
+  
+    /**
+   * Scroll element or window (used by auto scroll)
+   * @param {String} whatToScroll element|window
+   */
+  scrollWinOrElemByInterval: function(whatToScroll) {
+    var moveX = mgsuiteFr.autoScrollDistX[mgsuiteFr.scrollCount];
+    var moveY = mgsuiteFr.autoScrollDistY[mgsuiteFr.scrollCount];
+    
+    if (moveX != 0 || moveY != 0) {
+      var scrollNow = function() {
+        var absScrollX = Math.abs(mgsuiteFr.scrollByXStack);
+        var absScrollY = Math.abs(mgsuiteFr.scrollByYStack);
+        
+        if (absScrollX < 1 && absScrollY < 1) {
+          return;
+        }
+        
+        if (whatToScroll == 'element') {
+          if (mgsuiteFr.scrollByXStack) {
+            mgsuiteFr.nodeToScroll.nodeToScroll.scrollLeft += mgsuiteFr.scrollByXStack;
+          }
+          if (mgsuiteFr.scrollByYStack) {
+            mgsuiteFr.nodeToScroll.nodeToScroll.scrollTop += mgsuiteFr.scrollByYStack;
+          }
+          
+        } else if (whatToScroll == 'window') {
+          mgsuiteFr.mouseDownFrame.scrollBy(mgsuiteFr.scrollByXStack, mgsuiteFr.scrollByYStack);
+        }
+        
+        // subtract and leave only fractions below 1
+        mgsuiteFr.scrollByXStack -= Math.floor(absScrollX) * Math.sign(mgsuiteFr.scrollByXStack);
+        mgsuiteFr.scrollByYStack -= Math.floor(absScrollY) * Math.sign(mgsuiteFr.scrollByYStack);
+      }
+      
+      // We accumulate amount of pixels to scroll in 'stack' variables
+      // so that scrolling can catch up in case of delays. This improves
+      // scroll smoothness and speed stablity.
+      mgsuiteFr.scrollByXStack += moveX;
+      mgsuiteFr.scrollByYStack += moveY;
+      
+      content.requestAnimationFrame(function() {
+        // setTimeout improves speed and smoothness
+        content.setTimeout(scrollNow, 0);
+      });
+      
+      if (!mgsuiteFr.autoScrollMoved) {
+        mgsuiteFr.autoScrollMoved = true;
+        sendAsyncMessage("MouseGesturesSuite:returnWithCallback", {callback: 'overlay.setAutoScrollMoved'});
+      }
+    }
+    
+    if (++mgsuiteFr.scrollCount >= mgsuiteFr.scrollMax) {
+      mgsuiteFr.scrollCount = 0;
+    }
+  },
+  
+    /**
+   * Scroll element or window (used by grab & drag scrolling)
+   * @param {Object} msg.data:
+   *   @param {String} whatToScroll element|window
+   *   @param {Number} moveX
+   *   @param {Number} moveY
+   */
+  scrollWinOrElem: function(msg) {
+    if (msg.data.whatToScroll == 'element') {
+      if (msg.data.moveX) {
+        mgsuiteFr.nodeToScroll.nodeToScroll.scrollLeft += msg.data.moveX;
+      }
+      if (msg.data.moveY) {
+        mgsuiteFr.nodeToScroll.nodeToScroll.scrollTop += msg.data.moveY;
+      }
+      
+    } else if (msg.data.whatToScroll == 'window') {
+      mgsuiteFr.mouseDownFrame.scrollBy(msg.data.moveX, msg.data.moveY);
+    }
+  },
   
   /**
    * Go to next or previous link whose text is defined in options.
