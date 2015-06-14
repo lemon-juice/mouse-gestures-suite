@@ -2046,8 +2046,9 @@ mgsuite.overlay = {
     if (mgsuite.overlay.aioScroll.scrollType == 3) return; // nothing to scroll
     
     if (!mgsuite.overlay.aioScroll.isXML && mgsuite.overlay.aioScroll.nodeToScroll.nodeName.toLowerCase() != "select") {
-       mgsuite.overlay.aioScroll.cursorChangeable = true;
-       mgsuite.overlay.aioScroll.nodeToScroll.style.cursor = "url(chrome://mgsuite/content/allscroll.png), move";
+      mgsuite.overlay.aioScroll.cursorChangeable = true;
+      mgsuite.overlay.aioScroll.originalCursor = mgsuite.overlay.aioScroll.nodeToScroll.style.cursor;
+      mgsuite.overlay.aioScroll.nodeToScroll.style.cursor = "url(chrome://mgsuite/content/allscroll.png), move";
     }
     if (mgsuite.overlay.aioScrollAlaAcrobat) {
       mgsuite.overlay.aioScroll.ratioX = -1;
@@ -2082,8 +2083,10 @@ mgsuite.overlay = {
     window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
     window.addEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
     mgsuite.overlay.aioRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
-    if (mgsuite.overlay.aioScroll.cursorChangeable)
-       mgsuite.overlay.aioScroll.nodeToScroll.style.cursor = "auto";
+    
+    if (mgsuite.overlay.aioScroll.cursorChangeable) {
+      mgsuite.overlay.aioScroll.nodeToScroll.style.cursor = mgsuite.overlay.aioScroll.originalCursor;
+    }
     setTimeout(function(){mgsuite.overlay.aioScrollEnd();}, 200);
   },
 
