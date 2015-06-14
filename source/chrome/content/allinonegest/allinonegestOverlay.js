@@ -1754,10 +1754,67 @@ mgsuite.overlay = {
     }
     
     var factor = mgsuite.overlay.autoscrollSpeed;
+    
     tabDist[0] *= factor;
     tabDist[1] *= factor;
     tabDist[2] *= factor;
     tabDist[3] *= factor;
+    
+    if (factor > 1) {
+      var sign = 1;
+      var tabDistAbs = [0,0,0,0];
+      
+      for (var i=0; i<4; i++) {
+        if (tabDist[i] < 0) {
+          sign = -1;
+        }
+        tabDistAbs[i] = Math.abs(tabDist[i]);
+      }
+      
+      // check if there are too big differences between values
+      var diffMoreThan1 = false;
+      var firstVal = null;
+      var sum = 0;
+      
+      for (var i=0; i<4; i++) {
+        if (i == 0) {
+          firstVal = tabDistAbs[0];
+        }
+        else if (Math.abs(tabDistAbs[i] - firstVal) > 1) {
+          diffMoreThan1 = true;
+        }
+        
+        sum += tabDistAbs[i];
+      }
+      
+      if (diffMoreThan1) {
+        // distribute values evenly, e.g.
+        // 0 0 0 2 => 0 1 0 1
+        var mean = Math.floor(sum / 4);
+        tabDistAbs[0] = mean;
+        tabDistAbs[1] = mean;
+        tabDistAbs[2] = mean;
+        tabDistAbs[3] = mean;
+        
+        var mod = sum - mean * 4;
+        
+        if (mod == 1) {
+          tabDistAbs[3]++;
+        } else if (mod == 2) {
+          tabDistAbs[0]++;
+          tabDistAbs[2]++;
+        } else if (mod == 3) {
+          tabDistAbs[0]++;
+          tabDistAbs[2]++;
+          tabDistAbs[3]++;
+        }
+      }
+      
+      tabDist[0] = tabDistAbs[0] * sign;
+      tabDist[1] = tabDistAbs[1] * sign;
+      tabDist[2] = tabDistAbs[2] * sign;
+      tabDist[3] = tabDistAbs[3] * sign;
+    }
    
     return tabDist;
   },
