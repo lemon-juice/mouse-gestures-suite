@@ -1429,15 +1429,23 @@ mgsuite.imp = {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
         
-        var originalTabIndex = mgsuite.overlay.aioContent.mTabContainer.selectedIndex;
-        var originalTab = gBrowser.mCurrentTab;
+        var tabToReturnTo = gBrowser.mCurrentTab;
+        
+        if (mgsuite.overlay.aioGestureTab) {
+          var originalTabIndex = mgsuite.overlay.aioContent.getTabIndex ? mgsuite.overlay.aioContent.getTabIndex(mgsuite.overlay.aioGestureTab) : mgsuite.overlay.aioGestureTab._tPos;
+          var originalTab = mgsuite.overlay.aioGestureTab;
+          
+        } else {
+          var originalTabIndex = mgsuite.overlay.aioContent.mTabContainer.selectedIndex;
+          var originalTab = gBrowser.mCurrentTab;
+        }
         
         var cs = mgsuite.overlay.aioIsFx
           ? Components.classes["@mozilla.org/browser/sessionstore;1"]
           : Components.classes["@mozilla.org/suite/sessionstore;1"];
         var SessionStore = cs.getService(Components.interfaces.nsISessionStore);
         
-        var tab = SessionStore.duplicateTab(window, mgsuite.overlay.aioContent.mCurrentTab);
+        var tab = SessionStore.duplicateTab(window, originalTab);
         
         var loadInBg = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
       
@@ -1448,22 +1456,40 @@ mgsuite.imp = {
         if (!loadInBg) {
           mgsuite.overlay.aioContent.selectedTab = tab;
         }
-
-        if (!mgsuite.overlay.aioIsFx && mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.insertRelatedAfterCurrent")) {
-          // SM's duplicateTab() doesn't respect browser.tabs.insertRelatedAfterCurrent
-          // so we must move the tab manually
-          gBrowser.moveTabTo(tab, originalTabIndex + 1);
+        
+        if (mgsuite.overlay.aioIsFx) {
+          // Fx
+          if (mgsuite.overlay.aioGestureTab) {
+            // if gesture started on tab it must be moved manually to correct position
+            if (mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.insertRelatedAfterCurrent")) {
+              gBrowser.moveTabTo(tab, originalTabIndex + 1);
+              
+              if (!loadInBg) {
+                // set related tab to come back to after closing
+                tab.owner = tabToReturnTo;
+              }
+            }
+          }
           
-          if (!loadInBg) {
-            // set related tab to come back to after closing
-            gBrowser.mPreviousTab = originalTab;
+        } else {
+          // SM
+          if (mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.insertRelatedAfterCurrent")) {
+            // SM's duplicateTab() doesn't respect browser.tabs.insertRelatedAfterCurrent
+            // so we must move the tab manually
+            gBrowser.moveTabTo(tab, originalTabIndex + 1);
+            
+            if (!loadInBg) {
+              // set related tab to come back to after closing
+              gBrowser.mPreviousTab = tabToReturnTo;
+            }
           }
         }
+        
+        break;
       
       case "messenger":
         MsgOpenNewTabForMessage();
         break;
-      
     }
   },
   
