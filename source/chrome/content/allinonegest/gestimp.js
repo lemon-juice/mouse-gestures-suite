@@ -1753,18 +1753,7 @@ mgsuite.imp = {
     var win = mgsuite.imp.aioNewWindow(url, flags, noSanitize, referrer);
     
     if (background) {
-      if (mgsuite.overlay.aioIsWin) {
-        setTimeout(function(a){mgsuite.imp.aioSetToNormalZ(a);}, 500, win);
-      } else {
-        win.addEventListener('load', function() {
-          setTimeout(function() {
-            window.focus();
-          }, 400);
-          setTimeout(function() {
-            window.focus();
-          }, 800);
-        }, true);
-      }
+      mgsuite.imp._sendWinToBackground(win);
     
     } else if (priv && url == "about:privatebrowsing") {
       win.addEventListener('load', function() {
@@ -1777,11 +1766,33 @@ mgsuite.imp = {
     }
   },
   
+  _sendWinToBackground: function(win) {
+    if (mgsuite.overlay.aioIsWin) {
+      setTimeout(function(a){mgsuite.imp.aioSetToNormalZ(a);}, 500, win);
+    } else {
+      win.addEventListener('load', function() {
+        setTimeout(function() {
+          window.focus();
+        }, 400);
+        setTimeout(function() {
+          window.focus();
+        }, 800);
+      }, true);
+    }
+  },
+  
   aioDupWindow: function(background) {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
+        var win = mgsuite.imp._aioDetachTab(mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab : gBrowser.selectedTab, false, background);
+        
+        if (background) {
+          mgsuite.imp._sendWinToBackground(win);
+        }
+        break;
+      
       case "source":
-        var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.currentURI.spec : gBrowser.selectedBrowser.currentURI.spec;
+        var url = gBrowser.currentURI.spec;
         
         mgsuite.imp.aioOpenNewWindow(url, background, true);
         break;
@@ -2309,8 +2320,11 @@ mgsuite.imp = {
   aioSavePageAs: function() {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
-      case "source":
         saveDocument(mgsuite.overlay.aioGestureTab ? mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document : mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document);
+        break;
+      
+      case "source":
+        ViewSourceSavePage();
         break;
       
       case "messenger":
@@ -2357,16 +2371,25 @@ mgsuite.imp = {
   },
   
   
-  // detach given tab to new window
-  // returns opened window object
-  _aioDetachTab: function(tabToDetach) {
+  /**
+   * @param {Object} tabToDetach
+   * @param {Boolean} [undefined] noClose
+   * @param {Boolean} [undefined] background
+   * @returns {Object} opened window object
+   */
+  _aioDetachTab: function(tabToDetach, noClose, background) {
     var tabLength = gBrowser.tabContainer.childNodes.length;
-    if (tabLength <= 1) return null;
+    if (tabLength <= 1 && noClose !== false) return null;
 
     var history = mgsuite.imp.getTabHistory(tabToDetach);
-    gBrowser.removeTab(tabToDetach);
     
-    var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no');
+    if (noClose !== false) {
+      gBrowser.removeTab(tabToDetach);
+    }
+    
+    var flags = (background && mgsuite.overlay.aioIsWin) ? ",alwaysLowered" : "";
+    
+    var openedWindow = window.openDialog(getBrowserURL(), '_blank', 'chrome,all,dialog=no' + flags);
     
     openedWindow.addEventListener('load', function() {
           setTimeout(function() {
