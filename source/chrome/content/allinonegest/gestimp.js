@@ -1428,14 +1428,37 @@ mgsuite.imp = {
   aioDupTab: function(reverseBg) {
     switch (mgsuite.overlay.aioWindowType) {
       case "browser":
-        var url = mgsuite.overlay.aioGestureTab ? mgsuite.overlay.aioGestureTab.linkedBrowser.currentURI.spec : gBrowser.selectedBrowser.currentURI.spec;
         
-        // pass referer so that browser.tabs.insertRelatedAfterCurrent is respected
-        var ioService = Components.classes["@mozilla.org/network/io-service;1"]
-                      .getService(Components.interfaces.nsIIOService);
-        var referrer = ioService.newURI(url, null, null);
-        mgsuite.imp.aioLinkInTab(url, true, false, reverseBg, referrer);
-        break;
+        var originalTabIndex = mgsuite.overlay.aioContent.mTabContainer.selectedIndex;
+        var originalTab = gBrowser.mCurrentTab;
+        
+        var cs = mgsuite.overlay.aioIsFx
+          ? Components.classes["@mozilla.org/browser/sessionstore;1"]
+          : Components.classes["@mozilla.org/suite/sessionstore;1"];
+        var SessionStore = cs.getService(Components.interfaces.nsISessionStore);
+        
+        var tab = SessionStore.duplicateTab(window, mgsuite.overlay.aioContent.mCurrentTab);
+        
+        var loadInBg = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
+      
+        if (reverseBg) {
+          loadInBg = !loadInBg;
+        }
+        
+        if (!loadInBg) {
+          mgsuite.overlay.aioContent.selectedTab = tab;
+        }
+
+        if (!mgsuite.overlay.aioIsFx && mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.insertRelatedAfterCurrent")) {
+          // SM's duplicateTab() doesn't respect browser.tabs.insertRelatedAfterCurrent
+          // so we must move the tab manually
+          gBrowser.moveTabTo(tab, originalTabIndex + 1);
+          
+          if (!loadInBg) {
+            // set related tab to come back to after closing
+            gBrowser.mPreviousTab = originalTab;
+          }
+        }
       
       case "messenger":
         MsgOpenNewTabForMessage();
