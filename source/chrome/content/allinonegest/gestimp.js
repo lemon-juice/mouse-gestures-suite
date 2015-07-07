@@ -114,8 +114,8 @@ mgsuite.imp = {
       [function(){mgsuite.imp.aioSmartBackForward(+1, false);}, "g.smartForward1", 1, "84", ["browser"]], // 86
       [function(){mgsuite.imp.aioSmartBackForward(+1, true);}, "g.smartForward2", 1, "85", ["browser"]], // 87
       [function(){mgsuite.imp.aioPrint();}, "g.print", 0, "", null], //88
-      [function(){mgsuite.imp.aioImageInTab();}, "g.openImageInTab", 0, "", ["browser", "source", "messenger"]], //89
-      [function(){mgsuite.imp.aioImageInWindow();}, "g.openImageInWin", 0, "", ["browser", "source", "messenger"]], //90
+      [function(shiftKey){mgsuite.imp.aioImageInTab(shiftKey);}, "g.openImageInTab", 0, "", ["browser", "source", "messenger"]], //89
+      [function(shiftKey){mgsuite.imp.aioImageInWindow(shiftKey);}, "g.openImageInWin", 0, "", ["browser", "source", "messenger"]], //90
       [function(){mgsuite.imp.aioDetachTab();}, "g.detachTab", 0, "", ["browser"]], //91
       [function(){mgsuite.imp.aioDetachTabAndDoubleStack();}, "g.detachTabAndDoubleStack", 0, "", ["browser"]], //92
       [function(){mgsuite.imp.aioDoubleStackWindows();}, "g.doubleStack2Windows", 0, "", null], //93
@@ -2274,13 +2274,15 @@ mgsuite.imp = {
     }
   },
   
-  aioImageInWindow: function() {
-     if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioNewWindow(mgsuite.util.collectedImgUrl, "", false, mgsuite.imp.aioGetReferrer());
+  aioImageInWindow: function(bg) {
+    if (mgsuite.util.collectedImgUrl) {
+      mgsuite.imp.aioOpenNewWindow(mgsuite.util.collectedImgUrl, bg, true, false);
+    }
   },
   
-  aioImageInTab: function() {
+  aioImageInTab: function(bg) {
     var referrer = mgsuite.imp.aioGetReferrer();
-    if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioLinkInTab(mgsuite.util.collectedImgUrl, false, false, false, referrer);
+    if (mgsuite.util.collectedImgUrl) mgsuite.imp.aioLinkInTab(mgsuite.util.collectedImgUrl, false, bg, false, referrer);
   },
   
   aioSwitchTab: function(advanceBy) {
