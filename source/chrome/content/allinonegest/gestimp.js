@@ -2073,17 +2073,53 @@ mgsuite.imp = {
       goDoCommand("cmd_viewPageSource");
       
     } else {
+      var browser = mgsuite.overlay.aioGestureTab
+        ? mgsuite.overlay.aioGestureTab.linkedBrowser
+        : gBrowser.selectedBrowser;
+      
       if (frame) {
-        var doc = mgsuite.overlay.aioGestureTab ?
-        mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document
-        : mgsuite.util.collectedFrame.document;
-        BrowserViewSourceOfDocument(doc);
+        // Frame Source
+        try {
+          // old style
+          var doc = mgsuite.overlay.aioGestureTab
+            ? mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document
+            : mgsuite.util.collectedFrame.document;
+        
+          BrowserViewSourceOfDocument(doc);
+          
+        } catch(e) {
+          // Fx e10s
+          var url = mgsuite.overlay.aioGestureTab
+            ? browser.currentURI.spec
+            : mgsuite.util.collectedFrame.location.href;
+          
+          BrowserViewSourceOfDocument({
+            browser: browser,
+            URL: url
+          });
+        }
         
       } else {
-        var doc = mgsuite.overlay.aioGestureTab ?
-          mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document
-          : mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document;
-        BrowserViewSourceOfDocument(doc);
+        // Page Source
+        try {
+          // old style
+          var doc = mgsuite.overlay.aioGestureTab
+            ? mgsuite.util.getContentWindow(mgsuite.overlay.aioGestureTab.linkedBrowser).document
+            : mgsuite.util.getContentWindow(gBrowser.selectedBrowser).document;
+            
+            BrowserViewSourceOfDocument(doc);
+          
+        } catch(e) {
+          // Fx e10s
+          var url = mgsuite.overlay.aioGestureTab
+            ? browser.currentURI.spec
+            : gBrowser.selectedBrowser.currentURI.spec;
+          
+          BrowserViewSourceOfDocument({
+            browser: browser,
+            URL: url
+          });
+        }
       }
     }
   },
