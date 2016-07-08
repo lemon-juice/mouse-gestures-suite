@@ -1,5 +1,7 @@
 "use strict";
 
+Components.utils.import("chrome://mgsuite/content/MGStorage.jsm");
+
 var trailSize;
 
 function getBrowserWindow() {
@@ -82,7 +84,7 @@ function init() {
   
   // restore scroll position
   var boxObject = document.getElementById("gesttree").treeBoxObject;
-  var scrollPos = Application.storage.get("aioOptionsScrollPos", null);
+  var scrollPos = MGStorage.get("aioOptionsScrollPos");
   
   if (scrollPos) {
     setTimeout(function() {
@@ -271,7 +273,7 @@ function reInitAllWindows() {
  */
 function saveGesturesTableScroll() {
   var boxObject = document.getElementById("gesttree").treeBoxObject;
-  Application.storage.set("aioOptionsScrollPos", boxObject.getFirstVisibleRow());
+  MGStorage.set("aioOptionsScrollPos", boxObject.getFirstVisibleRow());
 }
 
 function deleteUnusedScriptFiles(customGestures) {
@@ -402,11 +404,11 @@ function sortGestureStrings(gestStr, funcStr, defaultFuncStr) {
 
 function rememberSelectedPanel() {
   var tabIndex = document.getElementById("tabpanId").selectedIndex;
-  Application.storage.set("aioOptionsLastTab", tabIndex);
+  MGStorage.set("aioOptionsLastTab", tabIndex);
 }
 
 function restoreLastSelectedPanel() {
-  var tabIndex = Application.storage.get("aioOptionsLastTab", null);
+  var tabIndex = MGStorage.get("aioOptionsLastTab");
   
   if (tabIndex !== null) {
     document.getElementsByTagName('tabbox')[0].selectedIndex = tabIndex;
@@ -489,7 +491,7 @@ function exportSettings() {
   picker.appendFilters(nsIFilePicker.filterText);
   picker.appendFilters(nsIFilePicker.filterAll);
   
-  var lastDir = Application.storage.get("aioSettingsDir", null);
+  var lastDir = MGStorage.get("aioSettingsDir");
   
   if (lastDir) {
     var file = Components.classes["@mozilla.org/file/local;1"]
@@ -507,7 +509,7 @@ function exportSettings() {
   segm.pop();
   segm.pop();
   var dir = segm.join("");
-  Application.storage.set("aioSettingsDir", dir);
+  MGStorage.set("aioSettingsDir", dir);
   
   const MODE_WRONLY   = 0x02;
   const MODE_CREATE   = 0x08;
@@ -543,7 +545,7 @@ function importSettings() {
   picker.appendFilters(nsIFilePicker.filterText);
   picker.appendFilters(nsIFilePicker.filterAll);
   
-  var lastDir = Application.storage.get("aioSettingsDir", null);
+  var lastDir = MGStorage.get("aioSettingsDir");
   
   if (lastDir) {
     var file = Components.classes["@mozilla.org/file/local;1"]

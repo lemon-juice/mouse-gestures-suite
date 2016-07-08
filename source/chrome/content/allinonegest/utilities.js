@@ -402,4 +402,4 @@ mgsuite.util = {
     }
     return "";
   }
-}
+};

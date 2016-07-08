@@ -7,6 +7,8 @@
  */
 "use strict";
 
+Components.utils.import("chrome://mgsuite/content/MGStorage.jsm");
+
 if (typeof mgsuite == 'undefined') {
   var mgsuite = {};
 }
@@ -2477,7 +2479,7 @@ mgsuite.imp = {
   
   // double stack 2 windows: current and previously focused
   aioDoubleStackWindows: function() {
-    var lastWin = Application.storage.get("aioLastWindow", null);
+    var lastWin = MGStorage.get("lastWindow");
     
     if (!lastWin || lastWin.closed) {
       return;
@@ -2510,6 +2512,7 @@ mgsuite.imp = {
     }, 200);
   },
   
+
   _aioDoubleStack2Windows: function(win1, win2) {
     function positionWindows(availHeight) {
       var shift = mgsuite.overlay.aioIsWin ? 0 : 5; // prevent overlapping on linux
@@ -2526,7 +2529,7 @@ mgsuite.imp = {
       positionWindows(screen.availHeight);
       
     } else {
-      var diff = Application.storage.get("aioAvailHeightDiff", null);
+      var diff = MGStorage.get("aioAvailHeightDiff");
       
       if (diff !== null) {
         positionWindows(screen.availHeight - diff);
@@ -2540,7 +2543,7 @@ mgsuite.imp = {
           
           // save amount of error of screen.availHeight so we don't need to execute
           // the maximize hack on subsequent calls
-          Application.storage.set("aioAvailHeightDiff", screen.availHeight - availHeight);
+          MGStorage.set("aioAvailHeightDiff", screen.availHeight - availHeight);
           
           win1.restore();
           

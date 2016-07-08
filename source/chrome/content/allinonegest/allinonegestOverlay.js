@@ -7,6 +7,8 @@
  */
 "use strict";
 
+Components.utils.import("chrome://mgsuite/content/MGStorage.jsm");
+
 if (typeof mgsuite == 'undefined') {
   var mgsuite = {};
 }
@@ -2288,8 +2290,8 @@ mgsuite.tooltip = {
 
 window.addEventListener("load",
   function() {
-     if (mgsuite.overlay.aioInitStarted) return;
-     mgsuite.overlay.aioStartUp();
+    if (mgsuite.overlay.aioInitStarted) return;
+    mgsuite.overlay.aioStartUp();
   },
   false);
 
@@ -2297,15 +2299,15 @@ window.addEventListener("load",
 // because we will need previous window for double-stack windows option
 // (we can't use z-order of windows because it's broken on Linux)
 window.addEventListener("activate", function() {
-  var curwin = Application.storage.get("aioCurWindow", null);
+  var curwin = MGStorage.get("curWindow");
   
   if (curwin == window) {
 	return;
   }
   
   if (curwin) {
-	Application.storage.set("aioLastWindow", curwin);
+    MGStorage.set("lastWindow", curwin);
   }
   
-  Application.storage.set("aioCurWindow", window);
+  MGStorage.set("curWindow", window);
 });
