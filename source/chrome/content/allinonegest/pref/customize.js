@@ -636,24 +636,27 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
 }
 
 function ReadFile(file) {
-    var ioService=Components.classes["@mozilla.org/network/io-service;1"]
-        .getService(Components.interfaces.nsIIOService);
-    var scriptableStream=Components
-        .classes["@mozilla.org/scriptableinputstream;1"]
-        .getService(Components.interfaces.nsIScriptableInputStream);
+  var ioService=Components.classes["@mozilla.org/network/io-service;1"]
+      .getService(Components.interfaces.nsIIOService);
+  var scriptableStream=Components
+      .classes["@mozilla.org/scriptableinputstream;1"]
+      .getService(Components.interfaces.nsIScriptableInputStream);
 
-    var channel=ioService.newChannel(file,null,null);
-    var input=channel.open();
-    scriptableStream.init(input);
-    var str=scriptableStream.read(input.available());
-    scriptableStream.close();
-    input.close();
-    
-    var utf8Converter = Components.classes["@mozilla.org/intl/utf8converterservice;1"].
-        getService(Components.interfaces.nsIUTF8ConverterService);
-    var str = utf8Converter.convertURISpecToUTF8(str, "UTF-8"); 
-    
-    return str;
+
+  // newChannel was deprecated in Fx 48 in favour of newChannel2
+  var channel = ioService.newChannel2 ? ioService.newChannel2(file,null,null,null,null,null,null,null)
+    : ioService.newChannel(file,null,null);
+  var input=channel.open();
+  scriptableStream.init(input);
+  var str=scriptableStream.read(input.available());
+  scriptableStream.close();
+  input.close();
+  
+  var utf8Converter = Components.classes["@mozilla.org/intl/utf8converterservice;1"].
+      getService(Components.interfaces.nsIUTF8ConverterService);
+  var str = utf8Converter.convertURISpecToUTF8(str, "UTF-8"); 
+  
+  return str;
 }
 
 // replace {placeholders} with transated text from .properties file
