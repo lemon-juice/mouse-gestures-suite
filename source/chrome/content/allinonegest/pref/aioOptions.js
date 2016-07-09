@@ -13,7 +13,7 @@ function getBrowserWindow() {
 
 function init() {
   initEditRuleConst();
-  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
+  var checkboxes  = ["mouse", "trailId", "smoothId", "drawnGestInfoId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
                      "markerId", "cursorId", "autoscrollContinueId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
                      "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
@@ -124,7 +124,7 @@ function doEnabling() {
 
   var idTable = [["trailId", c1, a1], ["trailColorId", c4, a1], ["trailPickerId", c4, a2],
                  ["trailSizeId", c4, a1], ["smoothId", c4, a1],
-                 ["gridId", c1, a1], ["gridLabelId", c1, a1],
+                 ["gridId", c1, a1], ["gridLabelId", c1, a1], ["drawnGestInfoId", c1, a1],
                  ["plusId", c6, a1], ["minusId", c7, a1],
                  ["wheelScrollOptions", c2, a1],
                  ["wheelScrollOptions0", c2, a1],
@@ -177,7 +177,7 @@ function populateSiteList(prefStr) {
 }
 
 function savePrefs() {
-  var checkboxes  = ["mouse", "trailId", "smoothId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
+  var checkboxes  = ["mouse", "trailId", "smoothId", "drawnGestInfoId", "rocker", "wheelscroll", "autoscroll", "wheelDirection", "showTabsPopup",
                      "markerId", "cursorId", "autoscrollContinueId", "panningId", "pasteId", "reverseId",
                      "noAltGestId", "leftdefaultId", "openlinksId", "openLinkInNewId",
                      "blankTabNextToCurrentId", "tabBar", "evenOnLinkId",
@@ -691,6 +691,7 @@ function getPrefsForImportExport() {
     ['crispResize', 'bool'],
     ['customGestures', 'char'],
     ['disableClickHeat', 'bool'],
+    ['drawnGestInfo', 'bool'],
     ['dragAlaAcrobat', 'bool'],
     ['evenOnLink', 'bool'],
     ['functionString', 'char'],

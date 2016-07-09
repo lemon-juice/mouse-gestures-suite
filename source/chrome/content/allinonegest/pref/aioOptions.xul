@@ -90,6 +90,10 @@
         <label id="gridLabelId" value="&mousegest.sensitivity;"/>
         <textbox type="number" min="3" max="50" size="2" id="gridId" preftype="int" prefstring="allinonegest.grid" />
        </bbox>
+       <bbox>
+        <checkbox id="drawnGestInfoId" type="checkbox" pref="true" preftype="bool" label="&mousegest.showGestInfo;"
+          prefstring="allinonegest.drawnGestInfo"/>
+       </bbox>
       </vbox>
      </groupbox>
      <groupbox orient="horizontal" flex="1">

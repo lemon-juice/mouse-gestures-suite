@@ -148,6 +148,11 @@ mgsuite.imp = {
   showGesturesUrl: mgsuite.const.CHROME_DIR + "show-gestures.html",
 
   aioStatusMessage: function(msg, timeToClear, append) {
+    if (!mgsuite.overlay.drawnGestInfo) {
+      // showing status messages disabled
+      return;
+    }
+    
     if (mgsuite.imp.aioStatusMessageTO) {
       clearTimeout(mgsuite.imp.aioStatusMessageTO);
       mgsuite.imp.aioStatusMessageTO = null;

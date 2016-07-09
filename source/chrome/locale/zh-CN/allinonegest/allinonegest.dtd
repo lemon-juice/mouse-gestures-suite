@@ -38,6 +38,7 @@
 <!ENTITY trails.size               "轨迹尺寸">
 <!ENTITY trails.smooth "Smooth (slower on old hardware)">
 <!ENTITY mousegest.sensitivity     "Movement sensitivity (pixels):">
+<!ENTITY mousegest.showGestInfo    "Show gesture info while drawing">
 
 <!ENTITY linktooltip.label     "链接提示:首选项">
 <!ENTITY linktooltip.shift         "按住Shift键显示">

@@ -38,6 +38,7 @@
 <!ENTITY trails.size               "Trail Size">
 <!ENTITY trails.smooth             "Smooth (slower on old hardware)">
 <!ENTITY mousegest.sensitivity     "Movement sensitivity (pixels):">
+<!ENTITY mousegest.showGestInfo    "Show gesture info while drawing">
 
 <!ENTITY linktooltip.label     "Link Tooltip: Prefs">
 <!ENTITY linktooltip.shift         "Depress Shift key to show">
