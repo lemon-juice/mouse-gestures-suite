@@ -11,17 +11,17 @@ overlay chrome://global/content/viewPartialSource.xul chrome://mgsuite/content/a
 overlay	chrome://communicator/content/tasksOverlay.xul	chrome://mgsuite/content/TasksOverlay.xul
 overlay	chrome://browser/content/browser.xul	chrome://mgsuite/content/TasksOverlay.xul
 
-content	mgsuite	jar:chrome/allinonegest.jar!/content/allinonegest/
-content	mgsuite-en jar:chrome/allinonegest.jar!/locale/en-US/allinonegest/
+content	mgsuite	chrome/content/allinonegest/
+content	mgsuite-en chrome/locale/en-US/allinonegest/
 
-locale	mgsuite	en-US	jar:chrome/allinonegest.jar!/locale/en-US/allinonegest/
-locale	mgsuite	de-DE	jar:chrome/allinonegest.jar!/locale/de-DE/allinonegest/
-locale	mgsuite	es-ES	jar:chrome/allinonegest.jar!/locale/es-ES/allinonegest/
-locale	mgsuite	fr-FR	jar:chrome/allinonegest.jar!/locale/fr-FR/allinonegest/
-locale	mgsuite	ja-JP	jar:chrome/allinonegest.jar!/locale/ja-JP/allinonegest/
-locale	mgsuite	ru-RU	jar:chrome/allinonegest.jar!/locale/ru-RU/allinonegest/
-locale	mgsuite	zh-CN	jar:chrome/allinonegest.jar!/locale/zh-CN/allinonegest/
-locale	mgsuite	zh-TW	jar:chrome/allinonegest.jar!/locale/zh-TW/allinonegest/
-locale	mgsuite	ko-KR	jar:chrome/allinonegest.jar!/locale/ko-KR/allinonegest/
-locale	mgsuite	it-IT	jar:chrome/allinonegest.jar!/locale/it-IT/allinonegest/
+locale	mgsuite	en-US	chrome/locale/en-US/allinonegest/
+locale	mgsuite	de-DE	chrome/locale/de-DE/allinonegest/
+locale	mgsuite	es-ES	chrome/locale/es-ES/allinonegest/
+locale	mgsuite	fr-FR	chrome/locale/fr-FR/allinonegest/
+locale	mgsuite	ja-JP	chrome/locale/ja-JP/allinonegest/
+locale	mgsuite	ru-RU	chrome/locale/ru-RU/allinonegest/
+locale	mgsuite	zh-CN	chrome/locale/zh-CN/allinonegest/
+locale	mgsuite	zh-TW	chrome/locale/zh-TW/allinonegest/
+locale	mgsuite	ko-KR	chrome/locale/ko-KR/allinonegest/
+locale	mgsuite	it-IT	chrome/locale/it-IT/allinonegest/
 
