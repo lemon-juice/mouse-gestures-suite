@@ -706,7 +706,7 @@ mgsuite.imp = {
         if (mgsuite.overlay.aioIsFx) {
           openNewTabWith(shortcutURL);
         } else {
-          openNewTabWindowOrExistingWith(kNewTab, shortcutURL, null, false);
+          openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, shortcutURL, null, false);
         }
     }
   },
@@ -1061,7 +1061,7 @@ mgsuite.imp = {
           
         } else {
           // SM
-          var tabWin = openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+          var tabWin = openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, "about:blank", null, false);
           
           if (tabWin.nodeName && tabWin.nodeName == 'tab') {
             var bs = tabWin.ownerDocument.defaultView.BrowserSearch;
@@ -1391,7 +1391,7 @@ mgsuite.imp = {
         // SM - we use this because when addTab() is used then after closing
         // the tab the user is not switched back to the original tab
         // like in Fx
-        var tab = openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg,
+        var tab = openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, url, null, !!bg,
                   null, false, referrer);
        
       } else {
@@ -1419,7 +1419,7 @@ mgsuite.imp = {
       if (mgsuite.overlay.aioIsFx) {
         openNewTabWith(url);
       } else {
-        openNewTabWindowOrExistingWith(kNewTab, url, null, !!bg);
+        openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, url, null, !!bg);
       }
       return null;
     }
@@ -1542,7 +1542,7 @@ mgsuite.imp = {
       
       if (mgsuite.overlay.aioWindowType == "messenger" && mgsuite.util.collectedLinks.length) {
         // we do this so that mail links open next to current tab
-        openNewTabWindowOrExistingWith(kNewTab, link, mgsuite.util.collectedLinks[0], bg);
+        openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, link, mgsuite.util.collectedLinks[0], bg);
       } else {
         mgsuite.imp.aioLinkInTab(link, false, bg, false, referrer);
       }
@@ -1609,7 +1609,7 @@ mgsuite.imp = {
         if (mgsuite.overlay.aioIsFx) {
           openNewTabWith("about:blank");
         } else {
-          openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, !!bg);
+          openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, "about:blank", null, !!bg);
         }
       }
     }
@@ -1626,7 +1626,7 @@ mgsuite.imp = {
         if (mgsuite.overlay.aioIsFx) {
           openNewTabWith(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[0]));
         } else {
-          openNewTabWindowOrExistingWith(kNewTab, mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[0]), null, false);
+          openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[0]), null, false);
         }
         
         var links = [];
@@ -1639,7 +1639,7 @@ mgsuite.imp = {
             if (mgsuite.overlay.aioIsFx) {
               openNewTabWith(links[i]);
             } else {
-              openNewTabWindowOrExistingWith(kNewTab, links[i], null, false);
+              openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, links[i], null, false);
             }
           }
         }, 500);
@@ -1947,7 +1947,7 @@ mgsuite.imp = {
           break;
         
         default:    
-          var tabWin = openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+          var tabWin = openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, "about:blank", null, false);
           
           if (tabWin.nodeName && tabWin.nodeName == 'tab') {
             var win = tabWin.ownerDocument.defaultView;
@@ -2357,7 +2357,7 @@ mgsuite.imp = {
         if (mgsuite.overlay.aioIsFx) {
           openNewTabWith("about:blank");
         } else {
-          openNewTabWindowOrExistingWith(kNewTab, "about:blank", null, false);
+          openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, "about:blank", null, false);
         }
     }
   },
