@@ -740,14 +740,14 @@ mgsuite.overlay = {
 
     if (mgsuite.overlay.aioWindowType == "browser") {
       if (mgsuite.overlay.aioTabSwitching) {
-        mgsuite.overlay.aioContent.mStrip.addEventListener("DOMMouseScroll", mgsuite.overlay.aioSwitchTabs, true);
+        mgsuite.overlay.aioContent.tabContainer.addEventListener("wheel", mgsuite.overlay.aioSwitchTabs, true);
         if (platform.indexOf('linux') != -1) // hack for linux-gtk2 + xft bug
-           document.getElementById("navigator-toolbox").addEventListener("DOMMouseScroll", mgsuite.overlay.aioSwitchTabs, true); 
+           document.getElementById("navigator-toolbox").addEventListener("wheel", mgsuite.overlay.aioSwitchTabs, true); 
      }
      else {
-        mgsuite.overlay.aioContent.mStrip.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioSwitchTabs, true);
+        mgsuite.overlay.aioContent.tabContainer.removeEventListener("wheel", mgsuite.overlay.aioSwitchTabs, true);
         if (platform.indexOf('linux') != -1)
-           document.getElementById("navigator-toolbox").removeEventListener("DOMMouseScroll", mgsuite.overlay.aioSwitchTabs, true);
+           document.getElementById("navigator-toolbox").removeEventListener("wheel", mgsuite.overlay.aioSwitchTabs, true);
       }
 
 	  mgsuite.overlay.aioPrevParsedURL = null;
@@ -1144,7 +1144,7 @@ mgsuite.overlay = {
 	  
 	  mgsuite.overlay.aioKillGestInProgress();
 	  mgsuite.imp.aioStatusMessage("", 0);
-	  mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+	  mgsuite.overlay.aioContent.removeEventListener("wheel", mgsuite.overlay.aioWheelNav, true);
 	  if (!mgsuite.overlay.aioRockMultiple[func] || (mgsuite.overlay.aioRockMultiple[func] == 2 && mgsuite.overlay.aioRockMode == 0)) mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
        else { // multiple ops allowed
 		if (mgsuite.overlay.aioRockTimer) {clearTimeout(mgsuite.overlay.aioRockTimer); mgsuite.overlay.aioRockTimer = null;}
@@ -1187,7 +1187,7 @@ mgsuite.overlay = {
 		  else mgsuite.overlay.aioTTNode = mgsuite.overlay.aioFindLink(e.target, false);
 		  
 		  if (mgsuite.overlay.aioWheelRocker || mgsuite.overlay.aioTabCount >= 1 || mgsuite.overlay.aioTTNode)
-			mgsuite.overlay.aioContent.addEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+			mgsuite.overlay.aioContent.addEventListener("wheel", mgsuite.overlay.aioWheelNav, true);
         }
 		
         mgsuite.overlay.aioOldX = e.screenX;
@@ -1325,7 +1325,7 @@ mgsuite.overlay = {
 
     if (button == mgsuite.overlay.aioDownButton) {
 	  mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-	  mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+	  mgsuite.overlay.aioContent.removeEventListener("wheel", mgsuite.overlay.aioWheelNav, true);
 	  if (button == mgsuite.const.RMB && !mgsuite.overlay.aioGestInProgress && !mgsuite.overlay.aioRockTimer) {
 		mgsuite.overlay.aioDisplayContextMenu(e);
 	  } else {
@@ -1366,7 +1366,7 @@ mgsuite.overlay = {
    * may be left unfinished because mouseup event does not fire after dragging */
   cancelGestureOnDrag: function(e) {
     mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-    mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+    mgsuite.overlay.aioContent.removeEventListener("wheel", mgsuite.overlay.aioWheelNav, true);
     if (mgsuite.overlay.aioGestInProgress) {
 	  mgsuite.overlay.aioKillGestInProgress(true);
 	}
@@ -1379,10 +1379,10 @@ mgsuite.overlay = {
   aioWheelNav: function(e) {
     mgsuite.overlay.aioNukeEvent(e);
     mgsuite.overlay.aioDownButton = mgsuite.const.NoB;
-    mgsuite.overlay.aioCCW = e.detail < 0;
+    mgsuite.overlay.aioCCW = e.deltaY < 0;
 
     mgsuite.overlay.aioRendering.removeEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
-    mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelNav, true);
+    mgsuite.overlay.aioContent.removeEventListener("wheel", mgsuite.overlay.aioWheelNav, true);
     window.removeEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
     if (mgsuite.overlay.aioGestInProgress) {
        mgsuite.overlay.aioKillGestInProgress(mgsuite.overlay.aioWheelRocker);
@@ -1397,7 +1397,7 @@ mgsuite.overlay = {
        else {
           mgsuite.overlay.aioRepet[func] = true; mgsuite.overlay.aioRepet[2 + (mgsuite.overlay.aioCCW - 0)] = mgsuite.overlay.aioWheelBothWays;
           window.addEventListener("mouseup", mgsuite.overlay.aioWheelRockUp, true);
-          mgsuite.overlay.aioContent.addEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelRocking, true);
+          mgsuite.overlay.aioContent.addEventListener("wheel", mgsuite.overlay.aioWheelRocking, true);
        }
        return;
     }
@@ -1420,12 +1420,12 @@ mgsuite.overlay = {
 
   aioWheelRockUp: function(e) {
     window.removeEventListener("mouseup", mgsuite.overlay.aioWheelRockUp, true);
-    mgsuite.overlay.aioContent.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioWheelRocking, true);
+    mgsuite.overlay.aioContent.removeEventListener("wheel", mgsuite.overlay.aioWheelRocking, true);
     mgsuite.overlay.aioWheelRockEnd();
   },
 
   aioWheelRocking: function(e) {
-    var func = 2 + ((e.detail >= 0) - 0);
+    var func = 2 + ((e.deltaY >= 0) - 0);
     if (mgsuite.overlay.aioRepet[func]) {
        mgsuite.overlay.aioSrcEvent = e;
        mgsuite.overlay.aioPerformRockerFunction(func);
@@ -1460,6 +1460,13 @@ mgsuite.overlay = {
 
   _aioCreatePU: function(arg1, arg2, arg3, menuClass) {
     var popupElem, label, img;
+    
+    if (SessionStore.getSessionHistory) {
+      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+    } else {
+      var sessionH = getWebNavigation().sessionHistory;
+    }
+    
     if (this.closeFunc) window.addEventListener("mouseup", this.closeFunc, true);
     if (this.popupType == "popup") {
        this.scrollerNode = document.createElementNS(mgsuite.const.xulNS, "panel");
@@ -1472,7 +1479,10 @@ mgsuite.overlay = {
       for (var i = this.popupStart; i < this.popupStart + this.popupLength; ++i) {
         popupElem = document.createElementNS(mgsuite.const.xulNS, "menuitem");
         if (arg1) {
-           label = getWebNavigation().sessionHistory.getEntryAtIndex(i, false).title;
+          var entry = sessionH.entries
+            ? sessionH.entries[i]
+            : sessionH.getEntryAtIndex(i, false);
+          label = entry.title;
         }
         else {
           if (mgsuite.overlay.aioContent.mTabContainer.childNodes[i]) {
@@ -1536,7 +1546,7 @@ mgsuite.overlay = {
 
   _aioUpdatePU: function() {
     this.scrollerNode.removeEventListener("popupshowing", this.observeFunc, true);
-    if (this.scrollingFunc) mgsuite.overlay.aioMainWin.addEventListener("DOMMouseScroll", this.scrollingFunc, true);
+    if (this.scrollingFunc) mgsuite.overlay.aioMainWin.addEventListener("wheel", this.scrollingFunc, true);
     for (var i = 0; i < arguments.length; i += 2)
       if (arguments[i] >= 0)
          this.scrollerNode.childNodes[arguments[i]].setAttribute(arguments[i + 1], "true");
@@ -1545,7 +1555,7 @@ mgsuite.overlay = {
   _aioScrollPU: function(event) {
     event.preventDefault(); event.stopPropagation();
     this.scrollerNode.childNodes[this.activeRow].removeAttribute("_moz-menuactive");
-    var goRight = this.reverseScroll ? event.detail < 0 : event.detail > 0;
+    var goRight = this.reverseScroll ? event.deltaY < 0 : event.deltaY > 0;
     if (goRight) {if (++this.activeRow >= this.popupLength) this.activeRow = 0;}
     else if (--this.activeRow < 0) this.activeRow = this.popupLength - 1;
     this.scrollerNode.childNodes[this.activeRow].setAttribute("_moz-menuactive","true");
@@ -1553,7 +1563,7 @@ mgsuite.overlay = {
 
   _aioClosePU: function(action) {
     if (this.closeFunc) window.removeEventListener("mouseup", this.closeFunc, true);
-    if (this.scrollingFunc) mgsuite.overlay.aioMainWin.removeEventListener("DOMMouseScroll", this.scrollingFunc, true);
+    if (this.scrollingFunc) mgsuite.overlay.aioMainWin.removeEventListener("wheel", this.scrollingFunc, true);
     this.scrollerNode.hidePopup();
     switch (action) {
       case 0: break;
@@ -1606,7 +1616,7 @@ mgsuite.overlay = {
   aioTabWheeling: function(e) {
     mgsuite.overlay.aioTabPU.scrollPopup(e);
 	
-    if (!mgsuite.overlay.showTabsPopup) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
+    if (!mgsuite.overlay.showTabsPopup) mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.deltaY > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
   },
 
   aioTabWheelEnd: function(e) {
@@ -1627,19 +1637,26 @@ mgsuite.overlay = {
   },
 
   aioHistoryWheelNav: function() {
-    var sessionH = getWebNavigation().sessionHistory;
-    if (sessionH.index < 0 || sessionH.count <= 0) { // Firefox bug: untitled tab
+    if (SessionStore.getSessionHistory) {
+      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+      var sCount = sessionH.entries.length;
+    } else {
+      var sessionH = getWebNavigation().sessionHistory;
+      var sCount = sessionH.count;
+    }
+    
+    if (sessionH.index < 0 || sCount <= 0) { // Firefox bug: untitled tab
        mgsuite.overlay.aioRestoreListeners();
        return;
     }
-    if (sessionH.count > 15) {
+    if (sCount > 15) {
        var start = Math.max(0, sessionH.index - 7);
-       if (start + 15 > sessionH.count) start = sessionH.count - 15;
+       if (start + 15 > sCount) start = sCount - 15;
        var count = 15;
     }
     else {
        start = 0;
-       count = sessionH.count;
+       count = sCount;
     }
 
     mgsuite.overlay.aioHistPU = new mgsuite.overlay.aioPopUp(sessionH.index, start, count, true, "popup", mgsuite.overlay.aioOldX + 2, mgsuite.overlay.aioOldY + 2,
@@ -1685,7 +1702,7 @@ mgsuite.overlay = {
   aioSwitchTabs: function(e) {
     if (typeof(TabbrowserService) == "object" || mgsuite.overlay.aioContent.mTabContainer.childNodes.length <= 1)  return;
     mgsuite.overlay.aioNukeEvent(e);
-    mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.detail > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
+    mgsuite.overlay.aioContent.mTabContainer.advanceSelectedTab(e.deltaY > 0 == mgsuite.overlay.aioReverseScroll ? -1 : 1, true);
   },
 
   aioScrollMove: function(e) {
@@ -1699,7 +1716,7 @@ mgsuite.overlay = {
   },
 
   aioAutoScrollStart: function() {
-    window.addEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
+    window.addEventListener("wheel", mgsuite.overlay.aioAutoScrollStop, true);
     window.addEventListener("mouseup", mgsuite.overlay.aioAutoScrollUp, true);
     window.addEventListener("mousedown", mgsuite.overlay.aioAutoScrollUp, true);
     mgsuite.overlay.aioAcceptASKeys = true;
@@ -1920,7 +1937,7 @@ mgsuite.overlay = {
 		window.removeEventListener("mouseup", mgsuite.overlay.aioAutoScrollUp, true);
 		window.removeEventListener("mousedown", mgsuite.overlay.aioAutoScrollUp, true);
 		window.removeEventListener("mousemove", mgsuite.overlay.aioScrollMove, true);
-		window.removeEventListener("DOMMouseScroll", mgsuite.overlay.aioAutoScrollStop, true);
+		window.removeEventListener("wheel", mgsuite.overlay.aioAutoScrollStop, true);
 		mgsuite.overlay.aioAcceptASKeys = false;
 		window.addEventListener("mouseup", mgsuite.overlay.aioMouseUp, true);
 		mgsuite.overlay.aioRendering.addEventListener("mousedown", mgsuite.overlay.aioMouseDown, true);
@@ -2255,7 +2272,7 @@ mgsuite.tooltip = {
     if (mgsuite.overlay.aioTTTimer) clearTimeout(mgsuite.overlay.aioTTTimer);
     linkNode.addEventListener("mouseout", mgsuite.tooltip.aioEraseTitlePopup, true);
     window.addEventListener("mousedown", mgsuite.tooltip.aioEraseTitlePopup, true);
-    window.addEventListener("DOMMouseScroll", mgsuite.tooltip.aioEraseTitlePopup, true);
+    window.addEventListener("wheel", mgsuite.tooltip.aioEraseTitlePopup, true);
     mgsuite.overlay.aioTTNode = linkNode;
     mgsuite.overlay.aioTTTimer = setTimeout(function(a, b){mgsuite.tooltip.aioShowTitlePopup(a, b);},
                             mgsuite.overlay.aioShiftForTitle ? 50 : mgsuite.overlay.aioTitleDelay, e.screenX, e.screenY);
@@ -2277,7 +2294,7 @@ mgsuite.tooltip = {
     }
     mgsuite.overlay.aioTTNode.removeEventListener("mouseout", mgsuite.tooltip.aioEraseTitlePopup, true);
     window.removeEventListener("mousedown", mgsuite.tooltip.aioEraseTitlePopup, true);
-    window.removeEventListener("DOMMouseScroll", mgsuite.tooltip.aioEraseTitlePopup, true);
+    window.removeEventListener("wheel", mgsuite.tooltip.aioEraseTitlePopup, true);
     if (mgsuite.overlay.aioTTShown) mgsuite.overlay.aioTTPU.closePopup(0);
     mgsuite.overlay.aioTTPU = null; mgsuite.overlay.aioTTNode = null;
     if (e && e.type == "mousedown") {

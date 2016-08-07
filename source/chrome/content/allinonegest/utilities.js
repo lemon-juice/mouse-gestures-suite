@@ -401,5 +401,13 @@ mgsuite.util = {
       // "tree.view.nodeForTreeIndex is not a function"
     }
     return "";
+  },
+  
+  getHostFromURL: function(url) {
+    if (!/^(http|https|ftp):\/\//.test(url)) {
+      return null;
+    }
+    
+    return url.split('/')[2];
   }
 };

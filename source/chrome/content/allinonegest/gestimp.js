@@ -1878,36 +1878,76 @@ mgsuite.imp = {
     });
   },
   
+  // Back to Last/First Page of Previous/Current Domain
+  // Forward to First/Last Page of Next/Current Domain
   aioSmartBackForward: function(aRwnd, aCurrDomainEndPoint) { // derived from SHIMODA "Piro" Hiroshi Rewind/Fastforward buttons
     var webNav = getWebNavigation();
-    var sessionH = webNav.sessionHistory;
-    var lURI = sessionH.getEntryAtIndex(sessionH.index, false).URI;
-    var c_host = lURI ? lURI.host : null ;
-    var check = (aRwnd == -1) ? function(aInd) {return aInd >= 0;} : function(aInd) {return aInd < sessionH.count;}
+    
+    if (SessionStore.getSessionHistory) {
+      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+    } else {
+      var sessionH = webNav.sessionHistory;
+    }
+    
+    var count = sessionH.entries ? sessionH.entries.length	// Fx43+
+      : sessionH.count;	// Fx42-
+    
+    var c_host;
+    
+    if (sessionH.entries) {
+      c_host = mgsuite.util.getHostFromURL(sessionH.entries[sessionH.index].url);
+    } else { // Fx42-
+      var lURI = sessionH.getEntryAtIndex(sessionH.index, false).URI;
+      
+      try {  // getting host errors out on empty pages
+         c_host = lURI ? lURI.host : null ;
+      } catch(err) {};
+    }
+    
+    var check = (aRwnd == -1) ? function(aInd) {return aInd >= 0;} : function(aInd) {return aInd < count;}
     var start = sessionH.index + aRwnd;
-    var t_host;
+    
     for (var i = start; check(i); i += aRwnd) {
-       lURI  = sessionH.getEntryAtIndex(i, false).URI;
-       t_host = lURI ? lURI.host : null ;
-       if ((c_host && !t_host) || (!c_host && t_host) || (c_host != t_host)) {
-          if (aCurrDomainEndPoint) {
-             if (i == start) {
-                c_host = t_host;
-                continue;
-             }
-             i -= aRwnd;
+      var t_host = null;
+       
+      if (sessionH.entries) {
+        t_host = mgsuite.util.getHostFromURL(sessionH.entries[i].url);
+      } else { // Fx42-
+        var lURI = sessionH.getEntryAtIndex(i, false).URI;
+        
+        try {  // getting host errors out on empty pages
+           t_host = lURI ? lURI.host : null ;
+        } catch(err) {};
+      }
+      
+      if ((c_host && !t_host) || (!c_host && t_host) || (c_host != t_host)) {
+         if (aCurrDomainEndPoint) {
+            if (i == start) {
+               c_host = t_host;
+               continue;
+            }
+            i -= aRwnd;
           }
-      webNav.gotoIndex(i);
+          webNav.gotoIndex(i);
           return;
        }
     }
-    webNav.gotoIndex((aRwnd == -1) ? 0 : sessionH.count - 1 );
+
+    webNav.gotoIndex((aRwnd == -1) ? 0 : count - 1 );
   },
   
   aioFastForward: function() {
-    var sessionH = getWebNavigation().sessionHistory;
-    if (sessionH.index < 0 || sessionH.count <= 0) return; // Firefox bug
-    if (sessionH.index + 1 < sessionH.count) BrowserForward();
+    if (SessionStore.getSessionHistory) {
+      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+    } else {
+      var sessionH = getWebNavigation().sessionHistory;
+    }
+
+    var count = sessionH.entries ? sessionH.entries.length	// Fx43+
+      : sessionH.count;	// Fx42-
+    
+    if (sessionH.index < 0 || count <= 0) return; // Firefox bug
+    if (sessionH.index + 1 < count) BrowserForward();
     else mgsuite.imp.aioNextPrevLink(true);
   },
   
@@ -2455,9 +2495,11 @@ mgsuite.imp = {
   getTabHistory: function(aTab)
   {
     var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
+    var sHistory = browser.webNavigation.sessionHistory;
+      
     var clonedData = {};
-    clonedData.entries = mgsuite.imp.getHistoryEntries(browser.webNavigation.sessionHistory);
-    clonedData.index = browser.webNavigation.sessionHistory.index;
+    clonedData.entries = mgsuite.imp.getHistoryEntries(sHistory);
+    clonedData.index = sHistory.index;
     var win = mgsuite.util.getContentWindow(browser);
     clonedData.scrollX = win.scrollX;
     clonedData.scrollY = win.scrollY;
@@ -2469,12 +2511,15 @@ mgsuite.imp = {
   // returns: an array containing a copy of the history
   getHistoryEntries: function(originalHistory)
   {
-    var range = {start: 0, index: originalHistory.index, length: originalHistory.count};
+    var sCount = originalHistory.entries ? originalHistory.entries.length : originalHistory.count;
+    var range = {start: 0, index: originalHistory.index, length: sCount};
   
     var entries = [];
     
     for (var i = range.start; i < range.length; i++) {
-      var entry = originalHistory.getEntryAtIndex(i, false);
+      var entry = originalHistory.entries
+        ? originalHistory.entries[i]
+        : originalHistory.getEntryAtIndex(i, false);
       entries.push(mgsuite.util.serializeEntry(entry));
     }
   
