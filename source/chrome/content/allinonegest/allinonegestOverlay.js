@@ -197,7 +197,7 @@ mgsuite.overlay = {
       isActive = false;
       prefNotExisting = true;
     }
-
+    
     try {
       if (!isActive) {
          mgsuite.overlay.aioPref.setBoolPref("isActive", true);
@@ -233,6 +233,17 @@ mgsuite.overlay = {
       //dump("reInit runs mgsuite.overlay.aioInit()\n");
       mgsuite.overlay.aioInit();
     }, 300);
+  },
+  
+  getSessionStore: function() {
+    if (typeof SessionStore != 'undefined') {
+      // this global doesn't exist in SM
+      return SessionStore;
+    }
+    let cs = mgsuite.overlay.aioIsFx
+          ? Components.classes["@mozilla.org/browser/sessionstore;1"]
+          : Components.classes["@mozilla.org/suite/sessionstore;1"];
+    return cs.getService(Components.interfaces.nsISessionStore);
   },
   
   aioStdPrefListener: {
@@ -1460,9 +1471,10 @@ mgsuite.overlay = {
 
   _aioCreatePU: function(arg1, arg2, arg3, menuClass) {
     var popupElem, label, img;
+    var SS = mgsuite.overlay.getSessionStore();
     
-    if (SessionStore.getSessionHistory) {
-      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+    if (SS.getSessionHistory) {
+      var sessionH = SS.getSessionHistory(gBrowser.selectedTab); // Fx43+
     } else {
       var sessionH = getWebNavigation().sessionHistory;
     }
@@ -1637,8 +1649,10 @@ mgsuite.overlay = {
   },
 
   aioHistoryWheelNav: function() {
-    if (SessionStore.getSessionHistory) {
-      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+    var SS = mgsuite.overlay.getSessionStore();
+    
+    if (SS.getSessionHistory) {
+      var sessionH = SS.getSessionHistory(gBrowser.selectedTab); // Fx43+
       var sCount = sessionH.entries.length;
     } else {
       var sessionH = getWebNavigation().sessionHistory;

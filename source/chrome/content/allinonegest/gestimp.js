@@ -1447,12 +1447,8 @@ mgsuite.imp = {
           var originalTab = gBrowser.mCurrentTab;
         }
         
-        var cs = mgsuite.overlay.aioIsFx
-          ? Components.classes["@mozilla.org/browser/sessionstore;1"]
-          : Components.classes["@mozilla.org/suite/sessionstore;1"];
-        var SessionStore = cs.getService(Components.interfaces.nsISessionStore);
-        
-        var tab = SessionStore.duplicateTab(window, originalTab);
+        var SS = mgsuite.overlay.getSessionStore();
+        var tab = SS.duplicateTab(window, originalTab);
         
         var loadInBg = mgsuite.overlay.aioPrefRoot.getBoolPref("browser.tabs.loadInBackground");
       
@@ -1882,9 +1878,10 @@ mgsuite.imp = {
   // Forward to First/Last Page of Next/Current Domain
   aioSmartBackForward: function(aRwnd, aCurrDomainEndPoint) { // derived from SHIMODA "Piro" Hiroshi Rewind/Fastforward buttons
     var webNav = getWebNavigation();
+    var SS = mgsuite.overlay.getSessionStore();
     
-    if (SessionStore.getSessionHistory) {
-      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+    if (SS.getSessionHistory) {
+      var sessionH = SS.getSessionHistory(gBrowser.selectedTab); // Fx43+
     } else {
       var sessionH = webNav.sessionHistory;
     }
@@ -1937,8 +1934,10 @@ mgsuite.imp = {
   },
   
   aioFastForward: function() {
-    if (SessionStore.getSessionHistory) {
-      var sessionH = SessionStore.getSessionHistory(gBrowser.selectedTab); // Fx43+
+    var SS = mgsuite.overlay.getSessionStore();
+    
+    if (SS.getSessionHistory) {
+      var sessionH = SS.getSessionHistory(gBrowser.selectedTab); // Fx43+
     } else {
       var sessionH = getWebNavigation().sessionHistory;
     }
@@ -2495,8 +2494,12 @@ mgsuite.imp = {
   getTabHistory: function(aTab)
   {
     var browser = aTab.ownerDocument.defaultView.gBrowser.getBrowserForTab(aTab);
-    var sHistory = browser.webNavigation.sessionHistory;
-      
+    var SS = mgsuite.overlay.getSessionStore();
+    
+    var sHistory = SS.getSessionHistory
+      ? SS.getSessionHistory(aTab)
+      : browser.webNavigation.sessionHistory;
+    
     var clonedData = {};
     clonedData.entries = mgsuite.imp.getHistoryEntries(sHistory);
     clonedData.index = sHistory.index;
@@ -2517,10 +2520,13 @@ mgsuite.imp = {
     var entries = [];
     
     for (var i = range.start; i < range.length; i++) {
-      var entry = originalHistory.entries
-        ? originalHistory.entries[i]
-        : originalHistory.getEntryAtIndex(i, false);
-      entries.push(mgsuite.util.serializeEntry(entry));
+      if (originalHistory.entries) {
+        // Fx43+
+        entries.push(JSON.stringify(originalHistory.entries[i]));
+      } else {
+        // old style history entry
+        entries.push(mgsuite.util.serializeEntry(originalHistory.getEntryAtIndex(i, false)));
+      }
     }
   
     return entries;

@@ -238,21 +238,27 @@ var mgsuiteFr = {
   },
   
   
-  insertHistory: function(msg) {   
+  insertHistory: function(msg) {
     docShell.QueryInterface(Components.interfaces.nsIWebNavigation);
     
     var sHistory = docShell.sessionHistory;
     sHistory.QueryInterface(Components.interfaces.nsISHistoryInternal);
     
     var entries = msg.data.entries;
-    var entry;
+    var entry, shEntry;
     let idMap = { used: {} };
     let docIdentMap = {};
     
     for (var i=0; i<entries.length; i++) {
-      if (!entries[i].url) continue;
-      entry = this.deserializeEntry(entries[i], idMap, docIdentMap);
-      sHistory.addEntry(entry, true);
+      entry = entries[i];
+      if (typeof entry == 'string') {
+        // new entry type (Fx43+) passed as JSON
+        entry = JSON.parse(entries[i]);
+      }
+      
+      if (!entry.url) continue;
+      shEntry = this.deserializeEntry(entry, idMap, docIdentMap);
+      sHistory.addEntry(shEntry, true);
     }
     
     var scrollIsSet = false;
