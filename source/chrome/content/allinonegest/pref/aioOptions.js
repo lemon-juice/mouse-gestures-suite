@@ -38,6 +38,7 @@ function init() {
   document.getElementById("nextsStringId").value = pref.getComplexValue("allinonegest.nextsString", Components.interfaces.nsISupportsString).data;
   document.getElementById("prevsStringId").value = pref.getComplexValue("allinonegest.prevsString", Components.interfaces.nsISupportsString).data;
   trailSize = pref.getIntPref("allinonegest.trailSize");
+  document.getElementById("timeoutId").value = pref.getIntPref("allinonegest.timeout");
   document.getElementById("gridId").value = pref.getIntPref("allinonegest.grid");
   document.getElementById("autoscrollSpeedId").value = pref.getCharPref("allinonegest.autoscrollSpeed");
 
@@ -124,7 +125,11 @@ function doEnabling() {
 
   var idTable = [["trailId", c1, a1], ["trailColorId", c4, a1], ["trailPickerId", c4, a2],
                  ["trailSizeId", c4, a1], ["smoothId", c4, a1],
-                 ["gridId", c1, a1], ["gridLabelId", c1, a1], ["drawnGestInfoId", c1, a1],
+                 ["gridId", c1, a1],
+                 ["gridLabelId", c1, a1],
+                 ["drawnGestInfoId", c1, a1],
+                 ["timeoutId", c1, a1],
+                 ["timeoutLabelId", c1, a1],
                  ["plusId", c6, a1], ["minusId", c7, a1],
                  ["wheelScrollOptions", c2, a1],
                  ["wheelScrollOptions0", c2, a1],
@@ -202,6 +207,7 @@ function savePrefs() {
   pref.setCharPref("allinonegest.trailColor", document.getElementById("trailPickerId").color);
   pref.setIntPref("allinonegest.trailSize", trailSize);
   pref.setIntPref("allinonegest.grid", document.getElementById("gridId").value);
+  pref.setIntPref("allinonegest.timeout", document.getElementById("timeoutId").value);
   pref.setCharPref("allinonegest.gestureString", returnCustomizedString(0));
   pref.setCharPref("allinonegest.functionString", returnCustomizedString(1));
   pref.setCharPref("allinonegest.rockerString", returnCustomizedString(2));
@@ -721,6 +727,7 @@ function getPrefsForImportExport() {
     ['smoothTrail', 'bool'],
     ['grid', 'int'],
     ['tabBar', 'bool'],
+    ['timeout', 'int'],
     ['titleDelay', 'int'],
     ['titleDuration', 'int'],
     ['trailColor', 'char'],

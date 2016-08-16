@@ -29,7 +29,7 @@ mgsuite.overlay = {
   aioFirstInit: true,
   aioGrid: null, // minimal gesture has to be 'grid' pixels long
   drawnGestInfo: true,
-  aioDelay: 1000, // delay before aborting gesture
+  aioDelay: 1000, // delay before aborting gesture ('timeout' in prefs)
   aioDelayTO: null,
   aioGestInProgress: false,
   aioOldX: null,
@@ -443,6 +443,7 @@ mgsuite.overlay = {
      [function(){mgsuite.overlay.aioTrailSize=mgsuite.overlay.aioPref.getIntPref("trailSize");}, function(){mgsuite.overlay.aioPref.setIntPref("trailSize",3);}, function(){return mgsuite.overlay.aioTrailSize<1||mgsuite.overlay.aioTrailSize>12;}],
      [function(){mgsuite.overlay.aioSmoothTrail=mgsuite.overlay.aioPref.getBoolPref("smoothTrail");}, function(){mgsuite.overlay.aioPref.setBoolPref("smoothTrail",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioGrid=mgsuite.overlay.aioPref.getIntPref("grid");}, function(){mgsuite.overlay.aioPref.setIntPref("grid",10);}, function(){return mgsuite.overlay.aioGrid<3 || mgsuite.overlay.aioGrid>50;}],
+     [function(){mgsuite.overlay.aioDelay=mgsuite.overlay.aioPref.getIntPref("timeout");}, function(){mgsuite.overlay.aioPref.setIntPref("timeout",1000);}, function(){return mgsuite.overlay.aioDelay<200 || mgsuite.overlay.aioDelay>3000;}],
      [function(){mgsuite.overlay.drawnGestInfo=mgsuite.overlay.aioPref.getBoolPref("drawnGestInfo");}, function(){mgsuite.overlay.aioPref.setBoolPref("drawnGestInfo",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioRockEnabled=mgsuite.overlay.aioPref.getBoolPref("rocking");}, function(){mgsuite.overlay.aioPref.setBoolPref("rocking",true);}, function(){return false;}],
      [function(){mgsuite.overlay.aioWheelEnabled=mgsuite.overlay.aioPref.getBoolPref("wheelscrolling");}, function(){mgsuite.overlay.aioPref.setBoolPref("wheelscrolling",true);}, function(){return false;}], // Scroll wheel navigation

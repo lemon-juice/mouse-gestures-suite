@@ -38,6 +38,7 @@
 <!ENTITY trails.size               "Taille de la trâce">
 <!ENTITY trails.smooth "Smooth (slower on old hardware)">
 <!ENTITY mousegest.sensitivity     "Movement sensitivity (pixels):">
+<!ENTITY mousegest.timeout         "Gesture timeout (ms):">
 <!ENTITY mousegest.showGestInfo    "Show gesture info while drawing">
 
 <!ENTITY linktooltip.label     "Info-bulle de lien: Préfs">
