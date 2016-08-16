@@ -49,7 +49,7 @@
    <vbox>
    <groupbox orient="horizontal">
      <caption label="&enable.label;"/>
-     <vbox>
+     <vbox flex="1">
        <checkbox id="mouse" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.mouse" label="&enable.mouse;" oncommand="doEnabling();"/>
        <checkbox id="rocker" type="checkbox" pref="true" preftype="bool"
@@ -57,7 +57,7 @@
        <checkbox id="tabBar" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.tabBar" label="&enable.tabbarscroll;" oncommand="doEnabling();"/>
      </vbox>
-     <vbox>
+     <vbox flex="1">
        <checkbox id="wheelscroll" type="checkbox" pref="true" preftype="bool"
            prefstring="allinonegest.wheelscrolling" label="&enable.wheelscroll;" oncommand="doEnabling();"/>
        <checkbox id="autoscroll" type="checkbox" pref="true" preftype="bool"
@@ -116,48 +116,6 @@
       </vbox>
      </groupbox>
      <groupbox orient="horizontal" flex="1">
-      <caption label="&linktooltip.label;"/>
-      <vbox>
-       <checkbox id="tooltipShiftId" type="checkbox" pref="true" preftype="bool" label="&linktooltip.shift;"
-          prefstring="allinonegest.shiftForTitle"  oncommand="doEnabling();"/>
-       <hbox align="center">
-        <label id="tooltipDelayId" value="&linktooltip.delay;"/>
-        <spacer flex="1"/>
-        <menulist id="delaydropdownId">
-           <menupopup>
-              <menuitem label="250" />
-              <menuitem label="500" />
-              <menuitem label="750" />
-              <menuitem label="1000" />
-              <menuitem label="1250" />
-	      <menuitem label="1500" />
-              <menuitem label="2000" />
-	      <menuitem label="2500" />
-	      <menuitem label="3000" />
-              <menuitem label="4000" />
-           </menupopup>
-        </menulist>
-       </hbox>
-       <hbox align="center">
-        <label id="tooltipDisplayId" value="&linktooltip.duration;"/>
-        <spacer flex="1"/>
-        <menulist id="durationdropdownId">
-           <menupopup>
-              <menuitem label="2000" />
-              <menuitem label="3000" />
-              <menuitem label="4000" />
-              <menuitem label="5000" />
-              <menuitem label="6000" />
-	      <menuitem label="7000" />
-              <menuitem label="8000" />
-           </menupopup>
-        </menulist>
-       </hbox>
-      </vbox>
-     </groupbox>
-   </hbox>
-   <hbox>
-     <groupbox orient="horizontal" flex="1">
       <caption label="&wheel.label;"/>
       <vbox>
         <radiogroup id="wheelScrollOptions" prefstring="allinonegest.wheelpref2">
@@ -176,6 +134,8 @@
         prefstring="allinonegest.showTabsPopup" label="&wheel.showTabsPopup;" />
       </vbox>
      </groupbox>
+   </hbox>
+   <hbox>
      <groupbox orient="horizontal" flex="1">
       <caption label="&autoscroll.label;"/>
       <vbox>
@@ -189,6 +149,46 @@
           <radio id="autoscrollOptions3" value="3" label="&autoscroll.grab;"
           oncommand="doEnabling();" />
         </radiogroup>
+      </vbox>
+     </groupbox>
+     <groupbox orient="horizontal" flex="1">
+      <caption label="&linktooltip.label;"/>
+      <vbox>
+       <checkbox id="tooltipShiftId" type="checkbox" pref="true" preftype="bool" label="&linktooltip.shift;"
+          prefstring="allinonegest.shiftForTitle"  oncommand="doEnabling();"/>
+       <hbox align="center">
+        <label id="tooltipDelayId" value="&linktooltip.delay;"/>
+        <spacer flex="1"/>
+        <menulist id="delaydropdownId">
+          <menupopup>
+            <menuitem label="250" />
+            <menuitem label="500" />
+            <menuitem label="750" />
+            <menuitem label="1000" />
+            <menuitem label="1250" />
+	        <menuitem label="1500" />
+            <menuitem label="2000" />
+	        <menuitem label="2500" />
+	        <menuitem label="3000" />
+            <menuitem label="4000" />
+          </menupopup>
+        </menulist>
+       </hbox>
+       <hbox align="center">
+        <label id="tooltipDisplayId" value="&linktooltip.duration;"/>
+        <spacer flex="1"/>
+        <menulist id="durationdropdownId">
+          <menupopup>
+            <menuitem label="2000" />
+            <menuitem label="3000" />
+            <menuitem label="4000" />
+            <menuitem label="5000" />
+            <menuitem label="6000" />
+	        <menuitem label="7000" />
+            <menuitem label="8000" />
+          </menupopup>
+        </menulist>
+       </hbox>
       </vbox>
      </groupbox>
    </hbox>
