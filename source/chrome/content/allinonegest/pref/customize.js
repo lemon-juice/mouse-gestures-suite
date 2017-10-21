@@ -636,6 +636,10 @@ function populateTree(aGesturesString, aFuncsString, aRockerString, customGestur
 }
 
 function ReadFile(file) {
+  if (typeof Services == 'undefined') {
+    Components.utils.import('resource://gre/modules/Services.jsm');
+  }
+  
   var ioService=Components.classes["@mozilla.org/network/io-service;1"]
       .getService(Components.interfaces.nsIIOService);
   var scriptableStream=Components
@@ -644,7 +648,14 @@ function ReadFile(file) {
 
 
   // newChannel was deprecated in Fx 48 in favour of newChannel2
-  var channel = ioService.newChannel2 ? ioService.newChannel2(file,null,null,null,null,null,null,null)
+  var channel = ioService.newChannel2 ? ioService.newChannel2(file,
+    null,
+    null,
+    null,
+    Services.scriptSecurityManager.getSystemPrincipal(),
+    Services.scriptSecurityManager.getSystemPrincipal(),
+    null,
+    null)
     : ioService.newChannel(file,null,null);
   var input=channel.open();
   scriptableStream.init(input);

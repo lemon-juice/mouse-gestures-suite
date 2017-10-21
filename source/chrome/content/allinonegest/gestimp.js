@@ -687,27 +687,51 @@ mgsuite.imp = {
   },
   
   aioFavoriteURL: function(suffix) {
-    var shortcutURL = null;
-    var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
-    var keyword = mgsuite.overlay.aioGetStr("g.keywordForGesture") + suffix;
-    var shortcutURI = bmsvc.getURIForKeyword(keyword);
-    if (shortcutURI) shortcutURL = shortcutURI.spec;
-    if (!shortcutURL) {
-      alert(mgsuite.overlay.aioGetStr("g.keywordMissing") + " " + keyword);
-      return;
+    function loadKeywordPage(keyword, url) {
+      if (!url) {
+        alert(mgsuite.overlay.aioGetStr("g.keywordMissing") + " " + keyword);
+        return;
+      }
+      
+      switch (mgsuite.overlay.aioWindowType) {
+        case "browser":
+          loadURI(url);
+          break;
+        
+        default:
+          if (mgsuite.overlay.aioIsFx) {
+            openNewTabWith(url);
+          } else {
+            openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, url, null, false);
+          }
+      }
     }
     
-    switch (mgsuite.overlay.aioWindowType) {
-      case "browser":
-        loadURI(shortcutURL);
-        break;
+    var keyword = mgsuite.overlay.aioGetStr("g.keywordForGesture") + suffix;
+    
+    try {
+      // try to fetch url keyword using old method (removed in Fx 53)
+      var url = null;
+      var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
+      var shortcutURI = bmsvc.getURIForKeyword(keyword);
+      if (shortcutURI) url = shortcutURI.spec;
+      loadKeywordPage(keyword, url);
+      return;
+
+    } catch (e) {
+    }
+    
+    if (!url) {
+      // if old method failed, then try new method (since Fx 40)
+      Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+      XPCOMUtils.defineLazyModuleGetter(this, "PlacesUtils", "resource://gre/modules/PlacesUtils.jsm");
       
-      default:
-        if (mgsuite.overlay.aioIsFx) {
-          openNewTabWith(shortcutURL);
-        } else {
-          openNewTabWindowOrExistingWith(Components.interfaces.nsIBrowserDOMWindow.OPEN_NEWTAB, shortcutURL, null, false);
-        }
+      PlacesUtils.keywords.fetch(keyword).then(entry => {
+        /* entry is either null, or a keyword entry */
+          loadKeywordPage(keyword, entry ? entry.url.href : null);
+        },
+        e => { /* failure */}
+      );
     }
   },
   
