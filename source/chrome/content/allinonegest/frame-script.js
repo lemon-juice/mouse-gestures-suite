@@ -129,7 +129,7 @@ var mgsuiteFr = {
         elemInfo = this.getElementInfo(e);
       }
       
-      if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl) {
+      if (elemInfo.link || elemInfo.img || elemInfo.bgImgUrl || e.type == 'mousedown') {
         if (elemInfo.link && !this.firstLink) {
           this.firstLink = elemInfo.link;
         }
