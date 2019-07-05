@@ -1638,9 +1638,9 @@ mgsuite.imp = {
   aioLinksInTabs: function() {
     if (mgsuite.overlay.aioWindowType == "browser") {
       for (var i = 0; i < mgsuite.util.collectedLinksUrls.length; ++i) {
-        mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[i]));
+        if (mgsuite.util.collectedLinksUrls[i]) 
+          mgsuite.overlay.aioContent.addTab(mgsuite.imp.aioSanitizeUrl(mgsuite.util.collectedLinksUrls[i]), mgsuite.imp.aioGetReferrer(mgsuite.util.collectedLinks[i]));
       }
-    
     } else {
       if (mgsuite.util.collectedLinksUrls.length > 0) {
         if (mgsuite.overlay.aioIsFx) {
